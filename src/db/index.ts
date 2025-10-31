@@ -12,6 +12,8 @@ import type {
     MySql2PreparedQueryHKT
 } from "drizzle-orm/mysql2"
 import env from "../lib/env"
+import fs from "fs"
+import * as schema from './schemas'
 
 const createMysqlClient = () => {
     const connection = mysql.createPool({
@@ -20,22 +22,25 @@ const createMysqlClient = () => {
         user: env.MYSQL_USER,
         password: env.MYSQL_PASSWORD,
         database: env.MYSQL_DATABASE,
-        // ssl: env.MYSQL_SSL_MODE === "true" ? { rejectUnauthorized: true } : undefined,
+        ssl: {
+            ca: fs.readFileSync('ca.pem'),
+            rejectUnauthorized: true
+        },
         waitForConnections: true,
         connectionLimit: 10,
         queueLimit: 0,
     })
 
-    return drizzle(connection, { casing: "snake_case" })
+    return drizzle(connection, { casing: "snake_case", mode: "default", schema })
 }
 
-// const globalForDrizzle = globalThis as unknown as {
-//     db: ReturnType<typeof createMysqlClient> | undefined
-// }
+const globalForDrizzle = globalThis as unknown as {
+    db: ReturnType<typeof createMysqlClient> | undefined
+}
 
 export const db = createMysqlClient()
 
-// if (env.NODE_ENV !== "production") globalForDrizzle.db = db
+if (env.NODE_ENV !== "production") globalForDrizzle.db = db
 
 type Database = MySql2Database
 

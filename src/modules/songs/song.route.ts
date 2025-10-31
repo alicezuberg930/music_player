@@ -1,14 +1,14 @@
 import express, { Request, Response } from "express";
-const userRouter = express.Router()
-import userController from "./user.controller";
+const songRouter = express.Router()
+import songController from "./song.controller";
 
-userRouter.all("/users", async (request: Request, response: Response) => {
+songRouter.all("/songs", async (request: Request, response: Response) => {
     switch (request.method) {
         case "GET":
-            await userController.getUsers(request, response)
+            await songController.getUsers(request, response)
             break;
         case "POST":
-            await userController.createUser(request, response)
+            await songController.createUser(request, response)
             break;
         case "DELETE":
             response.json({ message: "You called DELETE /songs" });
@@ -19,14 +19,14 @@ userRouter.all("/users", async (request: Request, response: Response) => {
     }
 })
 
-userRouter.get("/users/:id", async (request: Request, response: Response) => {
+songRouter.get("/songs/:id", async (request: Request, response: Response) => {
     const { id } = request.params
     response.json({ id })
 })
 
-userRouter.put("/users/:id", async (request: Request, response: Response) => {
+songRouter.put("/songs/:id", async (request: Request, response: Response) => {
     const { id } = request.params
     response.json({ id })
 })
 
-export default userRouter
+export default songRouter

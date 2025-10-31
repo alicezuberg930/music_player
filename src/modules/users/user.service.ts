@@ -1,14 +1,26 @@
 import { Request } from "express"
 import { db } from "../../db"
-import { usersTable } from "../../db/schemas"
+import { users } from "../../db/schemas"
+import { User } from "./user.model"
 
 export class UserService {
     public async getUsers(request: Request) {
         try {
-            const users = await db.select().from(usersTable)
-            return users
+            const data = await db.select().from(users)
+            return data
         } catch (error) {
             throw new Error(String(error))
         }
     }
+
+    public async createUser(request: Request) {
+        try {
+            const user = request.body as User
+            const data = await db.insert(users).values(user);
+            return data
+        } catch (error) {
+            throw new Error(String(error))
+        }
+    }
+
 }

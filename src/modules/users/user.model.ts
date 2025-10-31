@@ -1,3 +1,3 @@
-import { usersTable } from "../../db/schemas";
+import { users } from "../../db/schemas";
 
-export type User = typeof usersTable.$inferInsert | typeof usersTable.$inferSelect
+export type User = typeof users.$inferInsert | typeof users.$inferSelect

@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import env from "./lib/env";
-import songRouter from "./modules/users/user.route";
+import userRouter from "./modules/users/user.route";
+import songRouter from "./modules/songs/song.route";
 
 const app = express();
 // For parsing JSON request bodies
@@ -14,6 +15,7 @@ app.get("/", (_: Request, res: Response) => {
 });
 
 // song router
+app.use('/api/v1', userRouter)
 app.use('/api/v1', songRouter)
 
 app.listen(port, () => {

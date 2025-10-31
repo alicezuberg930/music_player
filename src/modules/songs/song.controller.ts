@@ -1,17 +1,17 @@
 import { Request, Response } from "express"
-import { UserService } from "./user.service"
+import { SongService } from "./song.service"
 
 class UserController {
-    private userService
+    private songService
 
     constructor() {
-        this.userService = new UserService()
+        this.songService = new SongService()
     }
 
     public async getUsers(request: Request, response: Response) {
         try {
-            const data = await this.userService.getUsers(request)
-            return response.json({ data, message: 'Users list fetched successfully' })
+            const data = await this.songService.getSongs(request)
+            return response.json({ data, message: 'Song list fetched successfully' })
         } catch (error) {
             return response.status(500).json({ message: error instanceof Error ? error.message : 'Internal Server Error' })
         }
@@ -19,8 +19,8 @@ class UserController {
 
     public async createUser(request: Request, response: Response) {
         try {
-            const data = await this.userService.createUser(request)
-            return response.status(201).json({ data, message: 'User created successfully' })
+            const data = await this.songService.createSong(request)
+            return response.status(201).json({ data, message: 'Song created successfully' })
         } catch (error) {
             return response.status(500).json({ message: error instanceof Error ? error.message : 'Internal Server Error' })
         }

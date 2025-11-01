@@ -1,7 +1,8 @@
-import { mysqlTable, int, varchar, boolean, text, date } from "drizzle-orm/mysql-core";
+import { index, mysqlTable, int, varchar, boolean, text, date } from "drizzle-orm/mysql-core";
 import { users } from "./user.schema";
 import { createdAt, updatedAt } from "../utils";
 import { relations } from "drizzle-orm";
+import { artistsSongs } from "./artist_song.schema";
 
 export const songs = mysqlTable("songs", {
     id: int().primaryKey().autoincrement(),
@@ -10,10 +11,12 @@ export const songs = mysqlTable("songs", {
     artistNames: varchar({ length: 255 }).notNull(),
     isWorldWide: boolean().default(false),
     thumbnail: text().notNull(),
+    lyricsFile: text(),
     duration: int().notNull(),
     isPrivate: boolean().default(false),
     releaseDate: date({ mode: 'string' }),
     distributor: varchar({ length: 255 }),
+    stream: varchar({ length: 255 }),
     isIndie: boolean().default(false),
     mvlink: varchar({ length: 500 }),
     hasLyrics: boolean().default(false),
@@ -24,11 +27,52 @@ export const songs = mysqlTable("songs", {
     comments: int().default(0),
     createdAt,
     updatedAt
-});
+}, (t) => [
+    index('songs_user_id_idx').on(t.userId),
+    index('songs_title_idx').on(t.title)
+])
 
-export const songsRelations = relations(songs, ({ one }) => ({
+export const songsRelations = relations(songs, ({ one, many }) => ({
     user: one(users, {
         fields: [songs.userId],
         references: [users.id],
     }),
+    artists: many(artistsSongs),
+    genres: many(songGenres)
 }))
+
+// genres table
+export const genres = mysqlTable("genres", {
+    id: int().primaryKey().autoincrement(),
+    name: varchar({ length: 255 }).notNull(),
+    alias: varchar({ length: 255 }),
+    createdAt,
+    updatedAt,
+});
+
+export const genresRelations = relations(genres, ({ one, many }) => ({
+    songs: many(songGenres)
+}))
+
+// song_genres table
+export const songGenres = mysqlTable("song_genres", {
+    id: int().primaryKey().autoincrement(),
+    genreId: int().references(() => genres.id, { onDelete: "cascade" }),
+    songId: int().references(() => songs.id, { onDelete: "cascade" }),
+}, (t) => [
+    index('genre_id_idx').on(t.genreId),
+    index('song_id_idx').on(t.songId)
+])
+
+export const songGenresRelations = relations(songGenres, ({ one, many }) => ({
+    genre: one(genres, {
+        fields: [songGenres.genreId],
+        references: [genres.id],
+    }),
+    song: one(songs, {
+        fields: [songGenres.songId],
+        references: [songs.id],
+    }),
+}))
+
+

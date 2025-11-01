@@ -1,6 +1,8 @@
 import { varchar, int, date } from "drizzle-orm/mysql-core";
 import { createdAt, updatedAt } from "../utils";
 import { mysqlTable } from "drizzle-orm/mysql-core";
+import { relations } from "drizzle-orm";
+import { songs, playlists } from "./";
 
 export const users = mysqlTable("users", {
     id: int().autoincrement().primaryKey(),
@@ -13,3 +15,8 @@ export const users = mysqlTable("users", {
     createdAt,
     updatedAt,
 })
+
+export const usersRelations = relations(users, ({ many }) => ({
+    songs: many(songs),
+    playlists: many(playlists)
+}))

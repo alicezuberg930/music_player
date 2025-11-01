@@ -6,12 +6,23 @@ import { songs } from "../../db/schemas/song.schema"
 export class SongService {
     public async getSongs(request: Request) {
         try {
-
-            const users = await db.query.songs.findMany({
+            const songs = await db.query.songs.findMany({
                 columns: { userId: false },
-                with: { user: true }
-            })
-            return users
+                with: {
+                    user: true,
+                    genres: {
+                        with: { genre: true }
+                    },
+                    artists: {
+                        columns: { id: false, artistId: false, songId: false },
+                        with: { artist: true }
+                    }
+                }
+            }).then(result => result.map(song => ({
+                ...song,
+                artists: song.artists.map(a => a.artist)
+            })))
+            return songs
         } catch (error) {
             throw new Error(String(error))
         }

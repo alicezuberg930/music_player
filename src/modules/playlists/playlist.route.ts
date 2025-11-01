@@ -1,14 +1,14 @@
 import express, { Request, Response } from "express";
-const songRouter = express.Router()
-import songController from "./song.controller";
+const playlistRouter = express.Router()
+import playlistController from "./playlist.controller";
 
-songRouter.all("/songs", async (request: Request, response: Response) => {
+playlistRouter.all("/playlists", async (request: Request, response: Response) => {
     switch (request.method) {
         case "GET":
-            await songController.getSongs(request, response)
+            await playlistController.getPlaylists(request, response)
             break;
         case "POST":
-            await songController.createSong(request, response)
+            await playlistController.createPlaylist(request, response)
             break;
         case "DELETE":
             response.json({ message: "You called DELETE /songs" });
@@ -19,14 +19,14 @@ songRouter.all("/songs", async (request: Request, response: Response) => {
     }
 })
 
-songRouter.get("/songs/:id", async (request: Request, response: Response) => {
+playlistRouter.get("/playlists/:id", async (request: Request, response: Response) => {
     const { id } = request.params
     response.json({ id })
 })
 
-songRouter.put("/songs/:id", async (request: Request, response: Response) => {
+playlistRouter.put("/playlists/:id", async (request: Request, response: Response) => {
     const { id } = request.params
     response.json({ id })
 })
 
-export default songRouter
+export default playlistRouter

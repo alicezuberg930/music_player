@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import env from "./lib/env";
 import userRouter from "./modules/users/user.route";
 import songRouter from "./modules/songs/song.route";
+import playlistRouter from "./modules/playlists/playlist.route";
 
 const app = express();
 // For parsing JSON request bodies
@@ -14,9 +15,8 @@ app.get("/", (_: Request, res: Response) => {
     res.json({ message: "Welcome to the Express + TypeScript Server!" });
 });
 
-// song router
-app.use('/api/v1', userRouter)
-app.use('/api/v1', songRouter)
+// routers
+app.use('/api/v1', [userRouter, playlistRouter, songRouter])
 
 app.listen(port, () => {
     console.log(`The server is running at http://localhost:${port}`);

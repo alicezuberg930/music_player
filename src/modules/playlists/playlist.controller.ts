@@ -1,25 +1,25 @@
 import { Request, Response } from "express"
-import { SongService } from "./song.service"
+import { PlaylistService } from "./playlist.service"
 
-class SongController {
-    private songService
+class PlaylistController {
+    private playlistService
 
     constructor() {
-        this.songService = new SongService()
+        this.playlistService = new PlaylistService()
     }
 
-    public async getSongs(request: Request, response: Response) {
+    public async getPlaylists(request: Request, response: Response) {
         try {
-            const data = await this.songService.getSongs(request)
+            const data = await this.playlistService.getPlaylists(request)
             return response.json({ data, message: 'Song list fetched successfully' })
         } catch (error) {
             return response.status(500).json({ message: error instanceof Error ? error.message : 'Internal Server Error' })
         }
     }
 
-    public async createSong(request: Request, response: Response) {
+    public async createPlaylist(request: Request, response: Response) {
         try {
-            const data = await this.songService.createSong(request)
+            const data = await this.playlistService.createPlaylist(request)
             return response.status(201).json({ data, message: 'Song created successfully' })
         } catch (error) {
             return response.status(500).json({ message: error instanceof Error ? error.message : 'Internal Server Error' })
@@ -35,4 +35,4 @@ class SongController {
     }
 }
 
-export default new SongController()
+export default new PlaylistController()

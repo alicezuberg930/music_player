@@ -1,2 +1,5 @@
 export * from './user.schema'
 export * from './song.schema'
+export * from './artist.schema'
+export * from './playlist.schema'
+export * from './artist_song.schema'

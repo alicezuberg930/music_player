@@ -9,29 +9,15 @@ class SongController {
     }
 
     public async getSongs(request: Request, response: Response) {
-        try {
-            const data = await this.songService.getSongs(request)
-            return response.json({ data, message: 'Song list fetched successfully' })
-        } catch (error) {
-            return response.status(500).json({ message: error instanceof Error ? error.message : 'Internal Server Error' })
-        }
+        return await this.songService.getSongs(request, response)
     }
 
     public async createSong(request: Request, response: Response) {
-        try {
-            const data = await this.songService.createSong(request)
-            return response.status(201).json({ data, message: 'Song created successfully' })
-        } catch (error) {
-            return response.status(500).json({ message: error instanceof Error ? error.message : 'Internal Server Error' })
-        }
+        return await this.songService.createSong(request, response)
     }
 
-    public async findUser(request: Request, response: Response) {
-        try {
-            const { id } = request.params
-        } catch (error) {
-
-        }
+    public async findSong(request: Request, response: Response) {
+        return await this.songService.findSong(request, response)
     }
 }
 

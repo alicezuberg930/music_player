@@ -50,7 +50,7 @@ export const genres = mysqlTable("genres", {
     updatedAt,
 });
 
-export const genresRelations = relations(genres, ({ one, many }) => ({
+export const genresRelations = relations(genres, ({ many }) => ({
     songs: many(songGenres)
 }))
 
@@ -64,7 +64,7 @@ export const songGenres = mysqlTable("song_genres", {
     index('song_id_idx').on(t.songId)
 ])
 
-export const songGenresRelations = relations(songGenres, ({ one, many }) => ({
+export const songGenresRelations = relations(songGenres, ({ one }) => ({
     genre: one(genres, {
         fields: [songGenres.genreId],
         references: [genres.id],
@@ -74,5 +74,3 @@ export const songGenresRelations = relations(songGenres, ({ one, many }) => ({
         references: [songs.id],
     }),
 }))
-
-

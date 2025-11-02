@@ -11,7 +11,7 @@ import type {
     MySql2QueryResultHKT,
     MySql2PreparedQueryHKT
 } from "drizzle-orm/mysql2"
-import env from "../lib/env"
+import env from "../lib/helpers/env"
 import fs from "fs"
 import * as schema from './schemas'
 

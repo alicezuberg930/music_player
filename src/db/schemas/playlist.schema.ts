@@ -1,9 +1,7 @@
 import { index, mysqlTable, int, varchar, boolean, text, date } from "drizzle-orm/mysql-core";
-import { users } from "./user.schema";
 import { createdAt, updatedAt } from "../utils";
 import { relations } from "drizzle-orm";
-import { artists } from "./artist.schema";
-import { songs } from "./song.schema";
+import { songs, artists, users } from "./";
 
 // playlist table
 export const playlists = mysqlTable("playlists", {

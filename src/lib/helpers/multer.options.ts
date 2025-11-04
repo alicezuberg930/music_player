@@ -2,9 +2,14 @@ import multer from "multer"
 import { extname } from "path"
 import { BadRequestException } from "../exceptions"
 
+type PerFieldRule = { mimes: string[]; exts: string[] }
+
 type Options = {
     allowedFields: string[]
     fileSize?: number
+    allowedMimes?: string[]
+    allowedExts?: string[]
+    allowed?: Record<string, PerFieldRule>
 }
 
 export const multerOptions = (options: Options): multer.Options => {
@@ -19,15 +24,23 @@ export const multerOptions = (options: Options): multer.Options => {
             },
         }),
         limits: {
-            fileSize: options.fileSize ?? 5_000_000, // 5MB default
+            fileSize: options.fileSize ?? 20_000_000, // 5MB default
         },
         fileFilter: (_req, file, callback) => {
-            // Allowed file types
-            const allowedTypes = /jpeg|jpg|png|gif/
-            const ext = file.originalname.split(".").pop()?.toLowerCase()
-            const mimetype = allowedTypes.test(file.mimetype)
-            if (!ext || !mimetype) {
-                return callback(new BadRequestException("Only images (jpg, jpeg, png, gif) are allowed"))
+            // prefer for each field if available, fallback to global arrays
+            const fieldRule: PerFieldRule | undefined = options.allowed?.[file.fieldname]
+            const allowedMimes = (fieldRule?.mimes ?? options.allowedMimes ?? []).map(m => m.toLowerCase())
+            const allowedExts = (fieldRule?.exts ?? options.allowedExts ?? []).map(e => e.toLowerCase())
+            // If no rules configured, reject by default 
+            if (allowedMimes.length === 0 && allowedExts.length === 0) {
+                return callback(new BadRequestException(`No upload rules configured for field: ${file.fieldname}`))
+            }
+            const ext = extname(file.originalname).replace(/^\./, "").toLowerCase()
+            const validMimetype = allowedMimes.length === 0 || allowedMimes.includes(file.mimetype.toLowerCase())
+            const validExtension = allowedExts.length === 0 || (!!ext && allowedExts.includes(ext))
+            if (!validExtension || !validMimetype) {
+                const expected = (allowedExts.length ? allowedExts : []).join(", ") || "(unspecified)"
+                return callback(new BadRequestException(`Only files of types: ${expected} are allowed for field ${file.fieldname}`))
             }
             // validate field name
             if (options.allowedFields.length > 0 && !options.allowedFields.includes(file.fieldname)) {

@@ -5,6 +5,7 @@ import userRouter from './modules/users/user.route'
 import songRouter from './modules/songs/song.route'
 import playlistRouter from './modules/playlists/playlist.route'
 import { errorHandlerMiddleware, notFoundHandlerMiddleware } from './middleware'
+import { realtimeChat } from './modules/socket/realtime.chat'
 
 const app = express()
 // For parsing content-type of application/json & application/x-www-form-urlencoded
@@ -16,6 +17,8 @@ const port = env.PORT || 3000
 app.get('/', (_: Request, res: Response) => {
     res.json({ message: 'Welcome to the Express + TypeScript Server!' })
 })
+
+realtimeChat(app)
 
 // routers
 app.use('/api/v1', [userRouter, playlistRouter, songRouter])

@@ -3,7 +3,7 @@ import { HttpException } from "../lib/exceptions/HttpException"
 import { MulterError } from "multer"
 
 export function errorHandlerMiddleware(err: unknown, req: Request, res: Response, _next: NextFunction) {
-    console.error(err)
+    // console.error(err)
 
     let status = 500
     let message = "Internal Server Error"

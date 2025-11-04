@@ -1,16 +1,17 @@
-import { Request, Response } from "express"
-import { db, eq } from "../../db"
-import { Song } from "./song.model"
-import { songs } from "../../db/schemas/song.schema"
-import { BadRequestException, NotFoundException } from "../../lib/exceptions"
-import { HttpException } from "../../lib/exceptions/HttpException"
+import { Request, Response } from 'express'
+import { db, eq, inArray } from '../../db'
+import { Song } from './song.model'
+import { BadRequestException, NotFoundException } from '../../lib/exceptions'
+import { HttpException } from '../../lib/exceptions/HttpException'
+import { parseFile } from 'music-metadata'
+import fs from 'fs'
+import { artists, songs } from '../../db/schemas'
+import slugify from '../../lib/helpers/slugify'
 
 export class SongService {
     public async getSongs(request: Request, response: Response) {
-        const hello = request.query as unknown as { a: number, b: number, c: number }
-        console.log((typeof hello.a))
         try {
-            const songs = await db.query.songs.findMany({
+            const songs: Song[] = await db.query.songs.findMany({
                 columns: { userId: false },
                 with: {
                     user: true,
@@ -40,14 +41,43 @@ export class SongService {
 
     public async createSong(request: Request, response: Response) {
         try {
-            const files = request.files as {
-                [fieldname: string]: Express.Multer.File[];
-            };
-            return response.json({ request: files.stream[0] })
-            // const songBody = request.body as Song
+            let song: Song = { ...request.body }
+            const files = request.files as { [fieldname: string]: Express.Multer.File[] }
+            const audioFile = files['audio']?.[0]
+            const lyricsFile = files['lyrics']?.[0]
+            const thumbnailFile = files['thumbnail']?.[0]
+            // extract metadata from mp3 file
+            const metadata = await parseFile(audioFile.path)
+
+            const picture = metadata.common.picture?.[0]
+            let coverBase64: string | null = null
+            // save the coverBase64 string to an image file if exists
+            if (picture) {
+                coverBase64 = `data:${picture.format}base64,${picture.data.toString('base64')}`
+                const coverBuffer = Buffer.from(picture!.data)
+                const coverPath = `uploads/cover-${Date.now()}.${picture!.format.split('/')[1]}`
+                fs.writeFileSync(coverPath, coverBuffer)
+            }
+            const artistIds = request.body.artistIds as number[]
+            const findArtists = await db.query.artists.findMany({
+                columns: { name: true },
+                where: inArray(artists.id, artistIds)
+            })
+            const { originaldate, originalyear, releasedate, date } = metadata.common
+            const thumbnail = coverBase64 ?? 'default-thumbnail.png'
+            song = {
+                ...song,
+                alias: slugify(song.title),
+                releaseDate: metadata.common.date,
+                duration: Math.floor(metadata.format.duration ?? 0),
+                artistNames: findArtists.map(a => a.name).join(", "),
+                hasLyrics: !!lyricsFile,
+            }
+            fs.unlinkSync(audioFile.path)
+            fs.unlinkSync(lyricsFile.path)
+            return response.json({ song })
+
             // const song = await db.insert(songs).values(songBody)
-            // console.log(song[0])
-            // console.log(song[1])
             // return response.json({ message: 'Song created successfully' })
         } catch (error) {
             if (error instanceof HttpException) throw error

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "node20",
+    "target": "es2020",
+    "module": "nodenext",
     "outDir": "./dist",
     "rootDir": "./src",
     "esModuleInterop": true,

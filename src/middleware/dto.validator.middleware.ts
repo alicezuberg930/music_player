@@ -5,7 +5,8 @@ import type { Request, Response, NextFunction } from "express"
 export function validateDtoHanlder(DtoClass: any) {
     return async (req: Request, res: Response, next: NextFunction) => {
         const dtoObject = plainToInstance(DtoClass, req.body, { enableImplicitConversion: true })
-        const errors = await validate(dtoObject, { whitelist: true })
+        const isPartial = Boolean((DtoClass as any)?.__partial__)
+        const errors = await validate(dtoObject, { whitelist: true, skipMissingProperties: isPartial })
 
         if (errors.length > 0) {
             return res.status(400).json({

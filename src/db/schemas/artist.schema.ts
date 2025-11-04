@@ -1,7 +1,7 @@
 import { mysqlTable, varchar, boolean, int, text } from "drizzle-orm/mysql-core";
 import { createdAt, updatedAt } from "../utils";
 import { relations } from "drizzle-orm";
-import { artistsSongs } from "./artist_song.schema";
+import { artistsSongs } from "./";
 
 export const artists = mysqlTable("artists", {
     id: int().primaryKey().autoincrement(),

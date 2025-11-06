@@ -12,7 +12,10 @@ const env = {
     MYSQL_PASSWORD: process.env.MYSQL_PASSWORD,
     MYSQL_USER: process.env.MYSQL_USER,
     MYSQL_HOST: process.env.MYSQL_HOST,
-    MYSQL_PORT: parseInt(process.env.MYSQL_PORT!)
+    MYSQL_PORT: parseInt(process.env.MYSQL_PORT!),
+    CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
+    CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
+    CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
 }
 
 export default env;

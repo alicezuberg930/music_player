@@ -9,7 +9,7 @@ import { JWTMiddleware } from "../../middleware/jwt.middleware";
 import { UpdateSongDto } from "./dto/update-song.dto";
 
 const upload = multer(multerOptions({
-    allowedFields: ["audio", "lyrics"],
+    allowedFields: ["audio", "lyrics", "thumbnail"],
     allowed: {
         audio: { mimes: ["audio/mpeg", "audio/wav"], exts: ["mp3", "wav"] },
         lyrics: { mimes: ["text/plain"], exts: ["lrc", "txt"] },
@@ -22,7 +22,7 @@ songRouter.get("/songs", async (request: Request, response: Response) => {
 })
 
 songRouter.post("/songs",
-    // JWTMiddleware,
+    JWTMiddleware,
     upload.fields([
         { name: "audio", maxCount: 1 },
         { name: "lyrics", maxCount: 1 },

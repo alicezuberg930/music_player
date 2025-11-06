@@ -38,7 +38,7 @@ const globalForDrizzle = globalThis as unknown as {
     db: ReturnType<typeof createMysqlClient> | undefined
 }
 
-export const db = createMysqlClient()
+export const db = globalForDrizzle.db ?? createMysqlClient()
 
 if (env.NODE_ENV !== "production") globalForDrizzle.db = db
 

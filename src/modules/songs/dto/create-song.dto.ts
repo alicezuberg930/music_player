@@ -2,18 +2,12 @@ import { IsArray, ArrayNotEmpty, IsInt, IsNotEmpty, IsOptional, Length } from "c
 import { Transform } from "class-transformer";
 
 export class CreateSongDto {
-    @IsOptional()
-    thumbnail!: string;
-
     @IsNotEmpty({ message: 'Release date cannot be empty' })
     releaseDate!: string
 
     @IsNotEmpty({ message: 'Title cannot be empty' })
     @Length(3, 50, { message: 'Title must be between 3 and 50 characters' })
     title!: string;
-
-    @IsNotEmpty({ message: 'Description cannot be empty' })
-    description!: string;
 
     @IsArray({ message: 'Artists must be an array' })
     @ArrayNotEmpty({ message: 'Artists cannot be empty' })

@@ -13,7 +13,7 @@ export const songs = mysqlTable("songs", {
     lyricsFile: text(),
     duration: int().notNull(),
     isPrivate: boolean().default(false),
-    releaseDate: date({ mode: 'string' }),
+    releaseDate: date({ mode: 'string' }).default(new Date().toISOString().split('T')[0]),
     distributor: varchar({ length: 255 }),
     stream: varchar({ length: 255 }),
     isIndie: boolean().default(false),
@@ -24,6 +24,7 @@ export const songs = mysqlTable("songs", {
     listens: int().default(0),
     liked: boolean().default(false),
     comments: int().default(0),
+    size: int().notNull(),
     createdAt,
     updatedAt
 }, (t) => [

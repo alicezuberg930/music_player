@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express"
 import { UnauthorizedException } from "../lib/exceptions"
 
-export const jwtDecode = (token: string) => {
+export const jwtDecode = (token: string): Record<string, string> => {
     const base64Url = token.split('.')[1]
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
     const jsonPayload = Buffer.from(base64, 'base64').toString('utf8')
@@ -19,11 +19,13 @@ export const JWTMiddleware = async (request: Request, response: Response, next: 
         throw new UnauthorizedException("Invalid credentials, please log in")
     }
 
-    const jwt = await jwtDecode(token)
+    const jwt = jwtDecode(token)
 
     if (!jwt || !jwt.id) {
         throw new UnauthorizedException("Invalid or expired access token")
     }
+
+    request.userId = parseInt(jwt.id)
 
     next()
 }

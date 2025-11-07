@@ -17,7 +17,7 @@ import { CreateSongDto } from './dto/create-song.dto'
 export class SongService {
     public async getSongs(request: Request, response: Response) {
         try {
-            const songs: Song[] = await db.query.songs.findMany({
+            const data: Song[] = await db.query.songs.findMany({
                 columns: { userId: false },
                 with: {
                     user: true,
@@ -35,10 +35,7 @@ export class SongService {
                 artists: song.artists.map(a => a.artist),
                 genres: song.genres.map(g => g.genre)
             })))
-            return response.json({
-                message: 'Song list fetched successfully',
-                data: songs
-            })
+            return response.json({ message: 'Song list fetched successfully', data })
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)
@@ -66,7 +63,6 @@ export class SongService {
             }
             if (thumbnailFile) {
                 // if the user uploaded a thumbnail file, embed it into the audio file's metadata
-                console.log(findArtists.map(a => a.name).join("/"),)
                 NodeID3.update({
                     title,
                     releaseTime: releaseDate,
@@ -95,7 +91,7 @@ export class SongService {
             }
             // upload audio file to cloud storage and get the url
             const audioUrl = await uploadFile(audioFile.path, 'audios')
-            const song: Song = {
+            const song = {
                 title, releaseDate,
                 userId: request.userId!,
                 size: audioFile.size,
@@ -105,11 +101,11 @@ export class SongService {
                 hasLyrics: !!lyricsFile,
                 stream: audioUrl as string,
                 lyricsFile: lyricsUrl,
-                thumbnail: thumbnailUrl ?? '/assets/default-thumbnail.png'
-            }
+                thumbnail: thumbnailUrl ?? '/assets/default-song-thumbnail.png'
+            } as Song
             const insertSong = await db.insert(songs).values(song)
             await db.insert(artistsSongs).values(artistIds.map(artistId => ({ songId: insertSong[0].insertId, artistId })))
-            return response.json({ message: 'Song created successfully', data: insertSong[0] })
+            return response.json({ message: 'Song created successfully' })
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)

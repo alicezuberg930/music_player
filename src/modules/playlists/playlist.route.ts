@@ -1,23 +1,29 @@
 import express, { Request, Response } from "express";
 const playlistRouter = express.Router()
 import playlistController from "./playlist.controller";
+import { JWTMiddleware } from "../../middleware/jwt.middleware";
+import multer from "multer";
+import { multerOptions } from "../../lib/helpers/multer.options";
+import { validateDtoHanlder } from "../../middleware";
+import { CreatePlaylistDto } from "./dto/create-playlist.dto";
 
-playlistRouter.all("/playlists", async (request: Request, response: Response) => {
-    switch (request.method) {
-        case "GET":
-            await playlistController.getPlaylists(request, response)
-            break;
-        case "POST":
-            await playlistController.createPlaylist(request, response)
-            break;
-        case "DELETE":
-            response.json({ message: "You called DELETE /songs" });
-            break;
-        default:
-            response.status(405).json({ message: `Method ${request.method} not allowed` });
-            break;
+const upload = multer(multerOptions({
+    allowedFields: ["thumbnail"],
+    allowed: {
+        thumbnail: { mimes: ["image/jpeg", "image/png"], exts: ["jpg", "jpeg", "png"] }
     }
+}))
+
+playlistRouter.get("/playlists", async (request: Request, response: Response) => {
+    return await playlistController.getPlaylists(request, response)
 })
+
+playlistRouter.post("/playlists",
+    JWTMiddleware,
+    upload.single('thumbnail'),
+    validateDtoHanlder(CreatePlaylistDto),
+    async (request: Request, response: Response) => playlistController.createPlaylist(request, response)
+)
 
 playlistRouter.get("/playlists/:id", async (request: Request, response: Response) => {
     const { id } = request.params

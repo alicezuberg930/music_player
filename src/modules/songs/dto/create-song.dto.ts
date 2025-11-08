@@ -1,5 +1,5 @@
-import { IsArray, ArrayNotEmpty, IsInt, IsNotEmpty, IsOptional, Length } from "class-validator";
-import { Transform } from "class-transformer";
+import { IsArray, ArrayNotEmpty, IsInt, IsNotEmpty, IsOptional, Length } from "class-validator"
+import { Transform } from "class-transformer"
 
 export class CreateSongDto {
     @IsNotEmpty({ message: 'Release date cannot be empty' })
@@ -7,7 +7,7 @@ export class CreateSongDto {
 
     @IsNotEmpty({ message: 'Title cannot be empty' })
     @Length(3, 50, { message: 'Title must be between 3 and 50 characters' })
-    title!: string;
+    title!: string
 
     @IsArray({ message: 'Artists must be an array' })
     @ArrayNotEmpty({ message: 'Artists cannot be empty' })

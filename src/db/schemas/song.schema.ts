@@ -1,10 +1,10 @@
-import { index, mysqlTable, int, varchar, boolean, text, date } from "drizzle-orm/mysql-core";
-import { createdAt, updatedAt } from "../utils";
-import { relations } from "drizzle-orm";
-import { artistsSongs, users } from "./";
+import { index, mysqlTable, int, varchar, boolean, text, date } from "drizzle-orm/mysql-core"
+import { createdAt, updatedAt } from "../utils"
+import { relations } from "drizzle-orm"
+import { artistsSongs, users } from "./"
 
 export const songs = mysqlTable("songs", {
-    id: int().primaryKey().autoincrement(),
+    id: int().primaryKey().notNull().autoincrement(),
     title: varchar({ length: 255 }).notNull(),
     alias: varchar({ length: 255 }).notNull(),
     artistNames: varchar({ length: 255 }).notNull(),
@@ -19,7 +19,7 @@ export const songs = mysqlTable("songs", {
     isIndie: boolean().default(false),
     mvlink: varchar({ length: 500 }),
     hasLyrics: boolean().default(false),
-    userId: int().references(() => users.id, { onDelete: "set null" }),
+    userId: int().notNull().references(() => users.id, { onDelete: "restrict" }),
     likes: int().default(0),
     listens: int().default(0),
     liked: boolean().default(false),
@@ -43,12 +43,12 @@ export const songsRelations = relations(songs, ({ one, many }) => ({
 
 // genres table
 export const genres = mysqlTable("genres", {
-    id: int().primaryKey().autoincrement(),
+    id: int().primaryKey().notNull().autoincrement(),
     name: varchar({ length: 255 }).notNull(),
     alias: varchar({ length: 255 }),
     createdAt,
     updatedAt,
-});
+})
 
 export const genresRelations = relations(genres, ({ many }) => ({
     songs: many(songGenres)
@@ -56,9 +56,9 @@ export const genresRelations = relations(genres, ({ many }) => ({
 
 // song_genres table
 export const songGenres = mysqlTable("song_genres", {
-    id: int().primaryKey().autoincrement(),
-    genreId: int().references(() => genres.id, { onDelete: "cascade" }),
-    songId: int().references(() => songs.id, { onDelete: "cascade" }),
+    id: int().primaryKey().notNull().autoincrement(),
+    genreId: int().notNull().references(() => genres.id, { onDelete: "cascade" }),
+    songId: int().notNull().references(() => songs.id, { onDelete: "cascade" }),
 }, (t) => [
     index('genre_id_idx').on(t.genreId),
     index('song_id_idx').on(t.songId)

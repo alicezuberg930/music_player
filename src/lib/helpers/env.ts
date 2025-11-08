@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+import dotenv from 'dotenv'
 
 dotenv.config({ path: '.env' })
 
@@ -18,4 +18,4 @@ const env = {
     CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
 }
 
-export default env;
+export default env

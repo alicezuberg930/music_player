@@ -1,1 +1,1 @@
-import { IsString, IsEmail, MinLength, IsOptional, IsInt, Min, Max } from 'class-validator';
+import { IsString, IsEmail, MinLength, IsOptional, IsInt, Min, Max } from 'class-validator'

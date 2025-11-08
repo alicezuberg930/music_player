@@ -1,21 +1,22 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response } from "express"
+import userController from "./user.controller"
+
 const userRouter = express.Router()
-import userController from "./user.controller";
 
 userRouter.all("/users", async (request: Request, response: Response) => {
     switch (request.method) {
         case "GET":
             await userController.getUsers(request, response)
-            break;
+            break
         case "POST":
             await userController.createUser(request, response)
-            break;
+            break
         case "DELETE":
-            response.json({ message: "You called DELETE /songs" });
-            break;
+            response.json({ message: "You called DELETE /songs" })
+            break
         default:
-            response.status(405).json({ message: `Method ${request.method} not allowed` });
-            break;
+            response.status(405).json({ message: `Method ${request.method} not allowed` })
+            break
     }
 })
 
@@ -29,4 +30,4 @@ userRouter.put("/users/:id", async (request: Request, response: Response) => {
     response.json({ id })
 })
 
-export default userRouter
+export { userRouter }

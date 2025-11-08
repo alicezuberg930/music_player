@@ -1,8 +1,8 @@
 import http from 'http'
 import { Server, Socket } from "socket.io"
-import jwt, { JwtPayload } from "jsonwebtoken";
-import env from '../../lib/helpers/env';
-import { UnauthorizedException } from '../../lib/exceptions';
+import jwt, { JwtPayload } from "jsonwebtoken"
+import env from '../../lib/helpers/env'
+import { UnauthorizedException } from '../../lib/exceptions'
 
 interface AuthenticatedSocket extends Socket {
     user?: JwtPayload
@@ -10,11 +10,11 @@ interface AuthenticatedSocket extends Socket {
 
 const verifyToken = (token: string) => {
     try {
-        return jwt.verify(token, env.JWT_SECRET_KEY!);
+        return jwt.verify(token, env.JWT_SECRET_KEY!)
     } catch (err) {
-        return null;
+        return null
     }
-};
+}
 
 export const realtimeChat = (app: any) => {
     const server = http.createServer(app)

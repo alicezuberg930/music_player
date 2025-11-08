@@ -12,10 +12,10 @@
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.44.7",
     "express": "^5.1.0",
-    "googleapis": "^164.1.0",
+    "file-type": "^21.0.0",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.2",
-    "music-metadata": "^8.3.0",
+    "music-metadata": "^11.9.0",
     "mysql2": "^3.15.3",
     "node-id3": "^0.2.9",
     "nodemon": "^3.1.10",
@@ -31,5 +31,6 @@
     "drizzle-kit": "^0.31.6",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3"
-  }
+  },
+  "type": "module"
 }

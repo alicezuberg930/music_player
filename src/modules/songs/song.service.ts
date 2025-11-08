@@ -1,11 +1,11 @@
 // lib
 import { Request, Response } from 'express'
-import { parseFile } from 'music-metadata'
+import * as mm from 'music-metadata'
 import fs from 'fs'
-import NodeID3 from 'node-id3';
+import NodeID3 from 'node-id3'
 // database
 import { db, eq, inArray } from '../../db'
-import { Song } from './song.model'
+import { CreateSong, Song } from './song.model'
 import { artists, songs, artistsSongs } from '../../db/schemas'
 // utils
 import { HttpException, BadRequestException, NotFoundException } from '../../lib/exceptions'
@@ -17,10 +17,10 @@ import { CreateSongDto } from './dto/create-song.dto'
 export class SongService {
     public async getSongs(request: Request, response: Response) {
         try {
+            const { } = request.query
             const data: Song[] = await db.query.songs.findMany({
-                columns: { userId: false },
                 with: {
-                    user: true,
+                    user: { columns: { password: false, email: false } },
                     genres: {
                         columns: { id: false, genreId: false, songId: false },
                         with: { genre: true }
@@ -57,7 +57,7 @@ export class SongService {
             // find artist names from artistIds
             const findArtists = await db.query.artists.findMany({ columns: { name: true }, where: inArray(artists.id, artistIds) })
             // extract metadata from audio file
-            let metadata = await parseFile(audioFile.path)
+            let metadata = await mm.parseFile(audioFile.path)
             if (lyricsFile) {
                 lyricsUrl = (await uploadFile(lyricsFile.path, 'lyrics')) as string
             }
@@ -102,7 +102,7 @@ export class SongService {
                 stream: audioUrl as string,
                 lyricsFile: lyricsUrl,
                 thumbnail: thumbnailUrl ?? '/assets/default-song-thumbnail.png'
-            } as Song
+            } as CreateSong
             const insertSong = await db.insert(songs).values(song)
             await db.insert(artistsSongs).values(artistIds.map(artistId => ({ songId: insertSong[0].insertId, artistId })))
             return response.json({ message: 'Song created successfully' })
@@ -146,9 +146,12 @@ export class SongService {
             })
             if (!song) throw new NotFoundException('Song not found')
             return response.json({
-                ...song,
-                artists: song.artists.map(a => a.artist),
-                genres: song.genres.map(g => g.genre)
+                message: 'Song fetched successfully',
+                data: {
+                    ...song,
+                    artists: song.artists.map(a => a.artist),
+                    genres: song.genres.map(g => g.genre)
+                }
             })
         } catch (error) {
             if (error instanceof HttpException) throw error

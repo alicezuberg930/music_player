@@ -9,8 +9,8 @@ export function errorHandlerMiddleware(err: unknown, req: Request, res: Response
     let message = "Internal Server Error"
 
     if (err instanceof HttpException) {
-        status = err.status;
-        message = err.message;
+        status = err.status
+        message = err.message
     }
 
     if (err instanceof MulterError) {

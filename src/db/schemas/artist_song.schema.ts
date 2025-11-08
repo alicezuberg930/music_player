@@ -1,11 +1,11 @@
-import { index, mysqlTable, int } from "drizzle-orm/mysql-core";
-import { songs, artists } from "./";
-import { relations } from "drizzle-orm";
+import { index, mysqlTable, int } from "drizzle-orm/mysql-core"
+import { songs, artists } from "./"
+import { relations } from "drizzle-orm"
 
 export const artistsSongs = mysqlTable("artists_songs", {
-    id: int().primaryKey().autoincrement(),
-    artistId: int().references(() => artists.id, { onDelete: "cascade" }),
-    songId: int().references(() => songs.id, { onDelete: "cascade" }),
+    id: int().primaryKey().notNull().autoincrement(),
+    artistId: int().notNull().references(() => artists.id, { onDelete: "restrict" }),
+    songId: int().notNull().references(() => songs.id, { onDelete: "cascade" }),
 }, (t) => [
     index('artist_id_idx').on(t.artistId),
     index('song_id_idx').on(t.songId),

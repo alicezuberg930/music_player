@@ -16,6 +16,10 @@ class PlaylistController {
         return await this.playlistService.createPlaylist(request, response)
     }
 
+    public async updatePlaylist(request: Request, response: Response) {
+        return await this.playlistService.updatePlaylist(request, response)
+    }
+
     public async findPlaylist(request: Request, response: Response) {
 
     }

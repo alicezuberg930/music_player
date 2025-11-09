@@ -5,12 +5,9 @@ import env from "../lib/helpers/env";
 const testRouter = express.Router()
 
 const oauth2Client = new google.auth.OAuth2(
-    "338520973807-cvr1jv3l3sjnj5l6htmvlbtt6c6omkfj.apps.googleusercontent.com",
-    // process.env.GOOGLE_CLIENT_ID,
-    "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",
-    // process.env.GOOGLE_CLIENT_SECRET,
-    "http://localhost:5000/api/auth/callback/google"
-    // process.env.GOOGLE_REDIRECT_URI
+    env.GOOGLE_CLIENT_ID,
+    env.GOOGLE_CLIENT_SECRET,
+    env.GOOGLE_REDIRECT_URI
 )
 
 let REFRESH_TOKEN = env.GOOGLE_REFRESH_TOKEN;
@@ -71,7 +68,6 @@ testRouter.get("/drive/files", async (req, res) => {
     try {
         const drive = getDriveClient();
 
-        // This call will:
         // - use current access_token if valid
         // - or automatically use refresh_token to get a new access_token
         const response = await drive.files.list({
@@ -83,7 +79,6 @@ testRouter.get("/drive/files", async (req, res) => {
     } catch (err: any) {
         console.error("Drive error:", err?.response?.data || err);
 
-        // If refresh_token is invalid/revoked → force re-auth
         if (err?.response?.data?.error === "invalid_grant") {
             return res.status(401).json({
                 error: "REAUTH_REQUIRED",

@@ -1,8 +1,8 @@
-import { fileTypeFromBuffer } from "file-type"
 import { promises as fs } from "fs"
 import type { Request, Response, NextFunction } from "express"
 import { Options, PerFieldRule } from "../lib/helpers/multer.options"
 import { BadRequestException } from "../lib/exceptions"
+import { esmFileType } from "../lib/helpers/esm-module"
 
 export const fileMimeAndSizeOptions = (options: Options) => {
     const perFieldRules: Record<string, PerFieldRule> = options.allowed ?? {}
@@ -32,7 +32,7 @@ export const fileMimeAndSizeOptions = (options: Options) => {
                         const { bytesRead } = await fd.read(buffer, 0, buffer.length, 0)
                         const slice = buffer.subarray(0, bytesRead)
 
-                        const detected = await fileTypeFromBuffer(slice)
+                        const detected = await esmFileType().then(m => m.fileTypeFromBuffer(slice))
 
                         let isValid = false
 

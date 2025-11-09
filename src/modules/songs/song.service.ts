@@ -1,6 +1,6 @@
 // lib
 import { Request, Response } from 'express'
-import * as mm from 'music-metadata'
+import { esmMusicMetadata } from '../../lib/helpers/esm-module'
 import fs from 'fs'
 import NodeID3 from 'node-id3'
 // database
@@ -42,10 +42,9 @@ export class SongService {
         }
     }
 
-    public async createSong(request: Request, response: Response) {
+    public async createSong(request: Request<{}, {}, CreateSongDto>, response: Response) {
         try {
-            const { title, releaseDate, artistIds } = request.body as CreateSongDto
-            // files
+            const { title, releaseDate, artistIds } = request.body
             const files = request.files as { [fieldname: string]: Express.Multer.File[] }
             const audioFile: Express.Multer.File | null = files['audio']?.[0] ?? null
             if (!audioFile) throw new BadRequestException('Audio file is required')
@@ -57,7 +56,7 @@ export class SongService {
             // find artist names from artistIds
             const findArtists = await db.query.artists.findMany({ columns: { name: true }, where: inArray(artists.id, artistIds) })
             // extract metadata from audio file
-            let metadata = await mm.parseFile(audioFile.path)
+            let metadata = await esmMusicMetadata().then(m => m.parseFile(audioFile.path))
             if (lyricsFile) {
                 lyricsUrl = (await uploadFile(lyricsFile.path, 'lyrics')) as string
             }

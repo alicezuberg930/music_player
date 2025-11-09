@@ -32,7 +32,7 @@ songRouter.post("/songs",
     ]),
     fileValidator,
     validateDtoHanlder(CreateSongDto),
-    (request: Request, response: Response) => songController.createSong(request, response)
+    (request: Request<{}, {}, CreateSongDto>, response: Response) => songController.createSong(request, response)
 )
 
 songRouter.get("/songs/:id",

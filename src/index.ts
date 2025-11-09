@@ -3,7 +3,6 @@ import express, { Request, Response } from 'express'
 import env from './lib/helpers/env'
 import { errorHandlerMiddleware, notFoundHandlerMiddleware } from './middleware'
 import { realtimeChat } from './modules/socket/realtime.chat'
-import { routerss } from './modules/search/route'
 import { artistRouter, playlistRouter, songRouter, userRouter } from './modules'
 
 const app = express()
@@ -20,7 +19,7 @@ app.get('/', (_: Request, res: Response) => {
 realtimeChat(app)
 
 // map routers to express server
-app.use('/api/v1', [userRouter, playlistRouter, songRouter, artistRouter, routerss])
+app.use('/api/v1', [userRouter, playlistRouter, songRouter, artistRouter])
 
 // assign global middlewares to express server
 app.use([notFoundHandlerMiddleware, errorHandlerMiddleware])

@@ -1,9 +1,10 @@
 import 'reflect-metadata'
-import express, { Request, Response } from 'express'
+import express, { Request, response, Response } from 'express'
 import env from './lib/helpers/env'
 import { errorHandlerMiddleware, notFoundHandlerMiddleware } from './middleware'
 import { realtimeChat } from './modules/socket/realtime.chat'
 import { artistRouter, playlistRouter, songRouter, userRouter } from './modules'
+import { testRouter } from './modules/test'
 
 const app = express()
 // for parsing content-type of application/json & application/x-www-form-urlencoded
@@ -20,6 +21,8 @@ realtimeChat(app)
 
 // map routers to express server
 app.use('/api/v1', [userRouter, playlistRouter, songRouter, artistRouter])
+
+app.use('/', testRouter)
 
 // assign global middlewares to express server
 app.use([notFoundHandlerMiddleware, errorHandlerMiddleware])

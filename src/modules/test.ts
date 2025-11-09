@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express"
 import { google } from "googleapis"
+import env from "../lib/helpers/env";
 
 const testRouter = express.Router()
 
@@ -12,7 +13,7 @@ const oauth2Client = new google.auth.OAuth2(
     // process.env.GOOGLE_REDIRECT_URI
 )
 
-let REFRESH_TOKEN = process.env.GOOGLE_REFRESH_TOKEN ?? "1//0gsa8xm0Y0IS4CgYIARAAGBASNwF-L9IrcrY47E9M42zDMNuba6FFETEsc0CPctnxn-j5uJbcGnkoNnC5d0pPWbEp6ZfZ1thsFMY";
+let REFRESH_TOKEN = env.GOOGLE_REFRESH_TOKEN;
 
 testRouter.get("/auth/google", (req, res) => {
     const authUrl = oauth2Client.generateAuthUrl({

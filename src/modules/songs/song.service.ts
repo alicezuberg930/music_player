@@ -1,6 +1,6 @@
 // lib
 import { Request, Response } from 'express'
-import { esmMusicMetadata } from '../../lib/helpers/esm-module'
+import { esmMusicMetadata } from '../../lib/helpers/esm.module'
 import fs from 'fs'
 import NodeID3 from 'node-id3'
 // database
@@ -10,7 +10,7 @@ import { artists, songs, artistsSongs } from '../../db/schemas'
 // utils
 import { HttpException, BadRequestException, NotFoundException } from '../../lib/exceptions'
 import slugify from '../../lib/helpers/slugify'
-import { uploadFile } from '../../lib/helpers/upload-file'
+import { uploadFile } from '../../lib/helpers/cloudinary.file'
 // dto
 import { CreateSongDto } from './dto/create-song.dto'
 

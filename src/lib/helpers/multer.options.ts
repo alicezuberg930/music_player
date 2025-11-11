@@ -1,6 +1,6 @@
-import multer from "multer"
-import { extname } from "path"
-import { BadRequestException } from "../exceptions"
+import multer from 'multer'
+import { extname } from 'path'
+import { BadRequestException } from '../exceptions'
 
 export type PerFieldRule = {
     mimes: string[]
@@ -20,7 +20,7 @@ export const multerOptions = (options: Options): multer.Options => {
         storage: multer.diskStorage({
             destination: 'uploads/',
             filename: (_, file, callback) => {
-                const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
+                const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`
                 const ext = extname(file.originalname)
                 const filename = `${file.fieldname}-${uniqueSuffix}${ext}`
                 callback(null, filename)
@@ -35,11 +35,11 @@ export const multerOptions = (options: Options): multer.Options => {
             if (allowedMimes.length === 0 && allowedExts.length === 0) {
                 return callback(new BadRequestException(`No upload rules configured for field: ${file.fieldname}`))
             }
-            // const ext = extname(file.originalname).replace(/^\./, "").toLowerCase()
+            // const ext = extname(file.originalname).replace(/^\./, '').toLowerCase()
             // const validMimetype = allowedMimes.length === 0 || allowedMimes.includes(file.mimetype.toLowerCase())
             // const validExtension = allowedExts.length === 0 || (!!ext && allowedExts.includes(ext))
             // if (!validExtension || !validMimetype) {
-            //     const expected = (allowedExts.length ? allowedExts : []).join(", ") || "(unspecified)"
+            //     const expected = (allowedExts.length ? allowedExts : []).join(', ') || '(unspecified)'
             //     return callback(new BadRequestException(`Only files of types: ${expected} are allowed for field ${file.fieldname}`))
             // }
             // validate field name

@@ -2,7 +2,7 @@ import { promises as fs } from "fs"
 import type { Request, Response, NextFunction } from "express"
 import { Options, PerFieldRule } from "../lib/helpers/multer.options"
 import { BadRequestException } from "../lib/exceptions"
-import { esmFileType } from "../lib/helpers/esm-module"
+import { esmFileType } from "../lib/helpers/esm.module"
 
 export const fileMimeAndSizeOptions = (options: Options) => {
     const perFieldRules: Record<string, PerFieldRule> = options.allowed ?? {}

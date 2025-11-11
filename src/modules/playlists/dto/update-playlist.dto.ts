@@ -1,5 +1,5 @@
 import { ArrayNotEmpty, IsArray, IsEnum, IsInt, IsOptional } from "class-validator"
-import { PartialType } from "../../../lib/helpers/mapped-types"
+import { PartialType } from "../../../lib/helpers/mapped.types"
 import { CreatePlaylistDto } from "./create-playlist.dto"
 import { Transform } from "class-transformer"
 

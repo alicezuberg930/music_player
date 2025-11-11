@@ -1,6 +1,10 @@
 import express, { Request, Response } from "express"
 import { google } from "googleapis"
 import env from "../lib/helpers/env";
+import { multerOptions, Options } from "../lib/helpers/multer.options";
+import multer from "multer";
+import fs from "fs"
+import { deleteFile, uploadFile } from "../lib/helpers/drive.file";
 
 const testRouter = express.Router()
 
@@ -72,7 +76,7 @@ testRouter.get("/drive/files", async (req, res) => {
         // - or automatically use refresh_token to get a new access_token
         const response = await drive.files.list({
             pageSize: 10,
-            fields: "files(id, name)",
+            fields: "files(id, name, webViewLink, webContentLink)",
         });
 
         res.json(response.data.files || []);
@@ -88,6 +92,57 @@ testRouter.get("/drive/files", async (req, res) => {
 
         res.status(500).json({ error: "Drive API error", details: err.message });
     }
+});
+
+const uploadOptions: Options = {
+    allowedFields: ["audio", "lyrics", "thumbnail"],
+    allowed: {
+        audio: { mimes: ["audio/mpeg", "audio/wav"], exts: ["mp3", "wav"], maxSize: 15 * 1024 * 1024 },
+        lyrics: { mimes: ["text/plain"], exts: ["lrc", "txt"], maxSize: 2 * 1024 * 1024 },
+        thumbnail: { mimes: ["image/jpeg", "image/png"], exts: ["jpg", "jpeg", "png"], maxSize: 5 * 1024 * 1024 },
+    },
+}
+const upload = multer(multerOptions(uploadOptions))
+
+const DRIVE_FOLDER_ID = process.env.GOOGLE_DRIVE_FOLDER_ID || "1dz87C_CCZiFKUMfnRwd3BaqqCMFm5u9z";
+
+testRouter.post("/drive/files",
+    // upload.fields([
+    //     { name: "audio", maxCount: 1 },
+    //     { name: "lyrics", maxCount: 1 },
+    //     { name: "thumbnail", maxCount: 1 }
+    // ]),
+    upload.array("thumbnail", 5),
+    async (req, res) => {
+        try {
+            if (!req.files) {
+                return res.status(400).json({ error: "No file uploaded" });
+            }
+
+            const data = await uploadFile(req.files as Express.Multer.File[], '/audio');
+            return res.json({ data });
+        } catch (err: any) {
+            console.error("Drive upload error:", err?.response?.data || err);
+
+            if (err?.response?.data?.error === "invalid_grant") {
+                return res.status(401).json({
+                    error: "REAUTH_REQUIRED",
+                    message: "Refresh token invalid. Please reconnect at /auth/google.",
+                });
+            }
+
+            res.status(500).json({
+                error: "Upload failed",
+                details: err.message,
+            });
+        }
+    }
+);
+
+testRouter.delete("/drive/files/:id", async (req, res) => {
+    const fileId = req.params.id;
+    await deleteFile(fileId);
+    res.sendStatus(204);
 });
 
 export { testRouter }

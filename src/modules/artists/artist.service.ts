@@ -3,7 +3,7 @@ import { db, inArray } from "../../db"
 import { Artist } from "./artist.model"
 import { artists } from "../../db/schemas"
 import { BadRequestException, HttpException } from "../../lib/exceptions"
-import { uploadFile } from "../../lib/helpers/upload-file"
+import { uploadFile } from "../../lib/helpers/cloudinary.file"
 import { CreateArtistDto } from "./dto/create-artist.dto"
 
 export class ArtistService {

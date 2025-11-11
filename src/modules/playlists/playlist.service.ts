@@ -4,7 +4,7 @@ import { CreatePlayList, PlayList } from "./playlist.model"
 import { playlistArtists, playlists, playlistSongs, songs } from "../../db/schemas"
 import { BadRequestException, HttpException } from "../../lib/exceptions"
 import { CreatePlaylistDto } from "./dto/create-playlist.dto"
-import { uploadFile } from "../../lib/helpers/upload-file"
+import { uploadFile } from "../../lib/helpers/cloudinary.file"
 import { UpdatePlaylistDto } from "./dto/update-playlist.dto"
 
 export class PlaylistService {
@@ -42,7 +42,8 @@ export class PlaylistService {
         try {
             const { releaseDate, title, songIds, description } = request.body as CreatePlaylistDto
             let thumbnailUrl: string | null = null
-            const thumbnailFile: Express.Multer.File | null = request.file ?? null
+            const files = request.files as { [fieldname: string]: Express.Multer.File[] }
+            const thumbnailFile: Express.Multer.File | null = files['thumbnail']?.[0] ?? null
             if (thumbnailFile) {
                 thumbnailUrl = (await uploadFile(thumbnailFile.path, 'thumbnails')) as string
             }
@@ -56,7 +57,7 @@ export class PlaylistService {
                         with: { artist: { columns: { id: true, name: true } } }
                     }
                 }
-            }).then(results => results.map(song => ({
+            }).then(results => results?.map(song => ({
                 ...song,
                 artists: song.artists.map(a => a.artist)
             })))
@@ -85,62 +86,46 @@ export class PlaylistService {
             const { id } = request.params
             const { releaseDate, title, songIds, description } = request.body as UpdatePlaylistDto
             let thumbnailUrl: string | null = null
-            const thumbnailFile: Express.Multer.File | null = request.file ?? null
+            const files = request.files as { [fieldname: string]: Express.Multer.File[] }
+            const thumbnailFile: Express.Multer.File | null = files['thumbnail']?.[0] ?? null
             if (thumbnailFile) {
                 thumbnailUrl = (await uploadFile(thumbnailFile.path, 'thumbnails')) as string
             }
             const myPlaylist = await db.query.playlists.findFirst({
+                columns: { totalDuration: true },
                 where: eq(playlists.id, parseInt(id)),
-                with: {
-                    // artists: {
-                    //     columns: { id: false, artistId: false, playlistId: false },
-                    //     with: { artist: true }
-                    // },
-                    songs: {
-                        columns: { id: false },
-                        // with: { song: true }
-                    }
-                }
+                with: { artists: true, songs: true }
             })
-            // .then(playlist => ({
-            //     ...playlist,
-            //     songs: playlist?.songs.map(s => s.song)
-            // }))
             if (!myPlaylist) throw new BadRequestException('Playlist not found')
-            // return response.json({ message: 'Playlist fetched', data: myPlaylist })
-            // const currentPlaylistSongs = await db.query.playlistSongs.findMany({
-            //     where: eq(playlistSongs.playlistId, parseInt(id)),
-            //     columns: { songId: true }
-            // })
             const currentPlaylistSongIds = myPlaylist.songs.map(ps => ps.songId)
+            let totalDuration = myPlaylist.totalDuration!
             // the user can remove any song in the playlist or add new songs
             const songsToAdd = songIds.filter(songId => !currentPlaylistSongIds.includes(songId))
             const songsToRemove = currentPlaylistSongIds.filter(songId => !songIds.includes(songId))
-            // if (songsToAdd.length > 0) {
-            //     await db.insert(playlistSongs).values(songsToAdd.map(song => ({ songId: song, playlistId: parseInt(id) })))
-            // }
-            // if (songsToRemove.length > 0) {
-            //     await db.delete(playlistSongs).where(and(eq(playlistSongs.playlistId, parseInt(id)), inArray(playlistSongs.songId, songsToRemove)))
-            // }
-            if (songsToAdd.length > 0 || songsToRemove.length > 0) {
-                const updatedPlaylistSongs = await db.query.songs.findMany({
-                    columns: { duration: true },
-                    where: inArray(songs.id, songIds)
-                })
-                const totalDuration = updatedPlaylistSongs.reduce((total, song) => total + song.duration, 0)
+            if (songsToAdd.length > 0) {
+                await db.insert(playlistSongs).values(songsToAdd.map(song => ({ songId: song, playlistId: parseInt(id) })))
+                const addSongs = await db.query.songs.findMany({ columns: { duration: true }, where: inArray(songs.id, songsToAdd) })
+                totalDuration += addSongs.reduce((total, song) => total + song.duration, 0)
             }
-
+            if (songsToRemove.length > 0) {
+                await db.delete(playlistSongs).where(and(eq(playlistSongs.playlistId, parseInt(id)), inArray(playlistSongs.songId, songsToRemove)))
+                const removeSongs = await db.query.songs.findMany({ columns: { duration: true }, where: inArray(songs.id, songsToRemove) })
+                totalDuration -= removeSongs.reduce((total, song) => total + song.duration, 0)
+            }
+            const updatedArtists = await db.query.playlistSongs.findMany({
+                where: eq(playlistSongs.playlistId, parseInt(id)),
+                columns: {},
+                with: { song: { columns: { artistNames: true } } }
+            }).then(results => Array.from(new Set(results?.flatMap(ps => ps.song.artistNames?.split(', ') ?? []))))
             const playlist = {
                 releaseDate, title, description,
                 userId: request.userId,
-                thumbnail: thumbnailUrl ?? '/assets/default-playlist-thumbnail.png',
-                // totalDuration,
-                // artistNames: Array.from(new Set(chosenSongs.flatMap(song => song.artists.map(a => a?.name)))).join(', ')
+                ...thumbnailUrl && { thumbnail: thumbnailUrl },
+                totalDuration,
+                artistNames: updatedArtists.join(', ')
             } as PlayList
-            // const insertedPlaylist = await db.insert(playlists).values(playlist)
-            // await db.insert(playlistSongs).values(chosenSongs.map(song => ({ songId: song.id, playlistId: insertedPlaylist[0].insertId })))
-            // await db.insert(playlistArtists).values(artistIds.map(artistId => ({ artistId, playlistId: insertedPlaylist[0].insertId })))
-            return response.json({ songsToAdd, songsToRemove })
+            await db.update(playlists).set(playlist).where(eq(playlists.id, parseInt(id)))
+            return response.json({ message: 'Playlists updated successfully' })
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)

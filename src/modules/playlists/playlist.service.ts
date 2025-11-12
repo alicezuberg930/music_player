@@ -2,16 +2,16 @@ import { Request, Response } from "express"
 import { and, db, eq, inArray } from "../../db"
 import { CreatePlayList, PlayList } from "./playlist.model"
 import { playlistArtists, playlists, playlistSongs, songs } from "../../db/schemas"
-import { BadRequestException, HttpException } from "../../lib/exceptions"
+import { BadRequestException, HttpException, NotFoundException } from "../../lib/exceptions"
 import { CreatePlaylistDto } from "./dto/create-playlist.dto"
 import { uploadFile } from "../../lib/helpers/cloudinary.file"
 import { UpdatePlaylistDto } from "./dto/update-playlist.dto"
+import { QueryPlaylistDto } from "./dto/query-playlist.dto"
 
 export class PlaylistService {
-    public async getPlaylists(request: Request, response: Response) {
+    public async getPlaylists(request: Request<{}, {}, {}, QueryPlaylistDto>, response: Response) {
         try {
-            const { } = request.query
-            // Query with proper typing - don't exclude userId since Song type expects it
+            const { artistName, songTitle, title, releaseDate } = request.query
             const queryResult = await db.query.playlists.findMany({
                 with: {
                     user: { columns: { password: false, email: false } },
@@ -38,9 +38,9 @@ export class PlaylistService {
         }
     }
 
-    public async createPlaylist(request: Request, response: Response) {
+    public async createPlaylist(request: Request<{}, {}, CreatePlaylistDto>, response: Response) {
         try {
-            const { releaseDate, title, songIds, description } = request.body as CreatePlaylistDto
+            const { releaseDate, title, songIds, description } = request.body
             let thumbnailUrl: string | null = null
             const files = request.files as { [fieldname: string]: Express.Multer.File[] }
             const thumbnailFile: Express.Multer.File | null = files['thumbnail']?.[0] ?? null
@@ -81,10 +81,10 @@ export class PlaylistService {
         }
     }
 
-    public async updatePlaylist(request: Request, response: Response) {
+    public async updatePlaylist(request: Request<{ id: string }, {}, UpdatePlaylistDto>, response: Response) {
         try {
             const { id } = request.params
-            const { releaseDate, title, songIds, description } = request.body as UpdatePlaylistDto
+            const { releaseDate, title, songIds, description } = request.body
             let thumbnailUrl: string | null = null
             const files = request.files as { [fieldname: string]: Express.Multer.File[] }
             const thumbnailFile: Express.Multer.File | null = files['thumbnail']?.[0] ?? null
@@ -126,6 +126,30 @@ export class PlaylistService {
             } as PlayList
             await db.update(playlists).set(playlist).where(eq(playlists.id, parseInt(id)))
             return response.json({ message: 'Playlists updated successfully' })
+        } catch (error) {
+            if (error instanceof HttpException) throw error
+            throw new BadRequestException(error instanceof Error ? error.message : undefined)
+        }
+    }
+
+    public async findPlaylist(request: Request<{ id: string }>, response: Response) {
+        try {
+            const { id } = request.params
+            const data: PlayList | undefined = await db.query.playlists.findFirst({
+                where: eq(playlists.id, parseInt(id)),
+                with: {
+                    user: { columns: { password: false, email: false } },
+                    songs: {
+                        columns: { id: false, songId: false, playlistId: false },
+                        with: { song: true }
+                    }
+                }
+            }).then(playlist => playlist ? ({
+                ...playlist,
+                songs: playlist.songs.map(s => s.song)
+            }) : undefined)
+            if (!data) throw new NotFoundException('Playlist not found')
+            return response.json({ message: 'Playlist details fetched successfully', data })
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)

@@ -40,7 +40,7 @@ export const playlistsRelations = relations(playlists, ({ one, many }) => ({
 // playlist_artist table
 export const playlistArtists = mysqlTable("playlist_artists", {
     id: int().primaryKey().notNull().autoincrement(),
-    playlistId: int().references(() => playlists.id, { onDelete: "cascade" }),
+    playlistId: int().notNull().references(() => playlists.id, { onDelete: "cascade" }),
     artistId: int().references(() => artists.id, { onDelete: "set null" }),
 }, (t) => [
     index('playlist_id_idx').on(t.playlistId),

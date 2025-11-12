@@ -19,7 +19,7 @@ export const uploadFile = async (files: string[] | string, subFolder?: string): 
                 resource_type: 'raw'
             }),
         )
-        // upload all files concurrently
+        // Upload all files concurrently
         const uploadResults: UploadApiResponse[] = await Promise.all(uploadPromises)
         // Extract URLs from results
         const fileUrls = uploadResults.map((result) => result.secure_url)

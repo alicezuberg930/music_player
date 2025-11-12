@@ -13,6 +13,7 @@ import slugify from '../../lib/helpers/slugify'
 import { uploadFile } from '../../lib/helpers/cloudinary.file'
 // dto
 import { CreateSongDto } from './dto/create-song.dto'
+import { UpdateSongDto } from './dto/update-song.dto'
 
 export class SongService {
     public async getSongs(request: Request, response: Response) {
@@ -111,13 +112,11 @@ export class SongService {
         }
     }
 
-    public async updateSong(request: Request, response: Response) {
+    public async updateSong(request: Request<{ id: string }, {}, UpdateSongDto>, response: Response) {
         try {
             const { id } = request.params
-            const body = request.body as Song
-            const song = await db.update(songs).set(body).where(eq(songs.id, parseInt(id)))
-            console.log(song[0])
-            console.log(song[1])
+
+            const song = await db.update(songs).set({}).where(eq(songs.id, parseInt(id)))
             return response.json({ message: 'Song updated successfully' })
         } catch (error) {
             if (error instanceof HttpException) throw error
@@ -125,14 +124,15 @@ export class SongService {
         }
     }
 
-    public async findSong(request: Request, response: Response) {
+    public async findSong(request: Request<{ id: string }>, response: Response) {
         try {
             const { id } = request.params
-            const song = await db.query.songs.findFirst({
+            const data: Song | undefined = await db.query.songs.findFirst({
                 where: eq(songs.id, parseInt(id)),
-                columns: { userId: false },
                 with: {
-                    user: true,
+                    user: {
+                        columns: { password: false, email: false }
+                    },
                     genres: {
                         columns: { id: false, genreId: false, songId: false },
                         with: { genre: true }
@@ -142,16 +142,13 @@ export class SongService {
                         with: { artist: true }
                     }
                 }
-            })
-            if (!song) throw new NotFoundException('Song not found')
-            return response.json({
-                message: 'Song fetched successfully',
-                data: {
-                    ...song,
-                    artists: song.artists.map(a => a.artist),
-                    genres: song.genres.map(g => g.genre)
-                }
-            })
+            }).then(song => song ? ({
+                ...song,
+                artists: song.artists.map(s => s.artist),
+                genres: song.genres.map(g => g.genre)
+            }) : undefined)
+            if (!data) throw new NotFoundException('Song not found')
+            return response.json({ message: 'Song fetched successfully', data })
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)

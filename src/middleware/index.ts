@@ -1,3 +1,5 @@
 export { notFoundHandlerMiddleware } from './notfound.middleware'
 export { errorHandlerMiddleware } from './error.middleware'
 export { validateDtoHanlder } from './dto.validator.middleware'
+export { JWTMiddleware } from './jwt.middleware'
+export { fileMimeAndSizeOptions } from './file.type.validator'

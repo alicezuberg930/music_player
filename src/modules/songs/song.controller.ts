@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import { SongService } from "./song.service"
 import { CreateSongDto } from "./dto/create-song.dto"
+import { UpdateSongDto } from "./dto/update-song.dto"
 
 class SongController {
     private songService
@@ -17,7 +18,11 @@ class SongController {
         return await this.songService.createSong(request, response)
     }
 
-    public async findSong(request: Request, response: Response) {
+    public async updateSong(request: Request<{ id: string }, {}, UpdateSongDto>, response: Response) {
+        return await this.songService.updateSong(request, response)
+    }
+
+    public async findSong(request: Request<{ id: string }>, response: Response) {
         return await this.songService.findSong(request, response)
     }
 }

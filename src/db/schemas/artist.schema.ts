@@ -1,7 +1,7 @@
 import { mysqlTable, varchar, boolean, int, text } from "drizzle-orm/mysql-core"
 import { createdAt, updatedAt } from "../utils"
 import { relations } from "drizzle-orm"
-import { artistsSongs } from "./"
+import { artistsSongs, playlistArtists } from "./"
 
 export const artists = mysqlTable("artists", {
     id: int().primaryKey().notNull().autoincrement(),
@@ -15,5 +15,6 @@ export const artists = mysqlTable("artists", {
 })
 
 export const artistsRelations = relations(artists, ({ one, many }) => ({
-    songs: many(artistsSongs)
+    songs: many(artistsSongs),
+    playlists: many(playlistArtists),
 }))

@@ -1,12 +1,11 @@
 import express, { Request, Response } from "express"
 import playlistController from "./playlist.controller"
-import { JWTMiddleware } from "../../middleware/jwt.middleware"
 import multer from "multer"
 import { multerOptions, Options } from "../../lib/helpers/multer.options"
-import { validateDtoHanlder } from "../../middleware"
+import { validateDtoHanlder, JWTMiddleware, fileMimeAndSizeOptions } from "../../middleware"
 import { CreatePlaylistDto } from "./dto/create-playlist.dto"
-import { fileMimeAndSizeOptions } from "../../middleware/file.type.validator"
 import { UpdatePlaylistDto } from "./dto/update-playlist.dto"
+import { QueryPlaylistDto } from "./dto/query-playlist.dto"
 
 const playlistRouter = express.Router()
 
@@ -19,25 +18,26 @@ const uploadOptions: Options = {
 const upload = multer(multerOptions(uploadOptions))
 const fileValidator = fileMimeAndSizeOptions(uploadOptions)
 
-playlistRouter.get("/playlists", (request: Request, response: Response) => playlistController.getPlaylists(request, response))
+playlistRouter.get("/playlists",
+    (request: Request<{}, {}, {}, QueryPlaylistDto>, response: Response) => playlistController.getPlaylists(request, response)
+)
 
 playlistRouter.post("/playlists",
     JWTMiddleware,
     upload.fields([{ name: "thumbnail", maxCount: 1 }]),
     fileValidator,
     validateDtoHanlder(CreatePlaylistDto),
-    (request: Request, response: Response) => playlistController.createPlaylist(request, response)
+    (request: Request<{}, {}, CreatePlaylistDto>, response: Response) => playlistController.createPlaylist(request, response)
 )
 
-playlistRouter.get("/playlists/:id", async (request: Request, response: Response) => {
-})
+playlistRouter.get("/playlists/:id", (request: Request<{ id: string }>, response: Response) => playlistController.findPlaylist(request, response))
 
 playlistRouter.put("/playlists/:id",
     JWTMiddleware,
     upload.fields([{ name: "thumbnail", maxCount: 1 }]),
     fileValidator,
     validateDtoHanlder(UpdatePlaylistDto),
-    (request: Request, response: Response) => playlistController.updatePlaylist(request, response)
+    (request: Request<{ id: string }, {}, UpdatePlaylistDto>, response: Response) => playlistController.updatePlaylist(request, response)
 )
 
 export { playlistRouter }

@@ -1,12 +1,10 @@
 import express, { Request, Response } from "express"
 import songController from "./song.controller"
-import { validateDtoHanlder } from "../../middleware/dto.validator.middleware"
 import { CreateSongDto } from "./dto/create-song.dto"
 import multer from "multer"
 import { multerOptions, Options } from "../../lib/helpers/multer.options"
-import { JWTMiddleware } from "../../middleware/jwt.middleware"
 import { UpdateSongDto } from "./dto/update-song.dto"
-import { fileMimeAndSizeOptions } from "../../middleware/file.type.validator"
+import { fileMimeAndSizeOptions, validateDtoHanlder, JWTMiddleware } from "../../middleware"
 
 const songRouter = express.Router()
 
@@ -35,15 +33,20 @@ songRouter.post("/songs",
     (request: Request<{}, {}, CreateSongDto>, response: Response) => songController.createSong(request, response)
 )
 
-songRouter.get("/songs/:id",
-    upload.none(),
+songRouter.put("/songs/:id",
+    JWTMiddleware,
+    upload.fields([
+        { name: "audio", maxCount: 1 },
+        { name: "lyrics", maxCount: 1 },
+        { name: "thumbnail", maxCount: 1 }
+    ]),
+    fileValidator,
     validateDtoHanlder(UpdateSongDto),
-    (request: Request, response: Response) => songController.findSong(request, response)
+    (request: Request<{ id: string }, {}, UpdateSongDto>, response: Response) => songController.updateSong(request, response)
 )
 
-songRouter.put("/songs/:id", async (request: Request, response: Response) => {
-    const { id } = request.params
-    response.json({ id })
-})
+songRouter.get("/songs/:id",
+    (request: Request<{ id: string }>, response: Response) => songController.findSong(request, response)
+)
 
 export { songRouter }

@@ -70,12 +70,13 @@ export const uploadFile = async (files: Express.Multer.File[] | Express.Multer.F
         const tempFiles = Array.isArray(files) ? files : [files]
         const drive = getDriveClient()
         const currentParentId = subFolder ? await checkOrCreateSubfolder(drive, subFolder) : ROOT_FOLDER_ID
+        // Upload all files to google drive concurrently
         const result: UploadResult[] = await Promise.all(
             tempFiles.map(async (file) => {
                 const { path, mimetype, filename } = file
                 console.log(file)
                 const fileStream = fs.createReadStream(path)
-                // upload to google Drive into specific folder with currentParentId
+                // Specific folder with currentParentId
                 const { data } = await drive.files.create({
                     requestBody: {
                         name: filename,
@@ -87,7 +88,7 @@ export const uploadFile = async (files: Express.Multer.File[] | Express.Multer.F
                     },
                     fields: 'id, name, webViewLink, webContentLink',
                 }) as { data: UploadResult }
-                // make file public for downloading so it can be loaded to audio player
+                // Make file public for downloading so it can be loaded to audio player
                 await drive.permissions.create({
                     fileId: data.id,
                     requestBody: { role: 'reader', type: 'anyone' },
@@ -95,6 +96,7 @@ export const uploadFile = async (files: Express.Multer.File[] | Express.Multer.F
                 return data
             })
         )
+        // Delete all local files concurrently
         await Promise.all(
             tempFiles.map((file) =>
                 fs.unlink(file.path, (err) => {

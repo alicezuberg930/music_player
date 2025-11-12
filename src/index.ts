@@ -2,7 +2,7 @@ import 'reflect-metadata'
 import express, { Request, response, Response } from 'express'
 import env from './lib/helpers/env'
 import { errorHandlerMiddleware, notFoundHandlerMiddleware } from './middleware'
-import { realtimeChat } from './modules/socket/realtime.chat'
+// import { realtimeChat } from './modules/socket/realtime.chat'
 import { artistRouter, playlistRouter, songRouter, userRouter } from './modules'
 import { testRouter } from './modules/test'
 
@@ -17,7 +17,7 @@ app.get('/', (_: Request, res: Response) => {
     res.json({ message: 'Welcome to the Express + TypeScript Server!' })
 })
 
-realtimeChat(app)
+// realtimeChat(app)
 
 // map routers to express server
 app.use('/api/v1', [userRouter, playlistRouter, songRouter, artistRouter])

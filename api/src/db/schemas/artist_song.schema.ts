@@ -4,7 +4,7 @@ import { relations } from "drizzle-orm"
 
 export const artistsSongs = mysqlTable("artists_songs", {
     id: int().primaryKey().notNull().autoincrement(),
-    artistId: int().notNull().references(() => artists.id, { onDelete: "restrict" }),
+    artistId: int().notNull().references(() => artists.id, { onDelete: "cascade" }),
     songId: int().notNull().references(() => songs.id, { onDelete: "cascade" }),
 }, (t) => [
     index('artist_id_idx').on(t.artistId),

@@ -1,4 +1,4 @@
-import { paths } from "./global_paths"
+import { paths } from "./paths"
 import { icons } from "./icons"
 const { MdOutlineFeed, MdOutlineLibraryMusic, TbChartArcs, HiOutlineChartPie } = icons
 

@@ -1,14 +1,11 @@
 import { useCallback, useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { playPlaylist, setCurrentSongId, setPlay } from "../store/actions/music_actions"
 import { useNavigate } from "react-router-dom"
 import { icons } from "@/lib/icons"
 
 let interval: number | undefined
 
 const HomeBannerSlider = () => {
-    const dispatch = useDispatch()
-    const { banners } = useSelector(state => state.app)
+    const banners: any = []
     const navigate = useNavigate()
     const { MdArrowBackIosNew, MdArrowForwardIos } = icons
     const [min, setMin] = useState(0)
@@ -29,29 +26,18 @@ const HomeBannerSlider = () => {
         return output
     }
 
-    const handleClickBanner = (item) => {
-        if (item?.type === 1) {
-            dispatch(setCurrentSongId(item?.encodeId))
-            dispatch(setPlay(true))
-            dispatch(playPlaylist(false))
-        }
-        if (item?.type === 2) {
+    const handleClickBanner = (item: any) => {
 
-        }
-        if (item?.type === 4) {
-            const playlistPath = item?.link?.split('.')[0]
-            navigate(playlistPath)
-        }
     }
 
-    const handleBannerAnimation = (step) => {
-        const slider = document.getElementsByClassName('slider-item')
+    const handleBannerAnimation = (step: number) => {
+        const slider = document.getElementsByClassName('slider-item') as HTMLCollectionOf<HTMLElement>
         const list = getArrSlider(min, max, slider.length - 1)
         for (let i = 0; i < slider.length; i++) {
             // reset animations from the images
-            slider[i]?.classList?.remove('animate-slide-right', 'order-last', 'z-20')
-            slider[i]?.classList?.remove('animate-slide-left', 'order-first', 'z-10')
-            slider[i]?.classList?.remove('animate-slide-left-2', 'order-2', 'z-10')
+            slider[i].classList.remove('animate-slide-right', 'order-last', 'z-20')
+            slider[i].classList.remove('animate-slide-left', 'order-first', 'z-10')
+            slider[i].classList.remove('animate-slide-left-2', 'order-2', 'z-10')
             // show image within min and max range and hide image outside of that range
             if (list.some(item => item === i)) {
                 slider[i].style.display = 'block'
@@ -62,11 +48,11 @@ const HomeBannerSlider = () => {
         // add animation for the images (the first one to most right and the 2nd and 3rd to left)
         list.forEach(item => {
             if (item === max) {
-                slider[item]?.classList?.add('animate-slide-right', 'order-last', 'z-20')
+                slider[item].classList.add('animate-slide-right', 'order-last', 'z-20')
             } else if (item === min) {
-                slider[item]?.classList?.add('animate-slide-left', 'order-first', 'z-10')
+                slider[item].classList.add('animate-slide-left', 'order-first', 'z-10')
             } else {
-                slider[item]?.classList?.add('animate-slide-left-2', 'order-2', 'z-10')
+                slider[item].classList.add('animate-slide-left-2', 'order-2', 'z-10')
             }
         })
         if (step === 1) {
@@ -111,7 +97,7 @@ const HomeBannerSlider = () => {
                 <span><MdArrowBackIosNew size={30} /></span>
             </button>
             {
-                banners?.map((item, index) => {
+                banners?.map((item: any, index: number) => {
                     return (
                         <img key={item.encodeId} src={item.banner} alt="banner"
                             onClick={() => handleClickBanner(item)}

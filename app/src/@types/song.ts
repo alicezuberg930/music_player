@@ -10,7 +10,7 @@ export type Song = {
     isPrivate: boolean | null;
     releaseDate: string | null;
     distributor: string | null;
-    stream: string | null;
+    stream: string;
     isIndie: boolean | null;
     mvlink: string | null;
     hasLyrics: boolean | null;
@@ -25,11 +25,10 @@ export type Song = {
 }
 
 export type IMusicState = {
-    songId: string | null
     isPlaying: boolean
     recentSongs: Song[]
     currentSongs: Song[]
-    isPlaylistPlaying: boolean
+    isPlaylist: boolean
     currentSong: Song | null
     currentPlaylistName: string | null
 }

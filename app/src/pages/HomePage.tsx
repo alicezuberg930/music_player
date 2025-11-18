@@ -1,19 +1,19 @@
 import { useSelector } from "react-redux"
-import HomeBannerSlider from "../sections/HomeBannerSlider"
-import PlaylistSection from "../sections/PlaylistSection"
-import NewReleaseList from "../sections/NewReleaseList"
+import HomeBannerSlider from "@/sections/HomeBannerSlider"
+import PlaylistSection from "@/sections/PlaylistSection"
+import NewReleaseList from "@/sections/NewReleaseList"
 import { Link } from "react-router-dom"
-import ChartSection from "../sections/ChartSection"
-import { favoriteArtistsHC, spotLightArtistsHC } from "../assets/dummy_data"
-import ArtistCard from "../sections/ArtistCard"
+import ChartSection from "@/sections/ChartSection"
+import { favoriteArtistsHC, spotLightArtistsHC } from "@/assets/dummy_data"
+import ArtistCard from "@/sections/ArtistCard"
 import { Triangle } from "react-loader-spinner"
 
 const HomePage = () => {
-    const { playlistsList, weekCharts, newRelease, favoriteArtists, spotLightArtists } = useSelector(state => state.app)
+    // const { playlistsList, weekCharts, newRelease, favoriteArtists, spotLightArtists } = useSelector(state => state.app)
 
     return (
         <>
-            {playlistsList && weekCharts && newRelease ?
+            {/* {playlistsList && weekCharts && newRelease ?
                 <div>
                     <HomeBannerSlider />
                     {
@@ -69,7 +69,7 @@ const HomePage = () => {
                 <div className="w-full h-full flex items-center justify-center">
                     <Triangle height={80} width={80} />
                 </div>
-            }
+            } */}
         </>
     )
 }

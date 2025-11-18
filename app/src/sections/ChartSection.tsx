@@ -4,7 +4,7 @@ import { useSelector } from "react-redux"
 import SongItem from "@/sections/SongItem"
 import { deepObjectComparison } from "@/lib/utils";
 import { Link } from "react-router-dom";
-import { paths } from '@/lib/global_paths';
+import { paths } from '@/lib/paths';
 import { icons } from "@/lib/icons";
 import { Line } from "react-chartjs-2";
 

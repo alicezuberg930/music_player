@@ -2,12 +2,11 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { IMusicState, Song } from '@/@types/song'
 
 const initialState: IMusicState = {
-  songId: null,
   isPlaying: false,
   recentSongs: [],
   currentSongs: [],
   currentSong: null,
-  isPlaylistPlaying: false,
+  isPlaylist: false,
   currentPlaylistName: null
 }
 
@@ -15,6 +14,18 @@ const slice = createSlice({
   name: 'music',
   initialState,
   reducers: {
+    setCurrentPlaylistName(state, action) {
+      state.currentPlaylistName = action.payload as string
+    },
+    setCurrentSong(state, action) {
+      state.currentSong = action.payload as Song
+    },
+    setIsPlaying(state, action) {
+      state.isPlaying = action.payload as boolean
+    },
+    setCurrentSongs(state, action) {
+      state.currentSongs = action.payload as Song[]
+    },
     addRecentSong(state, action) {
       let songs = state.recentSongs
       const newSong = action.payload as Song
@@ -23,6 +34,9 @@ const slice = createSlice({
       if (songs.length > 29)
         songs.pop()
       state.recentSongs = [newSong, ...songs]
+    },
+    setIsPlaylist(state, action) {
+      state.isPlaylist = action.payload as boolean
     },
 
     // removeRecentSong(state, action) {
@@ -84,29 +98,6 @@ const slice = createSlice({
 
     //   state.checkout.cart = updateCart
     // },
-
-    createBilling(state, action) {
-      if (action.payload._id) delete action.payload._id
-      state.billing = action.payload
-    },
-
-    applyDiscount(state, action) {
-      const discount = action.payload
-      state.discount = discount
-      state.total = state.subTotal - discount
-    },
-
-    applyShipping(state, action) {
-      const shipping = action.payload
-      state.shipping = shipping
-      state.total = state.subTotal - state.discount + shipping
-    },
-
-    applyPaymentMethod(state, action) {
-      const paymentMethod = action.payload
-      state.paymentMethod = paymentMethod
-    },
-
   },
 })
 
@@ -115,13 +106,13 @@ export default slice.reducer
 
 // Actions
 export const {
+  setCurrentPlaylistName,
+  setCurrentSong,
+  setIsPlaying,
   addRecentSong,
+  setIsPlaylist,
   resetCart,
   gotoStep,
   backStep,
   nextStep,
-  createBilling,
-  applyShipping,
-  applyDiscount,
-  applyPaymentMethod,
 } = slice.actions

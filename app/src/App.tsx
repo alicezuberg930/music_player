@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { paths } from "./lib/global_paths";
+import { paths } from "./lib/paths";
 import { ArtistPage, HomePage, LoginPage, PlaylistPage, PublicPage, SearchAllPage, SearchArtistPage, SearchMVPage, SearchPage, SearchPlaylistPage, SearchSongPage, VideoClipPage, WeeklyZingChartPage, ZingChartPage } from "./pages";
 
 export default function App() {

@@ -1,22 +1,19 @@
 import { useEffect, useRef, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { getSongDetails, getSongStreaming } from "../services/api.service"
+import { fetchSong } from "@/lib/http.client"
 import { icons } from "@/lib/icons"
-import { playPlaylist, setCurrentSong, setCurrentSongId, setPlay } from "../store/actions/music_actions"
 import { formatDuration } from "@/lib/utils"
 import { toast } from "react-toastify"
 import { RotatingLines } from "react-loader-spinner"
-import { setShowSideBarRight } from "../store/actions/home_actions"
+import { useDispatch, useSelector } from "@/redux/store"
+import { setCurrentSong, setIsPlaying, setIsPlaylist } from "@/redux/slices/music"
 
 let thumbInterval: number | undefined
 
 const Player = () => {
     const [volume, setVolume] = useState(50)
-    const [audio, setAudio] = useState(new Audio())
+    const [audio, setAudio] = useState<HTMLAudioElement | null>(null)
     const dispatch = useDispatch()
-    const { showSideBarRight } = useSelector(state => state.app)
-    const { currentSongId, isPlaying, isPlaylistPlaying, currentSongs } = useSelector(state => state.music)
-    const [songDetails, setSongDetails] = useState<any>(null)
+    const { currentSong, isPlaying, isPlaylist, currentSongs } = useSelector(state => state.music)
     const { AiOutlineHeart, BsThreeDots, MdSkipNext, MdSkipPrevious, CiRepeat, CiShuffle, BsPlayFill, BsPauseFill, TbRepeatOnce, BsMusicNoteList, SlVolumeOff, SlVolume1, SlVolume2 } = icons
     const [currentSecond, setCurrentSecond] = useState(0)
     const [shuffle, setShuffle] = useState(false)
@@ -29,21 +26,19 @@ const Player = () => {
         const trackRect = trackRef.current.getBoundingClientRect()
         const percent = Math.round(((e.clientX - trackRect.left) / trackRect.width) * 100)
         thumb.current.style.cssText = `right: ${100 - percent}%`
-        audio.currentTime = songDetails.duration * percent / 100
+        audio && (audio.currentTime = currentSong!.duration * percent / 100)
     }
 
     const handleClickNext = () => {
         if (currentSongs.length > 0) {
-            let currentSong
-            currentSongs.forEach((item: any, index: number) => {
-                if (item.encodeId === currentSongId) {
-                    currentSong = index
-                    if (currentSongs[currentSong + 1]) {
-                        dispatch(setCurrentSongId(currentSongs[currentSong + 1].encodeId))
-                        dispatch(setPlay(true))
+            currentSongs.forEach((item, index) => {
+                if (item.id === currentSong?.id) {
+                    if (currentSongs[index + 1]) {
+                        dispatch(setCurrentSong(currentSongs[index + 1]))
+                        dispatch(setIsPlaying(true))
                     }
-                    if (currentSong + 1 < currentSongs.length - 1) {
-                        dispatch(playPlaylist(false))
+                    if (index + 1 < currentSongs.length - 1) {
+                        dispatch(setIsPlaylist(false))
                     }
                     return
                 }
@@ -53,16 +48,14 @@ const Player = () => {
 
     const handleClickPrevious = () => {
         if (currentSongs.length > 0) {
-            let currentSong
-            currentSongs.forEach((item: any, index: number) => {
-                if (item.encodeId === currentSongId) {
-                    currentSong = index
-                    if (currentSongs[currentSong - 1]) {
-                        dispatch(setCurrentSongId(currentSongs[currentSong - 1].encodeId))
-                        dispatch(setPlay(true))
+            currentSongs.forEach((item, index) => {
+                if (item.id === currentSong?.id) {
+                    if (currentSongs[index - 1]) {
+                        dispatch(setCurrentSong(currentSongs[index - 1]))
+                        dispatch(setIsPlaying(true))
                     }
-                    if (currentSong - 1 === 0) {
-                        dispatch(playPlaylist(false))
+                    if (index - 1 === 0) {
+                        dispatch(setIsPlaylist(false))
                     }
                 }
             })
@@ -71,23 +64,23 @@ const Player = () => {
 
     const handleToggleButton = () => {
         if (isPlaying) {
-            dispatch(setPlay(false))
-            audio.pause()
+            dispatch(setIsPlaying(false))
+            audio?.pause()
         } else {
-            dispatch(setPlay(true))
-            audio.play()
+            dispatch(setIsPlaying(true))
+            audio?.play()
         }
     }
 
     const handleClickShuffle = () => {
         const randomIndex = Math.round(Math.random() * (currentSongs.length - 1))
-        dispatch(setCurrentSongId(currentSongs[randomIndex].encodeId))
-        dispatch(setPlay(true))
+        dispatch(setCurrentSong(currentSongs[randomIndex]))
+        dispatch(setIsPlaying(true))
     }
 
     const handleClickOne = () => {
-        audio.currentTime = 0
-        audio.play()
+        audio && (audio.currentTime = 0)
+        audio?.play()
     }
 
     // const playAudio = async () => {
@@ -98,21 +91,18 @@ const Player = () => {
     //     if (!audio.paused && isPlaying) audio.pause()
     // }
 
-    const getSong = async (id: string) => {
+    const getSong = async (id: number) => {
         try {
-            const [songDetailsResponse, songStreamingResponse] = await Promise.all([getSongDetails(id), getSongStreaming(id)])
-            if (songDetailsResponse.err === 0) {
-                setSongDetails(songDetailsResponse.data)
-                dispatch(setCurrentSong(songDetailsResponse.data))
-            }
+            const [song] = await Promise.all([fetchSong(id)])
             setIsLoading(false)
-            audio.pause()
-            if (songStreamingResponse.err === 0) {
-                setAudio(new Audio(songStreamingResponse.data['128']))
+            audio?.pause()
+            if (song.statusCode === 200) {
+                dispatch(setCurrentSong(song.data))
+                setAudio(new Audio(song.data.stream))
             } else {
-                setAudio(new Audio())
-                dispatch(setPlay(false))
-                toast.warn(songStreamingResponse.msg)
+                setAudio(null)
+                dispatch(setIsPlaying(false))
+                toast.warn(song.message)
                 setCurrentSecond(0)
                 thumb.current.style.cssText = `right: 100%`
             }
@@ -122,33 +112,26 @@ const Player = () => {
     }
 
     useEffect(() => {
-        audio.volume = (volume / 100)
+        audio && (audio.volume = (volume / 100))
     }, [volume])
 
     useEffect(() => {
-        getSong(currentSongId)
-    }, [currentSongId])
-
-    useEffect(() => {
-        // On video playing toggle values
-        audio.onplaying = () => {
-            dispatch(setPlay(true))
-        }
-
-        // On video pause toggle values
-        audio.onpause = () => {
-            dispatch(setPlay(false))
-        }
-    }, [])
+        getSong(currentSong!.id)
+    }, [currentSong])
 
     useEffect(() => {
         thumbInterval && clearInterval(thumbInterval)
+        if (!audio) return
         audio.load()
         audio.currentTime = 0
+        // On audio playing toggle values
+        audio.onplaying = () => dispatch(setIsPlaying(true))
+        // On audio pause toggle values
+        audio.onpause = () => dispatch(setIsPlaying(false))
         if (isPlaying && thumb.current) {
-            setTimeout(() => { audio.play() }, 250)
+            audio.play()
             thumbInterval = setInterval(() => {
-                let percent = Math.round((audio.currentTime / songDetails?.duration) * 10000) / 100
+                let percent = Math.round((audio.currentTime / currentSong!.duration) * 10000) / 100
                 thumb.current.style.cssText = `right: ${100 - percent}%`
                 setCurrentSecond(Math.round(audio.currentTime))
             }, 500)
@@ -159,7 +142,7 @@ const Player = () => {
             } else if (repeatMode > 0) {
                 repeatMode === 1 ? handleClickOne() : handleClickNext()
             } else {
-                dispatch(setPlay(false))
+                dispatch(setIsPlaying(false))
                 audio.pause()
             }
         }
@@ -171,10 +154,10 @@ const Player = () => {
         <div className="sticky bottom-0 left-0 right-0 z-20">
             <div className="flex justify-between bg-main-400 px-5 py-2">
                 <div className="w-[30%] hidden sm:flex justify-start items-center gap-4">
-                    <img src={songDetails?.thumbnailM} alt="thumbnail" className="w-16 h-16 object-cover" />
+                    <img src={currentSong?.thumbnail} alt="thumbnail" className="w-16 h-16 object-cover" />
                     <div className="flex flex-col">
-                        <span className="font-semibold text-gray-700 text-sm line-clamp-2 text-ellipsis">{songDetails?.title}</span>
-                        <span className="text-gray-500 text-xs line-clamp-2 text-ellipsis">{songDetails?.artistsNames}</span>
+                        <span className="font-semibold text-gray-700 text-sm line-clamp-2 text-ellipsis">{currentSong?.title}</span>
+                        <span className="text-gray-500 text-xs line-clamp-2 text-ellipsis">{currentSong?.artistNames}</span>
                     </div>
                     <span className="p-2">
                         <AiOutlineHeart size={20} />
@@ -188,13 +171,13 @@ const Player = () => {
                         <span title="Bật phát ngẫu nhiên" className={`cursor-pointer ${shuffle && 'text-purple-600'}`}>
                             <CiShuffle size={20} onClick={() => setShuffle(!shuffle)} />
                         </span>
-                        <span className={`${isPlaylistPlaying > 0 ? 'cursor-pointer' : 'text-gray-500'}`}>
+                        <span className={`${isPlaylist ? 'cursor-pointer' : 'text-gray-500'}`}>
                             <MdSkipPrevious size={20} onClick={handleClickPrevious} />
                         </span>
                         <span onClick={handleToggleButton} className="hover:text-main-500 border rounded-full border-gray-700 p-1" >
                             {isLoading ? <RotatingLines strokeColor="grey" width="26" /> : isPlaying ? <BsPauseFill size={26} /> : <BsPlayFill size={26} />}
                         </span>
-                        <span className={`${isPlaylistPlaying > 0 ? 'cursor-pointer' : 'text-gray-500'}`}>
+                        <span className={`${isPlaylist ? 'cursor-pointer' : 'text-gray-500'}`}>
                             <MdSkipNext size={20} onClick={handleClickNext} />
                         </span>
                         <span
@@ -212,7 +195,7 @@ const Player = () => {
                         >
                             <div ref={thumb} className="absolute top-0 left-0 bottom-0 h-full bg-[#0e8080] rounded-full"></div>
                         </div>
-                        <span>{formatDuration(songDetails?.duration)}</span>
+                        <span>{formatDuration(currentSong?.duration ?? 0)}</span>
                     </div>
                 </div>
                 <div className="w-[30%] hidden md:flex items-center justify-end gap-4">
@@ -223,7 +206,7 @@ const Player = () => {
                     </span>
                     <input type="range" step={1} min={0} max={100} onChange={(e) => setVolume(Number(e.target.value))} value={volume} className="bg-main-500 h-1 hover:h-2" />
                     <span className="p-1.5 rounded-md cursor-pointer bg-main-500 text-white opacity-90 hover:opacity-100">
-                        <BsMusicNoteList size={18} onClick={() => dispatch(setShowSideBarRight(!showSideBarRight))} />
+                        <BsMusicNoteList size={18} onClick={() => { }} />
                     </span>
                 </div>
             </div>

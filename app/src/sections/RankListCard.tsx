@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react"
 import SongCard from "./SongCard"
 import { useNavigate } from "react-router-dom"
+import type { Song } from "@/@types/song"
 
 type Props = {
-    songs: any[]
+    songs: Song[]
     hideAlbum?: boolean
     initialAmount: number
     link?: string

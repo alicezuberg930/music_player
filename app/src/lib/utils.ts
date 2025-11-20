@@ -40,3 +40,9 @@ export const deepObjectComparison = (obj1: any, obj2: any) => {
   }
   return true;
 }
+
+export function getBaseUrl(): string {
+  if (typeof window !== 'undefined') return window.location.origin
+  if (import.meta.env.PRODUCTION_URL) return import.meta.env.PRODUCTION_URL
+  return `http://localhost:${import.meta.env.PORT ?? 3000}`
+}

@@ -1,6 +1,7 @@
 export { default as PublicPage } from './PublicPage';
 export { default as PlaylistPage } from './PlaylistPage';
-export { default as LoginPage } from './LoginPage';
+export { default as SigninPage } from './SigninPage';
+export { default as SignupPage } from './SignupPage';
 export { default as HomePage } from './HomePage';
 export { default as ArtistPage } from './ArtistPage';
 export { default as SearchAllPage } from './SearchAllPage';

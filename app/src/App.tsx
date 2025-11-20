@@ -1,13 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 import { paths } from "./lib/paths";
-import { ArtistPage, HomePage, LoginPage, PlaylistPage, PublicPage, SearchAllPage, SearchArtistPage, SearchMVPage, SearchPage, SearchPlaylistPage, SearchSongPage, VideoClipPage, WeeklyZingChartPage, ZingChartPage } from "./pages";
+import { ArtistPage, HomePage, SigninPage, SignupPage, PlaylistPage, PublicPage, SearchAllPage, SearchArtistPage, SearchMVPage, SearchPage, SearchPlaylistPage, SearchSongPage, VideoClipPage, WeeklyZingChartPage, ZingChartPage } from "./pages";
 
 export default function App() {
   return (
     <Routes>
       <Route path={paths.PUBLIC} element={<PublicPage />} >
         <Route path={paths.HOME} element={<HomePage />} />
-        <Route path={paths.LOGIN} element={<LoginPage />} />
         <Route path={paths.PLAYLIST__TITLE__ID} element={<PlaylistPage />} />
         <Route path={paths.ALBUM__TITLE__ID} element={<PlaylistPage />} />
         <Route path={paths.WEEKRANK__TITLE__ID} element={<WeeklyZingChartPage />} />
@@ -22,6 +21,8 @@ export default function App() {
         <Route path={paths.ARTIST__NAME} element={<ArtistPage />} />
       </Route>
       <Route path={paths.VIDEOCLIP__TITLE__ID} element={<VideoClipPage />} />
+      <Route path={paths.SIGNIN} element={<SigninPage />} />
+      <Route path={paths.SIGNUP} element={<SignupPage />} />
     </Routes>
   )
 }

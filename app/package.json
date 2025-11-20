@@ -26,10 +26,12 @@
     "cmdk": "^1.1.1",
     "hls.js": "^1.6.14",
     "lucide-react": "^0.546.0",
+    "notistack": "^3.0.2",
     "react": "^19.1.1",
     "react-chartjs-2": "^5.3.1",
     "react-day-picker": "^9.11.1",
     "react-dom": "^19.1.1",
+    "react-helmet-async": "^2.0.5",
     "react-hook-form": "^7.65.0",
     "react-icons": "^5.5.0",
     "react-loader-spinner": "^8.0.0",
@@ -40,6 +42,9 @@
     "redux-thunk": "^3.1.0",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.15",
+    "vite-plugin-html": "^3.2.2",
+    "vite-plugin-pages": "^0.33.1",
+    "vite-plugin-sitemap": "^0.8.2",
     "yup": "^1.7.1"
   },
   "devDependencies": {

@@ -1,18 +1,17 @@
-import { useRef } from 'react';
-import { SnackbarProvider as NotistackProvider, type SnackbarKey } from 'notistack';
-//
-import { Check, Info, OctagonAlert, X } from 'lucide-react';
+import { useRef } from 'react'
+import { SnackbarProvider as NotistackProvider, type SnackbarKey } from 'notistack'
+import { Check, Info, OctagonAlert, X } from 'lucide-react'
 
 type Props = {
-  children: React.ReactNode;
-};
+  children: React.ReactNode
+}
 
 export default function SnackbarProvider({ children }: Props) {
-  const notistackRef = useRef<NotistackProvider>(null);
+  const notistackRef = useRef<NotistackProvider | null>(null)
 
   const onClose = (key: SnackbarKey) => () => {
-    notistackRef.current?.closeSnackbar(key);
-  };
+    notistackRef.current?.closeSnackbar(key)
+  }
 
   return (
     <>
@@ -30,7 +29,6 @@ export default function SnackbarProvider({ children }: Props) {
           warning: <SnackbarIcon icon={<OctagonAlert color="warning" />} color="warning" />,
           error: <SnackbarIcon icon={<OctagonAlert color="warning" />} color="error" />,
         }}
-        // With close as default
         action={(key) => (
           <X onClick={onClose(key)} className='p-2' />
         )}
@@ -38,15 +36,13 @@ export default function SnackbarProvider({ children }: Props) {
         {children}
       </NotistackProvider>
     </>
-  );
+  )
 }
 
-// ----------------------------------------------------------------------
-
 type SnackbarIconProps = {
-  icon: React.ReactNode;
-  color: 'info' | 'success' | 'warning' | 'error';
-};
+  icon: React.ReactNode
+  color: 'info' | 'success' | 'warning' | 'error'
+}
 
 function SnackbarIcon({ icon, color }: SnackbarIconProps) {
   return (
@@ -65,5 +61,5 @@ function SnackbarIcon({ icon, color }: SnackbarIconProps) {
     >
       {icon}
     </div>
-  );
+  )
 }

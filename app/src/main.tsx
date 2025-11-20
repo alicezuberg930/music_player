@@ -1,5 +1,5 @@
 import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { hydrateRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 import { Provider as ReduxProvider } from 'react-redux';
@@ -9,7 +9,7 @@ import { persistor, store } from './redux/store.ts';
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './lib/auth/AuthProvider.tsx';
 
-createRoot(document.getElementById('root')!).render(
+hydrateRoot(document.getElementById('root')!,
   <StrictMode>
     <HelmetProvider>
       <ReduxProvider store={store}>

@@ -1,23 +1,25 @@
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import SongList from '../sections/SongList'
 import { useSearchParams } from 'react-router-dom'
-import { searchTypeAction } from '../store/actions/music_actions'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import type { Song } from '@/@types/song'
 
 const SearchSongPage = () => {
-    const { searchTypeData } = useSelector(state => state.music)
     const dispatch = useDispatch()
     const [searchParams] = useSearchParams()
     const q = searchParams.get('q')
+    const [songs, setSongs] = useState<Song[]>([])
 
     useEffect(() => {
-        if (q.length > 0) dispatch(searchTypeAction(q, 'song'))
+        setSongs([])
+        // if (q)
+        // dispatch(searchTypeAction(q, 'song'))
     }, [q, dispatch])
 
     return (
         <div className='w-full'>
             <h3 className='text-xl font-bold mb-4'>Bài hát</h3>
-            <SongList songs={searchTypeData?.items} showHeader={false} />
+            <SongList songs={songs} showHeader={false} />
         </div>
     )
 }

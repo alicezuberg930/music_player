@@ -91,7 +91,7 @@ const Player = () => {
     //     if (!audio.paused && isPlaying) audio.pause()
     // }
 
-    const getSong = async (id: number) => {
+    const getSong = async (id: string) => {
         try {
             const [song] = await Promise.all([fetchSong(id)])
             setIsLoading(false)

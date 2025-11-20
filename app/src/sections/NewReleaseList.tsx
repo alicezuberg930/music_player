@@ -1,26 +1,26 @@
 import { useEffect, useState } from "react"
-import { useSelector } from "react-redux"
 import SongItem from "./SongItem"
+import type { Song } from "@/@types/song"
 
 const NewReleaseList = () => {
-    const { newRelease } = useSelector(state => state.app)
     const [type, setType] = useState(-1)
-    const [songs, setSongs] = useState<any>([])
+    const [songs, setSongs] = useState<Song[]>([])
 
     const setNewReleaseSongs = () => {
-        if (type === -1) setSongs(newRelease?.items?.all || [])
-        if (type === 0) setSongs(newRelease?.items?.others || [])
-        if (type === 1) setSongs(newRelease?.items?.vPop || [])
+        setSongs([])
+        // if (type === -1) setSongs(newRelease?.items?.all || [])
+        // if (type === 0) setSongs(newRelease?.items?.others || [])
+        // if (type === 1) setSongs(newRelease?.items?.vPop || [])
     }
 
     useEffect(() => {
         setNewReleaseSongs()
-    }, [type, newRelease])
+    }, [type])
 
     return (
         <div className="mt-12">
             <div className="flex items-center justify-between mb-5">
-                <h3 className="text-xl font-bold">{newRelease?.title}</h3>
+                <h3 className="text-xl font-bold">{"newRelease?.title"}</h3>
                 <span className="text-xs uppercase">Tất cả</span>
             </div>
             <div className="flex items-center gap-5 text-xs">
@@ -36,7 +36,7 @@ const NewReleaseList = () => {
             </div>
             <div className="flex flex-wrap w-full mt-5">
                 {songs?.slice(0, 12)?.map(item => (
-                    <div key={item?.encodeId} className="md:w-[45%] xl:w-[30%]">
+                    <div key={item?.id} className="md:w-[45%] xl:w-[30%]">
                         <SongItem song={item} imgSize="lg" showTime={true} />
                     </div>
                 ))}

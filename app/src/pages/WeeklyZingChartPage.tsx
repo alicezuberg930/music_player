@@ -14,6 +14,8 @@ const WeeklyZingChartPage = () => {
     let weekChartLinks: any = []
 
     const fetchWeekChart = useCallback(async (week: string, year: string) => {
+        console.log(week, year)
+        setSongs([])
         try {
             // const response = await getWeekChart(id);
             // if (response?.err === 0) {

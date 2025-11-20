@@ -1,6 +1,6 @@
 export type Song = {
     duration: number;
-    id: number;
+    id: string;
     title: string;
     alias: string;
     artistNames: string;
@@ -17,7 +17,7 @@ export type Song = {
     createdAt: string;
     updatedAt: string;
     userId: number;
-    likes: number | null;
+    likes: number;
     listens: number | null;
     liked: boolean | null;
     comments: number | null;

@@ -75,6 +75,7 @@ const ZingChartPage = () => {
 
     const fetchChartHome = async () => {
         try {
+            setChartData(null)
             // const response = await getChartHome()
             // if (response.err === 0) {
             //     setChartData(response?.data)
@@ -137,7 +138,7 @@ const ZingChartPage = () => {
                         <div className='tooltip absolute bg-main-200 rounded-md w-48 z-100'
                             style={{ top: tooltipData.top, left: tooltipData.left, opacity: tooltipData.opacity }}
                         >
-                            <SongItem song={selectedSong} percent={Math.round(selectedSong?.likes! / chartData?.RTChart?.chart?.totalScore * 100)} imgSize="sm" />
+                            {selectedSong && <SongItem song={selectedSong} percent={Math.round(selectedSong?.likes! / chartData?.RTChart?.chart?.totalScore * 100)} imgSize="sm" />}
                         </div>
                     </div>
                 </div>

@@ -1,45 +1,38 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { getArtist } from '../services/api.service'
-import { toast } from 'react-toastify'
-import { icons } from '../utils/icons'
+import { fetchArtist } from '@/lib/http.client'
+import { icons } from '@/lib/icons'
 import SongItem from '../sections/SongItem'
 import PlaylistSection from '../sections/PlaylistSection'
 import ArtistCard from '../sections/ArtistCard'
 import MVSection from '../sections/MVSection'
-import { useSelector } from 'react-redux'
+import type { Artist } from "@/@types/artist"
 
 const ArtistPage = () => {
     const { AiOutlineUserAdd, BsPlayFill } = icons
     const { name } = useParams()
-    const [artist, setArtist] = useState(null)
-    const ref = useRef()
-    const { screenWidth } = useSelector(state => state.app)
+    const [artist, setArtist] = useState<Artist | null>(null)
+    const ref = useRef<HTMLDivElement | null>(null)
     let displayAmount = 5
-    if (screenWidth < 1024) displayAmount = 4
-    if (screenWidth < 768) displayAmount = 3
-    if (screenWidth < 640) displayAmount = 2
-    if (screenWidth < 475) displayAmount = 1
 
-    const fetchArtist = async () => {
+    const getArtist = async () => {
         try {
-            const response = await getArtist(name)
-            if (response.err === 0) setArtist(response.data)
-            else toast.warn(response.msg)
+            setArtist(null)
+            const response = await fetchArtist(name!)
+            console.log(response)
         } catch (error) {
-            toast.warn(error)
         }
     }
 
     useEffect(() => {
-        fetchArtist()
+        getArtist()
         // ref.current.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' })
     }, [name])
 
     return (
         <div className='flex flex-col w-full'>
             <div ref={ref} className='h-[300px] relative -mx-2 md:-mx-6 -mt-20'>
-                <div className='absolute w-full h-full bg-no-repeat bg-cover bg-center blur-xl' style={{ backgroundImage: `url(${artist?.thumbnailM})` }}></div>
+                <div className='absolute w-full h-full bg-no-repeat bg-cover bg-center blur-xl' style={{ backgroundImage: `url(${artist?.thumbnail})` }}></div>
                 <div className='px-2 sm:px-10 absolute w-full h-full bg-[#291547b3] text-white'>
                     <div className='absolute bottom-0 pb-6 flex flex-col sm:flex-row gap-4'>
                         <img src={artist?.thumbnail} alt={artist?.thumbnail} className='h-32 w-32 rounded-full' />
@@ -52,7 +45,7 @@ const ArtistPage = () => {
                             </div>
                             <div className='flex items-center gap-4'>
                                 <span className='text-sm text-gray-300'>
-                                    {(+artist?.totalFollow).toLocaleString()} người quan tâm
+                                    {(+(artist?.totalFollow ?? 0)).toLocaleString()} người quan tâm
                                 </span>
                                 <button className='bg-main-500 text-white px-4 py-2 text-sm rounded-full flex items-center justify-center gap-1'>
                                     <span><AiOutlineUserAdd /></span>
@@ -70,10 +63,10 @@ const ArtistPage = () => {
                         <div className='p-2 sm:p-4 bg-[#C4CDCC] rounded-md flex gap-4'>
                             <img src={artist?.topAlbum?.thumbnail} alt='thumbnail' className='object-cover w-1/3 aspect-square rounded-md' />
                             <div className='flex flex-col text-xs text-black opacity-80 gap-3'>
-                                <span>{artist?.topAlbum?.textType}</span>
+                                <span>{artist?.topAlbum?.title}</span>
                                 <div>
                                     <span className='text-sm font-bold opacity-100'>{artist?.topAlbum?.title}</span>
-                                    <span className='inline-block'>{artist?.topAlbum?.artistsNames}</span>
+                                    <span className='inline-block'>{artist?.topAlbum?.artistNames}</span>
                                 </div>
                                 <span>{artist?.topAlbum?.releaseDate}</span>
                             </div>
@@ -85,10 +78,10 @@ const ArtistPage = () => {
                     <div className=''>
                         <div className='grid md:grid-cols-1 xl:grid-cols-2 w-full gap-x-8'>
                             {
-                                artist?.sections?.find(i => i.sectionType === 'song')?.items?.slice(0, 6).map(item => {
+                                artist?.songs?.slice(0, 6).map(song => {
                                     return (
-                                        <div key={item?.encodeId} className='border-b border-gray-400'>
-                                            <SongItem song={item} imgSize='sm' />
+                                        <div key={song?.id} className='border-b border-gray-400'>
+                                            <SongItem song={song} imgSize='sm' />
                                         </div>
                                     )
                                 })
@@ -98,18 +91,16 @@ const ArtistPage = () => {
                 </div>
             </div>
             <div className='w-full'>
-                {artist?.sections?.filter(i => i.sectionType === 'playlist')?.map(playlists => (
-                    <PlaylistSection key={playlists?.title} playlists={playlists} />
-                ))}
+                {artist?.playlists && (<PlaylistSection playlists={artist?.playlists} />)}
             </div>
             <div className='w-full'>
-                <MVSection videos={artist?.sections?.find(i => i.sectionType === 'video')} />
+                {artist?.videos && (<MVSection videos={artist.videos} />)}
             </div>
             <div className='mt-12'>
                 <h3 className='text-lg font-bold mb-4'>Có thể bạn sẽ thích</h3>
                 <div className='flex -mx-2'>
                     {
-                        artist?.sections?.find(i => i.sectionType === 'artist')?.items?.slice(0, displayAmount).map(artist => {
+                        artist?.recommendedArtists?.slice(0, displayAmount).map(artist => {
                             return (
                                 <ArtistCard visibleSlides={displayAmount} artist={artist} key={artist?.id} />
                             )
@@ -121,12 +112,12 @@ const ArtistPage = () => {
                 <h3 className='text-lg font-bold mb-5'>Về {artist?.name}</h3>
                 <div className='flex gap-8 flex-col sm:flex-row'>
                     <div className='w-full sm:w-2/5 h-auto'>
-                        <img src={artist?.thumbnailM} className='flex-auto object-cover rounded-md' />
+                        <img src={artist?.thumbnail} className='flex-auto object-cover rounded-md' />
                     </div>
                     <div className='w-full sm:w-3/5 flex-auto flex flex-col gap-8 text-xs'>
                         <p className='text-sm font-semibold text-gray-500' dangerouslySetInnerHTML={{ __html: artist?.biography || 'No description' }}></p>
                         <div>
-                            <span className='font-bold text-xl text-gray-700'>{(+artist?.follow).toLocaleString()}</span>
+                            <span className='font-bold text-xl text-gray-700'>{(+(artist?.totalFollow ?? 0)).toLocaleString()}</span>
                             <span className='block text-gray-500'>người quan tâm</span>
                         </div>
                     </div>

@@ -1,12 +1,12 @@
 import { useState } from "react"
 import { icons } from "@/lib/icons"
-import { useSelector } from "react-redux"
+import { useSelector } from "@/redux/store"
 import SongItem from "./SongItem"
 
 const SidebarRight = () => {
     const [type, setType] = useState(0)
     const { ImBin } = icons
-    const { currentSong, currentSongs, currentPlaylistName, recentSongs } = useSelector(state => state.music)
+    const { currentSong, currentPlaylistName, recentSongs, currentSongs } = useSelector(state => state.music)
 
     return (
         <div className="animate-slide-left hidden xl:block w-[330px] flex-none border-l">
@@ -41,10 +41,10 @@ const SidebarRight = () => {
                 <div className="flex flex-col overflow-hidden">
                     <div className="h-full overflow-y-scroll">
                         {
-                            type === 0 ? currentSong?.map(song => {
-                                return (<SongItem song={song} imgSize="sm" key={song.encodeId} />)
+                            type === 0 ? currentSongs?.map(song => {
+                                return (<SongItem song={song} imgSize="sm" key={song.id} />)
                             }) : recentSongs?.map(song => {
-                                return (<SongItem song={song} imgSize="sm" key={song.encodeId} />)
+                                return (<SongItem song={song} imgSize="sm" key={song.id} />)
                             })
                         }
                     </div>

@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+// import { useNavigate } from "react-router-dom"
 import { icons } from "@/lib/icons"
 
 let interval: number | undefined
 
 const HomeBannerSlider = () => {
     const banners: any = []
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
     const { MdArrowBackIosNew, MdArrowForwardIos } = icons
     const [min, setMin] = useState(0)
     const [max, setMax] = useState(2)
@@ -27,7 +27,7 @@ const HomeBannerSlider = () => {
     }
 
     const handleClickBanner = (item: any) => {
-
+        console.log(item)
     }
 
     const handleBannerAnimation = (step: number) => {

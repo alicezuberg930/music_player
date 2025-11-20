@@ -1,9 +1,10 @@
+import type { Song } from "@/@types/song"
+import { setCurrentSong, setIsPlaying } from "@/redux/slices/music"
 import { memo } from "react"
 import { useDispatch } from "react-redux"
-import { setCurrentSongId, setPlay } from "../store/actions/music_actions"
 
 type Props = {
-    song: any
+    song: Song
     order?: number
     percent?: number
     imgSize?: 'sm' | 'md' | 'lg' | 'xl'
@@ -18,8 +19,8 @@ const SongItem = ({ song, order, percent, imgSize, style, showTime }: Props) => 
     return (
         <div className={`${style || 'text-black hover:bg-main-200'} w-full p-2 h-auto rounded-md cursor-pointer`}
             onClick={() => {
-                dispatch(setCurrentSongId(song.encodeId))
-                dispatch(setPlay(true))
+                dispatch(setCurrentSong(song))
+                dispatch(setIsPlaying(true))
             }}
         >
             <div className="h-full flex justify-start items-center gap-2">
@@ -28,10 +29,10 @@ const SongItem = ({ song, order, percent, imgSize, style, showTime }: Props) => 
                         {order}
                     </span>
                 }
-                <img src={song?.thumbnail} alt={song?.encodeId} className={`${imageSizeCss} object-cover rounded-md`} />
+                <img src={song?.thumbnail} alt={song?.id} className={`${imageSizeCss} object-cover rounded-md`} />
                 <div className="flex flex-col flex-auto">
                     <span className="text-sm font-semibold line-clamp-1">{song?.title}</span>
-                    <span className="text-xs opacity-70 line-clamp-1">{song?.artistsNames}</span>
+                    <span className="text-xs opacity-70 line-clamp-1">{song?.artistNames}</span>
                     {(showTime) && <span className="text-xs opacity-70">{"2 giờ trước"}</span>}
                 </div>
                 {percent && <span className="pr-1 font-bold">{percent}%</span>}

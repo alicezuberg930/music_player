@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from "react"
-import { getVideo } from "../services/api.service"
+import { fetchVideo } from "@/lib/http.client"
 import { Link, NavLink, useParams } from "react-router-dom"
-import { toast } from "react-toastify"
 import Hls from "hls.js"
 import { icons } from "@/lib/icons"
 import { formatDuration } from "@/lib/utils"
-import { useDispatch, useSelector } from "react-redux"
+import type { Video } from "@/@types/video"
 // import { useIsMobile } from "@/hooks/useMobile"
 
 var hls: Hls | null = null
@@ -13,7 +12,7 @@ var hls: Hls | null = null
 const VideoClipPage = () => {
     const { id } = useParams()
     // local states
-    const [video, setVideo] = useState<any>(null)
+    const [video, setVideo] = useState<Video | null>(null)
     const [isPlaying, setIsPlaying] = useState(false)
     const [isTheater, setTheater] = useState(false)
     const [isFullscreen, setIsFullscreen] = useState(false)
@@ -21,7 +20,6 @@ const VideoClipPage = () => {
     const [currentTime, setCurrentTime] = useState(0)
     // icons
     const { BsPlayFill, BsPauseFill, LuRectangleHorizontal, MdFullscreen, MdOutlineFullscreenExit, MdPictureInPicture, SlVolume1, SlVolume2, SlVolumeOff, IoMdSettings } = icons
-    const dispatch = useDispatch()
     let isScrubbing = false
     // const isMobile = useIsMobile()
     // const displayAmount = isTheater ? (isMobile ? 4 : 7) : video?.recommends?.length
@@ -39,24 +37,26 @@ const VideoClipPage = () => {
         }
     }
 
-    const fetchVideo = async () => {
+    const getVideo = async () => {
         try {
-            const response = await getVideo(id)
-            if (response?.err === 0) {
-                setVideo(response?.data)
-                if (response?.data?.streaming) {
-                    initializeVideoPlayer(response?.data?.streaming?.hls['360p'])
-                }
-            } else {
-                toast.warn(response?.msg)
-            }
+            setVideo(null)
+            await fetchVideo(id!)
+            initializeVideoPlayer('')
+            // if (response?.err === 0) {
+            //     setVideo(response?.data)
+            //     if (response?.data?.streaming) {
+            //         initializeVideoPlayer(response?.data?.streaming?.hls['360p'])
+            //     }
+            // } else {
+            //     toast.warn(response?.msg)
+            // }
         } catch (error) {
             // toast.warn(error)
         }
     }
 
     useEffect(() => {
-        fetchVideo()
+        getVideo()
         return () => {
             if (hls) hls.destroy()
         }
@@ -191,7 +191,7 @@ const VideoClipPage = () => {
 
     return (
         <div className={`all-container w-full bg-purple-950 py-10 gap-6 ${isTheater ? 'h-fit' : 'h-screen flex justify-between px-5'}`}>
-            {video && video.streaming && video.streaming.hls ? (
+            {video ? (
                 <div ref={videoContainer} className={`relative h-fit ${isTheater ? 'w-full' : 'w-3/4'}`}>
                     <video ref={videoPlayer} className="rounded-md bg-black outline-none" width="100%" onClick={toggleVideo} tabIndex={0} onKeyDown={videoKeyDown} />
                     <img className="thumbnail-img" alt="thumbnail-img" />
@@ -286,9 +286,9 @@ const VideoClipPage = () => {
                     <span className="font-bold text-lg">Danh sách phát</span>
                 </div>
                 <div className={`${isTheater && 'overflow-x-auto whitespace-nowrap thin-scrollbar'} mx-4`}>
-                    {video?.recommends?.map((item: any) => (
-                        <div key={item?.encodeId} className={`${isTheater && 'last:mr-0 mr-4 w-[330px] inline-block'} py-2`}>
-                            <NavLink to={item?.link.split('.')[0]} className={`${isTheater && 'flex-col'} flex gap-2 items-center hover:bg-[#ffffff0d]`}>
+                    {video?.recommends?.map(item => (
+                        <div key={item?.id} className={`${isTheater && 'last:mr-0 mr-4 w-[330px] inline-block'} py-2`}>
+                            <NavLink to={`/video/${item.id}`} className={`${isTheater && 'flex-col'} flex gap-2 items-center hover:bg-[#ffffff0d]`}>
                                 <img src={item?.thumbnail} className={`${isTheater ? 'aspect-video w-full' : 'w-32 h-16'} object-cover rounded-md`} />
                                 <div className="w-full">
                                     <span className="line-clamp-1 font-bold text-sm">{item?.title}</span>

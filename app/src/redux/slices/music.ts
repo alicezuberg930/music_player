@@ -37,67 +37,7 @@ const slice = createSlice({
     },
     setIsPlaylist(state, action) {
       state.isPlaylist = action.payload as boolean
-    },
-
-    // removeRecentSong(state, action) {
-    //   const updateCart = state.cart.filter(product => product._id !== action.payload)
-    //   state.cart = updateCart
-    // },
-
-    resetCart(state) {
-      // state.cart = []
-      // state.billing = null
-      // // state.activeStep = 0
-      // state.total = 0
-      // state.subTotal = 0
-      // state.discount = 0
-      // state.shipping = 0
-      // state.paymentMethod = null
-    },
-
-    backStep(state) {
-      // state.activeStep -= 1
-    },
-
-    nextStep(state) {
-      // state.activeStep += 1
-    },
-
-    gotoStep(state, action) {
-      const step = action.payload
-      // state.activeStep = step
-    },
-
-    // increaseQuantity(state, action) {
-    //   const productId = action.payload
-
-    //   const updateCart = state.checkout.cart.map((product) => {
-    //     if (product.id === productId) {
-    //       return {
-    //         ...product,
-    //         quantity: product.quantity + 1,
-    //       }
-    //     }
-    //     return product
-    //   })
-
-    //   state.checkout.cart = updateCart
-    // },
-
-    // decreaseQuantity(state, action) {
-    //   const productId = action.payload
-    //   const updateCart = state.checkout.cart.map((product) => {
-    //     if (product.id === productId) {
-    //       return {
-    //         ...product,
-    //         quantity: product.quantity - 1,
-    //       }
-    //     }
-    //     return product
-    //   })
-
-    //   state.checkout.cart = updateCart
-    // },
+    }
   },
 })
 
@@ -111,8 +51,4 @@ export const {
   setIsPlaying,
   addRecentSong,
   setIsPlaylist,
-  resetCart,
-  gotoStep,
-  backStep,
-  nextStep,
 } = slice.actions

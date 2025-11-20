@@ -1,21 +1,20 @@
-import { roundPeopleAmount } from '../utils/utils'
+import { roundPeopleAmount } from '@/lib/utils'
 import SongItem from '../sections/SongItem'
 import SongCard from '../sections/SongCard'
 import PlaylistCard from '../sections/PlaylistCard'
 import ArtistCard from '../sections/ArtistCard'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
-import { searchMultiAction } from '../store/actions/music_actions'
 import { useEffect } from 'react'
 
 const SearchAllPage = () => {
-    const { searchData } = useSelector(state => state.music)
     const dispatch = useDispatch()
     const [searchParams] = useSearchParams()
     const q = searchParams.get('q')
+    const searchData: any = {}
 
     useEffect(() => {
-        if (q.length > 0) dispatch(searchMultiAction(q))
+        // if (q) dispatch(searchMultiAction(q))
     }, [q, dispatch])
 
     return (
@@ -36,7 +35,7 @@ const SearchAllPage = () => {
                                 </div>
                             </div>
                         )}
-                        {searchData?.songs?.slice(0, 2).map(song => (
+                        {searchData?.songs?.slice(0, 2).map((song: any) => (
                             <div className='flex-1 h-full bg-main-200 rounded-md' key={song?.encodeId}>
                                 <SongItem song={song} imgSize='xl' />
                             </div>
@@ -48,7 +47,7 @@ const SearchAllPage = () => {
                 <div className='w-full'>
                     <h3 className='text-lg font-bold mb-4'>Bài hát</h3>
                     <div className='grid grid-cols-2 gap-x-5 mb-7'>
-                        {searchData?.songs?.slice(0, 6).map(song => (
+                        {searchData?.songs?.slice(0, 6).map((song: any) => (
                             <SongCard
                                 key={song.encodeId}
                                 song={song}
@@ -64,7 +63,7 @@ const SearchAllPage = () => {
                 <div className='w-full'>
                     <h3 className='text-lg font-bold mb-4'>Playlist/Album</h3>
                     <div className='flex justify-start mb-7 -mx-3'>
-                        {searchData?.playlists?.slice(0, 5).map((playlist) => (
+                        {searchData?.playlists?.slice(0, 5).map((playlist: any) => (
                             <PlaylistCard item={playlist} key={playlist?.encodeId} />
                         ))}
                     </div>
@@ -74,7 +73,7 @@ const SearchAllPage = () => {
                 <div className='w-full'>
                     <h3 className='text-lg font-bold mb-4'>Nghệ sĩ</h3>
                     <div className='flex gap-6 mb-7'>
-                        {searchData?.artists?.slice(0, 5).map(artist => (
+                        {searchData?.artists?.slice(0, 5).map((artist: any) => (
                             <ArtistCard artist={artist} key={artist?.id} />
                         ))}
                     </div>

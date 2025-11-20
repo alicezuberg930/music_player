@@ -2,9 +2,10 @@ import { memo } from "react"
 import { roundPeopleAmount } from "@/lib/utils"
 import { icons } from "@/lib/icons"
 import { Link } from "react-router-dom"
+import type { Artist } from "@/@types/artist"
 
 type Props = {
-    artist: any
+    artist: Omit<Artist, 'recommendedArtists' | 'songs' | 'topAlbum' | 'playlists' | 'videos'>
     visibleSlides?: number
 }
 

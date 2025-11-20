@@ -2,9 +2,10 @@ import { memo } from "react"
 import SongCard from "./SongCard"
 import { icons } from "@/lib/icons"
 import { formatDuration } from "@/lib/utils"
+import type { Song } from "@/@types/song"
 
 type Props = {
-    songs: any[]
+    songs: Song[]
     totalDuration?: number
     playlistTitle?: string
     showHeader?: boolean
@@ -30,7 +31,7 @@ const SongList = ({ songs, totalDuration, playlistTitle, showHeader = true }: Pr
             )}
             <div className="flex flex-col">
                 {songs && songs?.map(song => (
-                    <SongCard key={song?.encodeId} song={song} playlistTitle={playlistTitle} songs={songs} />
+                    <SongCard key={song?.id} song={song} playlistTitle={playlistTitle} songs={songs} />
                 ))}
             </div>
             {totalDuration && (

@@ -1,9 +1,10 @@
 import { NavLink } from 'react-router-dom'
 import { icons } from '@/lib/icons'
 import { formatDuration } from '@/lib/utils'
+import type { Video } from '@/@types/video'
 
 type Props = {
-    video: any
+    video: Video
     variant?: 'horizontal' | 'vertical'
 }
 
@@ -12,9 +13,9 @@ const VideoCard = ({ video, variant = 'horizontal' }: Props) => {
 
     return (
         variant === 'horizontal' ? (
-            <NavLink to={video?.link.split('.')[0]} className='relative group' key={video?.encodeId}>
+            <NavLink to={`/video/${video.id}`} className='relative group' key={video?.id}>
                 <div className='relative aspect-video rounded-md overflow-hidden mb-3'>
-                    <img src={video?.thumbnailM} alt={video?.title} className='w-full h-full object-cover rounded-md mb-2 group-hover:scale-110 transition-all' />
+                    <img src={video?.thumbnail} alt={video?.title} className='w-full h-full object-cover rounded-md mb-2 group-hover:scale-110 transition-all' />
                     {/* Duration */}
                     <div className='absolute bottom-1 right-1 bg-[rgba(0,0,0,.7)] py-1 px-1.5 rounded-md'>
                         <p className='text-xs text-white'>{formatDuration(video?.duration)}</p>
@@ -25,11 +26,11 @@ const VideoCard = ({ video, variant = 'horizontal' }: Props) => {
                     </div>
                 </div>
                 <div className='flex gap-2 items-center'>
-                    <img src={video?.artist?.thumbnail} alt={video?.artist?.name} className='w-10 h-10 object-cover rounded-full' />
+                    <img src={video?.mainArtist?.thumbnail} alt={video?.mainArtist?.name} className='w-10 h-10 object-cover rounded-full' />
                     <div className='flex-1'>
                         <h4 className='text-sm font-semibold'>{video?.title}</h4>
                         {video?.artists?.map((artist, i) => (
-                            <NavLink className='text-xs text-gray-500' to={`/artist${artist?.link}`} key={artist?.id}>
+                            <NavLink className='text-xs text-gray-500' to={`/artist/${artist?.id}`} key={artist?.id}>
                                 {artist?.name + (i < video?.artists?.length - 1 ? ', ' : '')}
                             </NavLink>
                         ))}

@@ -4,24 +4,22 @@ import SidebarRight from "../sections/SidebarRight"
 import Player from "../sections/Player"
 import Header from "../sections/Header"
 import { ToastContainer } from 'react-toastify';
-import { useDispatch, useSelector } from "react-redux"
-import { isScrollTop } from "../store/actions/home_actions"
+import { useSelector } from "@/redux/store"
 
 const PublicPage = () => {
     const { showSideBarRight, scrollTop } = useSelector(state => state.app)
-    const { currentSongId } = useSelector(state => state.music)
+    const { currentSong } = useSelector(state => state.music)
     const location = useLocation();
-    const dispatch = useDispatch()
 
     const handleScrollTop = (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
         if (location.pathname.includes("/artist") || location.pathname.includes("/zing-chart")) {
             if (e.currentTarget.scrollTop === 0) {
-                dispatch(isScrollTop(true))
+                // dispatch(isScrollTop(true))
             } else {
-                dispatch(isScrollTop(false))
+                // dispatch(isScrollTop(false))
             }
         } else {
-            dispatch(isScrollTop(false))
+            // dispatch(isScrollTop(false))
         }
     }
 
@@ -37,7 +35,7 @@ const PublicPage = () => {
                         <div className="flex-auto overflow-y-scroll overflow-x-hidden py-20 px-2 md:px-6" onScroll={handleScrollTop}>
                             <Outlet />
                         </div>
-                        {currentSongId && <Player />}
+                        {currentSong && <Player />}
                     </div>
                     {showSideBarRight && <SidebarRight />}
                 </div>

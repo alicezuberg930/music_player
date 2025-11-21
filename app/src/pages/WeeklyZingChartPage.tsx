@@ -1,5 +1,4 @@
 import { NavLink, useParams } from "react-router-dom"
-import bgWeekChart from "../assets/bg-week-chart.jpg"
 import { icons } from "@/lib/icons"
 import { useCallback, useEffect, useState } from "react"
 import RankListCard from "@/sections/RankListCard"
@@ -35,7 +34,7 @@ const WeeklyZingChartPage = () => {
     return (
         <div className="">
             <div className='relative h-[450px]'>
-                <img src={bgWeekChart} alt="bg-chart" className='w-full h-full block object-cover grayscale' />
+                <img src='./bg-week-chart.jpg' alt="bg-chart" className='w-full h-full block object-cover grayscale' />
                 <div className='absolute top-0 left-0 right-0 bottom-0 bg-[rgba(206,217,217,0.7)]'></div>
                 <div className='absolute top-0 left-0 right-0 bottom-0 bg-linear-to-t from-[#CED9D9] to-transparent'></div>
                 <div className="absolute top-[20%] left-0 right-0 bottom-0 px-10 flex flex-col gap-4">

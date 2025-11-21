@@ -13,6 +13,78 @@ const HomePage = () => {
 
     return (
         <>
+            <div className="w-full h-40 bg-red-500 flex justify-between gap-6 mb-4">
+                {[1, 2, 3, 4, 5, 6, 7].map(_ => {
+                    return (
+                        <div className="flex-auto h-42 bg-amber-800">
+
+                        </div>
+                    )
+                })}
+            </div>
+            <div className="w-full h-40 bg-red-500 flex justify-between gap-6 mb-4">
+                {[1, 2, 3, 4, 5, 6, 7].map(_ => {
+                    return (
+                        <div className="flex-auto h-42 bg-amber-800">
+
+                        </div>
+                    )
+                })}
+            </div>
+            <div className="w-full h-40 bg-red-500 flex justify-between gap-6 mb-4">
+                {[1, 2, 3, 4, 5, 6, 7].map(_ => {
+                    return (
+                        <div className="flex-auto h-42 bg-amber-800">
+
+                        </div>
+                    )
+                })}
+            </div>
+            <div className="w-full h-40 bg-red-500 flex justify-between gap-6 mb-4">
+                {[1, 2, 3, 4, 5, 6, 7].map(_ => {
+                    return (
+                        <div className="flex-auto h-42 bg-amber-800">
+
+                        </div>
+                    )
+                })}
+            </div>
+            <div className="w-full h-40 bg-red-500 flex justify-between gap-6 mb-4">
+                {[1, 2, 3, 4, 5, 6, 7].map(_ => {
+                    return (
+                        <div className="flex-auto h-42 bg-amber-800">
+
+                        </div>
+                    )
+                })}
+            </div>
+            <div className="w-full h-40 bg-red-500 flex justify-between gap-6 mb-4">
+                {[1, 2, 3, 4, 5, 6, 7].map(_ => {
+                    return (
+                        <div className="flex-auto h-42 bg-amber-800">
+
+                        </div>
+                    )
+                })}
+            </div>
+            <div className="w-full h-40 bg-red-500 flex justify-between gap-6 mb-4">
+                {[1, 2, 3, 4, 5, 6, 7].map(_ => {
+                    return (
+                        <div className="flex-auto h-42 bg-amber-800">
+
+                        </div>
+                    )
+                })}
+            </div>
+            <div className="w-full h-40 bg-red-500 flex justify-between gap-6 mb-4">
+                {[1, 2, 3, 4, 5, 6, 7].map(_ => {
+                    return (
+                        <div className="flex-auto h-42 bg-amber-800">
+
+                        </div>
+                    )
+                })}
+            </div>
             {/* {playlistsList && weekCharts && newRelease ?
                 <div>
                     <HomeBannerSlider />

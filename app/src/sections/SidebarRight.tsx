@@ -1,15 +1,15 @@
 import { useState } from "react"
-import { icons } from "@/lib/icons"
 import { useSelector } from "@/redux/store"
 import SongItem from "./SongItem"
+import { Trash } from "lucide-react"
 
 const SidebarRight = () => {
     const [type, setType] = useState(0)
-    const { ImBin } = icons
     const { currentSong, currentPlaylistName, recentSongs, currentSongs } = useSelector(state => state.music)
+    const { showSideBarRight } = useSelector(state => state.app)
 
     return (
-        <div className="animate-slide-left hidden xl:block w-[330px] flex-none border-l">
+        <div className={`absolute bottom-0 top-0 w-[330px] border-l transition-all duration-1500 ease-in-out z-40 bg-main-300 ${showSideBarRight ? 'right-0' : 'right-[-330px]'}`}>
             <div className="flex flex-col text-xs w-full h-full">
                 <div className="h-16 flex-none py-3 flex items-center justify-between px-2 gap-8" >
                     <div className="flex flex-auto bg-main-200 rounded-full p-1 cursor-pointer">
@@ -24,8 +24,8 @@ const SidebarRight = () => {
                             Nghe gần đây
                         </span>
                     </div>
-                    <span className="p-1 rounded-full hover:bg-main-100 cursor-pointer">
-                        <ImBin size={18} />
+                    <span className="p-1 text-red-400 rounded-full hover:bg-main-100 cursor-pointer">
+                        <Trash />
                     </span>
                 </div>
                 <div className={`${type === 1 && 'hidden'} flex flex-col px-2`}>
@@ -40,13 +40,11 @@ const SidebarRight = () => {
                 </div>
                 <div className="flex flex-col overflow-hidden">
                     <div className="h-full overflow-y-scroll">
-                        {
-                            type === 0 ? currentSongs?.map(song => {
-                                return (<SongItem song={song} imgSize="sm" key={song.id} />)
-                            }) : recentSongs?.map(song => {
-                                return (<SongItem song={song} imgSize="sm" key={song.id} />)
-                            })
-                        }
+                        {type === 0 ? (
+                            currentSongs?.map(song => <SongItem song={song} imgSize="sm" key={song.id} />)
+                        ) : (
+                            recentSongs?.map(song => <SongItem song={song} imgSize="sm" key={song.id} />)
+                        )}
                     </div>
                     <div className="h-24"></div>
                 </div>

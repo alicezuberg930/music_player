@@ -1,32 +1,37 @@
 import { useEffect, useRef, useState } from "react"
 import { fetchSong } from "@/lib/http.client"
-import { icons } from "@/lib/icons"
 import { formatDuration } from "@/lib/utils"
 import { toast } from "react-toastify"
 import { RotatingLines } from "react-loader-spinner"
 import { useDispatch, useSelector } from "@/redux/store"
 import { setCurrentSong, setIsPlaying, setIsPlaylist } from "@/redux/slices/music"
-
-let thumbInterval: number | undefined
+import { Ellipsis, Heart, MusicIcon, Pause, Play, Repeat, Repeat1, Shuffle, SkipBack, SkipForward, Volume1, Volume2, VolumeX } from "lucide-react"
+import { setShowSidebarRight } from "@/redux/slices/app"
+import { Typography } from "@/components/ui/typography"
 
 const Player = () => {
-    const [volume, setVolume] = useState(50)
-    const [audio, setAudio] = useState<HTMLAudioElement | null>(null)
     const dispatch = useDispatch()
+    // redux states
+    const { showSideBarRight } = useSelector(state => state.app)
     const { currentSong, isPlaying, isPlaylist, currentSongs } = useSelector(state => state.music)
-    const { AiOutlineHeart, BsThreeDots, MdSkipNext, MdSkipPrevious, CiRepeat, CiShuffle, BsPlayFill, BsPauseFill, TbRepeatOnce, BsMusicNoteList, SlVolumeOff, SlVolume1, SlVolume2 } = icons
-    const [currentSecond, setCurrentSecond] = useState(0)
-    const [shuffle, setShuffle] = useState(false)
-    const [repeatMode, setRepeatMode] = useState(0)
-    const [isLoading, setIsLoading] = useState(true)
-    const thumb = useRef<any>(null)
-    const trackRef = useRef<any>(null)
+    //  local states
+    const [currentSecond, setCurrentSecond] = useState<number>(0)
+    const [shuffle, setShuffle] = useState<boolean>(false)
+    const [repeatMode, setRepeatMode] = useState<number>(0)
+    const [isLoading, setIsLoading] = useState<boolean>(true)
+    const [volume, setVolume] = useState<number>(50)
+    // refs
+    const thumb = useRef<HTMLDivElement | null>(null)
+    const trackRef = useRef<HTMLDivElement | null>(null)
+    const thumbInterval = useRef<number | undefined>(undefined)
+    const audio = useRef<HTMLAudioElement | null>(null)
 
     const handleClickProgressBar = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        if (!trackRef.current || !audio.current || !thumb.current) return
         const trackRect = trackRef.current.getBoundingClientRect()
         const percent = Math.round(((e.clientX - trackRect.left) / trackRect.width) * 100)
         thumb.current.style.cssText = `right: ${100 - percent}%`
-        audio && (audio.currentTime = currentSong!.duration * percent / 100)
+        audio.current.currentTime = currentSong!.duration * percent / 100
     }
 
     const handleClickNext = () => {
@@ -65,10 +70,10 @@ const Player = () => {
     const handleToggleButton = () => {
         if (isPlaying) {
             dispatch(setIsPlaying(false))
-            audio?.pause()
+            audio.current?.pause()
         } else {
             dispatch(setIsPlaying(true))
-            audio?.play()
+            audio.current?.play()
         }
     }
 
@@ -79,8 +84,9 @@ const Player = () => {
     }
 
     const handleClickOne = () => {
-        audio && (audio.currentTime = 0)
-        audio?.play()
+        if (!audio.current) return
+        audio.current.currentTime = 0
+        audio.current.play()
     }
 
     // const playAudio = async () => {
@@ -95,16 +101,16 @@ const Player = () => {
         try {
             const [song] = await Promise.all([fetchSong(id)])
             setIsLoading(false)
-            audio?.pause()
+            audio.current?.pause()
             if (song.statusCode === 200) {
                 dispatch(setCurrentSong(song.data))
-                setAudio(new Audio(song.data.stream))
+                audio.current = new Audio(song.data.stream)
             } else {
-                setAudio(null)
+                audio.current = null
                 dispatch(setIsPlaying(false))
                 toast.warn(song.message)
                 setCurrentSecond(0)
-                thumb.current.style.cssText = `right: 100%`
+                thumb.current && (thumb.current.style.cssText = `right: 100%`)
             }
         } catch (error) {
             toast.error(error as string)
@@ -112,28 +118,29 @@ const Player = () => {
     }
 
     useEffect(() => {
-        audio && (audio.volume = (volume / 100))
+        if (!audio.current) return
+        audio.current.volume = (volume / 100)
     }, [volume])
 
     useEffect(() => {
-        getSong(currentSong!.id)
+        getSong(currentSong?.id ?? '')
     }, [currentSong])
 
     useEffect(() => {
-        thumbInterval && clearInterval(thumbInterval)
-        if (!audio) return
-        audio.load()
-        audio.currentTime = 0
+        thumbInterval.current && clearInterval(thumbInterval.current)
+        if (!audio.current || !thumb.current || !thumbInterval.current) return
+        audio.current.load()
+        audio.current.currentTime = 0
         // On audio playing toggle values
-        audio.onplaying = () => dispatch(setIsPlaying(true))
+        audio.current.onplaying = () => dispatch(setIsPlaying(true))
         // On audio pause toggle values
-        audio.onpause = () => dispatch(setIsPlaying(false))
-        if (isPlaying && thumb.current) {
-            audio.play()
-            thumbInterval = setInterval(() => {
-                let percent = Math.round((audio.currentTime / currentSong!.duration) * 10000) / 100
-                thumb.current.style.cssText = `right: ${100 - percent}%`
-                setCurrentSecond(Math.round(audio.currentTime))
+        audio.current.onpause = () => dispatch(setIsPlaying(false))
+        if (isPlaying) {
+            audio.current.play()
+            thumbInterval.current = setInterval(() => {
+                let percent = Math.round((audio.current!.currentTime / currentSong!.duration) * 10000) / 100
+                thumb.current && (thumb.current.style.cssText = `right: ${100 - percent}%`)
+                setCurrentSecond(Math.round(audio.current!.currentTime))
             }, 500)
         }
         const handleEnd = () => {
@@ -143,71 +150,63 @@ const Player = () => {
                 repeatMode === 1 ? handleClickOne() : handleClickNext()
             } else {
                 dispatch(setIsPlaying(false))
-                audio.pause()
+                audio.current?.pause()
             }
         }
-        audio.addEventListener('ended', handleEnd)
-        return () => { audio.removeEventListener('ended', handleEnd) }
+        audio.current.addEventListener('ended', handleEnd)
+        return () => { audio.current?.removeEventListener('ended', handleEnd) }
     }, [audio])
 
     return (
-        <div className="sticky bottom-0 left-0 right-0 z-20">
-            <div className="flex justify-between bg-main-400 px-5 py-2">
+        <div className={`fixed left-0 right-0 bottom-0 z-20 h-24 content-center bg-main-400`}>
+            <div className="flex justify-between px-5">
                 <div className="w-[30%] hidden sm:flex justify-start items-center gap-4">
                     <img src={currentSong?.thumbnail} alt="thumbnail" className="w-16 h-16 object-cover" />
                     <div className="flex flex-col">
                         <span className="font-semibold text-gray-700 text-sm line-clamp-2 text-ellipsis">{currentSong?.title}</span>
                         <span className="text-gray-500 text-xs line-clamp-2 text-ellipsis">{currentSong?.artistNames}</span>
                     </div>
-                    <span className="p-2">
-                        <AiOutlineHeart size={20} />
-                    </span>
-                    <span className="p-1">
-                        <BsThreeDots size={20} />
-                    </span>
+                    <Heart size={20} />
+                    <Ellipsis size={20} />
                 </div>
                 <div className="w-full sm:w-[40%] flex flex-col justify-center items-center gap-4">
                     <div className="flex gap-8 items-center">
                         <span title="Bật phát ngẫu nhiên" className={`cursor-pointer ${shuffle && 'text-purple-600'}`}>
-                            <CiShuffle size={20} onClick={() => setShuffle(!shuffle)} />
+                            <Shuffle size={20} onClick={() => setShuffle(!shuffle)} />
                         </span>
                         <span className={`${isPlaylist ? 'cursor-pointer' : 'text-gray-500'}`}>
-                            <MdSkipPrevious size={20} onClick={handleClickPrevious} />
+                            <SkipBack size={20} onClick={handleClickPrevious} />
                         </span>
-                        <span onClick={handleToggleButton} className="hover:text-main-500 border rounded-full border-gray-700 p-1" >
-                            {isLoading ? <RotatingLines strokeColor="grey" width="26" /> : isPlaying ? <BsPauseFill size={26} /> : <BsPlayFill size={26} />}
+                        <span onClick={handleToggleButton} className="hover:text-main-500 border rounded-full border-gray-500 p-1" >
+                            {isLoading ? <RotatingLines strokeColor="grey" height={26} width={26} /> : isPlaying ? <Pause size={26} /> : <Play size={26} />}
                         </span>
                         <span className={`${isPlaylist ? 'cursor-pointer' : 'text-gray-500'}`}>
-                            <MdSkipNext size={20} onClick={handleClickNext} />
+                            <SkipForward size={20} onClick={handleClickNext} />
                         </span>
                         <span
                             title="Phát lại tất cả bài hát"
                             className={`cursor-pointer ${repeatMode && 'text-purple-600'}`}
                             onClick={() => setRepeatMode(repeatMode === 2 ? 0 : repeatMode + 1)}
                         >
-                            {repeatMode === 1 ? <TbRepeatOnce size={20} /> : <CiRepeat size={20} />}
+                            {repeatMode === 1 ? <Repeat1 size={20} /> : <Repeat size={20} />}
                         </span>
                     </div>
                     <div className="w-full flex items-center justify-center gap-3 text-sm">
-                        <span>{formatDuration(currentSecond)}</span>
-                        <div className="relative h-1 hover:h-2 bg-[rgba(0,0,0,0.1)] w-3/5 rounded-full cursor-pointer"
-                            onClick={handleClickProgressBar} ref={trackRef}
-                        >
+                        <Typography className="font-semibold text-gray-500 m-0">{formatDuration(currentSecond)}</Typography>
+                        <div className="relative h-1 hover:h-2 bg-[rgba(0,0,0,0.1)] w-3/5 rounded-full cursor-pointer" onClick={handleClickProgressBar} ref={trackRef}>
                             <div ref={thumb} className="absolute top-0 left-0 bottom-0 h-full bg-[#0e8080] rounded-full"></div>
                         </div>
-                        <span>{formatDuration(currentSong?.duration ?? 0)}</span>
+                        <Typography className="font-semibold text-gray-500 m-0">{formatDuration(currentSong?.duration ?? 0)}</Typography>
                     </div>
                 </div>
                 <div className="w-[30%] hidden md:flex items-center justify-end gap-4">
                     <span onClick={() => setVolume(volume === 0 ? 50 : 0)}>
-                        {
-                            volume >= 50 ? <SlVolume2 /> : volume === 0 ? <SlVolumeOff /> : <SlVolume1 />
-                        }
+                        {volume >= 50 ? <Volume2 /> : volume === 0 ? <VolumeX /> : <Volume1 />}
                     </span>
-                    <input type="range" step={1} min={0} max={100} onChange={(e) => setVolume(Number(e.target.value))} value={volume} className="bg-main-500 h-1 hover:h-2" />
-                    <span className="p-1.5 rounded-md cursor-pointer bg-main-500 text-white opacity-90 hover:opacity-100">
-                        <BsMusicNoteList size={18} onClick={() => { }} />
-                    </span>
+                    <input type="range" step={1} min={0} max={100} onChange={(e) => setVolume(Number(e.target.value))} value={volume} className="h-1 hover:h-2" />
+                    <div className="p-2 rounded-md cursor-pointer bg-main-500 text-white">
+                        <MusicIcon onClick={() => { dispatch(setShowSidebarRight(!showSideBarRight)) }} />
+                    </div>
                 </div>
             </div>
         </div>

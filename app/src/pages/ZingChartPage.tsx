@@ -4,7 +4,6 @@ import { Line } from "react-chartjs-2"
 import { icons } from "@/lib/icons"
 import { deepObjectComparison } from "@/lib/utils"
 import SongItem from "@/sections/SongItem"
-import bgChart from '../assets/bg-zing-chart.png'
 import { toast } from "react-toastify"
 import { zingChartDataHC } from "@/assets/dummy_data"
 import RankListCard from "@/sections/RankListCard"
@@ -123,7 +122,7 @@ const ZingChartPage = () => {
     return (
         <div className="w-full">
             <div className='relative h-[500px]'>
-                <img src={bgChart} alt="bg-chart" className='w-full h-full block object-cover grayscale' />
+                <img src='./bg-zing-chart.png' alt="bg-chart" className='w-full h-full block object-cover grayscale' />
                 <div className='absolute top-0 left-0 right-0 bottom-0 bg-[rgba(206,217,217,0.9)]'></div>
                 <div className='absolute top-0 left-0 right-0 bottom-0 bg-linear-to-t from-[#CED9D9] to-transparent'></div>
                 <div className="absolute top-[20%] left-0 right-0 bottom-0 px-10">
@@ -147,7 +146,7 @@ const ZingChartPage = () => {
                 <RankListCard initialAmount={10} songs={chartData?.RTChart?.items} />
             </div>
             <div className='relative'>
-                <img src={bgChart} alt="bg-chart" className='w-full h-full block object-cover grayscale' />
+                <img src={'./bg-zing-chart.png'} alt="bg-chart" className='w-full h-full block object-cover grayscale' />
                 <div className='absolute top-0 left-0 right-0 bottom-0 bg-[rgba(206,217,217,0.9)]'></div>
                 <div className="absolute top-0 left-0 right-0 bottom-0 px-10 flex flex-col gap-8">
                     <h3 className="text-4xl text-main-500 font-bold mt-8">Bảng xếp hạng tuần</h3>

@@ -7,8 +7,6 @@ import {
 import { persistStore, persistReducer } from 'redux-persist';
 import rootReducer, { rootPersistConfig } from './rootReducer';
 
-// ----------------------------------------------------------------------
-
 export type RootState = ReturnType<typeof rootReducer>;
 
 const store = configureStore({

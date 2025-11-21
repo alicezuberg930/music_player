@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom"
-import logo from "@/assets/react.svg"
 import { sidebarMenu } from "@/lib/menu"
+import { Typography } from "@/components/ui/typography"
 
 const SidebarLeft = () => {
     const checkActive = (active: boolean) => {
@@ -8,10 +8,13 @@ const SidebarLeft = () => {
     }
 
     return (
-        <div className="sm:block hidden lg:w-[180px] w-[70px] flex-none border bg-main-200">
-            <div className="h-full flex flex-col ">
-                <div className="w-full h-[70px] py-[15px] px-[25px] flex justify-start items-center">
-                    <img src={logo} alt="logo" />
+        <div className="sm:block hidden lg:w-48 w-20 flex-none border bg-main-200">
+            <div className="h-full flex flex-col">
+                <div className="w-full h-16 py-4 px-6 flex justify-start items-center gap-1">
+                    <img src='./vite.svg' alt="logo" />
+                    <div className="hidden lg:block">
+                        <Typography className="m-0 font-semibold">Tiến's MP3</Typography>
+                    </div>
                 </div>
                 <div className="flex flex-col">
                     {

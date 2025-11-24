@@ -34,8 +34,8 @@ export class UserService {
             const token = jwt.sign({ id: user.id }, env.JWT_SECRET!, { expiresIn: '1d', algorithm: 'HS256' })
             response.cookie('accessToken', token, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production', // HTTPS only in production
-                sameSite: 'strict',
+                secure: true,
+                sameSite: 'lax',
                 maxAge: 1 * 24 * 60 * 60 * 1000 // 1 days
             });
             return response.json({
@@ -85,6 +85,20 @@ export class UserService {
             })
             if (!data) throw new NotFoundException('User not found')
             return response.json({ message: 'User details fetched successfully', data })
+        } catch (error) {
+            if (error instanceof HttpException) throw error
+            throw new BadRequestException(error instanceof Error ? error.message : undefined)
+        }
+    }
+
+    public async signOut(request: Request, response: Response) {
+        try {
+            response.clearCookie('accessToken', {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'lax',
+            })
+            return response.json({ message: 'User signed out successfully' })
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)

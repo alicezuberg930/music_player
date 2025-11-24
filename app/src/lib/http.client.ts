@@ -87,6 +87,15 @@ export const signUp = async (fullname: string, email: string, password: string):
     }
 }
 
+export const signOut = async (): Promise<Response> => {
+    try {
+        const response = await axios.post<Response>(`/users/sign-out`)
+        return response.data
+    } catch (error) {
+        throw error
+    }
+}
+
 export const fetchProfile = async (): Promise<Response<User>> => {
     try {
         const response = await axios.get<Response<User>>(`/me/profile`)

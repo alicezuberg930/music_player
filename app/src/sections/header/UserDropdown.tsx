@@ -12,7 +12,7 @@ import { useAuthContext } from "@/lib/auth/useAuthContext"
 import { Link } from "react-router-dom"
 
 const UserDropdown: React.FC = () => {
-    const { user } = useAuthContext()
+    const { user, signout } = useAuthContext()
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -61,7 +61,7 @@ const UserDropdown: React.FC = () => {
                 {/* <DropdownMenuItem>Support</DropdownMenuItem> */}
                 {/* <DropdownMenuItem disabled>API</DropdownMenuItem> */}
                 {/* <DropdownMenuSeparator /> */}
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={signout}>
                     Đăng xuất
                 </DropdownMenuItem>
             </DropdownMenuContent>

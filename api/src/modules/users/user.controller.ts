@@ -23,6 +23,10 @@ class UserController {
         return await this.userService.signIn(request, response)
     }
 
+    public async signOut(request: Request, response: Response) {
+        return await this.userService.signOut(request, response)
+    }
+
     public async findUser(request: Request<{ id: string }>, response: Response) {
         return await this.userService.findUser(request, response)
     }

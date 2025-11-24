@@ -37,6 +37,11 @@ userRouter.post("/users/sign-in",
     (request: Request<{}, {}, LoginUserDto>, response: Response) => userController.signIn(request, response)
 )
 
+userRouter.post("/users/sign-out",
+    JWTMiddleware,
+    (request: Request, response: Response) => userController.signOut(request, response)
+)
+
 userRouter.put("/users/:id",
     upload.fields([{ name: "avatar", maxCount: 1 }]),
     fileValidator,

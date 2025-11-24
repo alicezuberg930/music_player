@@ -5,7 +5,7 @@ import type { ActionMapType, AuthStateType, AuthUser, JWTContextType } from './t
 // components
 import { useSnackbar } from '@/components/snackbar'
 // http requests
-import { fetchProfile, signIn } from '../http.client'
+import { fetchProfile, signIn, signOut } from '../http.client'
 
 enum Types {
   INITIAL = 'INITIAL',
@@ -113,18 +113,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         enqueueSnackbar(response.message ?? 'Lỗi không xác định', { variant: 'error' })
       } else {
         enqueueSnackbar(response.message)
-        navigate('/', { replace: true })
         dispatch({
           type: Types.LOGIN,
           payload: {
             user: response.data as AuthUser
           },
         })
+        navigate('/', { replace: true })
       }
     } catch (error) {
       enqueueSnackbar(error instanceof Error ? error.message : 'Internal Server Error', { variant: 'error' })
     }
-  }, [])
+  }, [initialize])
 
   const signup = useCallback(async (email: string, password: string, name: string) => {
     try {
@@ -148,16 +148,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error) {
       enqueueSnackbar(error instanceof Error ? error.message : 'Internal Server Error', { variant: 'error' })
     }
-  }, [])
+  }, [initialize])
 
-  const signout = useCallback(() => {
+  const signout = useCallback(async () => {
     try {
-      navigate('/', { replace: true })
+      await signOut()
       dispatch({ type: Types.LOGOUT })
+      navigate('/', { replace: true })
     } catch (error) {
       enqueueSnackbar(error instanceof Error ? error.message : 'Internal Server Error', { variant: 'error' })
     }
-  }, [])
+  }, [initialize])
 
   const signInWithProvider = useCallback((provider: string) => {
     window.location.href = `/api/auth/${provider}`

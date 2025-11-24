@@ -1,11 +1,11 @@
 import { index, mysqlTable, int, varchar, boolean, text, date } from "drizzle-orm/mysql-core"
-import { createdAt, updatedAt } from "../utils"
+import { createdAt, createId, updatedAt } from "../utils"
 import { relations } from "drizzle-orm"
 import { songs, artists, users } from "./"
 
 // playlist table
 export const playlists = mysqlTable("playlists", {
-    id: int().primaryKey().notNull().autoincrement(),
+    id: varchar({ length: 36 }).primaryKey().notNull().$defaultFn(() => createId()),
     title: varchar({ length: 255 }).notNull(),
     artistNames: varchar({ length: 255 }).notNull(),
     isWorldWide: boolean().default(false),
@@ -14,7 +14,7 @@ export const playlists = mysqlTable("playlists", {
     releaseDate: date({ mode: 'string' }),
     description: text(),
     isIndie: boolean().default(false),
-    userId: int().notNull().references(() => users.id, { onDelete: "restrict" }),
+    userId: varchar({ length: 36 }).notNull().references(() => users.id, { onDelete: "restrict" }),
     totalDuration: int().default(0),
     likes: int().default(0),
     listens: int().default(0),
@@ -41,8 +41,8 @@ export const playlistsRelations = relations(playlists, ({ one, many }) => ({
 // playlist_artist table
 export const playlistArtists = mysqlTable("playlist_artists", {
     id: int().primaryKey().notNull().autoincrement(),
-    playlistId: int().notNull().references(() => playlists.id, { onDelete: "cascade" }),
-    artistId: int().references(() => artists.id, { onDelete: "set null" }),
+    playlistId: varchar({ length: 36 }).notNull().references(() => playlists.id, { onDelete: "cascade" }),
+    artistId: varchar({ length: 36 }).references(() => artists.id, { onDelete: "set null" }),
 }, (t) => [
     index('playlist_id_idx').on(t.playlistId),
     index('artist_id_idx').on(t.artistId)
@@ -63,8 +63,8 @@ export const playlistArtistsRelations = relations(playlistArtists, ({ one }) => 
 // playlist_songs table
 export const playlistSongs = mysqlTable("playlist_songs", {
     id: int().primaryKey().notNull().autoincrement(),
-    playlistId: int().notNull().references(() => playlists.id, { onDelete: "cascade" }),
-    songId: int().notNull().references(() => songs.id, { onDelete: "cascade" }),
+    playlistId: varchar({ length: 36 }).notNull().references(() => playlists.id, { onDelete: "cascade" }),
+    songId: varchar({ length: 36 }).notNull().references(() => songs.id, { onDelete: "cascade" }),
 }, (t) => [
     index('playlist_id_idx').on(t.playlistId),
     index('song_id_idx').on(t.songId)

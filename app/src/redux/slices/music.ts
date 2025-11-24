@@ -7,7 +7,7 @@ const initialState: IMusicState = {
   currentSongs: [],
   currentSong: null,
   isPlaylist: false,
-  currentPlaylistName: null
+  currentPlaylistName: null,
 }
 
 const slice = createSlice({
@@ -29,10 +29,8 @@ const slice = createSlice({
     addRecentSong(state, action) {
       let songs = state.recentSongs
       const newSong = action.payload as Song
-      if (songs.find(song => song.id === newSong.id))
-        songs = songs.filter(song => song.id !== newSong.id)
-      if (songs.length > 29)
-        songs.pop()
+      if (songs.find(song => song.id === newSong.id)) songs = songs.filter(song => song.id !== newSong.id)
+      if (songs.length > 29) songs.pop()
       state.recentSongs = [newSong, ...songs]
     },
     setIsPlaylist(state, action) {

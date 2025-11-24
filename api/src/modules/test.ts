@@ -76,7 +76,7 @@ testRouter.get("/drive/files", async (req, res) => {
         // - or automatically use refresh_token to get a new access_token
         const response = await drive.files.list({
             pageSize: 10,
-            fields: "files(id, name, webViewLink, webContentLink)",
+            fields: "files(id, name, webViewLink, webContentLink, iconLink, thumbnailLink)",
         });
 
         res.json(response.data.files || []);

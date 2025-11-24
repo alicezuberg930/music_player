@@ -26,7 +26,7 @@ const SongCard = ({ song, playlistTitle, hideAlbum, order }: Props) => {
     }
 
     return (
-        <div onClick={handleSongClick} className="flex justify-between items-center p-2 border-t border-[rgba(0,0,0,0.05)] hover:bg-[#DDE4E4] cursor-pointer">
+        <div onClick={handleSongClick} className="flex justify-between items-center p-2 border-t border-[rgba(0,0,0,0.05)] hover:bg-main-200 cursor-pointer">
             <div className="flex w-[45%] items-center justify-start gap-2">
                 {order && (
                     <div className={`w-1/12 flex justify-center text-3xl px-1 text-[#33104cf2] ${orderCss}`}>

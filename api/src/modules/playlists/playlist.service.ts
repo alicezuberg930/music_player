@@ -4,9 +4,10 @@ import { CreatePlayList, PlayList } from "./playlist.model"
 import { playlistArtists, playlists, playlistSongs, songs } from "../../db/schemas"
 import { BadRequestException, HttpException, NotFoundException } from "../../lib/exceptions"
 import { CreatePlaylistDto } from "./dto/create-playlist.dto"
-import { uploadFile } from "../../lib/helpers/cloudinary.file"
+import { deleteFile, extractPublicId, uploadFile } from "../../lib/helpers/cloudinary.file"
 import { UpdatePlaylistDto } from "./dto/update-playlist.dto"
 import { QueryPlaylistDto } from "./dto/query-playlist.dto"
+import { createId } from "../../db/utils"
 
 export class PlaylistService {
     public async getPlaylists(request: Request<{}, {}, {}, QueryPlaylistDto>, response: Response) {
@@ -45,7 +46,7 @@ export class PlaylistService {
             const files = request.files as { [fieldname: string]: Express.Multer.File[] }
             const thumbnailFile: Express.Multer.File | null = files['thumbnail']?.[0] ?? null
             if (thumbnailFile) {
-                thumbnailUrl = (await uploadFile(thumbnailFile.path, 'thumbnails')) as string
+                thumbnailUrl = (await uploadFile(thumbnailFile, '/playlist', createId())) as string
             }
             // get all the songs by their ids
             const chosenSongs = await db.query.songs.findMany({
@@ -67,13 +68,13 @@ export class PlaylistService {
             const playlist = {
                 releaseDate, title, description,
                 userId: request.userId,
-                thumbnail: thumbnailUrl ?? '/assets/default-playlist-thumbnail.png',
+                thumbnail: thumbnailUrl ?? '/assets/default/default-playlist-thumbnail.png',
                 totalDuration,
                 artistNames: Array.from(new Set(chosenSongs.flatMap(song => song.artists.map(a => a?.name)))).join(', ')
             } as CreatePlayList
             const insertedPlaylist = await db.insert(playlists).values(playlist)
-            await db.insert(playlistSongs).values(chosenSongs.map(song => ({ songId: song.id, playlistId: insertedPlaylist[0].insertId })))
-            await db.insert(playlistArtists).values(artistIds.map(artistId => ({ artistId, playlistId: insertedPlaylist[0].insertId })))
+            await db.insert(playlistSongs).values(chosenSongs.map(song => ({ songId: song.id, playlistId: insertedPlaylist[0].insertId.toString() })))
+            await db.insert(playlistArtists).values(artistIds.map(artistId => ({ artistId, playlistId: insertedPlaylist[0].insertId.toString() })))
             return response.status(201).json({ message: 'Playlists created successfully' })
         } catch (error) {
             if (error instanceof HttpException) throw error
@@ -84,47 +85,51 @@ export class PlaylistService {
     public async updatePlaylist(request: Request<{ id: string }, {}, UpdatePlaylistDto>, response: Response) {
         try {
             const { id } = request.params
-            const { releaseDate, title, songIds, description } = request.body
-            let thumbnailUrl: string | null = null
-            const files = request.files as { [fieldname: string]: Express.Multer.File[] }
-            const thumbnailFile: Express.Multer.File | null = files['thumbnail']?.[0] ?? null
-            if (thumbnailFile) {
-                thumbnailUrl = (await uploadFile(thumbnailFile.path, 'thumbnails')) as string
-            }
             const myPlaylist = await db.query.playlists.findFirst({
-                columns: { totalDuration: true },
-                where: eq(playlists.id, parseInt(id)),
+                columns: { totalDuration: true, thumbnail: true },
+                where: eq(playlists.id, id),
                 with: { artists: true, songs: true }
             })
             if (!myPlaylist) throw new BadRequestException('Playlist not found')
+            const { releaseDate, title, songIds, description } = request.body
+            const files = request.files as { [fieldname: string]: Express.Multer.File[] }
+            const thumbnailFile: Express.Multer.File | null = files['thumbnail']?.[0] ?? null
+            let thumbnail: string | null = null
+            if (thumbnailFile) {
+                if (myPlaylist.thumbnail.includes('/assets/')) {
+                    thumbnail = (await uploadFile(thumbnailFile, '/playlist', createId())) as string
+                } else {
+                    await uploadFile(thumbnailFile, '/playlist', extractPublicId(myPlaylist.thumbnail))
+                }
+            }
             const currentPlaylistSongIds = myPlaylist.songs.map(ps => ps.songId)
             let totalDuration = myPlaylist.totalDuration!
             // the user can remove any song in the playlist or add new songs
             const songsToAdd = songIds.filter(songId => !currentPlaylistSongIds.includes(songId))
             const songsToRemove = currentPlaylistSongIds.filter(songId => !songIds.includes(songId))
             if (songsToAdd.length > 0) {
-                await db.insert(playlistSongs).values(songsToAdd.map(song => ({ songId: song, playlistId: parseInt(id) })))
+                await db.insert(playlistSongs).values(songsToAdd.map(song => ({ songId: song, playlistId: id })))
                 const addSongs = await db.query.songs.findMany({ columns: { duration: true }, where: inArray(songs.id, songsToAdd) })
                 totalDuration += addSongs.reduce((total, song) => total + song.duration, 0)
             }
             if (songsToRemove.length > 0) {
-                await db.delete(playlistSongs).where(and(eq(playlistSongs.playlistId, parseInt(id)), inArray(playlistSongs.songId, songsToRemove)))
+                await db.delete(playlistSongs).where(and(eq(playlistSongs.playlistId, id), inArray(playlistSongs.songId, songsToRemove)))
                 const removeSongs = await db.query.songs.findMany({ columns: { duration: true }, where: inArray(songs.id, songsToRemove) })
                 totalDuration -= removeSongs.reduce((total, song) => total + song.duration, 0)
             }
             const updatedArtists = await db.query.playlistSongs.findMany({
-                where: eq(playlistSongs.playlistId, parseInt(id)),
+                where: eq(playlistSongs.playlistId, id),
                 columns: {},
                 with: { song: { columns: { artistNames: true } } }
             }).then(results => Array.from(new Set(results?.flatMap(ps => ps.song.artistNames?.split(', ') ?? []))))
             const playlist = {
                 releaseDate, title, description,
                 userId: request.userId,
-                ...thumbnailUrl && { thumbnail: thumbnailUrl },
                 totalDuration,
-                artistNames: updatedArtists.join(', ')
+                artistNames: updatedArtists.join(', '),
+                ...thumbnail && { thumbnail }
             } as PlayList
-            await db.update(playlists).set(playlist).where(eq(playlists.id, parseInt(id)))
+            await db.update(playlists).set(playlist).where(eq(playlists.id, id))
             return response.json({ message: 'Playlists updated successfully' })
         } catch (error) {
             if (error instanceof HttpException) throw error
@@ -136,7 +141,7 @@ export class PlaylistService {
         try {
             const { id } = request.params
             const data: PlayList | undefined = await db.query.playlists.findFirst({
-                where: eq(playlists.id, parseInt(id)),
+                where: eq(playlists.id, id),
                 with: {
                     user: { columns: { password: false, email: false } },
                     songs: {
@@ -153,6 +158,18 @@ export class PlaylistService {
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)
+        }
+    }
+
+    public async deletePlaylist(request: Request<{ id: string }, {}>, response: Response) {
+        try {
+            const { id } = request.params
+            const myPlaylist = await db.query.playlists.findFirst({
+                columns: { thumbnail: true },
+                where: eq(playlists.id, id)
+            })
+        } catch (error) {
+
         }
     }
 }

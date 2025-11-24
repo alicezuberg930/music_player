@@ -17,7 +17,7 @@ interface FormValuesProps {
     confirmPassword: string
 }
 
-export default function SignupPage() {
+const SignupPage: React.FC = () => {
     const { signup } = useAuthContext()
 
     const FormSchema = Yup.object().shape({
@@ -91,3 +91,5 @@ export default function SignupPage() {
         </div>
     )
 }
+
+export default SignupPage

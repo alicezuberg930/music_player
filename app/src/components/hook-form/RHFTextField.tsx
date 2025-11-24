@@ -28,7 +28,7 @@ export default function RHFTextField({
                         aria-invalid={invalid}
                         autoComplete="off"
                     />
-                    {invalid && <FieldError errors={[error]} />}
+                    {invalid && <FieldError errors={[error]} className='ml-4' />}
                 </Field>
             )}
         />

@@ -40,4 +40,11 @@ playlistRouter.put("/playlists/:id",
     (request: Request<{ id: string }, {}, UpdatePlaylistDto>, response: Response) => playlistController.updatePlaylist(request, response)
 )
 
+playlistRouter.delete("/playlists/:id",
+    JWTMiddleware,
+    (request: Request<{ id: string }, {}>, response: Response) => playlistController.deletePlaylist(request, response)
+)
+
+
+
 export { playlistRouter }

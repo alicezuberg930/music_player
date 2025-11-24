@@ -62,7 +62,7 @@ export function RHFMultiSelect({
                         onValueChange={field.onChange}
                         defaultValue={field.value}
                     />
-                    {invalid && <FieldError errors={[error]} />}
+                    {invalid && <FieldError errors={[error]} className='ml-4' />}
                 </Field>
             )}
         />

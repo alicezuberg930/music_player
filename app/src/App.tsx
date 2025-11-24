@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { paths } from "./lib/paths";
-import { ArtistPage, HomePage, SigninPage, SignupPage, PlaylistPage, PublicPage, SearchAllPage, SearchArtistPage, SearchMVPage, SearchPage, SearchPlaylistPage, SearchSongPage, VideoClipPage, WeeklyZingChartPage, ZingChartPage } from "./pages";
+import { ArtistPage, HomePage, SigninPage, SignupPage, PlaylistPage, PublicPage, SearchAllPage, SearchArtistPage, SearchMVPage, SearchPage, SearchPlaylistPage, SearchSongPage, VideoClipPage, WeeklyZingChartPage, ZingChartPage, UploadMusicPage } from "./pages";
 
 export default function App() {
   return (
@@ -18,6 +18,9 @@ export default function App() {
           <Route path={paths.SEARCH_ARTIST} element={<SearchArtistPage />} />
           <Route path={paths.SEARCH_MV} element={<SearchMVPage />} />
         </Route>
+        {/* <Route path={'me'} element={<></>}> */}
+        <Route path={paths.UPLOAD_MUSIC} element={<UploadMusicPage />} />
+        {/* </Route> */}
         <Route path={paths.ARTIST__NAME} element={<ArtistPage />} />
       </Route>
       <Route path={paths.VIDEOCLIP__TITLE__ID} element={<VideoClipPage />} />

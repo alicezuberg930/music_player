@@ -50,10 +50,10 @@ export function RHFSingleDatePicker({
                                 {...other}
                                 navLayout='around'
                                 mode='single'
-                                selected={field.value ? parse(field.value, 'MM/dd/yyyy', new Date()) : undefined}
+                                selected={field.value ? parse(field.value, 'yyyy-MM-dd', new Date()) : undefined}
                                 onSelect={(day) => {
                                     if (day) {
-                                        field.onChange(format(day, 'MM/dd/yyyy'))
+                                        field.onChange(format(day, 'yyyy-MM-dd'))
                                         setOpen(false)
                                     }
                                 }}
@@ -61,7 +61,7 @@ export function RHFSingleDatePicker({
                             />
                         </PopoverContent>
                     </Popover>
-                    {invalid && <FieldError errors={[error]} />}
+                    {invalid && <FieldError errors={[error]} className='ml-4' />}
                 </Field>
             )}
         />
@@ -84,11 +84,11 @@ export function RHFRangeDatePicker({
             render={({ field, fieldState: { error, invalid } }) => {
                 const [start, end] = field.value || [undefined, undefined]
                 const displayValue = start && end
-                    ? `${format(start, 'MM/dd/yyyy')} - ${format(end, 'MM/dd/yyyy')}` : start
-                        ? `${format(start, 'MM/dd/yyyy')} - ...` : ''
+                    ? `${format(start, 'yyyy-MM-dd')} - ${format(end, 'yyyy-MM-dd')}` : start
+                        ? `${format(start, 'yyyy-MM-dd')} - ...` : ''
                 const selected: DateRange = {
-                    from: start ? parse(start, 'MM/dd/yyyy', new Date()) : undefined,
-                    to: end ? parse(end, 'MM/dd/yyyy', new Date()) : undefined
+                    from: start ? parse(start, 'yyyy-MM-dd', new Date()) : undefined,
+                    to: end ? parse(end, 'yyyy-MM-dd', new Date()) : undefined
                 }
                 return (
                     <Field data-invalid={invalid}>
@@ -115,7 +115,7 @@ export function RHFRangeDatePicker({
                                     selected={selected}
                                     onSelect={(range) => {
                                         if (range?.from && range.to) {
-                                            const arr = [format(range.from, 'MM/dd/yyyy'), format(range.to, 'MM/dd/yyyy')]
+                                            const arr = [format(range.from, 'yyyy-MM-dd'), format(range.to, 'yyyy-MM-dd')]
                                             field.onChange(arr)
                                         }
                                     }}
@@ -125,7 +125,7 @@ export function RHFRangeDatePicker({
                                 <Button variant={'outline'} onClick={() => setOpen(false)}>OK</Button>
                             </PopoverContent>
                         </Popover>
-                        {invalid && <FieldError errors={[error]} />}
+                        {invalid && <FieldError errors={[error]} className='ml-4' />}
                     </Field>
                 )
             }}

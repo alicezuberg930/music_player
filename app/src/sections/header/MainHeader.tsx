@@ -3,9 +3,12 @@ import SearchBar from "./SearchBar"
 import { paths } from "@/lib/paths"
 import { Typography } from "@/components/ui/typography"
 import { ArrowLeft, ArrowRight } from "lucide-react"
+import { useAuthContext } from "@/lib/auth/useAuthContext"
+import UserDropdown from "./UserDropdown"
 
 const Header = () => {
     const navigate = useNavigate()
+    const { isAuthenticated } = useAuthContext()
 
     return (
         <div className="w-full flex items-center justify-between bg-transparent gap-2">
@@ -16,9 +19,13 @@ const Header = () => {
                 </div>
                 <SearchBar />
             </div>
-            <Link to={paths.SIGNIN} className="flex-none">
-                <Typography variant={'span'} className="text-white">Đăng nhập</Typography>
-            </Link>
+            {isAuthenticated ? (
+                <UserDropdown />
+            ) : (
+                <Link to={paths.SIGNIN} className="flex-none">
+                    <Typography variant={'span'} className="text-white">Đăng nhập</Typography>
+                </Link>
+            )}
         </div>
     )
 }

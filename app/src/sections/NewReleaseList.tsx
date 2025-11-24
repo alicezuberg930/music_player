@@ -1,13 +1,21 @@
 import { useEffect, useState } from "react"
 import SongItem from "./SongItem"
 import type { Song } from "@/@types/song"
+import { fetchSongList } from "@/lib/http.client"
+import { Button } from "@/components/ui/button"
+import { Typography } from "@/components/ui/typography"
 
-const NewReleaseList = () => {
+const NewReleaseList: React.FC = () => {
     const [type, setType] = useState(-1)
     const [songs, setSongs] = useState<Song[]>([])
 
-    const setNewReleaseSongs = () => {
-        setSongs([])
+    const setNewReleaseSongs = async () => {
+        try {
+            const response = await fetchSongList()
+            setSongs(response.data || [])
+        } catch (error) {
+
+        }
         // if (type === -1) setSongs(newRelease?.items?.all || [])
         // if (type === 0) setSongs(newRelease?.items?.others || [])
         // if (type === 1) setSongs(newRelease?.items?.vPop || [])
@@ -15,31 +23,39 @@ const NewReleaseList = () => {
 
     useEffect(() => {
         setNewReleaseSongs()
-    }, [type])
+    }, [])
 
     return (
         <div className="mt-12">
-            <div className="flex items-center justify-between mb-5">
-                <h3 className="text-xl font-bold">{"newRelease?.title"}</h3>
+            <div className="flex items-center justify-between mb-3">
+                <Typography variant={'h5'}>Các bài hát mới</Typography>
                 <span className="text-xs uppercase">Tất cả</span>
             </div>
-            <div className="flex items-center gap-5 text-xs">
-                <button onClick={() => setType(-1)} className={`${type === -1 ? 'bg-main-500 text-white' : ''} py-1 px-4 rounded-l-full rounded-r-full border border-gray-400`}>
+            <div className="flex items-center gap-4">
+                <Button onClick={() => setType(-1)} variant={type === -1 ? 'default' : 'secondary'} className='text-xs'>
                     Tất cả
-                </button>
-                <button onClick={() => setType(0)} className={`${type === 0 ? 'bg-main-500 text-white' : ''} py-1 px-4 rounded-l-full rounded-r-full border border-gray-400`}>
+                </Button>
+                <Button onClick={() => setType(0)} variant={type === 0 ? 'default' : 'secondary'} className='text-xs'>
                     Quốc tế
-                </button>
-                <button onClick={() => setType(1)} className={`${type === 1 ? 'bg-main-500 text-white' : ''} py-1 px-4 rounded-l-full rounded-r-full border border-gray-400`}>
+                </Button>
+                <Button onClick={() => setType(1)} variant={type === 1 ? 'default' : 'secondary'} className='text-xs'>
                     Việt nam
-                </button>
+                </Button>
             </div>
-            <div className="flex flex-wrap w-full mt-5">
-                {songs?.slice(0, 12)?.map(item => (
-                    <div key={item?.id} className="md:w-[45%] xl:w-[30%]">
-                        <SongItem song={item} imgSize="lg" showTime={true} />
+            <div className="mt-5">
+                {songs.length > 0 ? (
+                    <div className="flex flex-wrap">
+                        {[0, 1, 2].map((col) => (
+                            <div key={col} className="w-full md:w-1/2 xl:w-1/3">
+                                {songs.slice(col * 3, (col + 1) * 3).map(item => (
+                                    <SongItem key={item.id} song={item} imgSize="lg" showTime={true} />
+                                ))}
+                            </div>
+                        ))}
                     </div>
-                ))}
+                ) : (
+                    <>loading</>
+                )}
             </div>
         </div >
     )

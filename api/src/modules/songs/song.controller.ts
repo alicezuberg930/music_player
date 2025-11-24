@@ -25,6 +25,10 @@ class SongController {
     public async findSong(request: Request<{ id: string }>, response: Response) {
         return await this.songService.findSong(request, response)
     }
+
+    public async deleteSong(request: Request<{ id: string }, {}>, response: Response) {
+        return await this.songService.deleteSong(request, response)
+    }
 }
 
 export default new SongController()

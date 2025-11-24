@@ -26,6 +26,10 @@ class PlaylistController {
     public async findPlaylist(request: Request<{ id: string }>, response: Response) {
         return await this.playlistService.findPlaylist(request, response)
     }
+
+    public async deletePlaylist(request: Request<{ id: string }, {}>, response: Response) {
+        return await this.playlistService.deletePlaylist(request, response)
+    }
 }
 
 export default new PlaylistController()

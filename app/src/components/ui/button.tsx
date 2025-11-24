@@ -4,12 +4,44 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
+const useRipple = (ref: React.RefObject<HTMLElement>) => {
+  React.useEffect(() => {
+    const element = ref.current
+    if (!element) return
+
+    const createRipple = (event: MouseEvent) => {
+      const button = event.currentTarget as HTMLElement
+      const rect = button.getBoundingClientRect()
+      const size = Math.max(rect.width, rect.height)
+      const x = event.clientX - rect.left - size / 2
+      const y = event.clientY - rect.top - size / 2
+
+      const ripple = document.createElement("span")
+      ripple.style.width = ripple.style.height = `${size}px`
+      ripple.style.left = `${x}px`
+      ripple.style.top = `${y}px`
+      ripple.classList.add("ripple")
+
+      button.appendChild(ripple)
+
+      setTimeout(() => ripple.remove(), 1000)
+    }
+
+    element.addEventListener("mousedown", createRipple)
+    element.addEventListener("click", createRipple)
+    return () => {
+      element.removeEventListener("mousedown", createRipple)
+      element.removeEventListener("click", createRipple)
+    }
+  }, [ref])
+}
+
 const buttonVariants = cva(
-  "cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  "cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive relative overflow-hidden",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        default: "bg-main-500 text-primary-foreground hover:bg-main-500/90",
         destructive:
           "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
@@ -47,9 +79,13 @@ function Button({
     asChild?: boolean
   }) {
   const Comp = asChild ? Slot : "button"
+  const buttonRef = React.useRef<HTMLButtonElement>(null)
+
+  useRipple(buttonRef as React.RefObject<HTMLElement>)
 
   return (
     <Comp
+      ref={buttonRef}
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}

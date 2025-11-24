@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { SnackbarProvider as NotistackProvider, type SnackbarKey } from 'notistack'
 import { Check, Info, OctagonAlert, X } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 type Props = {
   children: React.ReactNode
@@ -19,18 +20,19 @@ export default function SnackbarProvider({ children }: Props) {
         ref={notistackRef}
         dense
         maxSnack={5}
-        preventDuplicate
+        preventDuplicate={false}
         autoHideDuration={3000}
         variant="success"
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        style={{ backgroundColor: 'white', color: 'black' }}
         iconVariant={{
-          info: <SnackbarIcon icon={<Info color="info" />} color="info" />,
-          success: <SnackbarIcon icon={<Check color="success" />} color="success" />,
-          warning: <SnackbarIcon icon={<OctagonAlert color="warning" />} color="warning" />,
-          error: <SnackbarIcon icon={<OctagonAlert color="warning" />} color="error" />,
+          info: <SnackbarIcon icon={<Info />} color="info" />,
+          success: <SnackbarIcon icon={<Check />} color="success" />,
+          warning: <SnackbarIcon icon={<OctagonAlert />} color="warning" />,
+          error: <SnackbarIcon icon={<OctagonAlert />} color="error" />,
         }}
         action={(key) => (
-          <X onClick={onClose(key)} className='p-2' />
+          <X onClick={onClose(key)} size={24} />
         )}
       >
         {children}
@@ -47,17 +49,12 @@ type SnackbarIconProps = {
 function SnackbarIcon({ icon, color }: SnackbarIconProps) {
   return (
     <div
-      style={{
-        marginRight: 12,
-        width: 40,
-        height: 40,
-        display: 'flex',
-        borderRadius: 12,
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: `${color}`,
-        backgroundColor: `${color}`,
-      }}
+      className={cn('mr-3 w-10 h-10 flex rounded-xl items-center justify-center',
+        color === 'info' && 'text-blue-600 bg-blue-600/30',
+        color === 'success' && 'text-green-600 bg-green-600/30',
+        color === 'warning' && 'text-yellow-600 bg-yellow-600/30',
+        color === 'error' && 'text-red-600 bg-red-600/30'
+      )}
     >
       {icon}
     </div>

@@ -42,7 +42,7 @@ const routeMeta = {
 app.get('/*splat', (req, res) => {
     const userAgent = req.headers['user-agent'] || ''
     const isBot = botUserAgents.some(bot => userAgent.toLowerCase().includes(bot.toLowerCase()))
-
+    
     if (isBot) {
         const indexPath = path.join(__dirname, 'dist', 'index.html')
         let html = fs.readFileSync(indexPath, 'utf8')

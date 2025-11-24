@@ -1,10 +1,10 @@
 import { mysqlTable, varchar, boolean, int, text } from "drizzle-orm/mysql-core"
-import { createdAt, updatedAt } from "../utils"
+import { createdAt, createId, updatedAt } from "../utils"
 import { relations } from "drizzle-orm"
 import { artistsSongs, playlistArtists } from "./"
 
 export const artists = mysqlTable("artists", {
-    id: int().primaryKey().notNull().autoincrement(),
+    id: varchar({ length: 36 }).primaryKey().notNull().$defaultFn(() => createId()),
     name: varchar({ length: 255 }).notNull(),
     spotlight: boolean().default(false),
     alias: varchar({ length: 255 }),

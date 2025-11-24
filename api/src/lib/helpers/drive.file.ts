@@ -13,7 +13,7 @@ const oauth2Client = new google.auth.OAuth2(
     env.GOOGLE_REDIRECT_URI
 )
 
-const getDriveClient = () => {
+export const getDriveClient = () => {
     if (!REFRESH_TOKEN) throw new BadRequestException('No refresh token set. Go to /auth/google first.')
     oauth2Client.setCredentials({ refresh_token: REFRESH_TOKEN })
     return google.drive({ version: 'v3', auth: oauth2Client })
@@ -24,6 +24,7 @@ export type UploadResult = {
     name: string
     webViewLink: string
     webContentLink: string
+    thumbnailLink: string
 }
 
 const checkOrCreateSubfolder = async (drive: drive_v3.Drive, subFolder: string): Promise<string> => {
@@ -65,7 +66,7 @@ const checkOrCreateSubfolder = async (drive: drive_v3.Drive, subFolder: string):
     return currentParentId
 }
 
-export const uploadFile = async (files: Express.Multer.File[] | Express.Multer.File, subFolder?: string): Promise<UploadResult | UploadResult[]> => {
+export const uploadFile = async (files: Express.Multer.File[] | Express.Multer.File, subFolder?: string): Promise<string | string[]> => {
     try {
         const tempFiles = Array.isArray(files) ? files : [files]
         const drive = getDriveClient()
@@ -74,7 +75,6 @@ export const uploadFile = async (files: Express.Multer.File[] | Express.Multer.F
         const result: UploadResult[] = await Promise.all(
             tempFiles.map(async (file) => {
                 const { path, mimetype, filename } = file
-                console.log(file)
                 const fileStream = fs.createReadStream(path)
                 // Specific folder with currentParentId
                 const { data } = await drive.files.create({
@@ -104,7 +104,7 @@ export const uploadFile = async (files: Express.Multer.File[] | Express.Multer.F
                 })
             )
         )
-        return result.length > 1 ? result : result[0]
+        return result.length > 1 ? result.map(r => r.webContentLink) : result[0].webContentLink
     } catch (error) {
         throw new BadRequestException(error instanceof Error ? error.message : undefined)
     }

@@ -1,3 +1,5 @@
+import type { Artist } from "./artist";
+
 export type Song = {
     duration: number;
     id: string;
@@ -22,6 +24,7 @@ export type Song = {
     liked: boolean | null;
     comments: number | null;
     size: number;
+    artists: Artist[]
 }
 
 export type IMusicState = {

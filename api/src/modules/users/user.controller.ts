@@ -15,30 +15,20 @@ class UserController {
         return await this.userService.getUsers(request, response)
     }
 
-    public async registerUser(request: Request<{}, {}, CreateUserDto>, response: Response) {
-        try {
-            const data = await this.userService.createUser(request)
-            return response.status(201).json({ data, message: 'User created successfully' })
-        } catch (error) {
-            return response.status(500).json({ message: error instanceof Error ? error.message : 'Internal Server Error' })
-        }
+    public async signUp(request: Request<{}, {}, CreateUserDto>, response: Response) {
+        return await this.userService.signUp(request, response)
     }
 
-    public async loginUser(request: Request<{}, {}, LoginUserDto>, response: Response) {
-        try {
-            const data = await this.userService.createUser(request)
-            return response.status(201).json({ data, message: 'User created successfully' })
-        } catch (error) {
-            return response.status(500).json({ message: error instanceof Error ? error.message : 'Internal Server Error' })
-        }
+    public async signIn(request: Request<{}, {}, LoginUserDto>, response: Response) {
+        return await this.userService.signIn(request, response)
     }
 
     public async findUser(request: Request<{ id: string }>, response: Response) {
         return await this.userService.findUser(request, response)
     }
 
-    public async findMyProfile(request: Request, response: Response) {
-        return await this.userService.findMyProfile(request, response)
+    public async myProfile(request: Request, response: Response) {
+        return await this.userService.myProfile(request, response)
     }
 
     public async updateUser(request: Request<{ id: string }, {}, UpdateUserDto>, response: Response) { }

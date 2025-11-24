@@ -19,26 +19,22 @@ const upload = multer(multerOptions(uploadOptions))
 const fileValidator = fileMimeAndSizeOptions(uploadOptions)
 
 // user profile public access (wont see playlist if it's private and uploaded songs)
-userRouter.get("/users/:id",
-    (request: Request<{ id: string }>, response: Response) => userController.findUser(request, response)
-)
+userRouter.get("/users/:id", (request: Request<{ id: string }>, response: Response) => userController.findUser(request, response))
 
 // user profile only accessible when login (can see all playlist including private and uploaded songs)
-userRouter.get("/users/profile",
+userRouter.get("/me/profile",
     JWTMiddleware,
-    (request: Request<{ id: string }>, response: Response) => userController.findMyProfile(request, response)
+    (request: Request, response: Response) => userController.myProfile(request, response)
 )
 
-userRouter.post("/users/register",
-    JWTMiddleware,
+userRouter.post("/users/sign-up",
     validateDtoHanlder(CreateUserDto),
-    (request: Request<{}, {}, CreateUserDto>, response: Response) => userController.registerUser(request, response)
+    (request: Request<{}, {}, CreateUserDto>, response: Response) => userController.signUp(request, response)
 )
 
-userRouter.post("/users/login",
-    JWTMiddleware,
+userRouter.post("/users/sign-in",
     validateDtoHanlder(LoginUserDto),
-    (request: Request<{}, {}, LoginUserDto>, response: Response) => userController.loginUser(request, response)
+    (request: Request<{}, {}, LoginUserDto>, response: Response) => userController.signIn(request, response)
 )
 
 userRouter.put("/users/:id",

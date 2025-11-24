@@ -9,7 +9,7 @@ export const jwtDecode = (token: string): Record<string, string> => {
 }
 
 export const JWTMiddleware = async (request: Request, response: Response, next: NextFunction) => {
-    let token = request.cookies?.["accessToken"]
+    let token: string | undefined = request.cookies?.["accessToken"]
 
     if (!token && request.headers.authorization?.startsWith("Bearer")) {
         token = request.headers.authorization.split(" ")[1]
@@ -25,7 +25,7 @@ export const JWTMiddleware = async (request: Request, response: Response, next: 
         throw new UnauthorizedException("Invalid or expired access token")
     }
 
-    request.userId = parseInt(jwt.id)
+    request.userId = jwt.id
 
     next()
 }

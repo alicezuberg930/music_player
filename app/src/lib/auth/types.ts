@@ -1,29 +1,22 @@
+import type { User } from "@/@types/user"
 import BaseProvider from "./providers/base"
 
 export type ActionMapType<M extends { [index: string]: any }> = {
   [Key in keyof M]: M[Key] extends undefined ? { type: Key } : { type: Key, payload: M[Key] }
 }
 
-export type AuthUser = {
-  _id: string
-  name: string
-  email: string
-  phone: string
-  avatar: string | null
-  provider: string
-  isEmailVerified: boolean
-}
+export type AuthUser = User
 
 export type AuthStateType = {
   isAuthenticated: boolean
   isInitialized: boolean
-  user: AuthUser | null
+  user: User | null
 }
 
 export type JWTContextType = {
   isAuthenticated: boolean
   isInitialized: boolean
-  user: AuthUser | null
+  user: User | null
   signin: (username: string, password: string) => Promise<void>
   signup: (email: string, password: string, name: string) => Promise<void>
   signout: () => void

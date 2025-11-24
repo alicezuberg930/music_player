@@ -1,11 +1,12 @@
 import { index, mysqlTable, int } from "drizzle-orm/mysql-core"
 import { songs, artists } from "./"
 import { relations } from "drizzle-orm"
+import { varchar } from "drizzle-orm/mysql-core"
 
 export const artistsSongs = mysqlTable("artists_songs", {
     id: int().primaryKey().notNull().autoincrement(),
-    artistId: int().notNull().references(() => artists.id, { onDelete: "cascade" }),
-    songId: int().notNull().references(() => songs.id, { onDelete: "cascade" }),
+    artistId: varchar({ length: 36 }).notNull().references(() => artists.id, { onDelete: "cascade" }),
+    songId: varchar({ length: 36 }).notNull().references(() => songs.id, { onDelete: "cascade" }),
 }, (t) => [
     index('artist_id_idx').on(t.artistId),
     index('song_id_idx').on(t.songId),

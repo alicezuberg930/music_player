@@ -3,6 +3,7 @@ import { UploadApiResponse } from 'cloudinary'
 import env from './env'
 import fs from 'fs'
 import { BadRequestException } from '../exceptions'
+import { createId } from '../../db/utils'
 
 cloudinary.config({
     cloud_name: env.CLOUDINARY_CLOUD_NAME,
@@ -10,13 +11,20 @@ cloudinary.config({
     api_secret: env.CLOUDINARY_API_SECRET,
 })
 
-export const uploadFile = async (files: string[] | string, subFolder?: string): Promise<string | string[]> => {
+export const uploadFile = async (files: Express.Multer.File[] | Express.Multer.File, subFolder?: string, publicId?: string): Promise<string | string[]> => {
+    const tempFiles = Array.isArray(files) ? files : [files]
     try {
-        const tempFiles = Array.isArray(files) ? files : [files]
         const uploadPromises = tempFiles.map((file) =>
-            cloudinary.uploader.upload(file, {
-                folder: `lili-music${subFolder ? `/${subFolder}` : ''}`,
-                resource_type: 'raw'
+            cloudinary.uploader.upload(file.path, {
+                folder: `lili-music${subFolder}`,
+                ...publicId && { public_id: publicId },
+                ...!publicId && { public_id: createId() },
+                resource_type: 'auto',
+                overwrite: true,
+                invalidate: true,
+                use_filename: false,
+                unique_filename: false,
+                use_asset_folder_as_public_id_prefix: false
             }),
         )
         // Upload all files concurrently
@@ -26,24 +34,34 @@ export const uploadFile = async (files: string[] | string, subFolder?: string): 
         // Delete all local files concurrently
         await Promise.all(
             tempFiles.map((file) =>
-                fs.unlink(file, (err) => {
+                fs.unlink(file.path, (err) => {
                     if (err) console.error(`Error deleting file ${file} :${err.message}`)
                 })
             )
         )
+        console.log('Files uploaded to Cloudinary:', fileUrls)
         return fileUrls.length > 1 ? fileUrls : fileUrls[0]
     } catch (error) {
-        throw new BadRequestException(error instanceof Error ? error.message : undefined)
+        await Promise.all(
+            tempFiles.map((file) =>
+                fs.unlink(file.path, (err) => {
+                    if (err) console.error(`Error deleting file ${file} :${err.message}`)
+                })
+            )
+        )
+        throw new BadRequestException(JSON.stringify(error))
     }
 }
 
-const extractPublicId = (url: string): string => url.split('/').slice(-3).join('/').replace(/\.[^/.]+$/, '')
+export const extractPublicId = (url: string): string => url.split('/').slice(-3).join('/').replace(/\.[^/.]+$/, '')
 
 export const deleteFile = async (fileUrls: string | string[]): Promise<void> => {
     try {
         let tempURLs = Array.isArray(fileUrls) ? fileUrls : [fileUrls]
         await Promise.all(tempURLs.map(url => cloudinary.uploader.destroy(extractPublicId(url))))
+        console.log('Files deleted from Cloudinary:', tempURLs)
     } catch (error) {
         throw new BadRequestException(error instanceof Error ? error.message : undefined)
     }
 }
+

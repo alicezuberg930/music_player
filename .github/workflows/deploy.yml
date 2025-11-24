@@ -1,0 +1,72 @@
+name: Deploy Mono Repo
+
+on:
+    push:
+        branches:
+            - dev/rework
+
+jobs:
+    deploy-backend:
+        if: github.ref == 'refs/heads/dev/rework'
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout (for context only)
+              uses: actions/checkout@v4
+
+            - name: Deploy backend and frontend over SSH
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.SSH_HOST }}
+                  username: ${{ secrets.SSH_USER }}
+                  password: ${{ secrets.SSH_PASSWORD }}
+                  port: ${{ secrets.SSH_PORT }}
+                  script: |
+                      set -euo pipefail
+
+                      SERVER_PATH="${{ secrets.SERVER_PATH }}"
+                      FRONTEND_PATH="${{ secrets.FRONTEND_PATH }}"
+
+                      SERVER_NAME="music-player-server"
+                      FRONTEND_NAME="music-player-frontend"
+
+                      # Ensure Node & pm2 exist (adjust NVM/Node install to your stack)
+                      if ! command -v pm2 >/dev/null 2>&1; then
+                        npm i -g pm2
+                      fi
+
+                      cd "$SERVER_PATH"
+
+                      # Make sure we are on the right branch and up to date
+                      git fetch origin
+                      git checkout dev/rework
+                      git pull --ff-only origin dev/rework
+
+                      # Install deps, build, and run with PM2
+                      npm ci --legacy-peer-deps
+                      npm run build
+
+                      # Start or reload the service
+                      if pm2 describe "$SERVER_NAME" >/dev/null 2>&1; then
+                        pm2 reload "$SERVER_NAME"
+                      else
+                        # PM2 will run "npm start"
+                        pm2 start "npm run start" --name "$SERVER_NAME"
+                      fi
+
+                      cd "$FRONTEND_PATH"
+                      
+                      # Install deps, build, and run with PM2
+                      npm ci --legacy-peer-deps
+                      npm run build
+
+                      # Start or reload the service
+                      if pm2 describe "$FRONTEND_NAME" >/dev/null 2>&1; then
+                        pm2 reload "$FRONTEND_NAME"
+                      else
+                        # I'm running the command node server.js in app folder
+                        # For production, consider: "start": "node dist/index.js"
+                        # PM2 will run "node server.js"
+                        pm2 start "node server.js" --name "$FRONTEND_NAME"
+                      fi
+
+                      pm2 save

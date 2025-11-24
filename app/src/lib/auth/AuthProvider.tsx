@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom'
 import { createContext, useEffect, useReducer, useCallback, useMemo } from 'react'
-// utils
-import { setSession } from './utils'
-//
+// types
 import type { ActionMapType, AuthStateType, AuthUser, JWTContextType } from './types'
+// components
 import { useSnackbar } from '@/components/snackbar'
-import { paths } from '../paths'
+// http requests
+import { fetchProfile, signIn } from '../http.client'
 
 enum Types {
   INITIAL = 'INITIAL',
@@ -33,7 +33,7 @@ type ActionsType = ActionMapType<Payload>[keyof ActionMapType<Payload>]
 const initialState: AuthStateType = {
   isInitialized: false,
   isAuthenticated: false,
-  user: null,
+  user: null
 }
 
 const reducer = (state: AuthStateType, action: ActionsType) => {
@@ -77,37 +77,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const initialize = useCallback(async () => {
     try {
-      const profile = await fetch('/api/auth/profile')
-      const result = await profile.json()
-      if (profile.ok) {
-        fetch('/api/auth/token').then(res => res.json()).then(data => {
-          setSession(data.token, () => {
-            dispatch({
-              type: Types.INITIAL,
-              payload: {
-                isAuthenticated: false,
-                user: null
-              },
-            })
-            navigate(paths.SIGNIN)
-          })
-        })
+      const response = await fetchProfile()
+      console.log(response)
+      if (response.data && !response.statusCode) {
         dispatch({
           type: Types.INITIAL,
           payload: {
             isAuthenticated: true,
-            user: result.data,
+            user: response.data as AuthUser
+          },
+        })
+      } else {
+        dispatch({
+          type: Types.INITIAL,
+          payload: {
+            isAuthenticated: false,
+            user: null
           },
         })
       }
     } catch (error) {
-      dispatch({
-        type: Types.INITIAL,
-        payload: {
-          isAuthenticated: false,
-          user: null,
-        },
-      })
+      console.error(error)
     }
   }, [])
 
@@ -117,29 +107,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signin = useCallback(async (email: string, password: string) => {
     try {
-      const response = await fetch('/api/auth/sign-in', {
-        method: 'POST',
-        body: JSON.stringify({ email, password }),
-      })
-      const result = await response.json()
-      if (!response.ok) {
-        enqueueSnackbar(result.message, { variant: 'error' })
+      const response = await signIn(email, password)
+      console.log(response.data)
+      if (response.data && response.statusCode) {
+        enqueueSnackbar(response.message ?? 'Lỗi không xác định', { variant: 'error' })
       } else {
-        setSession(result.data.accessToken, () => {
-          dispatch({
-            type: Types.INITIAL,
-            payload: {
-              isAuthenticated: false,
-              user: null
-            },
-          })
-          navigate(paths.SIGNIN)
-        })
+        enqueueSnackbar(response.message)
+        navigate('/', { replace: true })
         dispatch({
           type: Types.LOGIN,
-          payload: { user: result.data.user }
+          payload: {
+            user: response.data as AuthUser
+          },
         })
-        navigate(paths.HOME, { replace: true })
       }
     } catch (error) {
       enqueueSnackbar(error instanceof Error ? error.message : 'Internal Server Error', { variant: 'error' })
@@ -172,7 +152,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signout = useCallback(() => {
     try {
-      setSession(null)
       navigate('/', { replace: true })
       dispatch({ type: Types.LOGOUT })
     } catch (error) {

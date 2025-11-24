@@ -21,5 +21,5 @@ export class UpdatePlaylistDto extends PartialType(CreatePlaylistDto) {
         }
         return []
     })
-    songIds!: number[]
+    songIds!: string[]
 }

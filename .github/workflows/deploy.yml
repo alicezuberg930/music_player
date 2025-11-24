@@ -23,13 +23,27 @@ jobs:
                   script: |
                       set -euo pipefail
 
+                      # Load NVM (Node Version Manager) if it exists
+                      export NVM_DIR="$HOME/.nvm"
+                      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                      
+                      # Or if using fnm
+                      if command -v fnm >/dev/null 2>&1; then
+                        eval "$(fnm env --use-on-cd)"
+                      fi
+
                       SERVER_PATH="${{ secrets.SERVER_PATH }}"
                       FRONTEND_PATH="${{ secrets.FRONTEND_PATH }}"
 
                       SERVER_NAME="music-player-server"
                       FRONTEND_NAME="music-player-frontend"
 
-                      # Ensure Node & pm2 exist (adjust NVM/Node install to your stack)
+                      # Ensure Node & pm2 exist
+                      if ! command -v node >/dev/null 2>&1; then
+                        echo "Node.js is not installed or not in PATH"
+                        exit 1
+                      fi
+                      
                       if ! command -v pm2 >/dev/null 2>&1; then
                         npm i -g pm2
                       fi

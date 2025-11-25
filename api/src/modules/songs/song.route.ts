@@ -5,7 +5,6 @@ import multer from "multer"
 import { multerOptions, Options } from "../../lib/helpers/multer.options"
 import { UpdateSongDto } from "./dto/update-song.dto"
 import { fileMimeAndSizeOptions, validateDtoHanlder, JWTMiddleware } from "../../middleware"
-import { getDriveClient } from "../../lib/helpers/drive.file"
 
 const songRouter = express.Router()
 
@@ -53,21 +52,6 @@ songRouter.get("/songs/:id",
 songRouter.delete("/songs/:id",
     JWTMiddleware,
     (request: Request<{ id: string }, {}>, response: Response) => songController.deleteSong(request, response)
-)
-
-songRouter.post('/songs/somthingsss',
-    JWTMiddleware,
-    async (request: Request, response: Response) => { return response.json({ message: 'ok' }) }
-)
-
-songRouter.put('/songs/somthingttt',
-    JWTMiddleware,
-    async (request: Request, response: Response) => { return response.json({ message: 'ok' }) }
-)
-
-songRouter.delete('/songs/somthingzzz',
-    JWTMiddleware,
-    async (request: Request, response: Response) => { return response.json({ message: 'ok' }) }
 )
 
 export { songRouter }

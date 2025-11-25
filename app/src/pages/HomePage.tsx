@@ -1,19 +1,6 @@
-import { axios } from "@/lib/axios.config"
 import NewReleaseList from "@/sections/NewReleaseList"
-import { useEffect } from "react"
 
 const HomePage: React.FC = () => {
-    useEffect(() => {
-        const a = async () => {
-            const a = await axios.post('/songs/somthingsss')
-            const b = await axios.put('/songs/somthingttt')
-            const c = await axios.delete('/songs/somthingzzz')
-            console.log(a)
-            console.log(b)
-            console.log(c)
-        }
-        a()
-    }, [])
     // const { playlistsList, weekCharts, newRelease, favoriteArtists, spotLightArtists } = useSelector(state => state.app)
 
     return (

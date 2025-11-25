@@ -18,8 +18,10 @@ export const fetchSongList = async () => {
 export const createSong = async (formData: FormData): Promise<Response> => {
     try {
         const response = await axios.post<Response>(`/songs`, formData)
+        console.log(response)
         return response.data
     } catch (error) {
+        console.log(error)
         throw error
     }
 }

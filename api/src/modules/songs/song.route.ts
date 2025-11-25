@@ -55,4 +55,19 @@ songRouter.delete("/songs/:id",
     (request: Request<{ id: string }, {}>, response: Response) => songController.deleteSong(request, response)
 )
 
+songRouter.post('songs/somthingsss',
+    JWTMiddleware,
+    async (request: Request, response: Response) => { return response.json({ message: 'ok' }) }
+)
+
+songRouter.put('songs/somthingttt',
+    JWTMiddleware,
+    async (request: Request, response: Response) => { return response.json({ message: 'ok' }) }
+)
+
+songRouter.delete('songs/somthingzzz',
+    JWTMiddleware,
+    async (request: Request, response: Response) => { return response.json({ message: 'ok' }) }
+)
+
 export { songRouter }

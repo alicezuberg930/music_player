@@ -192,7 +192,7 @@ const Player: React.FC = () => {
     return (
         <div className={`fixed left-0 right-0 bottom-0 z-20 h-24 content-center bg-main-400`}>
             <div className="flex justify-between px-5">
-                <div className="flex flex-1 items-center gap-4">
+                <div className="flex-1 items-center gap-4 hidden md:flex">
                     <img src={currentSong?.thumbnail} alt="thumbnail" className="w-16 h-16 object-cover" />
                     <div className="flex flex-col">
                         <span className="font-semibold text-gray-700 text-sm line-clamp-2 text-ellipsis">{currentSong?.title}</span>
@@ -231,9 +231,9 @@ const Player: React.FC = () => {
                         <Typography className="font-semibold text-gray-500 m-0">{formatDuration(currentSong?.duration ?? 0)}</Typography>
                     </div>
                 </div>
-                <div className="flex flex-1 items-center gap-4 justify-end">
+                <div className="flex-1 items-center gap-4 justify-end hidden md:flex">
                     <MicVocal size={20} />
-                    <Button size={'icon-sm'} variant={'ghost'} className="" onClick={() => setVolume(volume === 0 ? 50 : 0)}>
+                    <Button size={'icon-lg'} variant={'ghost'} className="" onClick={() => setVolume(volume === 0 ? 50 : 0)}>
                         {volume >= 50 ? <Volume2 /> : volume === 0 ? <VolumeX /> : <Volume1 />}
                     </Button>
                     <input type="range" step={1} min={0} max={100} onChange={(e) => setVolume(Number(e.target.value))} value={volume} className="h-1 hover:h-2" />

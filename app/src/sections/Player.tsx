@@ -4,7 +4,7 @@ import { RotatingLines } from "react-loader-spinner"
 import { Typography } from "@/components/ui/typography"
 import { Button } from "@/components/ui/button"
 // icons
-import { Ellipsis, Heart, MusicIcon, Pause, Play, Repeat, Repeat1, Shuffle, SkipBack, SkipForward, Volume1, Volume2, VolumeX } from "lucide-react"
+import { Ellipsis, Heart, MicVocal, MusicIcon, Pause, Play, Repeat, Repeat1, Shuffle, SkipBack, SkipForward, Volume1, Volume2, VolumeX } from "lucide-react"
 // utils
 import { formatDuration } from "@/lib/utils"
 import { getAudioFromCache, isAudioCached, saveAudioToCache } from "@/lib/indexdb.cache"
@@ -232,9 +232,10 @@ const Player: React.FC = () => {
                     </div>
                 </div>
                 <div className="flex flex-1 items-center gap-4 justify-end">
-                    <span onClick={() => setVolume(volume === 0 ? 50 : 0)}>
+                    <MicVocal size={20} />
+                    <Button size={'icon-sm'} variant={'ghost'} className="" onClick={() => setVolume(volume === 0 ? 50 : 0)}>
                         {volume >= 50 ? <Volume2 /> : volume === 0 ? <VolumeX /> : <Volume1 />}
-                    </span>
+                    </Button>
                     <input type="range" step={1} min={0} max={100} onChange={(e) => setVolume(Number(e.target.value))} value={volume} className="h-1 hover:h-2" />
                     <Button className="text-white" size={'icon-lg'} onClick={() => dispatch(setShowSidebarRight(!showSideBarRight))}>
                         <MusicIcon />

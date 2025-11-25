@@ -25,7 +25,7 @@ const UserDropdown: React.FC = () => {
                     )}
                 </Avatar>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56 z-100" align="start">
+            <DropdownMenuContent className="w-56 z-100" align='end'>
                 <DropdownMenuLabel>Tài khoản của tôi</DropdownMenuLabel>
                 <DropdownMenuGroup>
                     <DropdownMenuItem>

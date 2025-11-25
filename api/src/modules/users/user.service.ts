@@ -34,9 +34,10 @@ export class UserService {
             const token = jwt.sign({ id: user.id }, env.JWT_SECRET!, { expiresIn: '1d', algorithm: 'HS256' })
             response.cookie('accessToken', token, {
                 httpOnly: true,
-                secure: true,
-                sameSite: 'strict',
-                maxAge: 1 * 24 * 60 * 60 * 1000 // 1 days
+                secure: true, // Required for HTTPS
+                sameSite: 'none', // Required for cross-domain cookies
+                domain: '.smartlite.cloud', // Share cookie across subdomains
+                maxAge: 1 * 24 * 60 * 60 * 1000 // 1 day
             });
             return response.json({
                 message: 'User logged in successfully',
@@ -96,7 +97,8 @@ export class UserService {
             response.clearCookie('accessToken', {
                 httpOnly: true,
                 secure: true,
-                sameSite: 'strict',
+                sameSite: 'none',
+                domain: '.smartlite.cloud',
             })
             return response.json({ message: 'User signed out successfully' })
         } catch (error) {

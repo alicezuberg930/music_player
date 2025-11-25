@@ -27,12 +27,12 @@ const botUserAgents = [
 
 // Meta tags for different routes
 const routeMeta = {
-    '/signin': {
+    '/sign-in': {
         title: 'Đăng nhập',
         description: 'Đăng nhập tài khoản để trải nghiệm thêm tính năng của MP3 Music Player.',
         image: 'https://aismartlite.cloud/music-og.png',
     },
-    '/signup': {
+    '/sign-up': {
         title: 'Đăng ký',
         description: 'Tạo tài khoản mới để upload nhạc và tạo playlist của riêng bạn.',
         image: 'https://aismartlite.cloud/music-og.png',
@@ -42,7 +42,7 @@ const routeMeta = {
 app.get('/*splat', (req, res) => {
     const userAgent = req.headers['user-agent'] || ''
     const isBot = botUserAgents.some(bot => userAgent.toLowerCase().includes(bot.toLowerCase()))
-    
+
     if (isBot) {
         const indexPath = path.join(__dirname, 'dist', 'index.html')
         let html = fs.readFileSync(indexPath, 'utf8')

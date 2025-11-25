@@ -35,8 +35,8 @@ export class UserService {
             response.cookie('accessToken', token, {
                 httpOnly: true,
                 secure: env.NODE_ENV === "production" ? true : false, // Required for HTTPS
-                sameSite: 'none', // Required for cross-domain cookies
-                domain: env.NODE_ENV === "production" ? 'aismartlite.cloud' : undefined, // Share cookie across subdomains
+                sameSite: env.NODE_ENV === "production" ? 'none' : 'strict', // Required for cross-domain cookies
+                domain: env.NODE_ENV === "production" ? '.aismartlite.cloud' : undefined, // Share cookie across subdomains
                 maxAge: 1 * 24 * 60 * 60 * 1000 // 1 day
             });
             return response.json({
@@ -92,13 +92,13 @@ export class UserService {
         }
     }
 
-    public async signOut(request: Request, response: Response) {
+    public async signOut(_: Request, response: Response) {
         try {
             response.clearCookie('accessToken', {
                 httpOnly: true,
-                secure: true,
-                sameSite: 'none',
-                domain: '.smartlite.cloud',
+                secure: env.NODE_ENV === "production" ? true : false, // Required for HTTPS
+                sameSite: env.NODE_ENV === "production" ? 'none' : 'strict', // Required for cross-domain cookies
+                domain: env.NODE_ENV === "production" ? '.aismartlite.cloud' : undefined, // Share cookie across subdomains
             })
             return response.json({ message: 'User signed out successfully' })
         } catch (error) {

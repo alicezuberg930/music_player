@@ -97,7 +97,7 @@ export class UserService {
             response.clearCookie('accessToken', {
                 httpOnly: true,
                 secure: env.NODE_ENV === "production" ? true : false, // Required for HTTPS
-                sameSite: env.NODE_ENV === "production" ? 'none' : 'strict', // Required for cross-domain cookies
+                sameSite: env.NODE_ENV === "production" ? 'lax' : 'strict', // Required for cross-domain cookies
                 // domain: env.NODE_ENV === "production" ? '.aismartlite.cloud' : undefined, // Share cookie across subdomains
             })
             return response.json({ message: 'User signed out successfully' })

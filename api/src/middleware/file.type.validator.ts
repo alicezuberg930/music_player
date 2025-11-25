@@ -17,7 +17,7 @@ export const fileMimeAndSizeOptions = (options: Options) => {
                 if (!rule) continue
                 const allowedMimes = (rule.mimes ?? []).map((m) => m.toLowerCase())
                 const isTextOnlyField = allowedMimes.length > 0 && allowedMimes.every((m) => m.startsWith("text/"))
-                const maxSize = rule.maxSize ?? 5 * 1024 * 1024
+                const maxSize = rule.maxSize ?? 1 * 1024 * 1024
 
                 for (const file of files) {
                     // check file limit

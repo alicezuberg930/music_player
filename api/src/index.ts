@@ -13,15 +13,15 @@ app.use(cors({
     origin: ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:4173', 'https://aismartlite.cloud', 'https://api.aismartlite.cloud'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
-    // allowedHeaders: ['Content-Type', 'Authorization'],
 }))
 
 // parse cookies
 app.use(cookieParser())
 
 // for parsing content-type of application/json & application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
+// Increase body size limit for file uploads
+app.use(express.urlencoded({ extended: true, limit: '21mb' }))
+app.use(express.json({ limit: '21mb' }))
 
 const port = env.PORT || 3000
 

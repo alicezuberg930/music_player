@@ -13,8 +13,8 @@ const uploadOptions: Options = {
     allowedFields: ["audio", "lyrics", "thumbnail"],
     allowed: {
         audio: { mimes: ["audio/mpeg", "audio/wav"], exts: ["mp3", "wav"], maxSize: 15 * 1024 * 1024 },
-        lyrics: { mimes: ["text/plain"], exts: ["lrc", "txt"], maxSize: 2 * 1024 * 1024 },
-        thumbnail: { mimes: ["image/jpeg", "image/png"], exts: ["jpg", "jpeg", "png"], maxSize: 5 * 1024 * 1024 },
+        lyrics: { mimes: ["text/plain"], exts: ["lrc", "txt"], maxSize: 1 * 1024 * 1024 },
+        thumbnail: { mimes: ["image/jpeg", "image/png"], exts: ["jpg", "jpeg", "png"], maxSize: 4 * 1024 * 1024 },
     },
 }
 const upload = multer(multerOptions(uploadOptions))

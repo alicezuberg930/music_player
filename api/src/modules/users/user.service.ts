@@ -35,7 +35,7 @@ export class UserService {
             response.cookie('accessToken', token, {
                 httpOnly: true,
                 secure: true,
-                sameSite: 'lax',
+                sameSite: 'strict',
                 maxAge: 1 * 24 * 60 * 60 * 1000 // 1 days
             });
             return response.json({
@@ -96,7 +96,7 @@ export class UserService {
             response.clearCookie('accessToken', {
                 httpOnly: true,
                 secure: true,
-                sameSite: 'lax',
+                sameSite: 'strict',
             })
             return response.json({ message: 'User signed out successfully' })
         } catch (error) {

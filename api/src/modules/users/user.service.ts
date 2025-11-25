@@ -34,9 +34,9 @@ export class UserService {
             const token = jwt.sign({ id: user.id }, env.JWT_SECRET!, { expiresIn: '1d', algorithm: 'HS256' })
             response.cookie('accessToken', token, {
                 httpOnly: true,
-                secure: true, // Required for HTTPS
+                secure: env.NODE_ENV === "production" ? true : false, // Required for HTTPS
                 sameSite: 'none', // Required for cross-domain cookies
-                domain: '.smartlite.cloud', // Share cookie across subdomains
+                domain: env.NODE_ENV === "production" ? 'smartlite.cloud' : undefined, // Share cookie across subdomains
                 maxAge: 1 * 24 * 60 * 60 * 1000 // 1 day
             });
             return response.json({

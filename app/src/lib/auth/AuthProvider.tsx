@@ -5,7 +5,7 @@ import type { ActionMapType, AuthStateType, AuthUser, JWTContextType } from './t
 // components
 import { useSnackbar } from '@/components/snackbar'
 // http requests
-import { fetchProfile, signIn, signOut } from '../http.client'
+import { fetchProfile, signIn, signOut } from '../httpClient'
 import { paths } from '../route/paths'
 
 enum Types {
@@ -80,7 +80,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const response = await fetchProfile()
       console.log(response)
-      if (response.data && !response.statusCode) {
+      if (response?.statusCode && response?.statusCode === 200) {
         dispatch({
           type: Types.INITIAL,
           payload: {
@@ -109,17 +109,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signin = useCallback(async (email: string, password: string) => {
     try {
       const response = await signIn(email, password)
-      if (response.data && response.statusCode) {
-        enqueueSnackbar(response.message ?? 'Lỗi không xác định', { variant: 'error' })
-      } else {
+      if (response?.statusCode && response?.statusCode === 200) {
         navigate(paths.HOME, { replace: true })
-        enqueueSnackbar(response.message)
+        enqueueSnackbar(response.message, { variant: 'success' })
         dispatch({
           type: Types.LOGIN,
           payload: {
             user: response.data.user as AuthUser
           },
         })
+      }
+      else {
+        enqueueSnackbar(response?.message ?? 'Lỗi không xác định', { variant: 'error' })
       }
     } catch (error) {
       enqueueSnackbar(error instanceof Error ? error.message : 'Internal Server Error', { variant: 'error' })

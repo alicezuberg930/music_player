@@ -4,7 +4,7 @@ import type { IMusicState, Song } from '@/@types/song'
 const initialState: IMusicState = {
   isPlaying: false,
   recentSongs: [],
-  currentSongs: [],
+  currentPlaylistSongs: [],
   currentSong: null,
   isPlaylist: false,
   currentPlaylistName: null,
@@ -23,8 +23,8 @@ const slice = createSlice({
     setIsPlaying(state, action) {
       state.isPlaying = action.payload as boolean
     },
-    setCurrentSongs(state, action) {
-      state.currentSongs = action.payload as Song[]
+    setCurrentPlaylistSongs(state, action) {
+      state.currentPlaylistSongs = action.payload as Song[]
     },
     addRecentSong(state, action) {
       let songs = state.recentSongs
@@ -35,6 +35,10 @@ const slice = createSlice({
     },
     setIsPlaylist(state, action) {
       state.isPlaylist = action.payload as boolean
+    },
+    deleteCurrentSongs(state) {
+      state.currentPlaylistSongs = []
+      state.recentSongs = []
     }
   },
 })
@@ -49,4 +53,6 @@ export const {
   setIsPlaying,
   addRecentSong,
   setIsPlaylist,
+  setCurrentPlaylistSongs,
+  deleteCurrentSongs
 } = slice.actions

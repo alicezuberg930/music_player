@@ -14,7 +14,7 @@ import { FormProvider, RHFMultiSelect, RHFSingleDatePicker, RHFTextField } from 
 import { RHFUpload } from '@/components/hook-form/RHFUpload'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { createSong, fetchArtistList } from '@/lib/http.client'
+import { createSong, fetchArtistList } from '@/lib/httpClient'
 import { useSnackbar } from '@/components/snackbar'
 
 type FormValuesProps = {
@@ -77,7 +77,7 @@ const UploadMusicPage: React.FC<{ editSong?: Song, id?: string }> = ({ editSong,
             } else {
                 response = await createSong(formData)
             }
-            if (response && response.statusCode === 201) {
+            if (response?.statusCode && response?.statusCode === 201) {
                 reset()
                 enqueueSnackbar('Bài hát tải lên thành công', { variant: 'success' })
             } else {

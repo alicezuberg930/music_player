@@ -1,11 +1,42 @@
 import NewReleaseList from "@/sections/NewReleaseList"
+import PlaylistSection from "@/sections/PlaylistSection"
+import type { Song } from "@/@types/song"
+import { useEffect, useState } from "react"
+import { fetchPlaylistList, fetchSongList } from "@/lib/httpClient"
+import type { Playlist } from "@/@types/playlist"
 
 const HomePage: React.FC = () => {
-    // const { playlistsList, weekCharts, newRelease, favoriteArtists, spotLightArtists } = useSelector(state => state.app)
+    const [songs, setSongs] = useState<Song[]>([])
+    const [playlists, setPlaylists] = useState<Playlist[]>([])
+
+    const setNewReleaseSongs = async () => {
+        try {
+            const response = await fetchSongList()
+            setSongs(response.data || [])
+        } catch (error) {
+
+        }
+    }
+
+    const setNewPlaylists = async () => {
+        try {
+            const response = await fetchPlaylistList()
+            setPlaylists(response.data || [])
+        } catch (error) {
+
+        }
+    }
+
+    useEffect(() => {
+        setNewReleaseSongs()
+        setNewPlaylists()
+    }, [])
 
     return (
         <>
-            <NewReleaseList />
+            <NewReleaseList songs={songs} />
+
+            <PlaylistSection playlists={playlists} />
 
             {/* <div>
                 <HomeBannerSlider />

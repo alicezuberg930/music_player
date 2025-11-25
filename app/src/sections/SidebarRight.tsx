@@ -1,17 +1,19 @@
 import { memo, useCallback, useState } from "react"
-import { useSelector } from "@/redux/store"
+import { useDispatch, useSelector } from "@/redux/store"
 import SongItem from "./SongItem"
 import { Trash } from "lucide-react"
 import { Typography } from "@/components/ui/typography"
+import { deleteCurrentSongs } from "@/redux/slices/music"
 
 const SidebarRight = () => {
     const [type, setType] = useState<'playlist' | 'recent'>('playlist')
-    const { currentSong, currentPlaylistName, recentSongs, currentSongs } = useSelector(state => state.music)
+    const { currentSong, currentPlaylistName, recentSongs, currentPlaylistSongs } = useSelector(state => state.music)
     const { showSideBarRight } = useSelector(state => state.app)
+    const dispatch = useDispatch()
 
-    const handleClearAll = () => useCallback(() => {
-
-    }, [])
+    const handleClearAll = useCallback(() => {
+        dispatch(deleteCurrentSongs())
+    }, [dispatch, type])
 
     return (
         <div className={`absolute bottom-0 top-0 w-[330px] border-l transition-all duration-1500 ease-in-out z-40 bg-main-300 ${showSideBarRight ? 'right-0' : 'right-[-330px]'}`}>
@@ -38,8 +40,8 @@ const SidebarRight = () => {
                     </div>
                 </div>
                 <div className="flex flex-col overflow-hidden">
-                    <div className="overflow-y-scroll">
-                        {type === 'playlist' && currentSongs?.map(song => <SongItem song={song} imgSize="sm" key={song.id} />)}
+                    <div className="overflow-y-scroll px-2">
+                        {type === 'playlist' && currentPlaylistSongs?.map(song => <SongItem song={song} imgSize="sm" key={song.id} />)}
                         {type === 'recent' && recentSongs?.map(song => <SongItem song={song} imgSize="sm" key={song.id} />)}
                     </div>
                 </div>

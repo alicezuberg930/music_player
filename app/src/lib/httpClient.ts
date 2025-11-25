@@ -1,5 +1,5 @@
 import type { Response } from '@/@types/response'
-import { axios } from './axios.config'
+import { axios } from './axiosConfig'
 import type { Song } from '@/@types/song'
 import type { Video } from '@/@types/video'
 import type { Artist } from '@/@types/artist'
@@ -62,9 +62,27 @@ export const fetchArtist = async (artistId: string): Promise<Response<Artist>> =
     }
 }
 
+export const createPlaylist = async (formData: FormData): Promise<Response> => {
+    try {
+        const response = await axios.post<Response>(`/playlists`, formData)
+        return response.data
+    } catch (error) {
+        throw error
+    }
+}
+
 export const fetchPlaylist = async (playlistId: string): Promise<Response<Playlist>> => {
     try {
         const response = await axios.get<Response<Playlist>>(`/playlists/${playlistId}`)
+        return response.data
+    } catch (error) {
+        throw error
+    }
+}
+
+export const fetchPlaylistList = async (): Promise<Response<Playlist[]>> => {
+    try {
+        const response = await axios.get<Response<Playlist[]>>(`/playlists`)
         return response.data
     } catch (error) {
         throw error

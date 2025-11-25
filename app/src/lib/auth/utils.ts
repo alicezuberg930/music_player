@@ -1,4 +1,4 @@
-import { axios } from "../axios.config"
+import { axios } from "../axiosConfig"
 
 export function jwtDecode(token: string) {
   const base64Url = token.split('.')[1];

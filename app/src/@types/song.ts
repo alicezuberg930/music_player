@@ -30,7 +30,7 @@ export type Song = {
 export type IMusicState = {
     isPlaying: boolean
     recentSongs: Song[]
-    currentSongs: Song[]
+    currentPlaylistSongs: Song[]
     isPlaylist: boolean
     currentSong: Song | null
     currentPlaylistName: string | null

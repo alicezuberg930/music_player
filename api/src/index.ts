@@ -3,10 +3,13 @@ import express, { Request, Response } from 'express'
 import cors from "cors"
 import cookieParser from "cookie-parser"
 import env from './lib/helpers/env'
-import { errorHandlerMiddleware, notFoundHandlerMiddleware } from './middleware'
+import { errorHandlerMiddleware, notFoundHandlerMiddleware, responseInterceptor } from './middleware'
 import { artistRouter, playlistRouter, songRouter, userRouter } from './modules'
 
 const app = express()
+
+// Add response interceptor early
+app.use(responseInterceptor)
 
 // setup cors
 app.use(cors({

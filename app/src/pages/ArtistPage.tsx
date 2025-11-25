@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { fetchArtist } from '@/lib/http.client'
+import { fetchArtist } from '@/lib/httpClient'
 import { icons } from '@/lib/icons'
 import SongItem from '../sections/SongItem'
 import PlaylistSection from '../sections/PlaylistSection'

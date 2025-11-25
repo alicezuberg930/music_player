@@ -3,7 +3,7 @@ import { NavLink, useParams } from "react-router-dom"
 import SongList from "../sections/SongList"
 import { setIsPlaying } from "@/redux/slices/music"
 import { roundPeopleAmount } from "@/lib/utils"
-import { fetchPlaylist } from "@/lib/http.client"
+import { fetchPlaylist } from "@/lib/httpClient"
 import { Audio, Triangle } from "react-loader-spinner"
 import { icons } from "@/lib/icons"
 import { useDispatch, useSelector } from "@/redux/store"
@@ -13,7 +13,7 @@ const PlaylistPage = () => {
     const { id } = useParams()
     const dispatch = useDispatch()
     const [playlist, setPlaylist] = useState<Playlist | null>(null)
-    const { currentSong, isPlaying, currentSongs } = useSelector(state => state.music)
+    const { currentSong, isPlaying, currentPlaylistSongs } = useSelector(state => state.music)
     const { BsPlayFill } = icons
     const [inPlaylist, setInPlaylist] = useState(false)
     const [isLoading, setLoading] = useState(true)
@@ -48,7 +48,7 @@ const PlaylistPage = () => {
     }, [id])
 
     useEffect(() => {
-        setInPlaylist(currentSongs.some(song => song.id === currentSong?.id))
+        setInPlaylist(currentPlaylistSongs.some(song => song.id === currentSong?.id))
     }, [currentSong])
 
     // useEffect(() => {

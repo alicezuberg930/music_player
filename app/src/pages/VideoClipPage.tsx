@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { fetchVideo } from "@/lib/http.client"
+import { fetchVideo } from "@/lib/httpClient"
 import { Link, NavLink, useParams } from "react-router-dom"
 import Hls from "hls.js"
 import { icons } from "@/lib/icons"

@@ -1,28 +1,27 @@
 import { paths } from "./route/paths"
-import { icons } from "./icons"
-const { MdOutlineFeed, MdOutlineLibraryMusic, TbChartArcs, HiOutlineChartPie } = icons
+import { ChartPie, Newspaper, Telescope, User } from "lucide-react"
 
 export const sidebarMenu = [
     {
         path: paths.MY_MUSIC,
         text: 'Cá nhân',
-        icon: <MdOutlineLibraryMusic size={24} />
+        icon: <User />
     },
     {
         path: paths.HOME,
         text: 'Khám phá',
-        icon: <TbChartArcs size={24} />
+        icon: <Telescope />
     },
     {
         path: paths.ZING_CHART,
         text: '#zingchart',
-        icon: <HiOutlineChartPie size={24} />
+        icon: <ChartPie />
     },
     {
         path: paths.FOLLOW,
         text: 'Theo dõi',
-        icon: <MdOutlineFeed size={24} />
-    },
+        icon: <Newspaper />
+    }
 ]
 
 export const searchMenu = [
@@ -45,5 +44,5 @@ export const searchMenu = [
     {
         path: paths.SEARCH_MV,
         text: 'MV',
-    },
+    }
 ]

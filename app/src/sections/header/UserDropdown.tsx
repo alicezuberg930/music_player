@@ -6,10 +6,12 @@ import {
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
+    DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useAuthContext } from "@/lib/auth/useAuthContext"
 import { paths } from "@/lib/route/paths"
+import { Settings, Upload, User } from "lucide-react"
 import { Link } from "react-router-dom"
 
 const UserDropdown: React.FC = () => {
@@ -29,13 +31,22 @@ const UserDropdown: React.FC = () => {
                 <DropdownMenuLabel>Tài khoản của tôi</DropdownMenuLabel>
                 <DropdownMenuGroup>
                     <DropdownMenuItem>
-                        Hồ sơ
+                        <Link to={paths.UPLOAD_MUSIC}>Hồ sơ</Link>
+                        <DropdownMenuShortcut>
+                            <User />
+                        </DropdownMenuShortcut>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                        Cài đặt
+                        <Link to={paths.UPLOAD_MUSIC}>Cài đặt</Link>
+                        <DropdownMenuShortcut>
+                            <Settings />
+                        </DropdownMenuShortcut>
                     </DropdownMenuItem>
-                    <DropdownMenuItem >
+                    <DropdownMenuItem>
                         <Link to={paths.UPLOAD_MUSIC}>Tải nhạc</Link>
+                        <DropdownMenuShortcut>
+                            <Upload />
+                        </DropdownMenuShortcut>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />

@@ -10,6 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { Typography } from '@/components/ui/typography'
 import { useAuthContext } from '@/lib/auth/useAuthContext'
 import { Link } from "react-router-dom"
+import { paths } from "@/lib/route/paths"
 
 interface FormValuesProps {
     email: string
@@ -78,7 +79,7 @@ const SigninPage: React.FC = () => {
                             </Field>
                             <Typography className="text-center">
                                 Bạn chưa có tài khoản?{' '}
-                                <Link to="/signup" className="text-primary hover:underline">
+                                <Link to={paths.SIGNUP} className="text-primary hover:underline">
                                     Đăng ký
                                 </Link>
                             </Typography>

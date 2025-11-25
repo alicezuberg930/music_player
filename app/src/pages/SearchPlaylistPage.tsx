@@ -11,11 +11,9 @@ const SearchPlaylistPage = () => {
     const [playlists, setPlaylists] = useState<Playlist[]>([])
 
     useEffect(() => {
-        useEffect(() => {
-            setPlaylists([])
-            // if (q) dispatch(searchTypeAction(q, 'playlist'))
-        }, [q, dispatch])
-    }, [])
+        setPlaylists([])
+        // if (q) dispatch(searchTypeAction(q, 'playlist'))
+    }, [q, dispatch])
 
     return (
         <div className='w-full'>

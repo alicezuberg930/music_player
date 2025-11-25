@@ -9,6 +9,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useAuthContext } from "@/lib/auth/useAuthContext"
+import { paths } from "@/lib/route/paths"
 import { Link } from "react-router-dom"
 
 const UserDropdown: React.FC = () => {
@@ -34,7 +35,7 @@ const UserDropdown: React.FC = () => {
                         Cài đặt
                     </DropdownMenuItem>
                     <DropdownMenuItem >
-                        <Link to="/upload-music">Tải nhạc</Link>
+                        <Link to={paths.UPLOAD_MUSIC}>Tải nhạc</Link>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />

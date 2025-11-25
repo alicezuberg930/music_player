@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom"
 import SearchBar from "./SearchBar"
-import { paths } from "@/lib/paths"
+import { paths } from "@/lib/route/paths"
 import { Typography } from "@/components/ui/typography"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import { useAuthContext } from "@/lib/auth/useAuthContext"

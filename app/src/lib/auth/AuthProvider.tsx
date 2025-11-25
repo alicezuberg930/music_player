@@ -6,6 +6,7 @@ import type { ActionMapType, AuthStateType, AuthUser, JWTContextType } from './t
 import { useSnackbar } from '@/components/snackbar'
 // http requests
 import { fetchProfile, signIn, signOut } from '../http.client'
+import { paths } from '../route/paths'
 
 enum Types {
   INITIAL = 'INITIAL',
@@ -108,18 +109,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signin = useCallback(async (email: string, password: string) => {
     try {
       const response = await signIn(email, password)
-      console.log(response.data)
       if (response.data && response.statusCode) {
         enqueueSnackbar(response.message ?? 'Lỗi không xác định', { variant: 'error' })
       } else {
+        navigate(paths.HOME, { replace: true })
         enqueueSnackbar(response.message)
         dispatch({
           type: Types.LOGIN,
           payload: {
-            user: response.data as AuthUser
+            user: response.data.user as AuthUser
           },
         })
-        navigate('/', { replace: true })
       }
     } catch (error) {
       enqueueSnackbar(error instanceof Error ? error.message : 'Internal Server Error', { variant: 'error' })
@@ -175,4 +175,4 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }), [state, signin, signout, signup, signInWithProvider])
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>
-} 
+}

@@ -11,7 +11,7 @@ const SidebarLeft: React.FC = () => {
         <div className="sm:block hidden lg:w-48 w-20 flex-none border bg-main-200 transition-all duration-1500 ease-in-out">
             <div className="h-full flex flex-col">
                 <div className="w-full h-16 py-4 px-6 flex justify-start items-center gap-1">
-                    <img src='./vite.svg' alt="logo" />
+                    <img src='/vite.svg' alt="logo" />
                     <div className="hidden lg:block">
                         <Typography className="m-0 font-semibold">Tiến's MP3</Typography>
                     </div>

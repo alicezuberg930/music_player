@@ -1,4 +1,4 @@
-import axiosInstance, { AxiosError } from 'axios'
+import axiosInstance from 'axios'
 
 export const axios = axiosInstance.create({
     baseURL: import.meta.env.VITE_API_URL,
@@ -7,32 +7,19 @@ export const axios = axiosInstance.create({
     validateStatus: (status) => status >= 200 && status < 500
 })
 
-axios.interceptors.request.use(async (config) => {
-    // if (document !== undefined) {
-    //     const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Imo5Z3Z4ZzRzbDFsZzJtNGFhMWYxdDMzMCIsImlhdCI6MTc2MzczNDIzN30.dEcNmslX9vSaBH4wbCEBqAJOAPBNgvyP-d0Bl0ByW4g"
-    //     if (accessToken) {
-    //         config.headers['Authorization'] = `Bearer ${accessToken}`
-    //     } else {
-    //         // delete config.headers['Authorization']
-    //     }
-    // }
+// Add request and response interceptors if needed
+// For example, you can add an authorization token to the headers or handle errors globally
+axios.interceptors.request.use(config => {
     return config
-}, (error: AxiosError) => {
+}, (error) => {
     return Promise.reject(error)
 })
 
+// Handle responses globally
+// You can log errors or handle specific status codes here
 axios.interceptors.response.use(response => {
     return response
-}, (error: AxiosError) => {
-    // if (!error.response) {
-    //     console.log('Network err', error)
-    // } else {
-    //     switch (error.response.status) {
-    //         case 401:
-    //         case 404:
-    //         default:
-    //             break
-    //     }
-    // }
-    console.log(error.response)
+}, (error) => {
+    console.log(error)
+    return Promise.reject(error)
 })

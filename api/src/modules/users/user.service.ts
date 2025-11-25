@@ -36,7 +36,7 @@ export class UserService {
                 httpOnly: true,
                 secure: env.NODE_ENV === "production" ? true : false, // Required for HTTPS
                 sameSite: 'none', // Required for cross-domain cookies
-                domain: env.NODE_ENV === "production" ? 'smartlite.cloud' : undefined, // Share cookie across subdomains
+                domain: env.NODE_ENV === "production" ? 'aismartlite.cloud' : undefined, // Share cookie across subdomains
                 maxAge: 1 * 24 * 60 * 60 * 1000 // 1 day
             });
             return response.json({

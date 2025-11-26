@@ -27,12 +27,12 @@ export default function Router() {
             element: <PublicPage />,
             children: [
                 { element: <Navigate to={'/home'} replace />, index: true },
-                { path: 'home', element: <HomePage /> },
-                { path: 'playlist/:title/:id', element: <PlaylistPage /> },
-                { path: 'album/:title/:id', element: <PlaylistPage /> },
-                { path: 'week-chart/:title/:id', element: <WeeklyZingChartPage /> },
-                { path: 'chart', element: <ZingChartPage /> },
-                { path: "artist/:name", element: <ArtistPage /> },
+                { path: '/home', element: <HomePage /> },
+                { path: '/playlist/:id', element: <PlaylistPage /> },
+                { path: '/album/:id', element: <PlaylistPage /> },
+                { path: '/week-chart/:title/:id', element: <WeeklyZingChartPage /> },
+                { path: '/chart', element: <ZingChartPage /> },
+                { path: "/artist/:name", element: <ArtistPage /> },
                 {
                     path: '/search',
                     element: <SearchPage />,

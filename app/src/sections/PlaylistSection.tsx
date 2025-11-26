@@ -1,6 +1,7 @@
 import { useIsMobile } from "@/hooks/useMobile"
 import PlaylistCard from "./PlaylistCard"
 import type { Playlist } from "@/@types/playlist"
+import { Typography } from "@/components/ui/typography"
 
 type Props = {
     playlists: Playlist[]
@@ -13,7 +14,7 @@ const PlaylistSection: React.FC<Props> = ({ playlists }) => {
     return (
         <div className="mt-12">
             <div className="flex items-center justify-between mb-5">
-                <h3 className="text-xl font-bold">{"playlist title"}</h3>
+                <Typography variant={'h5'}>Danh sách phát</Typography>
                 <span className="text-xs uppercase">Tất cả</span>
             </div>
             <div className="-mx-3 flex items-start justify-start">

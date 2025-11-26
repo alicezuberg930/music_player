@@ -1,3 +1,4 @@
+import type { Artist } from "./artist"
 import type { Song } from "./song"
 
 export type Playlist = {
@@ -6,6 +7,7 @@ export type Playlist = {
     thumbnail: string
     description: string
     songs: Song[]
+    artists: Artist[]
     isAlbum: boolean
     artistNames: string
     releaseDate?: string

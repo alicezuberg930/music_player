@@ -71,6 +71,33 @@ export const createPlaylist = async (formData: FormData): Promise<Response> => {
     }
 }
 
+export const updatePlaylist = async (id: string, formData: FormData): Promise<Response> => {
+    try {
+        const response = await axios.put<Response>(`/playlists/${id}`, formData)
+        return response.data
+    } catch (error) {
+        throw error
+    }
+}
+
+export const addSongsToPlaylist = async (playlistId: string, songIds: string[]): Promise<Response> => {
+    try {
+        const response = await axios.put<Response>(`/playlists/add-songs/${playlistId}`, { songIds })
+        return response.data
+    } catch (error) {
+        throw error
+    }
+}
+
+export const removeSongsFromPlaylist = async (playlistId: string, songIds: string[]): Promise<Response> => {
+    try {
+        const response = await axios.put<Response>(`/playlists/remove-songs/${playlistId}`, { songIds })
+        return response.data
+    } catch (error) {
+        throw error
+    }
+}
+
 export const fetchPlaylist = async (playlistId: string): Promise<Response<Playlist>> => {
     try {
         const response = await axios.get<Response<Playlist>>(`/playlists/${playlistId}`)

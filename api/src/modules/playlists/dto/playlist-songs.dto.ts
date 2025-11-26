@@ -1,11 +1,9 @@
-import { ArrayNotEmpty, IsArray, IsEnum, IsInt, IsOptional, IsString } from "class-validator"
-import { PartialType } from "../../../lib/helpers/mapped.types"
-import { CreatePlaylistDto } from "./create-playlist.dto"
 import { Transform } from "class-transformer"
+import { ArrayNotEmpty, IsArray, IsString } from "class-validator"
 
-export class UpdatePlaylistDto extends PartialType(CreatePlaylistDto) {
-    // @IsArray({ message: 'Songs must be an array' })
-    // @ArrayNotEmpty({ message: 'Songs cannot be empty' })
+export class PlaylistSongDto {
+    @IsArray({ message: 'Songs must be an array' })
+    @ArrayNotEmpty({ message: 'Songs cannot be empty' })
     @IsString({ each: true, message: 'Each song id must be a string' })
     @Transform(({ value }) => {
         // Accept already-parsed arrays, JSON strings like "['a','b']", or comma-separated "a,b,b"

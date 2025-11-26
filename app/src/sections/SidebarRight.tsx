@@ -5,7 +5,7 @@ import { Trash } from "lucide-react"
 import { Typography } from "@/components/ui/typography"
 import { deleteCurrentSongs } from "@/redux/slices/music"
 
-const SidebarRight = () => {
+const SidebarRight: React.FC = () => {
     const [type, setType] = useState<'playlist' | 'recent'>('playlist')
     const { currentSong, currentPlaylistName, recentSongs, currentPlaylistSongs } = useSelector(state => state.music)
     const { showSideBarRight } = useSelector(state => state.app)
@@ -16,7 +16,7 @@ const SidebarRight = () => {
     }, [dispatch, type])
 
     return (
-        <div className={`absolute bottom-0 top-0 w-[330px] border-l transition-all duration-1500 ease-in-out z-40 bg-main-300 ${showSideBarRight ? 'right-0' : 'right-[-330px]'}`}>
+        <div className={`absolute bottom-0 top-0 w-[330px] border-l transition-all duration-1500 ease-in-out z-105 bg-main-300 ${showSideBarRight ? 'right-0' : 'right-[-330px]'}`}>
             <div className="flex flex-col h-full">
                 <div className="h-16 flex items-center justify-between px-2 gap-8" >
                     <div className="flex flex-auto bg-main-200 rounded-full cursor-pointer">

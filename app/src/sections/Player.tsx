@@ -3,22 +3,23 @@ import { useEffect, useRef, useState } from "react"
 import { RotatingLines } from "react-loader-spinner"
 import { Typography } from "@/components/ui/typography"
 import { Button } from "@/components/ui/button"
+import { LazyLoadImage } from "react-lazy-load-image-component"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 // icons
-import { Ellipsis, Heart, MicVocal, MusicIcon, Pause, Play, Repeat, Repeat1, Shuffle, SkipBack, SkipForward, Volume1, Volume2, VolumeX } from "lucide-react"
+import { Ellipsis, Heart, MicVocal, MusicIcon, PauseCircle, PlayCircle, Repeat, Repeat1, Shuffle, SkipBack, SkipForward, Volume1, Volume2, VolumeX } from "lucide-react"
 // utils
 import { formatDuration } from "@/lib/utils"
 import { getAudioFromCache, isAudioCached, saveAudioToCache } from "@/lib/indexDB"
 // redux
-import { setCurrentSong, setIsPlaying, setIsPlaylist } from "@/redux/slices/music"
+import { setCurrentSong, setIsPlaying, shufflePlaylist } from "@/redux/slices/music"
 import { setShowSidebarRight } from "@/redux/slices/app"
 import { useDispatch, useSelector } from "@/redux/store"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
 const Player: React.FC = () => {
     const dispatch = useDispatch()
     // redux states
     const { showSideBarRight } = useSelector(state => state.app)
-    const { currentSong, isPlaying, isPlaylist, currentPlaylistSongs } = useSelector(state => state.music)
+    const { currentSong, isPlaying, currentPlaylistSongs } = useSelector(state => state.music)
     // local states
     const [shuffle, setShuffle] = useState<boolean>(false)
     const [repeatMode, setRepeatMode] = useState<number>(0)
@@ -46,11 +47,7 @@ const Player: React.FC = () => {
                 if (item.id === currentSong?.id) {
                     if (currentPlaylistSongs[index + 1]) {
                         dispatch(setCurrentSong(currentPlaylistSongs[index + 1]))
-                        dispatch(setIsPlaying(true))
                         audioRef.current?.play()
-                    }
-                    if (index + 1 < currentPlaylistSongs.length - 1) {
-                        dispatch(setIsPlaylist(false))
                     }
                     return
                 }
@@ -64,11 +61,7 @@ const Player: React.FC = () => {
                 if (item.id === currentSong?.id) {
                     if (currentPlaylistSongs[index - 1]) {
                         dispatch(setCurrentSong(currentPlaylistSongs[index - 1]))
-                        dispatch(setIsPlaying(true))
                         audioRef.current?.play()
-                    }
-                    if (index - 1 === 0) {
-                        dispatch(setIsPlaylist(false))
                     }
                 }
             })
@@ -88,8 +81,8 @@ const Player: React.FC = () => {
 
     const handleShuffle = () => {
         if (!audioRef.current) return
-        const randomIndex = Math.round(Math.random() * (currentPlaylistSongs.length - 1))
-        dispatch(setCurrentSong(currentPlaylistSongs[randomIndex]))
+        // const randomIndex = Math.round(Math.random() * (currentPlaylistSongs.length - 1))
+        // dispatch(setCurrentSong(currentPlaylistSongs[randomIndex]))
         dispatch(setIsPlaying(true))
         audioRef.current.play()
     }
@@ -182,10 +175,15 @@ const Player: React.FC = () => {
         audioRef.current.volume = (volume / 100)
     }, [volume])
 
+
     // change shuffle mode during song playing
     useEffect(() => {
+        if (shuffle) dispatch(shufflePlaylist())
+        else dispatch(shufflePlaylist())
         shuffleRef.current = shuffle
     }, [shuffle])
+
+    console.log(currentPlaylistSongs)
 
     // change repeat mode during song playing
     useEffect(() => {
@@ -196,10 +194,14 @@ const Player: React.FC = () => {
         <div className={`fixed left-0 right-0 bottom-0 z-20 h-24 content-center bg-main-400 select-none`}>
             <div className="flex justify-between px-5">
                 <div className="flex-1 items-center gap-4 hidden md:flex">
-                    <img src={currentSong?.thumbnail} alt="thumbnail" className="w-16 h-16 object-cover" />
-                    <div className="flex flex-col">
-                        <span className="font-semibold text-gray-700 text-sm line-clamp-2 text-ellipsis">{currentSong?.title}</span>
-                        <span className="text-gray-500 text-xs line-clamp-2 text-ellipsis">{currentSong?.artistNames}</span>
+                    <LazyLoadImage src={currentSong?.thumbnail} effect='blur' alt="thumbnail" className="w-16 h-16 object-cover" />
+                    <div>
+                        <Typography className="font-semibold text-gray-600 line-clamp-2 text-ellipsis max-w-40">
+                            {currentSong?.title}
+                        </Typography>
+                        <Typography className="text-gray-500 line-clamp-2 text-ellipsis max-w-40 m-0 lg:text-xs">
+                            {currentSong?.artistNames}
+                        </Typography>
                     </div>
                     <Heart size={20} />
                     <Ellipsis size={20} />
@@ -217,13 +219,19 @@ const Player: React.FC = () => {
                                 Bật phát ngẫu nhiên
                             </TooltipContent>
                         </Tooltip>
-                        <span className={`${isPlaylist ? 'cursor-pointer' : 'text-gray-500'}`}>
+                        <span className={`${currentPlaylistSongs.length ? 'cursor-pointer' : 'text-gray-500'}`}>
                             <SkipBack size={20} onClick={handleClickPrevious} />
                         </span>
-                        <span onClick={handleToggleButton} className="hover:text-main-500 border rounded-full border-gray-500 p-1" >
-                            {isLoadingAudio ? <RotatingLines strokeColor="#0E8080" width={30} height={30} /> : isPlaying ? <Pause size={30} /> : <Play size={30} />}
+                        <span onClick={handleToggleButton} className="hover:text-main-500" >
+                            {isLoadingAudio ? (
+                                <RotatingLines strokeColor="#0E8080" width={42} height={42} />
+                            ) : isPlaying ? (
+                                <PauseCircle size={42} />
+                            ) : (
+                                <PlayCircle size={42} />
+                            )}
                         </span>
-                        <span className={`${isPlaylist ? 'cursor-pointer' : 'text-gray-500'}`}>
+                        <span className={`${currentPlaylistSongs.length ? 'cursor-pointer' : 'text-gray-500'}`}>
                             <SkipForward size={20} onClick={handleClickNext} />
                         </span>
                         <Tooltip>
@@ -252,7 +260,7 @@ const Player: React.FC = () => {
                         {volume >= 50 ? <Volume2 /> : volume === 0 ? <VolumeX /> : <Volume1 />}
                     </Button>
                     <input type="range" step={1} min={0} max={100} onChange={(e) => setVolume(Number(e.target.value))} value={volume} className="h-1 hover:h-2" />
-                    <Button className="text-white" size={'icon-lg'} onClick={() => dispatch(setShowSidebarRight(!showSideBarRight))}>
+                    <Button className="text-white" size={'lg'} onClick={() => dispatch(setShowSidebarRight(!showSideBarRight))}>
                         <MusicIcon />
                     </Button>
                 </div>

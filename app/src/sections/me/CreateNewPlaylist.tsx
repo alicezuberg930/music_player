@@ -1,4 +1,5 @@
 import * as Yup from 'yup'
+import { useState } from 'react'
 import { RotatingLines } from 'react-loader-spinner'
 import { createPlaylist } from '@/lib/httpClient'
 // form
@@ -28,6 +29,7 @@ type FormValuesProps = {
 
 const CreateNewPlaylistDialog: React.FC<{ triggerElement: React.ReactNode }> = ({ triggerElement }) => {
     const { enqueueSnackbar } = useSnackbar()
+    const [open, setOpen] = useState(false)
 
     const PlaylistSchema: Yup.ObjectSchema<FormValuesProps> = Yup.object().shape({
         isPrivate: Yup.boolean().required('Privacy setting is required'),
@@ -56,6 +58,7 @@ const CreateNewPlaylistDialog: React.FC<{ triggerElement: React.ReactNode }> = (
             Object.entries(data).forEach(([key, value]) => formData.append(key, value as string))
             const response = await createPlaylist(formData)
             if (response?.statusCode && response?.statusCode === 201) {
+                setOpen(false)
                 reset()
                 enqueueSnackbar(response.message, { variant: 'success' })
             } else {
@@ -67,7 +70,7 @@ const CreateNewPlaylistDialog: React.FC<{ triggerElement: React.ReactNode }> = (
     }
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 {triggerElement}
             </DialogTrigger>
@@ -92,7 +95,7 @@ const CreateNewPlaylistDialog: React.FC<{ triggerElement: React.ReactNode }> = (
                             {isSubmitting ? (
                                 <RotatingLines strokeColor="white" />
                             ) : (
-                                'Tải nhạc lên'
+                                'Tạo'
                             )}
                         </Button>
                     </DialogFooter>

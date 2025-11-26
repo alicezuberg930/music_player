@@ -5,6 +5,9 @@ import { useDispatch } from 'react-redux'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import { Ellipsis } from 'lucide-react'
+import { addSongsToPlaylist } from '@/lib/httpClient'
+import { useSnackbar } from '@/components/snackbar'
 
 dayjs.extend(relativeTime)
 
@@ -20,10 +23,21 @@ type Props = {
 const SongItem: React.FC<Props> = ({ song, order, percent, imgSize, style, showTime }) => {
     const dispatch = useDispatch()
     const imageSizeCss = imgSize === 'xl' ? 'w-20 h-20' : imgSize == 'lg' ? 'w-14 h-14' : 'w-10 h-10'
+    const { enqueueSnackbar } = useSnackbar()
 
     const handlePlay = () => {
         dispatch(addRecentSong(song))
         dispatch(setCurrentSong(song))
+    }
+
+    const addToPlaylist = async (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+        e.stopPropagation()
+        const response = await addSongsToPlaylist("m5ybbvy8yl89jvevp3on78sl", [song.id])
+        if (response.statusCode && response.statusCode === 200) {
+            enqueueSnackbar('Đã thêm bài hát vào playlist', { variant: 'success' })
+        } else {
+            enqueueSnackbar(response.message, { variant: 'error' })
+        }
     }
 
     return (
@@ -46,6 +60,7 @@ const SongItem: React.FC<Props> = ({ song, order, percent, imgSize, style, showT
                     {showTime && <span className='text-xs opacity-70'>{dayjs(song.createdAt).fromNow()}</span>}
                 </div>
                 {percent && <span className='pr-1 font-bold'>{percent}%</span>}
+                <Ellipsis onClick={addToPlaylist} />
             </div>
         </div>
     )

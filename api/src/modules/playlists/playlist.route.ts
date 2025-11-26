@@ -6,6 +6,7 @@ import { validateDtoHanlder, JWTMiddleware, fileMimeAndSizeOptions } from "../..
 import { CreatePlaylistDto } from "./dto/create-playlist.dto"
 import { UpdatePlaylistDto } from "./dto/update-playlist.dto"
 import { QueryPlaylistDto } from "./dto/query-playlist.dto"
+import { PlaylistSongDto } from "./dto/playlist-songs.dto"
 
 const playlistRouter = express.Router()
 
@@ -40,11 +41,21 @@ playlistRouter.put("/playlists/:id",
     (request: Request<{ id: string }, {}, UpdatePlaylistDto>, response: Response) => playlistController.updatePlaylist(request, response)
 )
 
+playlistRouter.put("/playlists/add-songs/:id",
+    JWTMiddleware,
+    validateDtoHanlder(PlaylistSongDto),
+    (request: Request<{ id: string }, {}, PlaylistSongDto>, response: Response) => playlistController.addSongs(request, response)
+)
+
+playlistRouter.put("/playlists/remove-songs/:id",
+    JWTMiddleware,
+    validateDtoHanlder(PlaylistSongDto),
+    (request: Request<{ id: string }, {}, PlaylistSongDto>, response: Response) => playlistController.removeSongs(request, response)
+)
+
 playlistRouter.delete("/playlists/:id",
     JWTMiddleware,
     (request: Request<{ id: string }, {}>, response: Response) => playlistController.deletePlaylist(request, response)
 )
-
-
 
 export { playlistRouter }

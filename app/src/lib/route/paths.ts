@@ -2,7 +2,7 @@ export const paths = {
     HOME: "/home",
     SIGNIN: "/sign-in",
     SIGNUP: "/sign-up",
-    PLAYLIST__TITLE__ID: "/playlist/:title/:id",
+    PLAYLIST__ID: "/playlist/:id",
     ALBUM__TITLE__ID: "/album/:title/:id",
     WEEKRANK__TITLE__ID: "/week-chart/:title/:id",
     ZING_CHART: "/chart",

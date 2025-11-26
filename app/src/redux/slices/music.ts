@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { IMusicState, Song } from '@/@types/song'
+import { shuffle } from '@/lib/utils'
 
 const initialState: IMusicState = {
   isPlaying: false,
@@ -33,12 +34,13 @@ const slice = createSlice({
       if (songs.length > 29) songs.pop()
       state.recentSongs = [newSong, ...songs]
     },
-    setIsPlaylist(state, action) {
-      state.isPlaylist = action.payload as boolean
-    },
     deleteCurrentSongs(state) {
       state.currentPlaylistSongs = []
       state.recentSongs = []
+    },
+    shufflePlaylist(state) {
+      const shuffleSongs = shuffle(state.currentPlaylistSongs)
+      state.currentPlaylistSongs = shuffleSongs
     }
   },
 })
@@ -52,7 +54,7 @@ export const {
   setCurrentSong,
   setIsPlaying,
   addRecentSong,
-  setIsPlaylist,
   setCurrentPlaylistSongs,
-  deleteCurrentSongs
+  deleteCurrentSongs,
+  shufflePlaylist
 } = slice.actions

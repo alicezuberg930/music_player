@@ -6,7 +6,7 @@ import Header from "../sections/header/MainHeader"
 import { useDispatch, useSelector } from "@/redux/store"
 import { setScrollTop } from "@/redux/slices/app"
 
-const PublicPage = () => {
+const PublicPage: React.FC = () => {
     const { showSideBarRight, scrollTop } = useSelector(state => state.app)
     const { currentSong } = useSelector(state => state.music)
     const location = useLocation();

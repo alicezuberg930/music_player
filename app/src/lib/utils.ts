@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
-export function cn(...inputs: ClassValue[]) {
+export const cn = (...inputs: ClassValue[]): string => {
   return twMerge(clsx(inputs))
 }
 
@@ -16,14 +16,6 @@ export const roundPeopleAmount = (number: number): string => {
   if (number > 1000 && number < 1000000) return `${(number / 1000).toFixed(1)}K`
   if (number > 1000000) return `${(number / 1000000).toFixed(1)}M`
   return number.toString()
-}
-
-export const convertMillisecondsToDate = (milliseconds: number) => {
-  const date = new Date(milliseconds) // Convert milliseconds to Date object
-  const day = String(date.getDate()).padStart(2, '0') // Add leading zero if necessary
-  const month = String(date.getMonth() + 1).padStart(2, '0') // Months are zero-based, so we add 1
-  const year = date.getFullYear()
-  return `${day}/${month}/${year}`
 }
 
 export const deepObjectComparison = (obj1: any, obj2: any): boolean => {
@@ -67,4 +59,18 @@ export const alpha = (color: string, opacity: number): string => {
   }
 
   return `rgba(0, 0, 0, ${opacity})`
+}
+
+// Source - https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+export const shuffle = <T>(array: T[]): T[] => {
+  let currentIndex = array.length
+  // While there remain elements to shuffle...
+  while (currentIndex !== 0) {
+    // Pick a remaining element...
+    const randomIndex = Math.floor(Math.random() * currentIndex)
+    currentIndex--;
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]]
+  }
+  return array
 }

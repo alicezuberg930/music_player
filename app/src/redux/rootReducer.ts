@@ -16,7 +16,7 @@ export const musicPersistConfig = {
   key: 'music',
   storage,
   keyPrefix: 'redux-',
-  whitelist: ['songId', 'isPlaying', 'recentSongs', 'currentSongs', 'currentSong', 'isPlaylistPlaying', 'currentPlaylistName']
+  whitelist: ['songId', 'isPlaying', 'recentSongs', 'currentSongs', 'currentSong', 'currentPlaylistSongs', 'currentPlaylistName']
 }
 
 export const appPersistConfig = {

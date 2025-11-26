@@ -1,19 +1,19 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from 'react'
 // components
-import { RotatingLines } from "react-loader-spinner"
-import { Typography } from "@/components/ui/typography"
-import { Button } from "@/components/ui/button"
-import { LazyLoadImage } from "react-lazy-load-image-component"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { RotatingLines } from 'react-loader-spinner'
+import { Typography } from '@/components/ui/typography'
+import { Button } from '@/components/ui/button'
+import { LazyLoadImage } from 'react-lazy-load-image-component'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 // icons
-import { Ellipsis, Heart, MicVocal, MusicIcon, PauseCircle, PlayCircle, Repeat, Repeat1, Shuffle, SkipBack, SkipForward, Volume1, Volume2, VolumeX } from "lucide-react"
+import { Ellipsis, Heart, MicVocal, MusicIcon, PauseCircle, PlayCircle, Repeat, Repeat1, Shuffle, SkipBack, SkipForward, Volume1, Volume2, VolumeX } from 'lucide-react'
 // utils
-import { formatDuration } from "@/lib/utils"
-import { getAudioFromCache, isAudioCached, saveAudioToCache } from "@/lib/indexDB"
+import { formatDuration } from '@/lib/utils'
+import { getAudioFromCache, isAudioCached, saveAudioToCache } from '@/lib/indexDB'
 // redux
-import { setCurrentSong, setIsPlaying, shufflePlaylist } from "@/redux/slices/music"
-import { setShowSidebarRight } from "@/redux/slices/app"
-import { useDispatch, useSelector } from "@/redux/store"
+import { setCurrentSong, setIsPlaying, shufflePlaylist } from '@/redux/slices/music'
+import { setShowSidebarRight } from '@/redux/slices/app'
+import { useDispatch, useSelector } from '@/redux/store'
 
 const Player: React.FC = () => {
     const dispatch = useDispatch()
@@ -32,6 +32,12 @@ const Player: React.FC = () => {
     const trackRef = useRef<HTMLDivElement | null>(null)
     const audioRef = useRef<HTMLAudioElement | null>(null)
     const currentTimeRef = useRef<HTMLElement | null>(null)
+    // memoized next song
+    const nextSong = useMemo(() => {
+        if (!currentSong) return undefined
+        const index = currentPlaylistSongs.findIndex((item) => item.id === currentSong.id)
+        return index === -1 ? undefined : currentPlaylistSongs[index + 1]
+    }, [currentSong, currentPlaylistSongs])
 
     const handleClickProgressBar = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         if (!trackRef.current || !audioRef.current || !thumbRef.current) return
@@ -41,7 +47,7 @@ const Player: React.FC = () => {
         audioRef.current.currentTime = currentSong!.duration * percent / 100
     }
 
-    const handleClickNext = () => {
+    const handleNext = () => {
         if (currentPlaylistSongs.length > 0) {
             currentPlaylistSongs.forEach((item, index) => {
                 if (item.id === currentSong?.id) {
@@ -55,7 +61,7 @@ const Player: React.FC = () => {
         }
     }
 
-    const handleClickPrevious = () => {
+    const handlePrevious = () => {
         if (currentPlaylistSongs.length > 0) {
             currentPlaylistSongs.forEach((item, index) => {
                 if (item.id === currentSong?.id) {
@@ -81,9 +87,6 @@ const Player: React.FC = () => {
 
     const handleShuffle = () => {
         if (!audioRef.current) return
-        // const randomIndex = Math.round(Math.random() * (currentPlaylistSongs.length - 1))
-        // dispatch(setCurrentSong(currentPlaylistSongs[randomIndex]))
-        dispatch(setIsPlaying(true))
         audioRef.current.play()
     }
 
@@ -114,20 +117,20 @@ const Player: React.FC = () => {
             if (shuffleRef.current) {
                 handleShuffle()
             } else if (repeatModeRef.current > 0) {
-                repeatModeRef.current === 1 ? handleRepeat() : handleClickNext()
+                repeatModeRef.current === 1 ? handleRepeat() : handleNext()
             } else {
                 dispatch(setIsPlaying(false))
                 audio.pause()
             }
         }
-        audio.addEventListener("play", handlePlay)
-        audio.addEventListener("pause", handlePause)
-        audio.addEventListener("ended", handleEnd)
+        audio.addEventListener('play', handlePlay)
+        audio.addEventListener('pause', handlePause)
+        audio.addEventListener('ended', handleEnd)
         // cleanup event listeners and cancel updating progress bar on unmount
         return () => {
-            audio.removeEventListener("play", handlePlay)
-            audio.removeEventListener("pause", handlePause)
-            audio.removeEventListener("ended", handleEnd)
+            audio.removeEventListener('play', handlePlay)
+            audio.removeEventListener('pause', handlePause)
+            audio.removeEventListener('ended', handleEnd)
             cancelAnimationFrame(animationFrame)
         }
     }
@@ -150,7 +153,7 @@ const Player: React.FC = () => {
                     setIsLoadingAudio(false)
                     audioRef.current?.play()
                         .then(_ => dispatch(setIsPlaying(true)))
-                        .catch(_ => console.log("Auto play was prevented because user didn't interact with the document"))
+                        .catch(_ => console.log('Auto play was prevented because user didnt interact with the document'))
                 }
             }
         } else {
@@ -164,6 +167,38 @@ const Player: React.FC = () => {
         updatePlayerUI()
     }
 
+    const handleSpaceKeyPress = (e: KeyboardEvent) => {
+        // Prevent space bar from triggering if user is typing in an input/textarea
+        if (e.code === 'Space' && e.target instanceof HTMLElement) {
+            const tagName = e.target.tagName.toLowerCase()
+            if (tagName === 'input' || tagName === 'textarea' || e.target.isContentEditable) return
+            e.preventDefault()
+            handleToggleButton()
+        }
+    }
+
+    const handleArrowKeyPress = (e: KeyboardEvent) => {
+        // Prevent arrow keys from triggering if user is typing in an input/textarea
+        if ((e.code === 'ArrowLeft' || e.code === 'ArrowRight') && e.target instanceof HTMLElement) {
+            const tagName = e.target.tagName.toLowerCase()
+            if (tagName === 'input' || tagName === 'textarea' || e.target.isContentEditable) return
+            e.preventDefault()
+            if (e.code === 'ArrowLeft') handlePrevious()
+            if (e.code === 'ArrowRight') handleNext()
+        }
+    }
+
+    useEffect(() => {
+        // keyboard event for space bar to play/pause
+        window.addEventListener('keydown', handleSpaceKeyPress)
+        // keyboard event for left/right arrow to previous/next song
+        window.addEventListener('keydown', handleArrowKeyPress)
+        return () => {
+            window.removeEventListener('keydown', handleSpaceKeyPress)
+            window.removeEventListener('keydown', handleArrowKeyPress)
+        }
+    }, [audioRef, isPlaying])
+
     // initialize player when current song changes and update player state UI
     useEffect(() => {
         initializePlayer()
@@ -175,7 +210,6 @@ const Player: React.FC = () => {
         audioRef.current.volume = (volume / 100)
     }, [volume])
 
-
     // change shuffle mode during song playing
     useEffect(() => {
         if (shuffle) dispatch(shufflePlaylist())
@@ -183,31 +217,35 @@ const Player: React.FC = () => {
         shuffleRef.current = shuffle
     }, [shuffle])
 
-    console.log(currentPlaylistSongs)
-
     // change repeat mode during song playing
     useEffect(() => {
         repeatModeRef.current = repeatMode
     }, [repeatMode])
 
+    // for cases when you want to play/pause the song outside the player component
+    useEffect(() => {
+        if (audioRef.current && audioRef.current.paused && isPlaying) audioRef.current.play()
+        if (audioRef.current && !audioRef.current.paused && !isPlaying) audioRef.current.pause()
+    }, [isPlaying])
+
     return (
         <div className={`fixed left-0 right-0 bottom-0 z-20 h-24 content-center bg-main-400 select-none`}>
-            <div className="flex justify-between px-5">
-                <div className="flex-1 items-center gap-4 hidden md:flex">
-                    <LazyLoadImage src={currentSong?.thumbnail} effect='blur' alt="thumbnail" className="w-16 h-16 object-cover" />
+            <div className='flex justify-between px-5'>
+                <div className='flex-1 items-center gap-4 hidden md:flex'>
+                    <LazyLoadImage src={currentSong?.thumbnail} effect='blur' alt='thumbnail' className='w-16 h-16 object-cover' />
                     <div>
-                        <Typography className="font-semibold text-gray-600 line-clamp-2 text-ellipsis max-w-40">
+                        <Typography className='font-semibold text-gray-600 line-clamp-2 text-ellipsis max-w-40'>
                             {currentSong?.title}
                         </Typography>
-                        <Typography className="text-gray-500 line-clamp-2 text-ellipsis max-w-40 m-0 lg:text-xs">
+                        <Typography className='text-gray-500 line-clamp-2 text-ellipsis max-w-40 m-0 lg:text-xs'>
                             {currentSong?.artistNames}
                         </Typography>
                     </div>
                     <Heart size={20} />
                     <Ellipsis size={20} />
                 </div>
-                <div className="flex flex-1 items-center gap-4 flex-col">
-                    <div className="flex gap-8 items-center">
+                <div className='flex flex-1 items-center gap-4 flex-col'>
+                    <div className='flex gap-8 items-center'>
                         <Tooltip>
                             <TooltipTrigger asChild
                                 className={`cursor-pointer ${shuffle && 'text-purple-600'}`}
@@ -220,20 +258,47 @@ const Player: React.FC = () => {
                             </TooltipContent>
                         </Tooltip>
                         <span className={`${currentPlaylistSongs.length ? 'cursor-pointer' : 'text-gray-500'}`}>
-                            <SkipBack size={20} onClick={handleClickPrevious} />
+                            <SkipBack size={20} onClick={handlePrevious} />
                         </span>
-                        <span onClick={handleToggleButton} className="hover:text-main-500" >
+                        <span onClick={handleToggleButton} className='hover:text-main-500' >
                             {isLoadingAudio ? (
-                                <RotatingLines strokeColor="#0E8080" width={42} height={42} />
+                                <RotatingLines strokeColor='#0E8080' width={42} height={42} />
                             ) : isPlaying ? (
                                 <PauseCircle size={42} />
                             ) : (
                                 <PlayCircle size={42} />
                             )}
                         </span>
-                        <span className={`${currentPlaylistSongs.length ? 'cursor-pointer' : 'text-gray-500'}`}>
-                            <SkipForward size={20} onClick={handleClickNext} />
-                        </span>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <span className={`${currentPlaylistSongs.length ? 'cursor-pointer' : 'text-gray-500'}`}>
+                                    <SkipForward size={20} onClick={handleNext} />
+                                </span>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                {nextSong && (
+                                    <>
+                                        <Typography className='font-semibold'>Phát tiếp theo</Typography>
+                                        <div className='flex gap-2 items-center'>
+                                            <LazyLoadImage
+                                                src={nextSong.thumbnail}
+                                                effect='blur'
+                                                alt='thumbnail'
+                                                className='w-10 h-10 object-cover rounded-md'
+                                            />
+                                            <div>
+                                                <Typography className='m-0 text-gray-400'>
+                                                    {nextSong.title}
+                                                </Typography>
+                                                <Typography className='m-0 text-gray-400'>
+                                                    {nextSong.artistNames}
+                                                </Typography>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
+                            </TooltipContent>
+                        </Tooltip>
                         <Tooltip>
                             <TooltipTrigger asChild
                                 className={`cursor-pointer ${repeatMode && 'text-purple-600'}`}
@@ -246,21 +311,21 @@ const Player: React.FC = () => {
                             </TooltipContent>
                         </Tooltip>
                     </div>
-                    <div className="w-full flex items-center justify-center gap-3 text-sm">
-                        <Typography ref={currentTimeRef} className="font-semibold text-gray-500 m-0">00:00</Typography>
-                        <div className="relative h-1 hover:h-2 bg-[#0000001a] w-3/5 rounded-full cursor-pointer" onClick={handleClickProgressBar} ref={trackRef}>
-                            <div ref={thumbRef} className="absolute top-0 left-0 bottom-0 h-full bg-[#0e8080] rounded-full"></div>
+                    <div className='w-full flex items-center justify-center gap-3 text-sm'>
+                        <Typography ref={currentTimeRef} className='font-semibold text-gray-500 m-0'>00:00</Typography>
+                        <div className='relative h-1 hover:h-2 bg-[#0000001a] w-3/5 rounded-full cursor-pointer' onClick={handleClickProgressBar} ref={trackRef}>
+                            <div ref={thumbRef} className='absolute top-0 left-0 bottom-0 h-full bg-[#0e8080] rounded-full'></div>
                         </div>
-                        <Typography className="font-semibold text-gray-500 m-0">{formatDuration(currentSong?.duration ?? 0)}</Typography>
+                        <Typography className='font-semibold text-gray-500 m-0'>{formatDuration(currentSong?.duration ?? 0)}</Typography>
                     </div>
                 </div>
-                <div className="flex-1 items-center gap-4 justify-end hidden md:flex">
+                <div className='flex-1 items-center gap-4 justify-end hidden md:flex'>
                     <MicVocal size={20} />
                     <Button size={'icon-lg'} variant={'ghost'} onClick={() => setVolume(volume === 0 ? 50 : 0)}>
                         {volume >= 50 ? <Volume2 /> : volume === 0 ? <VolumeX /> : <Volume1 />}
                     </Button>
-                    <input type="range" step={1} min={0} max={100} onChange={(e) => setVolume(Number(e.target.value))} value={volume} className="h-1 hover:h-2" />
-                    <Button className="text-white" size={'lg'} onClick={() => dispatch(setShowSidebarRight(!showSideBarRight))}>
+                    <input type='range' step={1} min={0} max={100} onChange={(e) => setVolume(Number(e.target.value))} value={volume} className='h-1 hover:h-2' />
+                    <Button className='text-white' size={'lg'} onClick={() => dispatch(setShowSidebarRight(!showSideBarRight))}>
                         <MusicIcon />
                     </Button>
                 </div>

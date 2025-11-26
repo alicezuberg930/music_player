@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { NavLink, useParams } from "react-router-dom"
+import { NavLink, useLocation, useParams } from "react-router-dom"
 import SongList from "../sections/SongList"
 import { setCurrentPlaylistSongs, setCurrentSong, setIsPlaying } from "@/redux/slices/music"
 import { roundPeopleAmount } from "@/lib/utils"
@@ -21,14 +21,21 @@ const PlaylistPage: React.FC = () => {
     const { currentSong, isPlaying, currentPlaylistSongs } = useSelector(state => state.music)
     const [playlist, setPlaylist] = useState<Playlist | null>(null)
     const [inPlaylist, setInPlaylist] = useState<boolean>(false)
+    const location = useLocation()
 
     const getPlaylist = async () => {
         try {
             const response = await fetchPlaylist(id!)
             if (response.statusCode && response.statusCode === 200) {
                 setPlaylist(response.data)
-                dispatch(setCurrentSong(response.data.songs[0]))
-                dispatch(setCurrentPlaylistSongs(response.data.songs))
+                // Only auto-play if navigating from PlaylistCard
+                if (location.state?.playAlbum) {
+                    dispatch(setCurrentPlaylistSongs(response.data.songs))
+                    dispatch(setCurrentSong(response.data.songs[0]))
+                    dispatch(setIsPlaying(true))
+                    // Clear the state so it doesn't auto-play on subsequent visits
+                    window.history.replaceState({}, document.title)
+                }
             }
         } catch (error) {
             console.error(error)
@@ -37,7 +44,7 @@ const PlaylistPage: React.FC = () => {
 
     useEffect(() => {
         getPlaylist()
-    }, [id])
+    }, [])
 
     useEffect(() => {
         if (currentSong) setInPlaylist(currentPlaylistSongs.some(song => song.id === currentSong.id))

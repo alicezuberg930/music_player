@@ -11,11 +11,11 @@ const Header = () => {
     const { isAuthenticated } = useAuthContext()
 
     return (
-        <div className="w-full flex items-center justify-between bg-transparent gap-2">
+        <div className="w-full flex items-center justify-between gap-2">
             <div className="flex my-2 gap-2 flex-auto">
-                <div className="flex items-center gap-6">
-                    <ArrowLeft onClick={() => navigate(-1)} className="cursor-pointer hover:text-white transition-colors" />
-                    <ArrowRight onClick={() => navigate(1)} className="cursor-pointer hover:text-white transition-colors" />
+                <div className="flex items-center gap-2 text-white">
+                    <ArrowLeft onClick={() => navigate(-1)} className="cursor-pointer" />
+                    <ArrowRight onClick={() => navigate(1)} className="cursor-pointer" />
                 </div>
                 <SearchBar />
             </div>

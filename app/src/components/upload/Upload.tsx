@@ -46,11 +46,11 @@ export default function Upload({
       <div
         {...getRootProps()}
         className={cn(
-          "outline-none cursor-pointer overflow-hidden relative p-10 rounded-lg transition-all bg-gray-100 border border-dashed border-gray-400 hover:opacity-70",
+          "cursor-pointer relative p-10 rounded-lg transition-all bg-gray-100 border border-dashed border-gray-400 hover:opacity-70",
           isDragActive && "opacity-70",
           isError && "text-red-600 bg-red-50 border-red-300",
           disabled && "opacity-50 pointer-events-none",
-          hasFile && "py-[12%] px-0"
+          hasFile && "aspect-4/3"
         )}
       >
         <input {...getInputProps()} />

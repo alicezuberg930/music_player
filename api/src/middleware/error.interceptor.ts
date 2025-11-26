@@ -1,10 +1,9 @@
 import { Request, Response, NextFunction } from "express"
 import { HttpException } from "../lib/exceptions/HttpException"
 import { MulterError } from "multer"
+import env from "../lib/helpers/env"
 
-export function errorInterceptor(err: unknown, req: Request, res: Response, _next: NextFunction) {
-    // console.error(err)
-
+export function errorInterceptor(err: HttpException | MulterError, req: Request, res: Response, _next: NextFunction) {
     let status = 500
     let message = "Internal Server Error"
 
@@ -23,7 +22,8 @@ export function errorInterceptor(err: unknown, req: Request, res: Response, _nex
         message,
         path: req.originalUrl,
         method: req.method,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        ...env.NODE_ENV !== 'production' && { stack: err.stack }
     }
 
     res.status(status).json(errorResponse)

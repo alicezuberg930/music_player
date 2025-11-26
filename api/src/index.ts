@@ -3,7 +3,7 @@ import express, { Request, Response } from 'express'
 import cors from "cors"
 import cookieParser from "cookie-parser"
 import env from './lib/helpers/env'
-import { errorHandlerMiddleware, notFoundHandlerMiddleware, responseInterceptor } from './middleware'
+import { errorInterceptor, notFoundHandlerMiddleware, responseInterceptor } from './middleware'
 import { artistRouter, playlistRouter, songRouter, userRouter } from './modules'
 
 const app = express()
@@ -36,7 +36,7 @@ app.get('/', (_: Request, res: Response) => {
 app.use('/api/v1', [userRouter, playlistRouter, songRouter, artistRouter])
 
 // assign global middlewares to express server
-app.use([notFoundHandlerMiddleware, errorHandlerMiddleware])
+app.use([notFoundHandlerMiddleware, errorInterceptor])
 
 app.listen(port, () => {
     console.log(`The server is running at http://localhost:${port}`)

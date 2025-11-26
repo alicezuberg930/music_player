@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express"
 import { HttpException } from "../lib/exceptions/HttpException"
 import { MulterError } from "multer"
 
-export function errorHandlerMiddleware(err: unknown, req: Request, res: Response, _next: NextFunction) {
+export function errorInterceptor(err: unknown, req: Request, res: Response, _next: NextFunction) {
     // console.error(err)
 
     let status = 500

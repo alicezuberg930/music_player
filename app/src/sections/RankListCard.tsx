@@ -28,7 +28,7 @@ const RankListCard = ({ songs, hideAlbum, initialAmount, link }: Props) => {
             {
                 currentSongs?.map((item, i) => {
                     return (
-                        <SongCard key={item.encodeId} song={item} hideAlbum={hideAlbum} songs={songs} order={i + 1} />
+                        <SongCard key={item.encodeId} song={item} hideAlbum={hideAlbum} order={i + 1} />
                     )
                 })
             }

@@ -51,7 +51,6 @@ const SearchAllPage = () => {
                             <SongCard
                                 key={song.encodeId}
                                 song={song}
-                                songs={searchData?.songs}
                                 playlistTitle='Kết quả tìm kiếm'
                                 hideAlbum={true}
                             />

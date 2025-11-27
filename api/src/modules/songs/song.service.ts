@@ -128,6 +128,7 @@ export class SongService {
             const lyricsFile: Express.Multer.File | null = files['lyrics']?.[0] ?? null
             const thumbnailFile: Express.Multer.File | null = files['thumbnail']?.[0] ?? null
             let thumbnail: string | null = null
+            let lyrics: string | null = null
             let findArtists: { name: string }[] = []
             // find artist names from artistIds array
             if (artistIds && artistIds.length > 0) {
@@ -138,7 +139,11 @@ export class SongService {
             // extract metadata from audio file
             let metadata = audioFile ? await esmMusicMetadata().then(m => m.parseFile(audioFile.path)) : null
             if (lyricsFile) {
-                await uploadFile(lyricsFile, '/lyrics', extractPublicId(findSong.lyricsFile!))
+                if (!findSong.lyricsFile) {
+                    lyrics = (await uploadFile(lyricsFile, '/lyrics', createId())) as string
+                } else {
+                    await uploadFile(lyricsFile, '/lyrics', extractPublicId(findSong.lyricsFile!))
+                }
             }
             if (thumbnailFile) {
                 if (audioFile) {
@@ -186,9 +191,12 @@ export class SongService {
                 ...releaseDate && ({ releaseDate }),
                 ...title && ({ title }),
                 ...thumbnail && { thumbnail },
+                ...lyrics && {
+                    lyricsFile: lyrics,
+                    hasLyrics: true
+                },
             } as CreateSong
-            if (Object.entries(song).length > 0)
-                await db.update(songs).set(song).where(eq(songs.id, id))
+            if (Object.entries(song).length > 0) await db.update(songs).set(song).where(eq(songs.id, id))
             return response.json({ message: 'Song updated successfully' })
         } catch (error) {
             if (error instanceof HttpException) throw error

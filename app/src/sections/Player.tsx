@@ -14,6 +14,7 @@ import { getAudioFromCache, isAudioCached, saveAudioToCache } from '@/lib/indexD
 import { setCurrentSong, setIsPlaying, shufflePlaylist } from '@/redux/slices/music'
 import { setShowSidebarRight } from '@/redux/slices/app'
 import { useDispatch, useSelector } from '@/redux/store'
+import LyricsDrawer from './LyricsDrawer'
 
 const Player: React.FC = () => {
     const dispatch = useDispatch()
@@ -275,29 +276,27 @@ const Player: React.FC = () => {
                                     <SkipForward size={20} onClick={handleNext} />
                                 </span>
                             </TooltipTrigger>
-                            <TooltipContent>
-                                {nextSong && (
-                                    <>
-                                        <Typography className='font-semibold'>Phát tiếp theo</Typography>
-                                        <div className='flex gap-2 items-center'>
-                                            <LazyLoadImage
-                                                src={nextSong.thumbnail}
-                                                effect='blur'
-                                                alt='thumbnail'
-                                                className='w-10 h-10 object-cover rounded-md'
-                                            />
-                                            <div>
-                                                <Typography className='m-0 text-gray-400'>
-                                                    {nextSong.title}
-                                                </Typography>
-                                                <Typography className='m-0 text-gray-400'>
-                                                    {nextSong.artistNames}
-                                                </Typography>
-                                            </div>
+                            {nextSong && (
+                                <TooltipContent>
+                                    <Typography className='font-semibold'>Phát tiếp theo</Typography>
+                                    <div className='flex gap-2 items-center'>
+                                        <LazyLoadImage
+                                            src={nextSong.thumbnail}
+                                            effect='blur'
+                                            alt='thumbnail'
+                                            className='w-10 h-10 object-cover rounded-md'
+                                        />
+                                        <div>
+                                            <Typography className='m-0 text-gray-400'>
+                                                {nextSong.title}
+                                            </Typography>
+                                            <Typography className='m-0 text-gray-400'>
+                                                {nextSong.artistNames}
+                                            </Typography>
                                         </div>
-                                    </>
-                                )}
-                            </TooltipContent>
+                                    </div>
+                                </TooltipContent>
+                            )}
                         </Tooltip>
                         <Tooltip>
                             <TooltipTrigger asChild
@@ -320,7 +319,7 @@ const Player: React.FC = () => {
                     </div>
                 </div>
                 <div className='flex-1 items-center gap-4 justify-end hidden md:flex'>
-                    <MicVocal size={20} />
+                    <LyricsDrawer drawerTrigger={<MicVocal size={20} />} />
                     <Button size={'icon-lg'} variant={'ghost'} onClick={() => setVolume(volume === 0 ? 50 : 0)}>
                         {volume >= 50 ? <Volume2 /> : volume === 0 ? <VolumeX /> : <Volume1 />}
                     </Button>

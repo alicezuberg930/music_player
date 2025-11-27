@@ -19,7 +19,7 @@ type Props = {
 
 const LyricsDrawer: React.FC<Props> = ({ drawerTrigger }) => {
     const { currentSong } = useSelector(state => state.music)
-
+    console.log(currentSong)
     const [goal, setGoal] = React.useState(350)
 
     function onClick(adjustment: number) {

@@ -1,83 +1,90 @@
-import * as React from "react"
-import { Minus, Plus } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import React from "react"
+import { Lrc } from 'react-lrc';
 import {
     Drawer,
-    DrawerClose,
+    // DrawerClose,
     DrawerContent,
     DrawerDescription,
-    DrawerFooter,
     DrawerHeader,
     DrawerTitle,
     DrawerTrigger,
 } from "@/components/ui/drawer"
 import { useSelector } from "@/redux/store"
+import { Typography } from "@/components/ui/typography";
 
 type Props = {
-    drawerTrigger: React.ReactNode
+    drawerTrigger: React.ReactNode,
+    audioRef: React.RefObject<HTMLAudioElement | null>
 }
 
-const LyricsDrawer: React.FC<Props> = ({ drawerTrigger }) => {
+const LyricsDrawer: React.FC<Props> = ({ drawerTrigger, audioRef }) => {
     const { currentSong } = useSelector(state => state.music)
-    console.log(currentSong)
-    const [goal, setGoal] = React.useState(350)
+    const [lyrics, setLyrics] = React.useState<string>("")
+    const [currentTime, setCurrentTime] = React.useState(0)
+    const activeLyricRef = React.useRef<HTMLDivElement | null>(null)
+    const scrollContainerRef = React.useRef<HTMLDivElement | null>(null)
 
-    function onClick(adjustment: number) {
-        setGoal(Math.max(200, Math.min(400, goal + adjustment)))
-    }
+    React.useEffect(() => {
+        const downloadLyrics = async () => {
+            if (currentSong?.lyricsFile) {
+                const res = await fetch(currentSong.lyricsFile)
+                const lyrics = await res.text()
+                setLyrics(lyrics.replace(/\r\n/g, '\n'))
+            }
+        }
+        downloadLyrics()
+        if (audioRef.current) {
+            const interval = setInterval(() => {
+                if (audioRef.current) setCurrentTime(audioRef.current.currentTime * 1000)
+            }, 1500)
+            return () => clearInterval(interval)
+        }
+    }, [audioRef.current])
+
+    // Automatically scroll to active lyric line to center it in the middle of the container
+    React.useEffect(() => {
+        if (activeLyricRef.current && scrollContainerRef.current) {
+            const container = scrollContainerRef.current
+            const activeLine = activeLyricRef.current
+            const containerHeight = container.clientHeight
+            const lineTop = activeLine.offsetTop
+            const lineHeight = activeLine.clientHeight
+            // Scroll so the active line is centered
+            const scrollTo = lineTop - (containerHeight / 2) - (lineHeight / 2)
+            container.scrollTo({ top: scrollTo, behavior: 'smooth' })
+        }
+    }, [currentTime])
 
     return (
         <Drawer>
             <DrawerTrigger asChild>
                 {drawerTrigger}
             </DrawerTrigger>
-            <DrawerContent className="top-0">
-                <div className="mx-auto w-full max-w-6xl">
+            <DrawerContent className="bg-white/70 min-h-[calc(100vh-96px)] backdrop-blur-md">
+                <div className="mx-auto w-full h-screen max-w-6xl relative">
                     <DrawerHeader>
-                        <DrawerTitle>Move Goal</DrawerTitle>
-                        <DrawerDescription>Set your daily activity goal.</DrawerDescription>
+                        <DrawerTitle>Lời bài hát</DrawerTitle>
+                        <DrawerDescription>{currentSong?.title} - {currentSong?.artistNames}</DrawerDescription>
                     </DrawerHeader>
-                    <div className="p-4 pb-0">
-                        <div className="flex items-center justify-center space-x-2">
-                            <Button
-                                variant="outline"
-                                size="icon"
-                                className="h-8 w-8 shrink-0 rounded-full"
-                                onClick={() => onClick(-10)}
-                                disabled={goal <= 200}
-                            >
-                                <Minus />
-                                <span className="sr-only">Decrease</span>
-                            </Button>
-                            <div className="flex-1 text-center">
-                                <div className="text-7xl font-bold tracking-tighter">
-                                    {goal}
-                                </div>
-                                <div className="text-muted-foreground text-[0.70rem] uppercase">
-                                    Calories/day
-                                </div>
-                            </div>
-                            <Button
-                                variant="outline"
-                                size="icon"
-                                className="h-8 w-8 shrink-0 rounded-full"
-                                onClick={() => onClick(10)}
-                                disabled={goal >= 400}
-                            >
-                                <Plus />
-                                <span className="sr-only">Increase</span>
-                            </Button>
-                        </div>
-                        <div className="mt-3 h-[120px]">
-
-                        </div>
+                    <div ref={scrollContainerRef} className="h-[65vh] overflow-auto px-4">
+                        {lyrics.length > 0 ? (
+                            <Lrc
+                                lrc={lyrics}
+                                currentMillisecond={currentTime}
+                                lineRenderer={({ index, active, line }) => (
+                                    <Typography
+                                        ref={active ? activeLyricRef : null}
+                                        key={index} variant={'h4'}
+                                        className={`my-8 text-center transition-colors duration-300 ${active ? "text-main-500" : "text-gray-400"}`}
+                                    >
+                                        {line.content}
+                                    </Typography>
+                                )}
+                            />
+                        ) : (
+                            <Typography className="text-center text-gray-400">Không có lời bài hát</Typography>
+                        )}
                     </div>
-                    <DrawerFooter>
-                        <Button>Submit</Button>
-                        <DrawerClose asChild>
-                            <Button variant="outline">Cancel</Button>
-                        </DrawerClose>
-                    </DrawerFooter>
                 </div>
             </DrawerContent>
         </Drawer>

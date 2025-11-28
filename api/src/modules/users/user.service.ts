@@ -38,6 +38,7 @@ export class UserService {
                 sameSite: env.NODE_ENV === "production" ? 'lax' : 'strict', // Required for cross-domain cookies
                 domain: env.NODE_ENV === "production" ? '.aismartlite.cloud' : undefined, // Share cookie across subdomains
                 maxAge: 1 * 24 * 60 * 60 * 1000 // 1 day
+                // maxAge: 10000
             });
             return response.json({
                 message: 'User logged in successfully',
@@ -85,6 +86,7 @@ export class UserService {
                 columns: { password: false }
             })
             if (!data) throw new NotFoundException('User not found')
+            response.set('Cache-Control', 'public, max-age=0, must-revalidate');
             return response.json({ message: 'User details fetched successfully', data })
         } catch (error) {
             if (error instanceof HttpException) throw error

@@ -88,14 +88,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             user: response.data as AuthUser
           },
         })
-      } else {
-        dispatch({
-          type: Types.INITIAL,
-          payload: {
-            isAuthenticated: false,
-            user: null
-          },
-        })
       }
     } catch (error) {
       console.error(error)

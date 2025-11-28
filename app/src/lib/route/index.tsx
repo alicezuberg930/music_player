@@ -14,10 +14,9 @@ import {
     WeeklyZingChartPage,
     ZingChartPage,
     UploadMusicPage,
-    HomePage,
-    PublicPage,
     SigninPage
 } from '@/pages'
+import { HomePage, PublicPage } from './element'
 
 export default function Router() {
     return useRoutes([

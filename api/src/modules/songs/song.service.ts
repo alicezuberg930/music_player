@@ -110,7 +110,7 @@ export class SongService {
             await db.insert(artistsSongs).values(artistIds.map(artistId => ({
                 songId: insertSong[0].id, artistId
             })))
-            return response.json({ message: 'Song created successfully' })
+            return response.status(201).json({ message: 'Song created successfully' })
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)

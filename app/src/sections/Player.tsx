@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 // components
 import { RotatingLines } from 'react-loader-spinner'
 import { Typography } from '@/components/ui/typography'
@@ -14,6 +14,7 @@ import { getAudioFromCache, isAudioCached, saveAudioToCache } from '@/lib/indexD
 import { setCurrentSong, setIsPlaying, shufflePlaylist } from '@/redux/slices/music'
 import { setShowSidebarRight } from '@/redux/slices/app'
 import { useDispatch, useSelector } from '@/redux/store'
+// sections
 import LyricsDrawer from './LyricsDrawer'
 
 const Player: React.FC = () => {
@@ -33,6 +34,7 @@ const Player: React.FC = () => {
     const trackRef = useRef<HTMLDivElement | null>(null)
     const audioRef = useRef<HTMLAudioElement | null>(null)
     const currentTimeRef = useRef<HTMLElement | null>(null)
+    const isDraggingRef = useRef<boolean>(false)
     // memoized next song
     const nextSong = useMemo(() => {
         if (!currentSong) return undefined
@@ -40,15 +42,38 @@ const Player: React.FC = () => {
         return index === -1 ? undefined : currentPlaylistSongs[index + 1]
     }, [currentSong, currentPlaylistSongs])
 
-    const handleClickProgressBar = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const seekBar = (clientX: number) => {
         if (!trackRef.current || !audioRef.current || !thumbRef.current) return
         const trackRect = trackRef.current.getBoundingClientRect()
-        const percent = Math.round(((e.clientX - trackRect.left) / trackRect.width) * 100)
+        const rawPercent = ((clientX - trackRect.left) / trackRect.width) * 100
+        const percent = Math.max(0, Math.min(100, Math.round(rawPercent)))
         thumbRef.current.style.cssText = `right: ${100 - percent}%`
-        audioRef.current.currentTime = currentSong!.duration * percent / 100
+        if (currentSong?.duration) audioRef.current.currentTime = (currentSong.duration * percent) / 100
     }
 
-    const handleNext = () => {
+    // handle click on progress bar
+    const handleClickProgressBar = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        seekBar(e.clientX)
+    }
+
+    // handle mouse down on progress bar
+    const handleMouseDownProgressBar = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        isDraggingRef.current = true
+        seekBar(e.clientX)
+    }
+
+    // handle drag on progress bar
+    const handleMouseMoveProgressBar = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        if (!isDraggingRef.current) return
+        seekBar(e.clientX)
+    }
+
+    // handle mouse up on progress bar
+    const handleMouseUpProgressBar = () => {
+        isDraggingRef.current = false
+    }
+
+    const handleNext = useCallback(() => {
         if (currentPlaylistSongs.length > 0) {
             currentPlaylistSongs.forEach((item, index) => {
                 if (item.id === currentSong?.id) {
@@ -60,9 +85,9 @@ const Player: React.FC = () => {
                 }
             })
         }
-    }
+    }, [currentPlaylistSongs, currentSong, dispatch])
 
-    const handlePrevious = () => {
+    const handlePrevious = useCallback(() => {
         if (currentPlaylistSongs.length > 0) {
             currentPlaylistSongs.forEach((item, index) => {
                 if (item.id === currentSong?.id) {
@@ -73,9 +98,9 @@ const Player: React.FC = () => {
                 }
             })
         }
-    }
+    }, [currentPlaylistSongs, currentSong, dispatch])
 
-    const handleToggleButton = async () => {
+    const handleToggleButton = useCallback(async () => {
         if (!audioRef.current) return
         if (isPlaying && !audioRef.current.paused) {
             dispatch(setIsPlaying(false))
@@ -84,7 +109,7 @@ const Player: React.FC = () => {
             dispatch(setIsPlaying(true))
             await audioRef.current.play()
         }
-    }
+    }, [isPlaying, dispatch])
 
     const handleShuffle = () => {
         if (!audioRef.current) return
@@ -136,13 +161,17 @@ const Player: React.FC = () => {
         }
     }
 
+    const onCanPlayThrough = () => {
+        setIsLoadingAudio(false)
+        audioRef.current?.play()
+            .then(_ => dispatch(setIsPlaying(true)))
+            .catch(_ => console.log('Auto play was prevented because user didnt interact with the document'))
+    }
+
     const initializePlayer = async () => {
         dispatch(setIsPlaying(false))
         if (currentSong?.stream) {
-            if (audioRef.current) {
-                audioRef.current.pause()
-                audioRef.current = null
-            }
+            setIsLoadingAudio(true)
             const isCached = await isAudioCached(currentSong.id)
             if (!isCached) await saveAudioToCache(currentSong.id, currentSong.stream)
             let audioUrl = await getAudioFromCache(currentSong.id)
@@ -150,46 +179,47 @@ const Player: React.FC = () => {
                 audioRef.current = new Audio(audioUrl)
                 audioRef.current.load()
                 audioRef.current.volume = (volume / 100)
-                audioRef.current.oncanplaythrough = () => {
-                    setIsLoadingAudio(false)
-                    audioRef.current?.play()
-                        .then(_ => dispatch(setIsPlaying(true)))
-                        .catch(_ => console.log('Auto play was prevented because user didnt interact with the document'))
-                }
-            }
-        } else {
-            if (audioRef.current) {
-                audioRef.current.pause()
-                audioRef.current = null
+                audioRef.current.oncanplaythrough = onCanPlayThrough
+                updatePlayerUI()
             }
         }
         currentTimeRef.current && (currentTimeRef.current.innerText = '00:00')
         thumbRef.current && (thumbRef.current.style.cssText = `right: 100%`)
-        updatePlayerUI()
     }
 
-    const handleSpaceKeyPress = (e: KeyboardEvent) => {
-        // Prevent space bar from triggering if user is typing in an input/textarea
-        if (e.code === 'Space' && e.target instanceof HTMLElement) {
-            const tagName = e.target.tagName.toLowerCase()
-            if (tagName === 'input' || tagName === 'textarea' || e.target.isContentEditable) return
-            e.preventDefault()
-            handleToggleButton()
+    // initialize player when current song changes and update player UI
+    useEffect(() => {
+        initializePlayer()
+        // Cleanup function runs when song changes or component unmounts
+        return () => {
+            if (audioRef.current) {
+                audioRef.current.oncanplaythrough = null
+                audioRef.current.pause()
+                audioRef.current = null
+            }
         }
-    }
-
-    const handleArrowKeyPress = (e: KeyboardEvent) => {
-        // Prevent arrow keys from triggering if user is typing in an input/textarea
-        if ((e.code === 'ArrowLeft' || e.code === 'ArrowRight') && e.target instanceof HTMLElement) {
-            const tagName = e.target.tagName.toLowerCase()
-            if (tagName === 'input' || tagName === 'textarea' || e.target.isContentEditable) return
-            e.preventDefault()
-            if (e.code === 'ArrowLeft') handlePrevious()
-            if (e.code === 'ArrowRight') handleNext()
-        }
-    }
+    }, [currentSong])
 
     useEffect(() => {
+        const handleSpaceKeyPress = (e: KeyboardEvent) => {
+            // Prevent space bar from triggering if user is typing in an input/textarea
+            if (e.code === 'Space' && e.target instanceof HTMLElement) {
+                const tagName = e.target.tagName.toLowerCase()
+                if (tagName === 'input' || tagName === 'textarea' || e.target.isContentEditable) return
+                e.preventDefault()
+                handleToggleButton()
+            }
+        }
+        const handleArrowKeyPress = (e: KeyboardEvent) => {
+            // Prevent arrow keys from triggering if user is typing in an input/textarea
+            if ((e.code === 'ArrowLeft' || e.code === 'ArrowRight') && e.target instanceof HTMLElement) {
+                const tagName = e.target.tagName.toLowerCase()
+                if (tagName === 'input' || tagName === 'textarea' || e.target.isContentEditable) return
+                e.preventDefault()
+                if (e.code === 'ArrowLeft') handlePrevious()
+                if (e.code === 'ArrowRight') handleNext()
+            }
+        }
         // keyboard event for space bar to play/pause
         window.addEventListener('keydown', handleSpaceKeyPress)
         // keyboard event for left/right arrow to previous/next song
@@ -198,12 +228,7 @@ const Player: React.FC = () => {
             window.removeEventListener('keydown', handleSpaceKeyPress)
             window.removeEventListener('keydown', handleArrowKeyPress)
         }
-    }, [audioRef, isPlaying])
-
-    // initialize player when current song changes and update player state UI
-    useEffect(() => {
-        initializePlayer()
-    }, [currentSong, audioRef, thumbRef, currentTimeRef])
+    }, [isPlaying, handleToggleButton, handlePrevious, handleNext])
 
     // change audio during song playing
     useEffect(() => {
@@ -312,14 +337,22 @@ const Player: React.FC = () => {
                     </div>
                     <div className='w-full flex items-center justify-center gap-3 text-sm'>
                         <Typography ref={currentTimeRef} className='font-semibold text-gray-500 m-0'>00:00</Typography>
-                        <div className='relative h-1 hover:h-2 bg-[#0000001a] w-3/5 rounded-full cursor-pointer' onClick={handleClickProgressBar} ref={trackRef}>
-                            <div ref={thumbRef} className='absolute top-0 left-0 bottom-0 h-full bg-[#0e8080] rounded-full'></div>
+                        <div
+                            className='relative h-1 hover:h-2 bg-[#0000001a] w-3/5 rounded-full cursor-pointer'
+                            onClick={handleClickProgressBar}
+                            onMouseDown={handleMouseDownProgressBar}
+                            onMouseMove={handleMouseMoveProgressBar}
+                            onMouseUp={handleMouseUpProgressBar}
+                            onMouseLeave={handleMouseUpProgressBar}
+                            ref={trackRef}
+                        >
+                            <div ref={thumbRef} className='absolute top-0 left-0 bottom-0 h-full bg-main-500 rounded-full'></div>
                         </div>
                         <Typography className='font-semibold text-gray-500 m-0'>{formatDuration(currentSong?.duration ?? 0)}</Typography>
                     </div>
                 </div>
                 <div className='flex-1 items-center gap-4 justify-end hidden md:flex'>
-                    <LyricsDrawer drawerTrigger={<MicVocal size={20} />} />
+                    <LyricsDrawer drawerTrigger={<MicVocal size={20} />} audioRef={audioRef} />
                     <Button size={'icon-lg'} variant={'ghost'} onClick={() => setVolume(volume === 0 ? 50 : 0)}>
                         {volume >= 50 ? <Volume2 /> : volume === 0 ? <VolumeX /> : <Volume1 />}
                     </Button>

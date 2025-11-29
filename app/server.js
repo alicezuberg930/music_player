@@ -26,7 +26,7 @@ const botUserAgents = [
 ]
 
 // Meta tags for different routes
-const routeMeta = {
+let routeMeta = {
     '/sign-in': {
         title: 'Đăng nhập',
         description: 'Đăng nhập tài khoản để trải nghiệm thêm tính năng của MP3 Music Player.',
@@ -40,61 +40,55 @@ const routeMeta = {
 }
 
 app.get('/*splat', async (req, res) => {
-    const userAgent = req.headers['user-agent'] || ''
-    const isBot = botUserAgents.some(bot => userAgent.toLowerCase().includes(bot.toLowerCase()))
-    if (!isBot) {
-        const indexPath = path.join(__dirname, 'dist', 'index.html')
-        let html = fs.readFileSync(indexPath, 'utf8')
+    // const userAgent = req.headers['user-agent'] || ''
 
-        const playlistMatch = req.path.match(/^\/playlist\/([\w-]+)$/)
-        if (playlistMatch) {
-            const response = await fetch(`${process.env.VITE_API_URL}/playlists/${playlistMatch[1]}`)
-            const data = await response.json()
-            if (data && data.data) {
-                routeMeta[req.path] = {
-                    title: data.data.title,
-                    description: data.data.description || 'Nghe playlist của bạn trên Tiến Music Player.',
-                    image: data.data.thumbnail || 'https://aismartlite.cloud/music-og.png',
-                }
-            } else {
-                routeMeta[req.path] = {
-                    title: 'Playlist không tồn tại',
-                    description: 'Playlist bạn đang tìm kiếm không tồn tại.',
-                    image: 'https://aismartlite.cloud/music-og.png',
-                }
+    const playlistMatch = req.path.match(/^\/playlist\/([\w-]+)$/)
+    if (playlistMatch) {
+        const response = await fetch(`${process.env.VITE_API_URL}/playlists/${playlistMatch[1]}`)
+        const data = await response.json()
+        if (data && data.data) {
+            routeMeta[req.path] = {
+                title: data.data.title,
+                description: data.data.description || 'Nghe playlist của bạn trên Tiến Music Player.',
+                image: data.data.thumbnail || 'https://aismartlite.cloud/music-og.png',
+            }
+        } else {
+            routeMeta[req.path] = {
+                title: 'Playlist không tồn tại',
+                description: 'Playlist bạn đang tìm kiếm không tồn tại.',
+                image: 'https://aismartlite.cloud/music-og.png',
             }
         }
-
-        const meta = routeMeta[req.path]
-        console.log(meta)
-
-        if (meta) {
-            html = html.replace(/<title>.*?<\/title>/, `<title>${meta.title}</title>`)
-            html = html.replace(
-                /<meta name="description" content=".*?"\/>/,
-                `<meta name="description" content="${meta.description}" />`
-            )
-            html = html.replace(
-                /<meta property="og:title" content=".*?"\/>/,
-                `<meta property="og:title" content="${meta.title}" />`
-            )
-            html = html.replace(
-                /<meta property="og:description" content=".*?"\/>/,
-                `<meta property="og:description" content="${meta.description}" />`
-            )
-            html = html.replace(
-                /<meta property="og:image" content=".*?"\/>/,
-                `<meta property="og:image" content="${meta.image}" />`
-            )
-            html = html.replace(
-                /<meta property="og:url" content=".*?"\/>/,
-                `<meta property="og:url" content="https://aismartlite.cloud${req.path}" />`
-            )
-        }
-        res.send(html)
-    } else {
-        res.sendFile(path.join(__dirname, 'dist', 'index.html'))
     }
+
+    const indexPath = path.join(__dirname, 'dist', 'index.html')
+    let html = fs.readFileSync(indexPath, 'utf8')
+    const meta = routeMeta[req.path]
+
+    if (meta) {
+        html = html.replace(/<title>.*?<\/title>/, `<title>${meta.title}</title>`)
+        html = html.replace(
+            /<meta name="description" content=".*?"\/>/,
+            `<meta name="description" content="${meta.description}"/>`
+        )
+        html = html.replace(
+            /<meta property="og:title" content=".*?"\/>/,
+            `<meta property="og:title" content="${meta.title}"/>`
+        )
+        html = html.replace(
+            /<meta property="og:description" content=".*?"\/>/,
+            `<meta property="og:description" content="${meta.description}"/>`
+        )
+        html = html.replace(
+            /<meta property="og:image" content=".*?"\/>/,
+            `<meta property="og:image" content="${meta.image}"/>`
+        )
+        html = html.replace(
+            /<meta property="og:url" content=".*?"\/>/,
+            `<meta property="og:url" content="https://aismartlite.cloud${req.path}"/>`
+        )
+    }
+    res.send(html)
 })
 
 app.listen(PORT, () => {

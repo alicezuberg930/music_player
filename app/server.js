@@ -39,7 +39,7 @@ const routeMeta = {
     },
 }
 
-app.get('/*splat', (req, res) => {
+app.get('/*splat', async (req, res) => {
     const userAgent = req.headers['user-agent'] || ''
     const isBot = botUserAgents.some(bot => userAgent.toLowerCase().includes(bot.toLowerCase()))
 
@@ -48,6 +48,24 @@ app.get('/*splat', (req, res) => {
         let html = fs.readFileSync(indexPath, 'utf8')
 
         const meta = routeMeta[req.path] || routeMeta['/']
+
+        if (req.path.startsWith('/playlist/')) {
+            const response = await fetch(`https://aismartlite.cloud/api/playlist/${req.path.split('/playlist/')[1]}`)
+            const data = await response.json()
+            if (data.success) {
+                routeMeta[req.path] = {
+                    title: data.playlist.name,
+                    description: data.playlist.description || 'Nghe playlist của bạn trên Tiến Music Player.',
+                    image: data.playlist.coverImage || 'https://aismartlite.cloud/music-og.png',
+                }
+            } else {
+                routeMeta[req.path] = {
+                    title: 'Playlist không tồn tại',
+                    description: 'Playlist bạn đang tìm kiếm không tồn tại.',
+                    image: 'https://aismartlite.cloud/music-og.png',
+                }
+            }
+        }
 
         if (meta) {
             html = html.replace(/<title>.*?<\/title>/, `<title>${meta.title}</title>`)

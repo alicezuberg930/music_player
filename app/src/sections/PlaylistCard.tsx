@@ -1,7 +1,7 @@
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import type { Playlist } from "@/@types/playlist"
 import { LazyLoadImage } from "react-lazy-load-image-component"
-import { Ellipsis, Heart, Play } from "lucide-react"
+import { Ellipsis, Heart, PlayCircle } from "lucide-react"
 import { Typography } from "@/components/ui/typography"
 
 type Props = {
@@ -12,11 +12,10 @@ type Props = {
 }
 
 const PlaylistCard: React.FC<Props> = ({ item, sectionId, isSearch, visibleSlides = 5 }) => {
-    const navigate = useNavigate()
-
     return (
-        <div
-            onClick={() => navigate(`/playlist/${item.id}`)}
+        <Link
+            suppressHydrationWarning
+            to={`/playlist/${item.id}`}
             className={`flex flex-col gap-3 cursor-pointer px-3 ${isSearch ? 'mb-5' : ''}`}
             style={{ width: `${100 / visibleSlides}%`, flex: '0 0 auto' }}
         >
@@ -24,7 +23,7 @@ const PlaylistCard: React.FC<Props> = ({ item, sectionId, isSearch, visibleSlide
                 <div className="z-1 text-white absolute w-full h-full gap-3 bg-overlay invisible group-hover:visible flex items-center justify-center">
                     <Heart />
                     <Link to={`/playlist/${item.id}`} state={{ playAlbum: true }}>
-                        <Play size={48} className="p-1 border border-white rounded-full" />
+                        <PlayCircle size={56} className="" />
                     </Link>
                     <Ellipsis />
                 </div>
@@ -34,10 +33,10 @@ const PlaylistCard: React.FC<Props> = ({ item, sectionId, isSearch, visibleSlide
                 />
             </div>
             <div>
-                <Typography className="font-semibold line-clamp-1">{item?.title}</Typography>
-                <span className="line-clamp-2">{sectionId && sectionId === "h100" ? item?.artistNames : item?.description}</span>
+                <Typography variant={'span'} className="font-semibold line-clamp-1">{item?.title}</Typography>
+                <Typography className="line-clamp-2">{sectionId && sectionId === "h100" ? item?.artistNames : item?.description}</Typography>
             </div>
-        </div>
+        </Link>
     )
 }
 

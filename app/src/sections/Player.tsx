@@ -255,7 +255,7 @@ const Player: React.FC = () => {
     }, [isPlaying])
 
     return (
-        <div className={`fixed left-0 right-0 bottom-0 z-20 h-24 content-center bg-main-400 select-none`}>
+        <div className={`fixed left-0 right-0 bottom-0 z-20 h-24 content-center bg-main-400 select-none border-t border-main-500/20 shadow-[0_-4px_2px_-1px_rgba(0,0,0,0.1),0_-2px_4px_-1px_rgba(0,0,0,0.06)]`}>
             <div className='flex justify-between px-5'>
                 <div className='flex-1 items-center gap-4 hidden md:flex'>
                     <LazyLoadImage src={currentSong?.thumbnail} effect='blur' alt='thumbnail' className='w-16 h-16 object-cover' />

@@ -1,7 +1,7 @@
 FROM node:22-alpine
 
 # Set working directory
-WORKDIR /app
+WORKDIR /api
 
 COPY package*.json ./
 
@@ -12,10 +12,11 @@ RUN npm install --legacy-peer-deps
 COPY . .
 
 # Build the application
-RUN npm run build
+# RUN npm run build
 
 # Expose the port the app runs on
-EXPOSE 4172
+EXPOSE 5000
 
 # Start the application
-CMD ["npm", "start"]
+# CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]

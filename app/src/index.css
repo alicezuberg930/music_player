@@ -20,13 +20,16 @@ body {
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  /* Custom main colors */
+  /* Custom theme colors */
   --color-main-100: #E7ECEC;
   --color-main-200: #DDE4E4;
   --color-main-300: #CED9D9;
   --color-main-400: #C0D8D8;
   --color-main-500: #0E8080;
   --color-overlay: rgba(0, 0, 0, 0.3);
+
+  /* Custom shadows */
+  --shadow-up: 0 -4px 2px -4px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);

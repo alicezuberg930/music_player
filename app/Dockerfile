@@ -12,10 +12,12 @@ RUN npm install --legacy-peer-deps
 COPY . .
 
 # Build the application
-RUN npm run build
+# RUN npm run build
 
 # Expose the port the app runs on
-EXPOSE 4173
+EXPOSE 5173
 
 # Start the application
-CMD ["node", "server.js"]
+# CMD ["node", "server.js"]
+# Start the development server
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]

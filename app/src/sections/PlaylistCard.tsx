@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import type { Playlist } from "@/@types/playlist"
 import { LazyLoadImage } from "react-lazy-load-image-component"
 import { Ellipsis, Heart, Play } from "lucide-react"
@@ -14,20 +14,18 @@ type Props = {
 const PlaylistCard: React.FC<Props> = ({ item, sectionId, isSearch, visibleSlides = 5 }) => {
     const navigate = useNavigate()
 
-    const navigateAndPlayAlbum = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
-        e.stopPropagation()
-        navigate(`/playlist/${item.id}`, { state: { playAlbum: true } })
-    }
-
     return (
         <div
+            onClick={() => navigate(`/playlist/${item.id}`)}
             className={`flex flex-col gap-3 cursor-pointer px-3 ${isSearch ? 'mb-5' : ''}`}
             style={{ width: `${100 / visibleSlides}%`, flex: '0 0 auto' }}
         >
             <div className="relative w-full group overflow-hidden rounded-lg bg-main-200">
-                <div className="text-white absolute w-full h-full gap-3 bg-overlay z-20 invisible group-hover:visible flex items-center justify-center">
+                <div className="z-1 text-white absolute w-full h-full gap-3 bg-overlay invisible group-hover:visible flex items-center justify-center">
                     <Heart />
-                    <Play size={48} className="p-1 border border-white rounded-full" onClick={navigateAndPlayAlbum} />
+                    <Link to={`/playlist/${item.id}`} state={{ playAlbum: true }}>
+                        <Play size={48} className="p-1 border border-white rounded-full" />
+                    </Link>
                     <Ellipsis />
                 </div>
                 <LazyLoadImage

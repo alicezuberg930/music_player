@@ -46,8 +46,7 @@ const SignupPage: React.FC = () => {
     const { handleSubmit } = methods
 
     const onSubmit = async (data: FormValuesProps) => {
-        // console.log(data)
-        await signup(data.email, data.password, data.fullname)
+        await signup(data.fullname, data.email, data.password)
     }
 
     return (

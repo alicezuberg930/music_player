@@ -5,9 +5,10 @@ import { useDispatch } from 'react-redux'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { Ellipsis } from 'lucide-react'
+import { HeartIcon } from 'lucide-react'
 import { addSongsToPlaylist } from '@/lib/httpClient'
 import { useSnackbar } from '@/components/snackbar'
+import SongOptionDropdown from './SongOptionDropdown'
 
 dayjs.extend(relativeTime)
 
@@ -30,14 +31,19 @@ const SongItem: React.FC<Props> = ({ song, order, percent, imgSize, style, showT
         dispatch(setCurrentSong(song))
     }
 
-    const addToPlaylist = async (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
-        e.stopPropagation()
-        const response = await addSongsToPlaylist("m5ybbvy8yl89jvevp3on78sl", [song.id])
+    const addToPlaylist = async (songId: string, e?: React.MouseEvent) => {
+        e?.stopPropagation()
+        const response = await addSongsToPlaylist("m5ybbvy8yl89jvevp3on78sl", [songId])
         if (response.statusCode && response.statusCode === 200) {
             enqueueSnackbar('Đã thêm bài hát vào playlist', { variant: 'success' })
         } else {
             enqueueSnackbar(response.message, { variant: 'error' })
         }
+    }
+
+    const addToFavorite = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+        e.stopPropagation()
+        enqueueSnackbar('Đã thêm bài hát vào yêu thích', { variant: 'success' })
     }
 
     return (
@@ -60,7 +66,8 @@ const SongItem: React.FC<Props> = ({ song, order, percent, imgSize, style, showT
                     {showTime && <span className='text-xs opacity-70'>{dayjs(song.createdAt).fromNow()}</span>}
                 </div>
                 {percent && <span className='pr-1 font-bold'>{percent}%</span>}
-                <Ellipsis onClick={addToPlaylist} />
+                <HeartIcon className={`text-gray-500 ${song.liked && 'fill-main-500'}`} onClick={addToFavorite} />
+                <SongOptionDropdown addToPlaylist={(e: React.MouseEvent) => { addToPlaylist(song.id, e) }} />
             </div>
         </div>
     )

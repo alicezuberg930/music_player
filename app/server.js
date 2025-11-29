@@ -61,6 +61,26 @@ app.get('/*splat', async (req, res) => {
         }
     }
 
+
+    const artistMatch = req.path.match(/^\/artist\/([\w-]+)$/)
+    if (artistMatch) {
+        const response = await fetch(`${process.env.VITE_API_URL}/artists/${artistMatch[1]}`)
+        const data = await response.json()
+        if (data && data.data) {
+            routeMeta[req.path] = {
+                title: data.data.title,
+                description: data.data.description || `${data.data.title} - Tiến Music Player.`,
+                image: data.data.thumbnail || 'https://aismartlite.cloud/music-og.png',
+            }
+        } else {
+            routeMeta[req.path] = {
+                title: 'Nhạc sĩ không tồn tại',
+                description: 'Nhạc sĩ bạn đang tìm kiếm không tồn tại.',
+                image: 'https://aismartlite.cloud/music-og.png',
+            }
+        }
+    }
+
     const indexPath = path.join(__dirname, 'dist', 'index.html')
     let html = fs.readFileSync(indexPath, 'utf8')
     const meta = routeMeta[req.path]

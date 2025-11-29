@@ -41,17 +41,14 @@ const LyricsDrawer: React.FC<Props> = ({ drawerTrigger, audioRef }) => {
         }
     }, [audioRef.current])
 
-    // Automatically scroll to active lyric line to center it in the middle of the container
     React.useEffect(() => {
         if (activeLyricRef.current && scrollContainerRef.current) {
-            const container = scrollContainerRef.current
-            const activeLine = activeLyricRef.current
-            const containerHeight = container.clientHeight
-            const lineTop = activeLine.offsetTop
-            const lineHeight = activeLine.clientHeight
-            // Scroll so the active line is centered
+            const containerHeight = activeLyricRef.current.clientHeight
+            const lineTop = activeLyricRef.current.offsetTop
+            const lineHeight = activeLyricRef.current.clientHeight
+            // automatically scroll with enough height so that the active line is centered in the parent container
             const scrollTo = lineTop - (containerHeight / 2) - (lineHeight / 2)
-            container.scrollTo({ top: scrollTo, behavior: 'smooth' })
+            scrollContainerRef.current.scrollTo({ top: scrollTo, behavior: 'smooth' })
         }
     }, [currentTime])
 

@@ -5,7 +5,7 @@ import type { ActionMapType, AuthStateType, AuthUser, JWTContextType } from './t
 // components
 import { useSnackbar } from '@/components/snackbar'
 // http requests
-import { fetchProfile, signIn, signOut } from '../httpClient'
+import { fetchProfile, signIn, signOut, signUp } from '../httpClient'
 import { paths } from '../route/paths'
 
 enum Types {
@@ -119,24 +119,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [initialize])
 
-  const signup = useCallback(async (email: string, password: string, name: string) => {
+  const signup = useCallback(async (fullname: string, email: string, password: string) => {
     try {
-      const response = await fetch('/api/auth/sign-up', {
-        method: 'POST',
-        body: JSON.stringify({ email, password, name })
-      })
-      const result = await response.json()
-      if (!response.ok) {
-        enqueueSnackbar(result.message, { variant: 'error' })
-      } else {
+      const response = await signUp(fullname, email, password)
+      if (response && response.statusCode === 201) {
         dispatch({
           type: Types.REGISTER,
           payload: {
-            user: result.data as AuthUser
+            user: response.data as AuthUser
           },
         })
-        enqueueSnackbar(result.message)
+        enqueueSnackbar(response.message)
         navigate('/', { replace: true })
+      } else {
+        enqueueSnackbar(response.message ?? "Lỗi không xác định", { variant: 'error' })
       }
     } catch (error) {
       enqueueSnackbar(error instanceof Error ? error.message : 'Internal Server Error', { variant: 'error' })

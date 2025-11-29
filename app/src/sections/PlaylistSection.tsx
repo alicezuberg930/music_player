@@ -9,7 +9,7 @@ type Props = {
 
 const PlaylistSection: React.FC<Props> = ({ playlists }) => {
     const isMobile = useIsMobile()
-    let displayAmount = isMobile ? 3 : 5
+    let displayAmount = isMobile ? 2 : 5
 
     return (
         <div className="mt-12">

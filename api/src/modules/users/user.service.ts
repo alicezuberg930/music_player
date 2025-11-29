@@ -53,6 +53,8 @@ export class UserService {
     public async signUp(request: Request<{}, {}, CreateUserDto>, response: Response) {
         try {
             const { password, fullname, email } = request.body
+            const existingUser: User | undefined = await db.query.users.findFirst({ where: eq(users.email, email) })
+            if (existingUser) throw new BadRequestException('Email is already registered')
             const hashedPassword = await new Password().hash(password)
             await db.insert(users).values({ fullname, email, password: hashedPassword })
             return response.status(201).json({ message: 'User registered successfully' })

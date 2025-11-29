@@ -42,21 +42,19 @@ const routeMeta = {
 app.get('/*splat', async (req, res) => {
     const userAgent = req.headers['user-agent'] || ''
     const isBot = botUserAgents.some(bot => userAgent.toLowerCase().includes(bot.toLowerCase()))
-
-    if (isBot) {
+    if (!isBot) {
         const indexPath = path.join(__dirname, 'dist', 'index.html')
         let html = fs.readFileSync(indexPath, 'utf8')
 
-        const meta = routeMeta[req.path] || routeMeta['/']
-
-        if (req.path.startsWith('/playlist/')) {
-            const response = await fetch(`https://aismartlite.cloud/api/playlist/${req.path.split('/playlist/')[1]}`)
+        const playlistMatch = req.path.match(/^\/playlist\/([\w-]+)$/)
+        if (playlistMatch) {
+            const response = await fetch(`${process.env.VITE_API_URL}/playlists/${playlistMatch[1]}`)
             const data = await response.json()
-            if (data.success) {
+            if (data && data.data) {
                 routeMeta[req.path] = {
-                    title: data.playlist.name,
-                    description: data.playlist.description || 'Nghe playlist của bạn trên Tiến Music Player.',
-                    image: data.playlist.coverImage || 'https://aismartlite.cloud/music-og.png',
+                    title: data.data.title,
+                    description: data.data.description || 'Nghe playlist của bạn trên Tiến Music Player.',
+                    image: data.data.thumbnail || 'https://aismartlite.cloud/music-og.png',
                 }
             } else {
                 routeMeta[req.path] = {
@@ -67,27 +65,30 @@ app.get('/*splat', async (req, res) => {
             }
         }
 
+        const meta = routeMeta[req.path]
+        console.log(meta)
+
         if (meta) {
             html = html.replace(/<title>.*?<\/title>/, `<title>${meta.title}</title>`)
             html = html.replace(
                 /<meta name="description" content=".*?"\/>/,
-                `<meta name="description" content="${meta.description}"/>`
+                `<meta name="description" content="${meta.description}" />`
             )
             html = html.replace(
                 /<meta property="og:title" content=".*?"\/>/,
-                `<meta property="og:title" content="${meta.title}"/>`
+                `<meta property="og:title" content="${meta.title}" />`
             )
             html = html.replace(
                 /<meta property="og:description" content=".*?"\/>/,
-                `<meta property="og:description" content="${meta.description}"/>`
+                `<meta property="og:description" content="${meta.description}" />`
             )
             html = html.replace(
                 /<meta property="og:image" content=".*?"\/>/,
-                `<meta property="og:image" content="${meta.image}"/>`
+                `<meta property="og:image" content="${meta.image}" />`
             )
             html = html.replace(
                 /<meta property="og:url" content=".*?"\/>/,
-                `<meta property="og:url" content="https://aismartlite.cloud${req.path}"/>`
+                `<meta property="og:url" content="https://aismartlite.cloud${req.path}" />`
             )
         }
         res.send(html)

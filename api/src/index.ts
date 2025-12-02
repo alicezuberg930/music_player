@@ -14,7 +14,7 @@ app.use(responseInterceptor)
 
 // setup cors
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:5174', 'https://aismartlite.cloud', 'https://api.aismartlite.cloud', 'https://tien-music-player.site'],
+    origin: ['http://localhost:5173', 'http://localhost:5174', 'https://aismartlite.cloud', 'https://api.aismartlite.cloud', 'https://www.tien-music-player.site'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
 }))

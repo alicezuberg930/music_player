@@ -1,0 +1,37 @@
+import type { Artist } from "./artist";
+
+export type Song = {
+    duration: number;
+    id: string;
+    title: string;
+    alias: string;
+    artistNames: string;
+    isWorldWide: boolean | null;
+    thumbnail: string;
+    lyricsFile: string | null;
+    isPrivate: boolean | null;
+    releaseDate: string | null;
+    distributor: string | null;
+    stream: string;
+    isIndie: boolean | null;
+    mvlink: string | null;
+    hasLyrics: boolean | null;
+    createdAt: string;
+    updatedAt: string;
+    userId: number;
+    likes: number;
+    listens: number | null;
+    liked: boolean | null;
+    comments: number | null;
+    size: number;
+    artists: Artist[]
+}
+
+export type IMusicState = {
+    isPlaying: boolean
+    recentSongs: Song[]
+    currentPlaylistSongs: Song[]
+    isPlaylist: boolean
+    currentSong: Song | null
+    currentPlaylistName: string | null
+}

@@ -1,0 +1,1729 @@
+{
+    "err": 0,
+    "msg": "Success",
+    "data": {
+        "artists": [
+            {
+                "id": "IWZA6CCW",
+                "name": "Alan Walker",
+                "link": "/Alan-Walker",
+                "spotlight": false,
+                "alias": "Alan-Walker",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                "isOA": true,
+                "isOABrand": false,
+                "playlistId": "ZWZCU89E",
+                "totalFollow": 1209318
+            }
+        ],
+        "songs": [
+            {
+                "encodeId": "ZW7O8OI9",
+                "title": "Faded",
+                "alias": "Faded-Alan-Walker",
+                "isOffical": true,
+                "username": "mp3",
+                "artistsNames": "Alan Walker",
+                "artists": [
+                    {
+                        "id": "IWZA6CCW",
+                        "name": "Alan Walker",
+                        "link": "/Alan-Walker",
+                        "spotlight": false,
+                        "alias": "Alan-Walker",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCU89E"
+                    }
+                ],
+                "isWorldWide": false,
+                "previewInfo": {
+                    "startTime": 0,
+                    "endTime": 60
+                },
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/cover/f/8/2/8/f828971973632637d83b119fe5801965.jpg",
+                "link": "/bai-hat/Faded-Alan-Walker/ZW7O8OI9.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w94_r1x1_jpeg/cover/f/8/2/8/f828971973632637d83b119fe5801965.jpg",
+                "duration": 213,
+                "zingChoice": false,
+                "isPrivate": false,
+                "preRelease": false,
+                "releaseDate": 1464886800,
+                "genreIds": [
+                    "IWZ9Z08O",
+                    "IWZ9Z097"
+                ],
+                "album": {
+                    "encodeId": "ZU8AOA06",
+                    "title": "Faded (EP)",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w165_r1x1_jpeg/cover/f/8/2/8/f828971973632637d83b119fe5801965.jpg",
+                    "isoffical": true,
+                    "link": "/album/Faded-EP-Alan-Walker/ZU8AOA06.html",
+                    "isIndie": false,
+                    "releaseDate": "04/12/2015",
+                    "sortDescription": "",
+                    "releasedAt": 1449162000000,
+                    "boolAtt": 753714,
+                    "genreIds": [
+                        "IWZ9Z08O",
+                        "IWZ9Z09A",
+                        "IWZ9Z0C7"
+                    ],
+                    "PR": false,
+                    "artists": [
+                        {
+                            "id": "IWZA6CCW",
+                            "name": "Alan Walker",
+                            "link": "/Alan-Walker",
+                            "spotlight": false,
+                            "alias": "Alan-Walker",
+                            "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                            "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                            "isOA": true,
+                            "isOABrand": false,
+                            "playlistId": "ZWZCU89E",
+                            "totalFollow": 1209318
+                        }
+                    ],
+                    "artistsNames": "Alan Walker"
+                },
+                "distributor": "Sony Music Entertainment",
+                "indicators": [],
+                "radioId": 1285124301,
+                "isIndie": false,
+                "mvlink": "/video-clip/Faded-Alan-Walker/ZW7O8OI9.html",
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "downloadPrivileges": [
+                    3
+                ],
+                "allowAudioAds": true,
+                "hasLyric": true
+            },
+            {
+                "encodeId": "ZWABOA0F",
+                "title": "On My Way",
+                "alias": "On-My-Way-Alan-Walker-Sabrina-Carpenter-Farruko",
+                "isOffical": true,
+                "username": "",
+                "artistsNames": "Alan Walker, Sabrina Carpenter, Farruko",
+                "artists": [
+                    {
+                        "id": "IWZA6CCW",
+                        "name": "Alan Walker",
+                        "link": "/Alan-Walker",
+                        "spotlight": false,
+                        "alias": "Alan-Walker",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCU89E"
+                    },
+                    {
+                        "id": "IWZ9CUB9",
+                        "name": "Sabrina Carpenter",
+                        "link": "/Sabrina-Carpenter",
+                        "spotlight": false,
+                        "alias": "Sabrina-Carpenter",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/1/3/b/2/13b2b4cab53d9da4bc926bfa79e40404.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/1/3/b/2/13b2b4cab53d9da4bc926bfa79e40404.jpg",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "6UB6966U"
+                    },
+                    {
+                        "id": "IWZAZ9OC",
+                        "name": "Farruko",
+                        "link": "/Farruko",
+                        "spotlight": false,
+                        "alias": "Farruko",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/a/b/2/a/ab2a1a455717f261a40fa46c2153dd4a.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/a/b/2/a/ab2a1a455717f261a40fa46c2153dd4a.jpg",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "6UB6A87Z"
+                    }
+                ],
+                "isWorldWide": false,
+                "previewInfo": {
+                    "startTime": 0,
+                    "endTime": 58
+                },
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/cover/c/0/2/3/c023d060918c344df175418894c88975.jpg",
+                "link": "/bai-hat/On-My-Way-Alan-Walker-Sabrina-Carpenter-Farruko/ZWABOA0F.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w94_r1x1_jpeg/cover/c/0/2/3/c023d060918c344df175418894c88975.jpg",
+                "duration": 199,
+                "zingChoice": false,
+                "isPrivate": false,
+                "preRelease": false,
+                "releaseDate": 1553101200,
+                "genreIds": [
+                    "IWZ9Z08O",
+                    "IWZ9Z097"
+                ],
+                "album": {
+                    "encodeId": "ZUAIFUZC",
+                    "title": "On My Way (Single)",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w165_r1x1_jpeg/cover/c/0/2/3/c023d060918c344df175418894c88975.jpg",
+                    "isoffical": true,
+                    "link": "/album/On-My-Way-Single-Alan-Walker-Sabrina-Carpenter-Farruko/ZUAIFUZC.html",
+                    "isIndie": false,
+                    "releaseDate": "21/03/2019",
+                    "sortDescription": "",
+                    "releasedAt": 1553101200000,
+                    "boolAtt": 753714,
+                    "genreIds": [
+                        "IWZ9Z08O",
+                        "IWZ9Z09A",
+                        "IWZ9Z0C7"
+                    ],
+                    "PR": false,
+                    "artists": [
+                        {
+                            "id": "IWZA6CCW",
+                            "name": "Alan Walker",
+                            "link": "/Alan-Walker",
+                            "spotlight": false,
+                            "alias": "Alan-Walker",
+                            "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                            "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                            "isOA": true,
+                            "isOABrand": false,
+                            "playlistId": "ZWZCU89E",
+                            "totalFollow": 1209318
+                        },
+                        {
+                            "id": "IWZ9CUB9",
+                            "name": "Sabrina Carpenter",
+                            "link": "/Sabrina-Carpenter",
+                            "spotlight": false,
+                            "alias": "Sabrina-Carpenter",
+                            "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/1/3/b/2/13b2b4cab53d9da4bc926bfa79e40404.jpg",
+                            "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/1/3/b/2/13b2b4cab53d9da4bc926bfa79e40404.jpg",
+                            "isOA": false,
+                            "isOABrand": false,
+                            "playlistId": "6UB6966U",
+                            "totalFollow": 59311
+                        },
+                        {
+                            "id": "IWZAZ9OC",
+                            "name": "Farruko",
+                            "link": "/Farruko",
+                            "spotlight": false,
+                            "alias": "Farruko",
+                            "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/a/b/2/a/ab2a1a455717f261a40fa46c2153dd4a.jpg",
+                            "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/a/b/2/a/ab2a1a455717f261a40fa46c2153dd4a.jpg",
+                            "isOA": false,
+                            "isOABrand": false,
+                            "playlistId": "6UB6A87Z",
+                            "totalFollow": 25463
+                        }
+                    ],
+                    "artistsNames": "Alan Walker, Sabrina Carpenter, Farruko"
+                },
+                "distributor": "Sony Music Entertainment",
+                "indicators": [
+                    "explicit"
+                ],
+                "radioId": 1286701351,
+                "isIndie": false,
+                "mvlink": "/video-clip/On-My-Way-Alan-Walker-Sabrina-Carpenter-Farruko/ZWABOA0F.html",
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "downloadPrivileges": [
+                    3
+                ],
+                "allowAudioAds": true,
+                "hasLyric": true
+            },
+            {
+                "encodeId": "ZW78AWZF",
+                "title": "Alone",
+                "alias": "Alone-Alan-Walker",
+                "isOffical": true,
+                "username": "",
+                "artistsNames": "Alan Walker",
+                "artists": [
+                    {
+                        "id": "IWZA6CCW",
+                        "name": "Alan Walker",
+                        "link": "/Alan-Walker",
+                        "spotlight": false,
+                        "alias": "Alan-Walker",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCU89E"
+                    }
+                ],
+                "isWorldWide": false,
+                "previewInfo": {
+                    "startTime": 0,
+                    "endTime": 48
+                },
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/cover/2/6/0/e/260ed88242ac832bff290cdd2e36e06d.jpg",
+                "link": "/bai-hat/Alone-Alan-Walker/ZW78AWZF.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w94_r1x1_jpeg/cover/2/6/0/e/260ed88242ac832bff290cdd2e36e06d.jpg",
+                "duration": 159,
+                "zingChoice": false,
+                "isPrivate": false,
+                "preRelease": false,
+                "releaseDate": 1544720400,
+                "genreIds": [
+                    "IWZ9Z08O",
+                    "IWZ9Z09A",
+                    "IWZ9Z0C7"
+                ],
+                "album": {
+                    "encodeId": "ZU8AZW0W",
+                    "title": "Alone (EP)",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w165_r1x1_jpeg/cover/2/6/0/e/260ed88242ac832bff290cdd2e36e06d.jpg",
+                    "isoffical": true,
+                    "link": "/album/Alone-EP-Alan-Walker/ZU8AZW0W.html",
+                    "isIndie": false,
+                    "releaseDate": "02/12/2016",
+                    "sortDescription": "",
+                    "releasedAt": 1480611600000,
+                    "boolAtt": 753714,
+                    "genreIds": [
+                        "IWZ9Z08O",
+                        "IWZ9Z09A",
+                        "IWZ9Z0C7"
+                    ],
+                    "PR": false,
+                    "artists": [
+                        {
+                            "id": "IWZA6CCW",
+                            "name": "Alan Walker",
+                            "link": "/Alan-Walker",
+                            "spotlight": false,
+                            "alias": "Alan-Walker",
+                            "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                            "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                            "isOA": true,
+                            "isOABrand": false,
+                            "playlistId": "ZWZCU89E",
+                            "totalFollow": 1209318
+                        }
+                    ],
+                    "artistsNames": "Alan Walker"
+                },
+                "distributor": "Sony Music Entertainment",
+                "indicators": [],
+                "radioId": 1285284644,
+                "isIndie": false,
+                "mvlink": "/video-clip/Alone-Alan-Walker/ZW78AWZF.html",
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "downloadPrivileges": [
+                    3
+                ],
+                "allowAudioAds": true,
+                "hasLyric": true
+            },
+            {
+                "encodeId": "ZWA0OA6F",
+                "title": "Lily",
+                "alias": "Lily-Alan-Walker-K-391-Emelie-Hollow",
+                "isOffical": true,
+                "username": "",
+                "artistsNames": "Alan Walker, K-391, Emelie Hollow",
+                "artists": [
+                    {
+                        "id": "IWZA6CCW",
+                        "name": "Alan Walker",
+                        "link": "/Alan-Walker",
+                        "spotlight": false,
+                        "alias": "Alan-Walker",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCU89E"
+                    },
+                    {
+                        "id": "IWZA7OIA",
+                        "name": "K-391",
+                        "link": "/K-391",
+                        "spotlight": false,
+                        "alias": "K-391",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/a/e/b/b/aebbce76ebd8ef9bfa61e5ba5b511524.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/a/e/b/b/aebbce76ebd8ef9bfa61e5ba5b511524.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "6UB6AABC"
+                    },
+                    {
+                        "id": "IWZD7OZ0",
+                        "name": "Emelie Hollow",
+                        "link": "/Emelie-Hollow",
+                        "spotlight": false,
+                        "alias": "Emelie-Hollow",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/e/9/e/9/e9e99eb4d4f51f77c96fd6f8a9ea4607.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/e/9/e/9/e9e99eb4d4f51f77c96fd6f8a9ea4607.jpg",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "6UB6BIFO"
+                    }
+                ],
+                "isWorldWide": false,
+                "previewInfo": {
+                    "startTime": 0,
+                    "endTime": 58
+                },
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/cover/6/d/1/c/6d1c9f8998c65a74ff7cad9726ac01fd.jpg",
+                "link": "/bai-hat/Lily-Alan-Walker-K-391-Emelie-Hollow/ZWA0OA6F.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w94_r1x1_jpeg/cover/6/d/1/c/6d1c9f8998c65a74ff7cad9726ac01fd.jpg",
+                "duration": 195,
+                "zingChoice": false,
+                "isPrivate": false,
+                "preRelease": false,
+                "releaseDate": 1544720400,
+                "genreIds": [
+                    "IWZ9Z08O",
+                    "IWZ9Z09A",
+                    "IWZ9Z0C7"
+                ],
+                "album": {
+                    "encodeId": "ZUUAI06C",
+                    "title": "Different World",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w165_r1x1_jpeg/cover/6/d/1/c/6d1c9f8998c65a74ff7cad9726ac01fd.jpg",
+                    "isoffical": true,
+                    "link": "/album/Different-World-Alan-Walker/ZUUAI06C.html",
+                    "isIndie": false,
+                    "releaseDate": "14/12/2018",
+                    "sortDescription": "℗ 2018 MER under exclusive license to Sony Music Entertainment Sweden AB",
+                    "releasedAt": 1544720400000,
+                    "boolAtt": 753682,
+                    "genreIds": [
+                        "IWZ9Z08O",
+                        "IWZ9Z09A",
+                        "IWZ9Z0C7"
+                    ],
+                    "PR": false,
+                    "artists": [
+                        {
+                            "id": "IWZA6CCW",
+                            "name": "Alan Walker",
+                            "link": "/Alan-Walker",
+                            "spotlight": false,
+                            "alias": "Alan-Walker",
+                            "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                            "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                            "isOA": true,
+                            "isOABrand": false,
+                            "playlistId": "ZWZCU89E",
+                            "totalFollow": 1209318
+                        }
+                    ],
+                    "artistsNames": "Alan Walker"
+                },
+                "distributor": "Sony Music Entertainment",
+                "indicators": [],
+                "radioId": 1286057673,
+                "isIndie": false,
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "downloadPrivileges": [
+                    3
+                ],
+                "allowAudioAds": true,
+                "hasLyric": true
+            },
+            {
+                "encodeId": "ZW8I90UC",
+                "title": "The Spectre",
+                "alias": "The-Spectre-Alan-Walker",
+                "isOffical": true,
+                "username": "",
+                "artistsNames": "Alan Walker",
+                "artists": [
+                    {
+                        "id": "IWZA6CCW",
+                        "name": "Alan Walker",
+                        "link": "/Alan-Walker",
+                        "spotlight": false,
+                        "alias": "Alan-Walker",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCU89E"
+                    }
+                ],
+                "isWorldWide": false,
+                "previewInfo": {
+                    "startTime": 0,
+                    "endTime": 58
+                },
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/cover/f/2/b/3/f2b329e84d5c77b05610b0ec7636f21b.jpg",
+                "link": "/bai-hat/The-Spectre-Alan-Walker/ZW8I90UC.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w94_r1x1_jpeg/cover/f/2/b/3/f2b329e84d5c77b05610b0ec7636f21b.jpg",
+                "duration": 194,
+                "zingChoice": false,
+                "isPrivate": false,
+                "preRelease": false,
+                "releaseDate": 1505408400,
+                "genreIds": [
+                    "IWZ9Z08O",
+                    "IWZ9Z09A",
+                    "IWZ9Z0C7"
+                ],
+                "album": {
+                    "encodeId": "ZU8BDEE6",
+                    "title": "The Spectre (Single)",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w165_r1x1_jpeg/cover/f/2/b/3/f2b329e84d5c77b05610b0ec7636f21b.jpg",
+                    "isoffical": true,
+                    "link": "/album/The-Spectre-Single-Alan-Walker/ZU8BDEE6.html",
+                    "isIndie": false,
+                    "releaseDate": "15/09/2017",
+                    "sortDescription": "",
+                    "releasedAt": 1505408400000,
+                    "boolAtt": 753714,
+                    "genreIds": [
+                        "IWZ9Z08O",
+                        "IWZ9Z09A",
+                        "IWZ9Z0C7"
+                    ],
+                    "PR": false,
+                    "artists": [
+                        {
+                            "id": "IWZA6CCW",
+                            "name": "Alan Walker",
+                            "link": "/Alan-Walker",
+                            "spotlight": false,
+                            "alias": "Alan-Walker",
+                            "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                            "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                            "isOA": true,
+                            "isOABrand": false,
+                            "playlistId": "ZWZCU89E",
+                            "totalFollow": 1209318
+                        }
+                    ],
+                    "artistsNames": "Alan Walker"
+                },
+                "distributor": "Sony Music Entertainment",
+                "indicators": [],
+                "radioId": 1285832603,
+                "isIndie": false,
+                "mvlink": "/video-clip/The-Spectre-Alan-Walker/ZW8I90UC.html",
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "downloadPrivileges": [
+                    3
+                ],
+                "allowAudioAds": true,
+                "hasLyric": true
+            },
+            {
+                "encodeId": "ZW8WOI6U",
+                "title": "All Falls Down",
+                "alias": "All-Falls-Down-Alan-Walker-Noah-Cyrus-Digital-Farm-Animals",
+                "isOffical": true,
+                "username": "",
+                "artistsNames": "Alan Walker, Noah Cyrus, Digital Farm Animals",
+                "artists": [
+                    {
+                        "id": "IWZA6CCW",
+                        "name": "Alan Walker",
+                        "link": "/Alan-Walker",
+                        "spotlight": false,
+                        "alias": "Alan-Walker",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCU89E"
+                    },
+                    {
+                        "id": "IWZAF76W",
+                        "name": "Noah Cyrus",
+                        "link": "/Noah-Cyrus",
+                        "spotlight": false,
+                        "alias": "Noah-Cyrus",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/9/3/c/c/93cc8be0cd2c739be3762ff02b539f27.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/9/3/c/c/93cc8be0cd2c739be3762ff02b539f27.jpg",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "ZODEFAZD"
+                    },
+                    {
+                        "id": "IWZAZ80A",
+                        "name": "Digital Farm Animals",
+                        "link": "/Digital-Farm-Animals",
+                        "spotlight": false,
+                        "alias": "Digital-Farm-Animals",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/2/c/3/d/2c3d4cc0f842bb40ada64ecb4b7b0a31.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/2/c/3/d/2c3d4cc0f842bb40ada64ecb4b7b0a31.jpg",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "ZODEFAO0"
+                    }
+                ],
+                "isWorldWide": false,
+                "previewInfo": {
+                    "startTime": 0,
+                    "endTime": 59
+                },
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/covers/c/d/cd5e9fea8071c159d382eded303e3a8c_1509329820.jpg",
+                "link": "/bai-hat/All-Falls-Down-Alan-Walker-Noah-Cyrus-Digital-Farm-Animals/ZW8WOI6U.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w94_r1x1_jpeg/covers/c/d/cd5e9fea8071c159d382eded303e3a8c_1509329820.jpg",
+                "duration": 199,
+                "zingChoice": false,
+                "isPrivate": false,
+                "preRelease": false,
+                "releaseDate": 0,
+                "genreIds": [
+                    "IWZ9Z08O",
+                    "IWZ9Z09A"
+                ],
+                "album": {
+                    "encodeId": "ZUUAI06C",
+                    "title": "Different World",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w165_r1x1_jpeg/cover/6/d/1/c/6d1c9f8998c65a74ff7cad9726ac01fd.jpg",
+                    "isoffical": true,
+                    "link": "/album/Different-World-Alan-Walker/ZUUAI06C.html",
+                    "isIndie": false,
+                    "releaseDate": "14/12/2018",
+                    "sortDescription": "℗ 2018 MER under exclusive license to Sony Music Entertainment Sweden AB",
+                    "releasedAt": 1544720400000,
+                    "boolAtt": 753682,
+                    "genreIds": [
+                        "IWZ9Z08O",
+                        "IWZ9Z09A",
+                        "IWZ9Z0C7"
+                    ],
+                    "PR": false,
+                    "artists": [
+                        {
+                            "id": "IWZA6CCW",
+                            "name": "Alan Walker",
+                            "link": "/Alan-Walker",
+                            "spotlight": false,
+                            "alias": "Alan-Walker",
+                            "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                            "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                            "isOA": true,
+                            "isOABrand": false,
+                            "playlistId": "ZWZCU89E",
+                            "totalFollow": 1209318
+                        }
+                    ],
+                    "artistsNames": "Alan Walker"
+                },
+                "distributor": "Sony Music Entertainment",
+                "indicators": [],
+                "radioId": 1285843814,
+                "isIndie": false,
+                "mvlink": "/video-clip/All-Falls-Down-Alan-Walker-Noah-Cyrus-Digital-Farm-Animals/ZW8WOI6U.html",
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "downloadPrivileges": [
+                    3
+                ],
+                "allowAudioAds": true,
+                "hasLyric": true
+            }
+        ],
+        "videos": [
+            {
+                "encodeId": "ZW7O8OI9",
+                "title": "Faded",
+                "alias": "Faded-Alan-Walker",
+                "isOffical": true,
+                "username": "mp3",
+                "artistsNames": "Alan Walker",
+                "artists": [
+                    {
+                        "id": "IWZA6CCW",
+                        "name": "Alan Walker",
+                        "link": "/Alan-Walker",
+                        "spotlight": false,
+                        "alias": "Alan-Walker",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCU89E"
+                    }
+                ],
+                "isWorldWide": false,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w600_r300x169_jpeg/thumb_video/1/6/16b17cc76539abb6c505625ae68f4831_1454405421.jpg",
+                "link": "/video-clip/Faded-Alan-Walker/ZW7O8OI9.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r16x9_jpeg/thumb_video/1/6/16b17cc76539abb6c505625ae68f4831_1454405421.jpg",
+                "duration": 212,
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "artist": {
+                    "id": "IWZA6CCW",
+                    "name": "Alan Walker",
+                    "link": "/Alan-Walker",
+                    "spotlight": false,
+                    "alias": "Alan-Walker",
+                    "playlistId": "ZWZCU89E",
+                    "cover": "https://zmp3-static.zmdcdn.me/skins/zmp3-v5.2/images/default_cover.png",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg"
+                }
+            },
+            {
+                "encodeId": "ZW8WOI6U",
+                "title": "All Falls Down",
+                "alias": "All-Falls-Down-Alan-Walker-Noah-Cyrus-Digital-Farm-Animals",
+                "isOffical": true,
+                "username": "",
+                "artistsNames": "Alan Walker, Noah Cyrus, Digital Farm Animals",
+                "artists": [
+                    {
+                        "id": "IWZA6CCW",
+                        "name": "Alan Walker",
+                        "link": "/Alan-Walker",
+                        "spotlight": false,
+                        "alias": "Alan-Walker",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCU89E"
+                    },
+                    {
+                        "id": "IWZAF76W",
+                        "name": "Noah Cyrus",
+                        "link": "/Noah-Cyrus",
+                        "spotlight": false,
+                        "alias": "Noah-Cyrus",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/9/3/c/c/93cc8be0cd2c739be3762ff02b539f27.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/9/3/c/c/93cc8be0cd2c739be3762ff02b539f27.jpg",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "ZODEFAZD"
+                    },
+                    {
+                        "id": "IWZAZ80A",
+                        "name": "Digital Farm Animals",
+                        "link": "/Digital-Farm-Animals",
+                        "spotlight": false,
+                        "alias": "Digital-Farm-Animals",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/2/c/3/d/2c3d4cc0f842bb40ada64ecb4b7b0a31.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/2/c/3/d/2c3d4cc0f842bb40ada64ecb4b7b0a31.jpg",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "ZODEFAO0"
+                    }
+                ],
+                "isWorldWide": false,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w600_r300x169_jpeg/thumb_video/5/a/5ac28db0054baa551ba8c8734e6ba55c_1509166055.jpg",
+                "link": "/video-clip/All-Falls-Down-Alan-Walker-Noah-Cyrus-Digital-Farm-Animals/ZW8WOI6U.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r16x9_jpeg/thumb_video/5/a/5ac28db0054baa551ba8c8734e6ba55c_1509166055.jpg",
+                "duration": 220,
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "artist": {
+                    "id": "IWZA6CCW",
+                    "name": "Alan Walker",
+                    "link": "/Alan-Walker",
+                    "spotlight": false,
+                    "alias": "Alan-Walker",
+                    "playlistId": "ZWZCU89E",
+                    "cover": "https://zmp3-static.zmdcdn.me/skins/zmp3-v5.2/images/default_cover.png",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg"
+                }
+            },
+            {
+                "encodeId": "ZW78AWZF",
+                "title": "Alone",
+                "alias": "Alone-Alan-Walker",
+                "isOffical": true,
+                "username": "",
+                "artistsNames": "Alan Walker",
+                "artists": [
+                    {
+                        "id": "IWZA6CCW",
+                        "name": "Alan Walker",
+                        "link": "/Alan-Walker",
+                        "spotlight": false,
+                        "alias": "Alan-Walker",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCU89E"
+                    }
+                ],
+                "isWorldWide": false,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w600_r300x169_jpeg/thumb_video/a/5/d/6/a5d6dde803be0fa52d00425458058ca6.jpg",
+                "link": "/video-clip/Alone-Alan-Walker/ZW78AWZF.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r16x9_jpeg/thumb_video/a/5/d/6/a5d6dde803be0fa52d00425458058ca6.jpg",
+                "duration": 163,
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "artist": {
+                    "id": "IWZA6CCW",
+                    "name": "Alan Walker",
+                    "link": "/Alan-Walker",
+                    "spotlight": false,
+                    "alias": "Alan-Walker",
+                    "playlistId": "ZWZCU89E",
+                    "cover": "https://zmp3-static.zmdcdn.me/skins/zmp3-v5.2/images/default_cover.png",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg"
+                }
+            },
+            {
+                "encodeId": "ZW7U8679",
+                "title": "Sing Me to Sleep",
+                "alias": "Sing-Me-to-Sleep-Alan-Walker",
+                "isOffical": true,
+                "username": "mp3",
+                "artistsNames": "Alan Walker",
+                "artists": [
+                    {
+                        "id": "IWZA6CCW",
+                        "name": "Alan Walker",
+                        "link": "/Alan-Walker",
+                        "spotlight": false,
+                        "alias": "Alan-Walker",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCU89E"
+                    }
+                ],
+                "isWorldWide": false,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w600_r300x169_jpeg/thumb_video/c/d/cdad225d9f993958d47fcb657530bcd7_1465266801.jpg",
+                "link": "/video-clip/Sing-Me-to-Sleep-Alan-Walker/ZW7U8679.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r16x9_jpeg/thumb_video/c/d/cdad225d9f993958d47fcb657530bcd7_1465266801.jpg",
+                "duration": 191,
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "artist": {
+                    "id": "IWZA6CCW",
+                    "name": "Alan Walker",
+                    "link": "/Alan-Walker",
+                    "spotlight": false,
+                    "alias": "Alan-Walker",
+                    "playlistId": "ZWZCU89E",
+                    "cover": "https://zmp3-static.zmdcdn.me/skins/zmp3-v5.2/images/default_cover.png",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg"
+                }
+            },
+            {
+                "encodeId": "ZWABOA0F",
+                "title": "On My Way",
+                "alias": "On-My-Way-Alan-Walker-Sabrina-Carpenter-Farruko",
+                "isOffical": true,
+                "username": "",
+                "artistsNames": "Alan Walker, Sabrina Carpenter, Farruko",
+                "artists": [
+                    {
+                        "id": "IWZA6CCW",
+                        "name": "Alan Walker",
+                        "link": "/Alan-Walker",
+                        "spotlight": false,
+                        "alias": "Alan-Walker",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCU89E"
+                    },
+                    {
+                        "id": "IWZ9CUB9",
+                        "name": "Sabrina Carpenter",
+                        "link": "/Sabrina-Carpenter",
+                        "spotlight": false,
+                        "alias": "Sabrina-Carpenter",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/1/3/b/2/13b2b4cab53d9da4bc926bfa79e40404.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/1/3/b/2/13b2b4cab53d9da4bc926bfa79e40404.jpg",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "6UB6966U"
+                    },
+                    {
+                        "id": "IWZAZ9OC",
+                        "name": "Farruko",
+                        "link": "/Farruko",
+                        "spotlight": false,
+                        "alias": "Farruko",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/a/b/2/a/ab2a1a455717f261a40fa46c2153dd4a.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/a/b/2/a/ab2a1a455717f261a40fa46c2153dd4a.jpg",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "6UB6A87Z"
+                    }
+                ],
+                "isWorldWide": false,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w600_r300x169_jpeg/thumb_video/b/a/2/0/ba208abb79f62840a31ad805bbfdf14e.jpg",
+                "link": "/video-clip/On-My-Way-Alan-Walker-Sabrina-Carpenter-Farruko/ZWABOA0F.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r16x9_jpeg/thumb_video/b/a/2/0/ba208abb79f62840a31ad805bbfdf14e.jpg",
+                "duration": 202,
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "artist": {
+                    "id": "IWZA6CCW",
+                    "name": "Alan Walker",
+                    "link": "/Alan-Walker",
+                    "spotlight": false,
+                    "alias": "Alan-Walker",
+                    "playlistId": "ZWZCU89E",
+                    "cover": "https://zmp3-static.zmdcdn.me/skins/zmp3-v5.2/images/default_cover.png",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg"
+                }
+            },
+            {
+                "encodeId": "ZW9DIZ68",
+                "title": "Darkside",
+                "alias": "Darkside-Alan-Walker-Au-Ra-Tomine-Harket",
+                "isOffical": true,
+                "username": "",
+                "artistsNames": "Alan Walker, Au/Ra, Tomine Harket",
+                "artists": [
+                    {
+                        "id": "IWZA6CCW",
+                        "name": "Alan Walker",
+                        "link": "/Alan-Walker",
+                        "spotlight": false,
+                        "alias": "Alan-Walker",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCU89E"
+                    },
+                    {
+                        "id": "IWZFF08D",
+                        "name": "Au/Ra",
+                        "link": "/Au-Ra",
+                        "spotlight": false,
+                        "alias": "Au-Ra",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/2/7/5/4/27547307dcbf63d89143be394e1b9baa.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/2/7/5/4/27547307dcbf63d89143be394e1b9baa.jpg",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "6UB70968"
+                    },
+                    {
+                        "id": "IW6W9CCE",
+                        "name": "Tomine Harket",
+                        "link": "/Tomine Harket",
+                        "spotlight": false,
+                        "alias": "Tomine Harket",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/5/4/5/d/545d8c18a922296ddff7d9d319c95e61.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/5/4/5/d/545d8c18a922296ddff7d9d319c95e61.jpg",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "6B7W9900"
+                    }
+                ],
+                "isWorldWide": false,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w600_r300x169_jpeg/thumb_video/d/d/c/a/ddcaf4109867107abb5d2050e94b404e.jpg",
+                "link": "/video-clip/Darkside-Alan-Walker-Au-Ra-Tomine-Harket/ZW9DIZ68.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r16x9_jpeg/thumb_video/d/d/c/a/ddcaf4109867107abb5d2050e94b404e.jpg",
+                "duration": 239,
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "artist": {
+                    "id": "IWZA6CCW",
+                    "name": "Alan Walker",
+                    "link": "/Alan-Walker",
+                    "spotlight": false,
+                    "alias": "Alan-Walker",
+                    "playlistId": "ZWZCU89E",
+                    "cover": "https://zmp3-static.zmdcdn.me/skins/zmp3-v5.2/images/default_cover.png",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg"
+                }
+            },
+            {
+                "encodeId": "ZW78CAAB",
+                "title": "Routine",
+                "alias": "Routine-Alan-Walker-David-Whistle",
+                "isOffical": true,
+                "username": "",
+                "artistsNames": "Alan Walker, David Whistle",
+                "artists": [
+                    {
+                        "id": "IWZA6CCW",
+                        "name": "Alan Walker",
+                        "link": "/Alan-Walker",
+                        "spotlight": false,
+                        "alias": "Alan-Walker",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCU89E"
+                    },
+                    {
+                        "id": "IWZCOZ6E",
+                        "name": "David Whistle",
+                        "link": "/David-Whistle",
+                        "spotlight": false,
+                        "alias": "David-Whistle",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/1/a/2/7/1a27769dccc5d485f84a9b68bd666be0.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/1/a/2/7/1a27769dccc5d485f84a9b68bd666be0.jpg",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "6B7W8D8F"
+                    }
+                ],
+                "isWorldWide": false,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w600_r300x169_jpeg/thumb_video/e/8/3/1/e831e9865f18b49f58cdbbd31ff7c53c.jpg",
+                "link": "/video-clip/Routine-Alan-Walker-David-Whistle/ZW78CAAB.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r16x9_jpeg/thumb_video/e/8/3/1/e831e9865f18b49f58cdbbd31ff7c53c.jpg",
+                "duration": 166,
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "artist": {
+                    "id": "IWZA6CCW",
+                    "name": "Alan Walker",
+                    "link": "/Alan-Walker",
+                    "spotlight": false,
+                    "alias": "Alan-Walker",
+                    "playlistId": "ZWZCU89E",
+                    "cover": "https://zmp3-static.zmdcdn.me/skins/zmp3-v5.2/images/default_cover.png",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg"
+                }
+            },
+            {
+                "encodeId": "ZW7FA7WA",
+                "title": "Tired",
+                "alias": "Tired-Alan-Walker-Gavin-James",
+                "isOffical": true,
+                "username": "",
+                "artistsNames": "Alan Walker, Gavin James",
+                "artists": [
+                    {
+                        "id": "IWZA6CCW",
+                        "name": "Alan Walker",
+                        "link": "/Alan-Walker",
+                        "spotlight": false,
+                        "alias": "Alan-Walker",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCU89E"
+                    },
+                    {
+                        "id": "IWZAUDW9",
+                        "name": "Gavin James",
+                        "link": "/Gavin-James",
+                        "spotlight": false,
+                        "alias": "Gavin-James",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/1/9/19dc0db7a0bc0d30d16d04947c6b4dde_1481624904.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/1/9/19dc0db7a0bc0d30d16d04947c6b4dde_1481624904.jpg",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "ZOEOOBWC"
+                    }
+                ],
+                "isWorldWide": false,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w600_r300x169_jpeg/thumb_video/9/3/e/5/93e5c9077d046d144c0a482c1a6f7e25.jpg",
+                "link": "/video-clip/Tired-Alan-Walker-Gavin-James/ZW7FA7WA.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r16x9_jpeg/thumb_video/9/3/e/5/93e5c9077d046d144c0a482c1a6f7e25.jpg",
+                "duration": 205,
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "artist": {
+                    "id": "IWZA6CCW",
+                    "name": "Alan Walker",
+                    "link": "/Alan-Walker",
+                    "spotlight": false,
+                    "alias": "Alan-Walker",
+                    "playlistId": "ZWZCU89E",
+                    "cover": "https://zmp3-static.zmdcdn.me/skins/zmp3-v5.2/images/default_cover.png",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg"
+                }
+            }
+        ],
+        "playlists": [
+            {
+                "encodeId": "ZWZCU89E",
+                "title": "Những Bài Hát Hay Nhất Của Alan Walker",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w165_r1x1_jpeg/images/b/4/8/0/b4807a29d5b9f6abb009bed66f81af8d.jpg",
+                "isoffical": true,
+                "link": "/album/Nhung-Bai-Hat-Hay-Nhat-Cua-Alan-Walker-Alan-Walker/ZWZCU89E.html",
+                "isIndie": false,
+                "releaseDate": "",
+                "sortDescription": "Tuyển chọn các bài hát hay nhất của Alan Walker.",
+                "releasedAt": 0,
+                "boolAtt": 755714,
+                "genreIds": [
+                    "IWZ9Z08O",
+                    "IWZ9Z09A"
+                ],
+                "PR": false,
+                "artists": [
+                    {
+                        "id": "IWZA6CCW",
+                        "name": "Alan Walker",
+                        "link": "/Alan-Walker",
+                        "spotlight": false,
+                        "alias": "Alan-Walker",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCU89E",
+                        "totalFollow": 1209318
+                    }
+                ],
+                "artistsNames": "Alan Walker",
+                "playItemMode": 0,
+                "subType": 20,
+                "uid": 0,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w320_r1x1_jpeg/images/b/4/8/0/b4807a29d5b9f6abb009bed66f81af8d.jpg",
+                "isShuffle": true,
+                "isPrivate": false,
+                "userName": "Zing MP3",
+                "isAlbum": false,
+                "textType": "Playlist",
+                "isSingle": false,
+                "isOwner": true,
+                "canEdit": true,
+                "canDelete": true
+            },
+            {
+                "encodeId": "ZWZB96C7",
+                "title": "Top 100 Nhạc Electronic/Dance Âu Mỹ Hay Nhất",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w165_r1x1_jpeg/cover/4/a/1/6/4a167556eddb73b296d9151a9e3c2b9a.jpg",
+                "isoffical": true,
+                "link": "/album/Top-100-Nhac-Electronic-Dance-Au-My-Hay-Nhat-Alan-Walker-Martin-Garrix-Avicii-Kygo/ZWZB96C7.html",
+                "isIndie": false,
+                "releaseDate": "",
+                "sortDescription": "Top 100 Nhạc Electronic/Dance Âu Mỹ là danh sách 100 ca khúc hot nhất hiện tại của thể loại Top 100 Nhạc Electronic/Dance Âu Mỹ, được Zing MP3 tự động tổng hợp dựa trên thông tin số liệu lượt nghe và lượt chia sẻ của từng bài hát trên phiên bản web và phiên bản Mobile. Dữ liệu sẽ được lấy trong 30 ngày gần nhất và được cập nhật liên tục.",
+                "releasedAt": 0,
+                "boolAtt": 755714,
+                "genreIds": [
+                    "IWZ9Z08O",
+                    "IWZ9Z09A"
+                ],
+                "PR": false,
+                "artists": [
+                    {
+                        "id": "IWZA6CCW",
+                        "name": "Alan Walker",
+                        "link": "/Alan-Walker",
+                        "spotlight": false,
+                        "alias": "Alan-Walker",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCU89E",
+                        "totalFollow": 1209318
+                    },
+                    {
+                        "id": "IWZ9F67Z",
+                        "name": "Martin Garrix",
+                        "link": "/Martin-Garrix",
+                        "spotlight": false,
+                        "alias": "Martin-Garrix",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/4/8/e/b48e8a057310250001eeb1bb2e39093c.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/4/8/e/b48e8a057310250001eeb1bb2e39093c.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCI0ZC",
+                        "totalFollow": 146631
+                    },
+                    {
+                        "id": "IWZ96A67",
+                        "name": "Avicii",
+                        "link": "/Avicii",
+                        "spotlight": false,
+                        "alias": "Avicii",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/c/c/cc38fa85ce8e6dd638f4072e196a2fa4_1502420964.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/c/c/cc38fa85ce8e6dd638f4072e196a2fa4_1502420964.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZBIBB6",
+                        "totalFollow": 100962
+                    },
+                    {
+                        "id": "IWZAUZOO",
+                        "name": "Kygo",
+                        "link": "/Kygo",
+                        "spotlight": false,
+                        "alias": "Kygo",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/5/b/d/1/5bd15604f59b04cc5f62683a6b7321ff.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/5/b/d/1/5bd15604f59b04cc5f62683a6b7321ff.jpg",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCICA6",
+                        "totalFollow": 11720
+                    }
+                ],
+                "artistsNames": "Nhiều nghệ sĩ",
+                "playItemMode": 0,
+                "subType": 24,
+                "uid": 0,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w320_r1x1_jpeg/cover/4/a/1/6/4a167556eddb73b296d9151a9e3c2b9a.jpg",
+                "isShuffle": true,
+                "isPrivate": false,
+                "userName": "Zing MP3",
+                "isAlbum": false,
+                "textType": "Playlist",
+                "isSingle": false,
+                "isOwner": true,
+                "canEdit": true,
+                "canDelete": true
+            },
+            {
+                "encodeId": "ZWZC0CII",
+                "title": "EDM Now",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w165_r1x1_jpeg/cover/5/b/1/c/5b1c4269ec0d65fb1cbcecb9fcefc381.jpg",
+                "isoffical": true,
+                "link": "/album/EDM-Now-Martin-Garrix-Alan-Walker-Armin-Van-Buuren-David-Guetta/ZWZC0CII.html",
+                "isIndie": false,
+                "releaseDate": "",
+                "sortDescription": "Những bản EDM cực đỉnh mới ra lò",
+                "releasedAt": 0,
+                "boolAtt": 755714,
+                "genreIds": [
+                    "IWZ9Z08O",
+                    "IWZ9Z09A"
+                ],
+                "PR": false,
+                "artists": [
+                    {
+                        "id": "IWZ9F67Z",
+                        "name": "Martin Garrix",
+                        "link": "/Martin-Garrix",
+                        "spotlight": false,
+                        "alias": "Martin-Garrix",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/4/8/e/b48e8a057310250001eeb1bb2e39093c.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/4/8/e/b48e8a057310250001eeb1bb2e39093c.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCI0ZC",
+                        "totalFollow": 146631
+                    },
+                    {
+                        "id": "IWZA6CCW",
+                        "name": "Alan Walker",
+                        "link": "/Alan-Walker",
+                        "spotlight": false,
+                        "alias": "Alan-Walker",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCU89E",
+                        "totalFollow": 1209318
+                    },
+                    {
+                        "id": "IWZ96A99",
+                        "name": "Armin Van Buuren",
+                        "link": "/Armin-Van-Buuren",
+                        "spotlight": false,
+                        "alias": "Armin-Van-Buuren",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/3/c/9/d/3c9d2db8b103110fe334e4bbb861b286.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/3/c/9/d/3c9d2db8b103110fe334e4bbb861b286.jpg",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "ZWZBFC9D",
+                        "totalFollow": 5197
+                    },
+                    {
+                        "id": "IWZ96AFA",
+                        "name": "David Guetta",
+                        "link": "/David-Guetta",
+                        "spotlight": false,
+                        "alias": "David-Guetta",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/5/e/7/5/5e75741d01ac0fe5e4f2f407cbe01cee.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/5/e/7/5/5e75741d01ac0fe5e4f2f407cbe01cee.jpg",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "ZO6W6C7A",
+                        "totalFollow": 23372
+                    }
+                ],
+                "artistsNames": "Nhiều nghệ sĩ",
+                "playItemMode": 0,
+                "subType": 1,
+                "uid": 0,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w320_r1x1_jpeg/cover/5/b/1/c/5b1c4269ec0d65fb1cbcecb9fcefc381.jpg",
+                "isShuffle": true,
+                "isPrivate": false,
+                "userName": "Zing MP3",
+                "isAlbum": false,
+                "textType": "Playlist",
+                "isSingle": false,
+                "isOwner": true,
+                "canEdit": true,
+                "canDelete": true
+            },
+            {
+                "encodeId": "ZODAB8EF",
+                "title": "Today's EDM Hits",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w165_r1x1_jpeg/cover/0/2/b/b/02bb60f12ee43535ba436ccc1f0eba01.jpg",
+                "isoffical": true,
+                "link": "/album/Today-s-EDM-Hits-David-Guetta-Calvin-Harris-Alan-Walker-Martin-Garrix/ZODAB8EF.html",
+                "isIndie": false,
+                "releaseDate": "",
+                "sortDescription": "Alan Walker và 30 bản Hits EDM nổi bật nhất hiện nay",
+                "releasedAt": 0,
+                "boolAtt": 756742,
+                "genreIds": [
+                    "IWZ9Z08O",
+                    "IWZ9Z09A"
+                ],
+                "PR": false,
+                "artists": [
+                    {
+                        "id": "IWZ96AFA",
+                        "name": "David Guetta",
+                        "link": "/David-Guetta",
+                        "spotlight": false,
+                        "alias": "David-Guetta",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/5/e/7/5/5e75741d01ac0fe5e4f2f407cbe01cee.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/5/e/7/5/5e75741d01ac0fe5e4f2f407cbe01cee.jpg",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "ZO6W6C7A",
+                        "totalFollow": 23372
+                    },
+                    {
+                        "id": "IWZ9ZZ0B",
+                        "name": "Calvin Harris",
+                        "link": "/Calvin-Harris",
+                        "spotlight": false,
+                        "alias": "Calvin-Harris",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/6/a/5/8/6a585138d2c6f44d426f1be4b5602a66.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/6/a/5/8/6a585138d2c6f44d426f1be4b5602a66.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZOU98OAC",
+                        "totalFollow": 15746
+                    },
+                    {
+                        "id": "IWZA6CCW",
+                        "name": "Alan Walker",
+                        "link": "/Alan-Walker",
+                        "spotlight": false,
+                        "alias": "Alan-Walker",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCU89E",
+                        "totalFollow": 1209318
+                    },
+                    {
+                        "id": "IWZ9F67Z",
+                        "name": "Martin Garrix",
+                        "link": "/Martin-Garrix",
+                        "spotlight": false,
+                        "alias": "Martin-Garrix",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/4/8/e/b48e8a057310250001eeb1bb2e39093c.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/4/8/e/b48e8a057310250001eeb1bb2e39093c.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCI0ZC",
+                        "totalFollow": 146631
+                    }
+                ],
+                "artistsNames": "Nhiều nghệ sĩ",
+                "playItemMode": 0,
+                "subType": 1,
+                "uid": 309,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w320_r1x1_jpeg/cover/0/2/b/b/02bb60f12ee43535ba436ccc1f0eba01.jpg",
+                "isShuffle": true,
+                "isPrivate": false,
+                "userName": "Zing MP3",
+                "isAlbum": false,
+                "textType": "Playlist",
+                "isSingle": false,
+                "isOwner": false,
+                "canEdit": false,
+                "canDelete": false
+            },
+            {
+                "encodeId": "60I0COI0",
+                "title": "Đỉnh Cao EDM",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w165_r1x1_jpeg/cover/c/e/a/a/ceaa48ccd3d21ac3aa06eae30b4f2f6b.jpg",
+                "isoffical": true,
+                "link": "/album/Dinh-Cao-EDM-Avicii-Alan-Walker-The-Chainsmokers-Armin-Van-Buuren/60I0COI0.html",
+                "isIndie": false,
+                "releaseDate": "",
+                "sortDescription": "Hit EDM cực khủng không thể thiếu tại các festival âm nhạc",
+                "releasedAt": 0,
+                "boolAtt": 755718,
+                "genreIds": [
+                    "IWZ9Z08O",
+                    "IWZ9Z09A"
+                ],
+                "PR": false,
+                "artists": [
+                    {
+                        "id": "IWZ96A67",
+                        "name": "Avicii",
+                        "link": "/Avicii",
+                        "spotlight": false,
+                        "alias": "Avicii",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/c/c/cc38fa85ce8e6dd638f4072e196a2fa4_1502420964.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/c/c/cc38fa85ce8e6dd638f4072e196a2fa4_1502420964.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZBIBB6",
+                        "totalFollow": 100962
+                    },
+                    {
+                        "id": "IWZA6CCW",
+                        "name": "Alan Walker",
+                        "link": "/Alan-Walker",
+                        "spotlight": false,
+                        "alias": "Alan-Walker",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCU89E",
+                        "totalFollow": 1209318
+                    },
+                    {
+                        "id": "IWZAIWD7",
+                        "name": "The Chainsmokers",
+                        "link": "/The-Chainsmokers",
+                        "spotlight": false,
+                        "alias": "The-Chainsmokers",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/9/b/8/f/9b8fdae2d963f0e90a16f3c472ed10e8.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/9/b/8/f/9b8fdae2d963f0e90a16f3c472ed10e8.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCU0WO",
+                        "totalFollow": 142975
+                    },
+                    {
+                        "id": "IWZ96A99",
+                        "name": "Armin Van Buuren",
+                        "link": "/Armin-Van-Buuren",
+                        "spotlight": false,
+                        "alias": "Armin-Van-Buuren",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/3/c/9/d/3c9d2db8b103110fe334e4bbb861b286.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/3/c/9/d/3c9d2db8b103110fe334e4bbb861b286.jpg",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "ZWZBFC9D",
+                        "totalFollow": 5197
+                    }
+                ],
+                "artistsNames": "Nhiều nghệ sĩ",
+                "playItemMode": 2,
+                "subType": 1,
+                "uid": 422,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w320_r1x1_jpeg/cover/c/e/a/a/ceaa48ccd3d21ac3aa06eae30b4f2f6b.jpg",
+                "isShuffle": true,
+                "isPrivate": false,
+                "userName": "Zing MP3",
+                "isAlbum": false,
+                "textType": "Playlist",
+                "isSingle": false,
+                "isOwner": false,
+                "canEdit": false,
+                "canDelete": false
+            },
+            {
+                "encodeId": "ZE990U80",
+                "title": "Chúc Mừng Năm Mới 2025",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w165_r1x1_jpeg/cover/d/4/d/5/d4d54a72000b07d0674346be5752cceb.jpg",
+                "isoffical": true,
+                "link": "/album/Chuc-Mung-Nam-Moi-2025-Hoang-Thuy-Linh-Tang-Duy-Tan-Alan-Walker-Quang-Hung-MasterD/ZE990U80.html",
+                "isIndie": false,
+                "releaseDate": "",
+                "sortDescription": "Lắc lư chào đón năm mới 2025",
+                "releasedAt": 0,
+                "boolAtt": 755718,
+                "genreIds": [
+                    "IWZ9Z08I",
+                    "IWZ97FCD",
+                    "IWZ9Z08W",
+                    "IWZ9Z09O",
+                    "IWZ9Z08O",
+                    "IWZ9Z097",
+                    "IWZ9Z09A"
+                ],
+                "PR": false,
+                "artists": [
+                    {
+                        "id": "IWZ9ZZB6",
+                        "name": "Hoàng Thùy Linh",
+                        "link": "/Hoang-Thuy-Linh",
+                        "spotlight": false,
+                        "alias": "Hoang-Thuy-Linh",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/a/3/7/b/a37b96a77f40eaeeafa8a8b22a4ff114.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/a/3/7/b/a37b96a77f40eaeeafa8a8b22a4ff114.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZOZ9678O",
+                        "totalFollow": 152294
+                    },
+                    {
+                        "id": "IW6W8FO8",
+                        "name": "Tăng Duy Tân",
+                        "link": "/Tang-Duy-Tan",
+                        "spotlight": false,
+                        "alias": "Tang-Duy-Tan",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/5/a/8/b5a8579c44d3e1b1319edf1ad48e41e4.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/5/a/8/b5a8579c44d3e1b1319edf1ad48e41e4.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "6UW9B9UA",
+                        "totalFollow": 114425
+                    },
+                    {
+                        "id": "IWZA6CCW",
+                        "name": "Alan Walker",
+                        "link": "/Alan-Walker",
+                        "spotlight": false,
+                        "alias": "Alan-Walker",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCU89E",
+                        "totalFollow": 1209318
+                    },
+                    {
+                        "id": "IWZAZFCO",
+                        "name": "Quang Hùng MasterD",
+                        "link": "/Quang-Hung-MasterD",
+                        "spotlight": false,
+                        "alias": "Quang-Hung-MasterD",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/4/a/9/7/4a976ab21866376c0a87c6cff5a8e8de.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/4/a/9/7/4a976ab21866376c0a87c6cff5a8e8de.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZOEIUO67",
+                        "totalFollow": 217998
+                    }
+                ],
+                "artistsNames": "Nhiều nghệ sĩ",
+                "playItemMode": 0,
+                "subType": 1,
+                "uid": 435,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w320_r1x1_jpeg/cover/d/4/d/5/d4d54a72000b07d0674346be5752cceb.jpg",
+                "isShuffle": true,
+                "isPrivate": false,
+                "userName": "Zing MP3",
+                "isAlbum": false,
+                "textType": "Playlist",
+                "isSingle": false,
+                "isOwner": false,
+                "canEdit": false,
+                "canDelete": false
+            },
+            {
+                "encodeId": "ZOEACWCC",
+                "title": "Nhạc Cổ Đánh Đổ Gamer",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w165_r1x1_jpeg/cover/a/c/a/1/aca122a871dd39c94592573bd5033a64.jpg",
+                "isoffical": true,
+                "link": "/album/Nhac-Co-Danh-Do-Gamer-TheFatRat-Alan-Walker-Vicetone-Marshmello/ZOEACWCC.html",
+                "isIndie": false,
+                "releaseDate": "",
+                "sortDescription": "Leo rank phà phà cùng EDM đỉnh cao nhất thập niên 2010",
+                "releasedAt": 0,
+                "boolAtt": 755718,
+                "genreIds": [
+                    "IWZ9Z08O",
+                    "IWZ9Z09A"
+                ],
+                "PR": false,
+                "artists": [
+                    {
+                        "id": "IWZAEF8D",
+                        "name": "TheFatRat",
+                        "link": "/Thefatrat",
+                        "spotlight": false,
+                        "alias": "Thefatrat",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/2/3/231aa7ebe1e944683aeb7483db76a9ed_1475208904.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/2/3/231aa7ebe1e944683aeb7483db76a9ed_1475208904.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZODEA6AF",
+                        "totalFollow": 86436
+                    },
+                    {
+                        "id": "IWZA6CCW",
+                        "name": "Alan Walker",
+                        "link": "/Alan-Walker",
+                        "spotlight": false,
+                        "alias": "Alan-Walker",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCU89E",
+                        "totalFollow": 1209318
+                    },
+                    {
+                        "id": "IWZAO6WW",
+                        "name": "Vicetone",
+                        "link": "/Vicetone",
+                        "spotlight": false,
+                        "alias": "Vicetone",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/8/3/9/e/839e528299cde119add314f7d277fc65.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/8/3/9/e/839e528299cde119add314f7d277fc65.jpg",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "6UB6AZ98",
+                        "totalFollow": 12116
+                    },
+                    {
+                        "id": "IWZA7CE8",
+                        "name": "Marshmello",
+                        "link": "/Marshmello",
+                        "spotlight": false,
+                        "alias": "Marshmello",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/c/8/f/f/c8ffdd8d03d45777da6a7483c52a3b4f.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/c/8/f/f/c8ffdd8d03d45777da6a7483c52a3b4f.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZO6I7A79",
+                        "totalFollow": 383262
+                    }
+                ],
+                "artistsNames": "Nhiều nghệ sĩ",
+                "playItemMode": 0,
+                "subType": 1,
+                "uid": 298,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w320_r1x1_jpeg/cover/a/c/a/1/aca122a871dd39c94592573bd5033a64.jpg",
+                "isShuffle": true,
+                "isPrivate": false,
+                "userName": "Zing MP3",
+                "isAlbum": false,
+                "textType": "Playlist",
+                "isSingle": false,
+                "isOwner": false,
+                "canEdit": false,
+                "canDelete": false
+            },
+            {
+                "encodeId": "ZWZCO80F",
+                "title": "EDM Drive",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w165_r1x1_jpeg/cover/4/6/8/9/46890f6efd2fcf362eaf570fcb1523ca.jpg",
+                "isoffical": true,
+                "link": "/album/EDM-Drive-The-Chainsmokers-Marshmello-Alan-Walker-John-Summit/ZWZCO80F.html",
+                "isIndie": false,
+                "releaseDate": "",
+                "sortDescription": "Cùng EDM sôi động trên mọi hành trình",
+                "releasedAt": 0,
+                "boolAtt": 755714,
+                "genreIds": [
+                    "IWZ9Z08O",
+                    "IWZ9Z09A"
+                ],
+                "PR": false,
+                "artists": [
+                    {
+                        "id": "IWZAIWD7",
+                        "name": "The Chainsmokers",
+                        "link": "/The-Chainsmokers",
+                        "spotlight": false,
+                        "alias": "The-Chainsmokers",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/9/b/8/f/9b8fdae2d963f0e90a16f3c472ed10e8.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/9/b/8/f/9b8fdae2d963f0e90a16f3c472ed10e8.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCU0WO",
+                        "totalFollow": 142975
+                    },
+                    {
+                        "id": "IWZA7CE8",
+                        "name": "Marshmello",
+                        "link": "/Marshmello",
+                        "spotlight": false,
+                        "alias": "Marshmello",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/c/8/f/f/c8ffdd8d03d45777da6a7483c52a3b4f.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/c/8/f/f/c8ffdd8d03d45777da6a7483c52a3b4f.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZO6I7A79",
+                        "totalFollow": 383262
+                    },
+                    {
+                        "id": "IWZA6CCW",
+                        "name": "Alan Walker",
+                        "link": "/Alan-Walker",
+                        "spotlight": false,
+                        "alias": "Alan-Walker",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                        "isOA": true,
+                        "isOABrand": false,
+                        "playlistId": "ZWZCU89E",
+                        "totalFollow": 1209318
+                    },
+                    {
+                        "id": "IW6ZFOUI",
+                        "name": "John Summit",
+                        "link": "/John-Summit-IW6ZFOUI",
+                        "spotlight": false,
+                        "alias": "John-Summit-IW6ZFOUI",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/1/4/a/b/14ab1ddbcc4cb0925c64af511289a3cf.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/1/4/a/b/14ab1ddbcc4cb0925c64af511289a3cf.jpg",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "6BBUDWFD",
+                        "totalFollow": 23
+                    }
+                ],
+                "artistsNames": "Nhiều nghệ sĩ",
+                "playItemMode": 0,
+                "subType": 1,
+                "uid": 0,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w320_r1x1_jpeg/cover/4/6/8/9/46890f6efd2fcf362eaf570fcb1523ca.jpg",
+                "isShuffle": true,
+                "isPrivate": false,
+                "userName": "Zing MP3",
+                "isAlbum": false,
+                "textType": "Playlist",
+                "isSingle": false,
+                "isOwner": true,
+                "canEdit": true,
+                "canDelete": true
+            }
+        ],
+        "counter": {
+            "song": 350,
+            "artist": 1,
+            "playlist": 24027,
+            "video": 46
+        },
+        "sectionId": "search"
+    },
+    "timestamp": 1761920230675
+}

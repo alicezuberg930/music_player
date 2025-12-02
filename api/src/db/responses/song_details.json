@@ -1,0 +1,240 @@
+{
+    "err": 0,
+    "msg": "Success",
+    "data": {
+        "id": "ZW7O8OI9",
+        "title": "Faded",
+        "alias": "Faded-Alan-Walker",
+        "isOffical": true,
+        "username": "mp3",
+        "artistsNames": "Alan Walker",
+        "artists": [
+            {
+                "id": "IWZA6CCW",
+                "name": "Alan Walker",
+                "link": "/Alan-Walker",
+                "spotlight": false,
+                "alias": "Alan-Walker",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                "isOA": true,
+                "isOABrand": false,
+                "playlistId": "ZWZCU89E",
+                "totalFollow": 1209320
+            }
+        ],
+        "isWorldWide": false,
+        "previewInfo": {
+            "startTime": 0,
+            "endTime": 60
+        },
+        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/cover/f/8/2/8/f828971973632637d83b119fe5801965.jpg",
+        "link": "/bai-hat/Faded-Alan-Walker/ZW7O8OI9.html",
+        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w94_r1x1_jpeg/cover/f/8/2/8/f828971973632637d83b119fe5801965.jpg",
+        "duration": 213,
+        "zingChoice": false,
+        "isPrivate": false,
+        "preRelease": false,
+        "releaseDate": 1464886800,
+        "genreIds": [
+            "IWZ9Z08O",
+            "IWZ9Z097"
+        ],
+        "distributor": "Sony Music Entertainment",
+        "indicators": [],
+        "radioId": 1285124301,
+        "isIndie": false,
+        "mvlink": "/video-clip/Faded-Alan-Walker/ZW7O8OI9.html",
+        "streamingStatus": 2,
+        "streamPrivileges": [
+            2
+        ],
+        "downloadPrivileges": [
+            3
+        ],
+        "allowAudioAds": true,
+        "hasLyric": true,
+        "userid": 88,
+        "genres": [
+            {
+                "id": "IWZ9Z08O",
+                "name": "Âu Mỹ",
+                "title": "Âu Mỹ",
+                "alias": "au-my",
+                "link": "/the-loai-album/Au-My/IWZ9Z08O.html"
+            },
+            {
+                "id": "IWZ9Z097",
+                "name": "Pop",
+                "title": "Pop",
+                "alias": "pop",
+                "link": "/the-loai-album/Pop/IWZ9Z097.html"
+            }
+        ],
+        "composers": [
+            {
+                "id": "IWZA6CCW",
+                "name": "Alan Walker",
+                "link": "/Alan-Walker",
+                "spotlight": false,
+                "alias": "Alan-Walker",
+                "playlistId": "ZWZCU89E",
+                "cover": "https://zmp3-static.zmdcdn.me/skins/zmp3-v5.2/images/default_cover.png",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                "totalFollow": 1209320
+            },
+            {
+                "id": "IW6OZEEB",
+                "name": "Jesper Borgen",
+                "link": "/Jesper-Borgen",
+                "spotlight": false,
+                "alias": "Jesper-Borgen",
+                "cover": "https://zmp3-static.zmdcdn.me/skins/zmp3-v5.2/images/default_cover.png",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/1/a/2/7/1a27769dccc5d485f84a9b68bd666be0.jpg",
+                "totalFollow": 1
+            },
+            {
+                "id": "IW6O7CFD",
+                "name": "Anders Frøen",
+                "link": "/Anders-Fr-en",
+                "spotlight": false,
+                "alias": "Anders-Fr-en",
+                "cover": "https://zmp3-static.zmdcdn.me/skins/zmp3-v5.2/images/default_cover.png",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/1/a/2/7/1a27769dccc5d485f84a9b68bd666be0.jpg",
+                "totalFollow": 1
+            },
+            {
+                "id": "IW6O7CFE",
+                "name": "Gunnar Greve",
+                "link": "/Gunnar-Greve",
+                "spotlight": false,
+                "alias": "Gunnar-Greve",
+                "cover": "https://zmp3-static.zmdcdn.me/skins/zmp3-v5.2/images/default_cover.png",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/1/a/2/7/1a27769dccc5d485f84a9b68bd666be0.jpg",
+                "totalFollow": 3
+            }
+        ],
+        "album": {
+            "encodeId": "ZU8AOA06",
+            "title": "Faded (EP)",
+            "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w165_r1x1_jpeg/cover/f/8/2/8/f828971973632637d83b119fe5801965.jpg",
+            "isoffical": true,
+            "link": "/album/Faded-EP-Alan-Walker/ZU8AOA06.html",
+            "isIndie": false,
+            "releaseDate": "04/12/2015",
+            "sortDescription": "",
+            "releasedAt": 1449162000000,
+            "boolAtt": 753714,
+            "genreIds": [
+                "IWZ9Z08O",
+                "IWZ9Z09A",
+                "IWZ9Z0C7"
+            ],
+            "PR": false,
+            "artists": [
+                {
+                    "id": "IWZA6CCW",
+                    "name": "Alan Walker",
+                    "link": "/Alan-Walker",
+                    "spotlight": false,
+                    "alias": "Alan-Walker",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                    "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                    "isOA": true,
+                    "isOABrand": false,
+                    "playlistId": "ZWZCU89E",
+                    "totalFollow": 1209320
+                }
+            ],
+            "artistsNames": "Alan Walker"
+        },
+        "radio": {
+            "encodeId": "ZEFWCIUD",
+            "title": "Mixtape Faded",
+            "thumbnail": "https://photo-playlist-zmp3.zmdcdn.me/s1/mixtape?src=HavwqN7EYmrDGr6VBegSG044GDy-mDP0LGH0tshNt5SA2qFUPDFRNGyEHjeotTi8MWTCtcRPsbuE2qBRUOgS309D4D0ooDK_6KeSvpI3Y7KE1r2W9SFCFqe7Kg1smyuc7qq4hdwKdYn670YlBPN0UKP7NgfxoC9_4HK9_twQYILN5WMvB8dESG50MkCUof0sP29z&cv=1&size=thumb/240_240",
+            "isoffical": true,
+            "link": "/album/Faded-Various-Artists/ZEFWCIUD.html",
+            "isIndie": false,
+            "releaseDate": "",
+            "sortDescription": "",
+            "releasedAt": 0,
+            "boolAtt": 1802242,
+            "genreIds": [
+                "IWZ9Z08O",
+                "IWZ9Z097"
+            ],
+            "PR": false,
+            "artists": [
+                {
+                    "id": "IWZA6CCW",
+                    "name": "Alan Walker",
+                    "link": "/Alan-Walker",
+                    "spotlight": false,
+                    "alias": "Alan-Walker",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                    "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/b/a/6/b/ba6b56ca02dd06f37693d945acfcdad9.jpg",
+                    "isOA": true,
+                    "isOABrand": false,
+                    "playlistId": "ZWZCU89E",
+                    "totalFollow": 1209320
+                },
+                {
+                    "id": "IWZA7OIA",
+                    "name": "K-391",
+                    "link": "/K-391",
+                    "spotlight": false,
+                    "alias": "K-391",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/a/e/b/b/aebbce76ebd8ef9bfa61e5ba5b511524.jpg",
+                    "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/a/e/b/b/aebbce76ebd8ef9bfa61e5ba5b511524.jpg",
+                    "isOA": true,
+                    "isOABrand": false,
+                    "playlistId": "6UB6AABC",
+                    "totalFollow": 189626
+                },
+                {
+                    "id": "IWZD7OZ0",
+                    "name": "Emelie Hollow",
+                    "link": "/Emelie-Hollow",
+                    "spotlight": false,
+                    "alias": "Emelie-Hollow",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/e/9/e/9/e9e99eb4d4f51f77c96fd6f8a9ea4607.jpg",
+                    "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/e/9/e/9/e9e99eb4d4f51f77c96fd6f8a9ea4607.jpg",
+                    "isOA": false,
+                    "isOABrand": false,
+                    "playlistId": "6UB6BIFO",
+                    "totalFollow": 40032
+                },
+                {
+                    "id": "IWZAF76W",
+                    "name": "Noah Cyrus",
+                    "link": "/Noah-Cyrus",
+                    "spotlight": false,
+                    "alias": "Noah-Cyrus",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/9/3/c/c/93cc8be0cd2c739be3762ff02b539f27.jpg",
+                    "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/9/3/c/c/93cc8be0cd2c739be3762ff02b539f27.jpg",
+                    "isOA": false,
+                    "isOABrand": false,
+                    "playlistId": "ZODEFAZD",
+                    "totalFollow": 12503
+                }
+            ],
+            "artistsNames": "Nhiều nghệ sĩ",
+            "playItemMode": 2,
+            "subType": 19,
+            "uid": 1,
+            "thumbnailM": "https://photo-playlist-zmp3.zmdcdn.me/s1/mixtape?src=HavwqN7EYmrDGr6VBegSG044GDy-mDP0LGH0tshNt5SA2qFUPDFRNGyEHjeotTi8MWTCtcRPsbuE2qBRUOgS309D4D0ooDK_6KeSvpI3Y7KE1r2W9SFCFqe7Kg1smyuc7qq4hdwKdYn670YlBPN0UKP7NgfxoC9_4HK9_twQYILN5WMvB8dESG50MkCUof0sP29z&cv=1&size=thumb/240_240",
+            "isShuffle": false,
+            "isPrivate": false,
+            "userName": "",
+            "isAlbum": false,
+            "textType": "Playlist",
+            "isSingle": false
+        },
+        "isRBT": false,
+        "like": 582723,
+        "listen": 0,
+        "liked": false,
+        "comment": 8
+    },
+    "timestamp": 1761921852313
+}

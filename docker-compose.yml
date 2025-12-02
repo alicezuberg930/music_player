@@ -1,0 +1,63 @@
+services:
+  # music_player_db:
+  #   image: mysql:9
+  #   container_name: music_player_db
+  #   environment:
+  #     MYSQL_USER: music_user
+  #     MYSQL_PASSWORD: music_password
+  #     MYSQL_DB: music_db
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - music_player_db_data:/var/lib/mysql/data
+
+  music_player_app:
+    build: 
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: music_player_app
+    ports:
+      - "5174:5173"
+    develop:
+      watch:
+        - path: ./app
+          action: sync
+          target: /app
+          ignore:
+            - node_modules
+            - dist
+        - action: rebuild
+          path: ./app/package.json 
+    # depends_on:
+    #   - music_player_db
+
+  music_player_api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: music_player_api
+    ports:
+      - "5001:5000"
+    develop:
+      watch:
+        - path: ./api
+          action: sync
+          target: /api
+          ignore:
+            - node_modules
+            - dist
+        - action: rebuild
+          path: ./api/package.json
+    # depends_on:
+    #   - music_player_db
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: music_player_rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+# volumes:
+#   music_player_db_data:
+#     driver: local

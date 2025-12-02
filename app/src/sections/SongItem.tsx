@@ -23,7 +23,17 @@ type Props = {
 
 const SongItem: React.FC<Props> = ({ song, order, percent, imgSize, style, showTime }) => {
     const dispatch = useDispatch()
-    const imageSizeCss = imgSize === 'xl' ? 'w-20 h-20' : imgSize == 'lg' ? 'w-14 h-14' : 'w-10 h-10'
+    const imageSizeCss = () => {
+        if (imgSize === 'xl') return 'w-20 h-20'
+        if (imgSize == 'lg') return 'w-14 h-14'
+        if (imgSize == 'md') return 'w-12 h-12'
+        if (imgSize == 'sm') return 'w-10 h-10'
+    }
+    const textColor = () => {
+        if (order === 1) return 'text-shadow-1'
+        if (order === 2) return 'text-shadow-2'
+        if (order === 3) return 'text-shadow-3'
+    }
     const { enqueueSnackbar } = useSnackbar()
 
     const handlePlay = () => {
@@ -50,12 +60,12 @@ const SongItem: React.FC<Props> = ({ song, order, percent, imgSize, style, showT
         <div className={`${style || 'text-black hover:bg-main-200'} w-full p-2 h-auto rounded-md cursor-pointer`} onClick={handlePlay}>
             <div className='h-full flex justify-start items-center gap-2'>
                 {order && (
-                    <span className={`text-3xl px-1 text-[#33104cf2] ${order === 1 ? 'text-shadow-1' : order === 2 ? 'text-shadow-2' : 'text-shadow-3'}`}>
+                    <span className={`text-3xl px-1 text-[#33104cf2] ${textColor()}`}>
                         {order}
                     </span>
                 )}
                 <LazyLoadImage
-                    className={`${imageSizeCss} object-cover rounded-md`}
+                    className={`${imageSizeCss()} object-cover rounded-md`}
                     alt={song.id}
                     src={song.thumbnail}
                     effect='blur'

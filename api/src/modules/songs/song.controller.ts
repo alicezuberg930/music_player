@@ -4,7 +4,7 @@ import { CreateSongDto } from "./dto/create-song.dto"
 import { UpdateSongDto } from "./dto/update-song.dto"
 
 class SongController {
-    private songService
+    private readonly songService
 
     constructor() {
         this.songService = new SongService()

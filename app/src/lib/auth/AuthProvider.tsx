@@ -85,7 +85,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           type: Types.INITIAL,
           payload: {
             isAuthenticated: true,
-            user: response.data as AuthUser
+            user: response.data
           },
         })
       }
@@ -122,7 +122,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signup = useCallback(async (fullname: string, email: string, password: string) => {
     try {
       const response = await signUp(fullname, email, password)
-      if (response && response.statusCode === 201) {
+      if (response.statusCode === 201) {
         dispatch({
           type: Types.REGISTER,
           payload: {

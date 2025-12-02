@@ -6,7 +6,7 @@ import { QueryPlaylistDto } from "./dto/query-playlist.dto"
 import { PlaylistSongDto } from "./dto/playlist-songs.dto"
 
 class PlaylistController {
-    private playlistService
+    private readonly playlistService
 
     constructor() {
         this.playlistService = new PlaylistService()

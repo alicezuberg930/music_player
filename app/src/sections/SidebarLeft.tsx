@@ -4,8 +4,10 @@ import { Typography } from "@/components/ui/typography"
 import { Plus } from "lucide-react"
 import { cn } from "@/lib/utils"
 import CreateNewPlaylistDialog from "./me/CreateNewPlaylist"
+import { useAuthContext } from "@/lib/auth/useAuthContext"
 
 const SidebarLeft: React.FC = () => {
+    const { isAuthenticated } = useAuthContext()
     return (
         <div className="sm:block hidden lg:w-48 w-20 flex-none border bg-main-200 transition-all duration-1500 ease-in-out">
             <div className="h-full flex flex-col relative">
@@ -16,9 +18,9 @@ const SidebarLeft: React.FC = () => {
                     </div>
                 </div>
                 <div className="flex flex-col">
-                    {sidebarMenu.map((value, index) => (
+                    {sidebarMenu.map(value => (
                         <NavLink
-                            to={value.path} key={index}
+                            to={value.path} key={value.path}
                             className={({ isActive }) => cn(
                                 'text-gray-500 text-sm py-2 px-6 font-bold flex gap-3 items-center justify-start',
                                 isActive && 'text-[#0F7070] bg-main-100'
@@ -29,14 +31,16 @@ const SidebarLeft: React.FC = () => {
                         </NavLink>
                     ))}
                 </div>
-                <CreateNewPlaylistDialog
-                    triggerElement={
-                        <div className="text-gray-500 text-sm py-2 px-6 font-bold flex gap-3 items-center justify-start absolute bottom-0 border-t border-gray-400 w-full">
-                            <Plus />
-                            <Typography className="hidden lg:inline m-0">Tạo playlist</Typography>
-                        </div>
-                    }
-                />
+                {isAuthenticated && (
+                    <CreateNewPlaylistDialog
+                        triggerElement={
+                            <div className="text-gray-500 text-sm py-2 px-6 font-bold flex gap-3 items-center justify-start absolute bottom-0 border-t border-gray-400 w-full">
+                                <Plus />
+                                <Typography className="hidden lg:inline m-0">Tạo playlist</Typography>
+                            </div>
+                        }
+                    />
+                )}
             </div>
         </div>
     )

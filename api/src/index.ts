@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser"
 import env from './lib/helpers/env'
 import { errorInterceptor, notFoundHandlerMiddleware, responseInterceptor } from './middleware'
 import { artistRouter, playlistRouter, songRouter, userRouter } from './modules'
+import { rateLimiter } from './middleware/rate.limiter'
 
 const app = express()
 
@@ -13,7 +14,7 @@ app.use(responseInterceptor)
 
 // setup cors
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:5174', 'https://aismartlite.cloud', 'https://api.aismartlite.cloud'],
+    origin: ['http://localhost:5173', 'http://localhost:5174', 'https://aismartlite.cloud', 'https://api.aismartlite.cloud', 'https://tien-music-player.site'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
 }))
@@ -26,10 +27,13 @@ app.use(cookieParser())
 app.use(express.urlencoded({ extended: true, limit: '21mb' }))
 app.use(express.json({ limit: '21mb' }))
 
-const port = env.PORT || 3000
+const port = env.PORT || 5000
+
+// global rate limiter
+app.use(rateLimiter)
 
 app.get('/', (_: Request, res: Response) => {
-    res.json({ message: 'Welcome to the Express + TypeScript Server!' })
+    res.json({ message: 'Welcome to Tiếns MP3 Express Server!' })
 })
 
 // map routers to express server

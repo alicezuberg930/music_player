@@ -59,8 +59,8 @@ const PlaylistPage: React.FC = () => {
                             <div className="relative">
                                 <LazyLoadImage
                                     src={playlist.thumbnail} alt="thumbnail" effect="blur"
-                                    className="w-full aspect-square "
-                                    wrapperClassName="w-full rounded-md shadow-md"
+                                    className="w-full aspect-square rounded-lg"
+                                    wrapperClassName="w-full"
                                 />
                                 <div className={`${(inPlaylist && isPlaying) ? 'rounded-full' : 'rounded-md'} text-white absolute top-0 left-0 bottom-0 right-0 flex items-center justify-center`}>
                                     <span onClick={() => dispatch(setIsPlaying(!isPlaying))}>

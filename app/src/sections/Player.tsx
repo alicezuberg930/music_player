@@ -75,28 +75,29 @@ const Player: React.FC = () => {
 
     const handleNext = useCallback(() => {
         if (currentPlaylistSongs.length > 0) {
-            currentPlaylistSongs.forEach((item, index) => {
-                if (item.id === currentSong?.id) {
+            for (let index = 0; index < currentPlaylistSongs.length; index++) {
+                if (currentPlaylistSongs[index].id === currentSong?.id) {
                     if (currentPlaylistSongs[index + 1]) {
                         dispatch(setCurrentSong(currentPlaylistSongs[index + 1]))
                         audioRef.current?.play()
                     }
-                    return
+                    break
                 }
-            })
+            }
         }
     }, [currentPlaylistSongs, currentSong, dispatch])
 
     const handlePrevious = useCallback(() => {
         if (currentPlaylistSongs.length > 0) {
-            currentPlaylistSongs.forEach((item, index) => {
-                if (item.id === currentSong?.id) {
+            for (let index = 0; index < currentPlaylistSongs.length; index++) {
+                if (currentPlaylistSongs[index].id === currentSong?.id) {
                     if (currentPlaylistSongs[index - 1]) {
                         dispatch(setCurrentSong(currentPlaylistSongs[index - 1]))
                         audioRef.current?.play()
                     }
+                    break
                 }
-            })
+            }
         }
     }, [currentPlaylistSongs, currentSong, dispatch])
 
@@ -125,7 +126,7 @@ const Player: React.FC = () => {
     const updatePlayerUI = () => {
         let animationFrame: number
         const audio = audioRef.current
-        if (!audio || !audio.src) return
+        if (!audio?.src) return
 
         const updateTime = () => {
             currentTimeRef.current!.innerText = formatDuration(Math.floor(audio.currentTime))
@@ -170,6 +171,8 @@ const Player: React.FC = () => {
 
     const initializePlayer = async () => {
         dispatch(setIsPlaying(false))
+        currentTimeRef.current && (currentTimeRef.current.innerText = '00:00')
+        thumbRef.current && (thumbRef.current.style.cssText = `right: 100%`)
         if (currentSong?.stream) {
             setIsLoadingAudio(true)
             const isCached = await isAudioCached(currentSong.id)
@@ -183,8 +186,6 @@ const Player: React.FC = () => {
                 updatePlayerUI()
             }
         }
-        currentTimeRef.current && (currentTimeRef.current.innerText = '00:00')
-        thumbRef.current && (thumbRef.current.style.cssText = `right: 100%`)
     }
 
     // initialize player when current song changes and update player UI
@@ -255,8 +256,8 @@ const Player: React.FC = () => {
     }, [isPlaying])
 
     return (
-        <div className={`fixed left-0 right-0 bottom-0 z-20 h-24 content-center bg-main-400 select-none border-t border-main-500/20 shadow-[0_-4px_2px_-1px_rgba(0,0,0,0.1),0_-2px_4px_-1px_rgba(0,0,0,0.06)]`}>
-            <div className='flex justify-between px-5'>
+        <div className={`fixed w-full z-20 h-24 content-center bg-main-400 select-none border-t border-main-500/20 shadow-up`}>
+            <div className='flex justify-between px-4'>
                 <div className='flex-1 items-center gap-4 hidden md:flex'>
                     <LazyLoadImage src={currentSong?.thumbnail} effect='blur' alt='thumbnail' className='w-16 h-16 object-cover' />
                     <div>
@@ -351,7 +352,7 @@ const Player: React.FC = () => {
                         <Typography className='font-semibold text-gray-500 m-0'>{formatDuration(currentSong?.duration ?? 0)}</Typography>
                     </div>
                 </div>
-                <div className='flex-1 items-center gap-4 justify-end hidden md:flex'>
+                <div className='flex-1 items-center gap-4 hidden md:flex justify-end'>
                     <LyricsDrawer drawerTrigger={<MicVocal size={20} />} audioRef={audioRef} />
                     <Button size={'icon-lg'} variant={'ghost'} onClick={() => setVolume(volume === 0 ? 50 : 0)}>
                         {volume >= 50 ? <Volume2 /> : volume === 0 ? <VolumeX /> : <Volume1 />}

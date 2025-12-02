@@ -7,14 +7,15 @@ services:
   #     MYSQL_PASSWORD: music_password
   #     MYSQL_DB: music_db
   #   ports:
-  #     - "5432:5432"
+  #     - "3306:3306"
   #   volumes:
   #     - music_player_db_data:/var/lib/mysql/data
 
-  music_player_app:
-    build: 
+  music_player_app_dev:
+    profiles: ["dev"]
+    build:
       context: ./app
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.development
     container_name: music_player_app
     ports:
       - "5174:5173"
@@ -31,10 +32,22 @@ services:
     # depends_on:
     #   - music_player_db
 
-  music_player_api:
+  music_player_app_prod:
+    profiles: ["prod"]
+    build: 
+      context: ./app
+      dockerfile: Dockerfile.production
+    container_name: music_player_app
+    ports:
+      - "5174:5173"
+    # depends_on:
+    #   - music_player_db
+
+  music_player_api_dev:
+    profiles: ["dev"]
     build:
       context: ./api
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.development
     container_name: music_player_api
     ports:
       - "5001:5000"
@@ -51,6 +64,17 @@ services:
     # depends_on:
     #   - music_player_db
 
+  music_player_api_prod:
+    profiles: ["prod"]
+    build:
+      context: ./api
+      dockerfile: Dockerfile.production
+    container_name: music_player_api
+    ports:
+      - "5001:5000"
+    # depends_on:
+    #   - music_player_db
+
   rabbitmq:
     image: rabbitmq:3-management
     container_name: music_player_rabbitmq
@@ -61,3 +85,8 @@ services:
 # volumes:
 #   music_player_db_data:
 #     driver: local
+
+# For development with watch mode:
+# docker compose --profile dev up --build --watch
+# For production:
+# docker compose --profile prod up --build

@@ -4,17 +4,16 @@ import { CreatePlayList, PlayList } from "./playlist.model"
 import { playlistArtists, playlists, playlistSongs, songs } from "../../db/schemas"
 import { BadRequestException, HttpException, NotFoundException } from "../../lib/exceptions"
 import { CreatePlaylistDto } from "./dto/create-playlist.dto"
-import { extractPublicId, uploadFile } from "../../lib/helpers/cloudinary.file"
+import { deleteFile, extractPublicId, uploadFile } from "../../lib/helpers/cloudinary.file"
 import { UpdatePlaylistDto } from "./dto/update-playlist.dto"
 import { QueryPlaylistDto } from "./dto/query-playlist.dto"
 import { createId } from "../../db/utils"
-import { Song } from "../songs/song.model"
 import { PlaylistSongDto } from "./dto/playlist-songs.dto"
 
 export class PlaylistService {
     public async getPlaylists(request: Request<{}, {}, {}, QueryPlaylistDto>, response: Response) {
         try {
-            const { artistName, songTitle, title, releaseDate } = request.query
+            // const { artistName, songTitle, title, releaseDate } = request.query
             const queryResult = await db.query.playlists.findMany({
                 with: {
                     user: { columns: { password: false, email: false } },
@@ -155,8 +154,15 @@ export class PlaylistService {
                 columns: { thumbnail: true },
                 where: eq(playlists.id, id)
             })
+            if (!myPlaylist) throw new BadRequestException('Playlist not found')
+            if (!myPlaylist.thumbnail.includes('/assets/')) {
+                await deleteFile(extractPublicId(myPlaylist.thumbnail))
+            }
+            await db.delete(playlists).where(eq(playlists.id, id))
+            return response.json({ message: 'Playlist deleted successfully' })
         } catch (error) {
-
+            if (error instanceof HttpException) throw error
+            throw new BadRequestException(error instanceof Error ? error.message : undefined)
         }
     }
 
@@ -171,10 +177,10 @@ export class PlaylistService {
         const { songIds } = request.body;
 
         // get existing song ids in the playlist
-        const existingSongIds = myPlaylist.songs.map(ps => ps.songId)
+        const existingSongIds = new Set(myPlaylist.songs.map(ps => ps.songId))
 
         // filter out songs that already exist in the playlist
-        const newSongIds = songIds.filter(songId => !existingSongIds.includes(songId))
+        const newSongIds = songIds.filter(songId => !existingSongIds.has(songId))
 
         // if no new songs to add, return early
         if (newSongIds.length === 0) {
@@ -203,10 +209,10 @@ export class PlaylistService {
         const existingArtistIds = await db.query.playlistArtists.findMany({
             columns: { artistId: true },
             where: eq(playlistArtists.playlistId, id)
-        }).then(results => results.map(pa => pa.artistId!))
+        }).then(results => new Set(results.map(pa => pa.artistId)))
 
         // filter out artists that already exist in the playlist
-        const newArtistIds = artistIds.filter(artistId => !existingArtistIds.includes(artistId))
+        const newArtistIds = artistIds.filter(artistId => !existingArtistIds.has(artistId))
 
         const playlist = {
             totalDuration,
@@ -230,10 +236,10 @@ export class PlaylistService {
         const { songIds } = request.body;
 
         // get existing song ids in the playlist
-        const existingSongIds = myPlaylist.songs.map(ps => ps.songId)
+        const existingSongIds = new Set(myPlaylist.songs.map(ps => ps.songId))
 
         // filter only songs that actually exist in the playlist
-        const songsToRemove = songIds.filter(songId => existingSongIds.includes(songId))
+        const songsToRemove = songIds.filter(songId => existingSongIds.has(songId))
 
         // if no songs to remove, return early
         if (songsToRemove.length === 0) {
@@ -264,7 +270,7 @@ export class PlaylistService {
         const remainingSongs = await db.query.playlistSongs.findMany({
             where: and(
                 eq(playlistSongs.playlistId, id),
-                inArray(playlistSongs.songId, existingSongIds.filter(sid => !songsToRemove.includes(sid)))
+                inArray(playlistSongs.songId, Array.from(existingSongIds).filter(sid => !songsToRemove.includes(sid)))
             ),
             with: {
                 song: {
@@ -278,10 +284,10 @@ export class PlaylistService {
         })
 
         // get artist ids that still exist in remaining songs
-        const remainingArtistIds = Array.from(new Set(remainingSongs.flatMap(ps => ps.song.artists.map(a => a.artistId))))
+        const remainingArtistIds = new Set(remainingSongs.flatMap(ps => ps.song.artists.map(a => a.artistId)))
 
         // find artists to remove (artists that were in removed songs but not in remaining songs)
-        const artistsToRemove = removedArtistIds.filter(artistId => !remainingArtistIds.includes(artistId))
+        const artistsToRemove = removedArtistIds.filter(artistId => !remainingArtistIds.has(artistId))
 
         // delete songs from playlist
         await db.delete(playlistSongs).where(

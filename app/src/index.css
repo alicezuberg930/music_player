@@ -346,7 +346,6 @@ body {
   border-radius: 50%;
   transition: transform 250ms ease-in-out;
   aspect-ratio: 1/1;
-  background-color: #ffffff0d;
 }
 
 .timeline-container.scrubbing .thumb-indicator,

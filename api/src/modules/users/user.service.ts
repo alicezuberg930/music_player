@@ -12,7 +12,7 @@ import env from "../../lib/helpers/env"
 export class UserService {
     public async getUsers(request: Request, response: Response) {
         try {
-            const { } = request.query
+            // const { } = request.query
             const data: User[] = await db.query.users.findMany({
 
             })
@@ -34,9 +34,9 @@ export class UserService {
             const token = jwt.sign({ id: user.id }, env.JWT_SECRET!, { expiresIn: '1d', algorithm: 'HS256' })
             response.cookie('accessToken', token, {
                 httpOnly: true,
-                secure: env.NODE_ENV === "production" ? true : false, // Required for HTTPS
+                secure: env.NODE_ENV === "production", // Required for HTTPS
                 sameSite: env.NODE_ENV === "production" ? 'lax' : 'strict', // Required for cross-domain cookies
-                domain: env.NODE_ENV === "production" ? '.aismartlite.cloud' : undefined, // Share cookie across subdomains
+                // domain: env.NODE_ENV === "production" ? '.aismartlite.cloud' : undefined, // Share cookie across subdomains
                 maxAge: 1 * 24 * 60 * 60 * 1000 // 1 day
                 // maxAge: 10000
             });
@@ -100,9 +100,9 @@ export class UserService {
         try {
             response.clearCookie('accessToken', {
                 httpOnly: true,
-                secure: env.NODE_ENV === "production" ? true : false, // Required for HTTPS
+                secure: env.NODE_ENV === "production", // Required for HTTPS
                 sameSite: env.NODE_ENV === "production" ? 'lax' : 'strict', // Required for cross-domain cookies
-                domain: env.NODE_ENV === "production" ? '.aismartlite.cloud' : undefined, // Share cookie across subdomains
+                // domain: env.NODE_ENV === "production" ? '.aismartlite.cloud' : undefined, // Share cookie across subdomains
             })
             return response.json({ message: 'User signed out successfully' })
         } catch (error) {

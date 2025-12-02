@@ -250,7 +250,8 @@ export class SongService {
             await db.delete(songs).where(eq(songs.id, request.params.id))
             return response.json({ message: 'Song deleted successfully' })
         } catch (error) {
-
+            if (error instanceof HttpException) throw error
+            throw new BadRequestException(error instanceof Error ? error.message : undefined)
         }
     }
 }

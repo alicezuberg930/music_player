@@ -4,7 +4,7 @@ import { UpdateArtistDto } from "./dto/update-artist.dto"
 import { CreateArtistDto } from "./dto/create-artist.dto"
 
 class ArtistController {
-    private artistService
+    private readonly artistService
 
     constructor() {
         this.artistService = new ArtistService()

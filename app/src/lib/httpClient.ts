@@ -151,3 +151,12 @@ export const fetchProfile = async (): Promise<Response<User>> => {
         throw error
     }
 }
+
+export const verifyEmail = async (userId: string, token: string): Promise<Response> => {
+    try {
+        const response = await axios.get<Response>(`/users/verify-email/${userId}`, { params: { token } })
+        return response.data
+    } catch (error) {
+        throw error
+    }
+}

@@ -35,7 +35,13 @@ class UserController {
         return await this.userService.myProfile(request, response)
     }
 
-    public async updateUser(request: Request<{ id: string }, {}, UpdateUserDto>, response: Response) { }
+    public async updateUser(request: Request<{ id: string }, {}, UpdateUserDto>, response: Response) {
+        return await this.userService.updateUser(request, response)
+    }
+
+    public async verifyEmail(request: Request<{ id: string }, {}, {}, { token: string }>, response: Response) {
+        return await this.userService.verifyEmail(request, response)
+    }
 }
 
 export default new UserController()

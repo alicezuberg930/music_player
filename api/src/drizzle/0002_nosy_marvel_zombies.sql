@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `verify_token_expires` timestamp;

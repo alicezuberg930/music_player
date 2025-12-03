@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import jwt from "jsonwebtoken"
-import { db, eq } from "../../db"
+import { and, db, eq } from "../../db"
 import { users } from "../../db/schemas"
 import { User } from "./user.model"
 import { BadRequestException, HttpException, NotFoundException } from "../../lib/exceptions"
@@ -8,6 +8,9 @@ import { CreateUserDto } from "./dto/create-user.dto"
 import { Password } from "../../lib/bcrypt/password"
 import { LoginUserDto } from "./dto/login-user.dto"
 import env from "../../lib/helpers/env"
+import { sendVerifyEmail } from "../../lib/email/verify"
+import { UpdateUserDto } from "./dto/update-user.dto"
+import { createId } from "../../db/utils"
 
 export class UserService {
     public async getUsers(request: Request, response: Response) {
@@ -56,7 +59,10 @@ export class UserService {
             const existingUser: User | undefined = await db.query.users.findFirst({ where: eq(users.email, email) })
             if (existingUser) throw new BadRequestException('Email is already registered')
             const hashedPassword = await new Password().hash(password)
-            await db.insert(users).values({ fullname, email, password: hashedPassword })
+            const verifyToken = await new Password().hash(createId())
+            const verifyTokenExpires = new Date(Date.now() + 1 * 60 * 60 * 1000) // 1 hour from now
+            const user = await db.insert(users).values({ fullname, email, password: hashedPassword, verifyToken, verifyTokenExpires }).$returningId()
+            sendVerifyEmail(email, fullname, verifyToken, String(user[0].id)).catch(err => console.error('Failed to send welcome email:', err))
             return response.status(201).json({ message: 'User registered successfully' })
         } catch (error) {
             if (error instanceof HttpException) throw error
@@ -105,6 +111,34 @@ export class UserService {
                 // domain: env.NODE_ENV === "production" ? '.aismartlite.cloud' : undefined, // Share cookie across subdomains
             })
             return response.json({ message: 'User signed out successfully' })
+        } catch (error) {
+            if (error instanceof HttpException) throw error
+            throw new BadRequestException(error instanceof Error ? error.message : undefined)
+        }
+    }
+
+    public async updateUser(request: Request<{ id: string }, {}, UpdateUserDto>, response: Response) {
+        try {
+            const { id } = request.params
+            const { fullname, email, password } = request.body
+            return response.json({ message: 'User updated successfully', data: { id, fullname, email, password } })
+        } catch (error) {
+            if (error instanceof HttpException) throw error
+            throw new BadRequestException(error instanceof Error ? error.message : undefined)
+        }
+    }
+
+    public async verifyEmail(request: Request<{ id: string }, {}, {}, { token: string }>, response: Response) {
+        try {
+            const { id } = request.params
+            const { token } = request.query
+            const user: User | undefined = await db.query.users.findFirst({ where: and(eq(users.id, id)) })
+            if (!user) throw new NotFoundException('User not found')
+            if (user.isVerified) response.json({ message: 'Email is already verified' })
+            if (user.verifyToken && user.verifyToken !== token) throw new BadRequestException('Invalid verification token')
+            if (user.verifyTokenExpires && user.verifyTokenExpires < new Date()) throw new BadRequestException('Verification token has expired')
+            await db.update(users).set({ isVerified: true, verifyToken: null, verifyTokenExpires: null }).where(eq(users.id, user.id))
+            return response.json({ message: 'Email verified successfully' })
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)

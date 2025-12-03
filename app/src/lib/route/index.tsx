@@ -17,6 +17,7 @@ import {
     SigninPage
 } from '@/pages'
 import { HomePage, PublicPage } from './element'
+import VerifyPage from '@/pages/VerifyPage'
 
 export default function Router() {
     return useRoutes([
@@ -58,5 +59,6 @@ export default function Router() {
         { path: "/video-clip/:title/:id", element: <VideoClipPage /> },
         { path: paths.SIGNIN, element: <SigninPage /> },
         { path: paths.SIGNUP, element: <SignupPage /> },
+        { path: paths.VERIFY, element: <VerifyPage /> },
     ])
 }

@@ -12,7 +12,7 @@ const env = {
     MYSQL_PASSWORD: process.env.MYSQL_PASSWORD,
     MYSQL_USER: process.env.MYSQL_USER,
     MYSQL_HOST: process.env.MYSQL_HOST,
-    MYSQL_PORT: parseInt(process.env.MYSQL_PORT!),
+    MYSQL_PORT: Number.parseInt(process.env.MYSQL_PORT!),
     CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
     CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
     CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
@@ -20,7 +20,9 @@ const env = {
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     GOOGLE_REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI,
-    JWT_SECRET: process.env.JWT_SECRET
+    JWT_SECRET: process.env.JWT_SECRET,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
+    WEB_URL: process.env.WEB_URL,
 }
 
 export default env

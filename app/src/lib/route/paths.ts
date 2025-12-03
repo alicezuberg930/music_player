@@ -18,4 +18,5 @@ export const paths = {
     VIDEOCLIP__TITLE__ID: "/video-clip/:title/:id",
     ME: "/me",
     UPLOAD_MUSIC: "/me/upload-music",
+    VERIFY: '/verify/:id'
 }

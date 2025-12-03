@@ -48,4 +48,8 @@ userRouter.put("/users/:id",
     (request: Request<{ id: string }, {}, UpdateUserDto>, response: Response) => userController.updateUser(request, response)
 )
 
+userRouter.get("/users/verify-email/:id",
+    (request: Request<{ id: string }, {}, {}, { token: string }>, response: Response) => userController.verifyEmail(request, response)
+)
+
 export { userRouter }

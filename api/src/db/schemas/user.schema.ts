@@ -1,6 +1,5 @@
-import { varchar, int, date } from "drizzle-orm/mysql-core"
 import { createdAt, createId, updatedAt } from "../utils"
-import { mysqlTable } from "drizzle-orm/mysql-core"
+import { mysqlTable, varchar, date, boolean, timestamp } from "drizzle-orm/mysql-core"
 import { relations } from "drizzle-orm"
 import { songs, playlists } from "./"
 
@@ -12,6 +11,11 @@ export const users = mysqlTable("users", {
     birthday: date({ mode: 'string' }),
     email: varchar({ length: 100 }).notNull().unique(),
     password: varchar({ length: 255 }),
+    isVerified: boolean().notNull().default(false),
+    verifyToken: varchar({ length: 255 }),
+    verifyTokenExpires: timestamp({ mode: 'date' }),
+    resetPasswordToken: varchar({ length: 255 }),
+    resetPasswordExpires: timestamp({ mode: 'date' }),
     createdAt,
     updatedAt,
 })

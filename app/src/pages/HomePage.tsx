@@ -14,7 +14,7 @@ const HomePage: React.FC = () => {
             const response = await fetchSongList()
             setSongs(response.data || [])
         } catch (error) {
-
+            console.log(error)
         }
     }
 
@@ -23,7 +23,7 @@ const HomePage: React.FC = () => {
             const response = await fetchPlaylistList()
             setPlaylists(response.data || [])
         } catch (error) {
-
+            console.log(error)
         }
     }
 

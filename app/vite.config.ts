@@ -41,6 +41,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
+        minifyInternalExports: true,
         manualChunks: {
           react: ['react', 'react-dom', 'react-router-dom'],
         },

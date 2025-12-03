@@ -134,7 +134,7 @@ export class UserService {
             const { token } = request.query
             const user: User | undefined = await db.query.users.findFirst({ where: and(eq(users.id, id)) })
             if (!user) throw new NotFoundException('User not found')
-            if (user.isVerified) response.json({ message: 'Email is already verified' })
+            if (user.isVerified) return response.json({ message: 'Email is already verified' })
             if (user.verifyToken && user.verifyToken !== token) throw new BadRequestException('Invalid verification token')
             if (user.verifyTokenExpires && user.verifyTokenExpires < new Date()) throw new BadRequestException('Verification token has expired')
             await db.update(users).set({ isVerified: true, verifyToken: null, verifyTokenExpires: null }).where(eq(users.id, user.id))

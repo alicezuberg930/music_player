@@ -1,6 +1,8 @@
 import './index.css'
 // lazy load image css
 import 'react-lazy-load-image-component/src/effects/blur.css'
+// i18n
+import './lib/locales/i18n'
 // redux provider config
 import { Provider as ReduxProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'

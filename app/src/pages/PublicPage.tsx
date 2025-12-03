@@ -5,7 +5,6 @@ import Player from "../sections/Player"
 import Header from "../sections/header/MainHeader"
 import { useDispatch, useSelector } from "@/redux/store"
 import { setScrollTop } from "@/redux/slices/app"
-import { useLocales } from "@/lib/locales"
 
 const PublicPage: React.FC = () => {
     const { showSideBarRight, scrollTop } = useSelector(state => state.app)
@@ -24,11 +23,9 @@ const PublicPage: React.FC = () => {
             dispatch(setScrollTop(false))
         }
     }
-    const { translate } = useLocales()
 
     return (
         <div className={`w-full bg-main-300 ${currentSong ? 'h-[calc(100vh-96px)]' : 'h-screen'}`}>
-            <div>affvaer {translate('only_admin_can_see_this_item')}</div>
             <div className="w-full h-full flex">
                 <SidebarLeft />
                 <div className="flex-1 flex flex-col relative">

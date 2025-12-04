@@ -1,6 +1,0 @@
-service URI: mysql://avnadmin:AVNS_KfaROSf_5YxC3WhSOuW@zingmp3-mysql-music-website-db.h.aivencloud.com:17444/defaultdb?ssl-mode=REQUIRED
-Database name: defaultdb
-Host: zingmp3-mysql-music-website-db.h.aivencloud.com
-Port: 17444
-User: avnadmin
-Password: AVNS_KfaROSf_5YxC3WhSOuW

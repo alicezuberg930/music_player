@@ -34,6 +34,8 @@ app.get('/', (_, res) => {
 });
 // map routers to express server
 app.use('/api/v1', [modules_1.userRouter, modules_1.playlistRouter, modules_1.songRouter, modules_1.artistRouter]);
+// Sitemap routes (public)
+app.use('/', modules_1.sitemapRouter);
 // assign global middlewares to express server
 app.use([middleware_1.notFoundHandlerMiddleware, middleware_1.errorInterceptor]);
 app.listen(port, () => {

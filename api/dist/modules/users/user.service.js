@@ -10,8 +10,8 @@ const schemas_1 = require("../../db/schemas");
 const exceptions_1 = require("../../lib/exceptions");
 const password_1 = require("../../lib/bcrypt/password");
 const env_1 = __importDefault(require("../../lib/helpers/env"));
-const verify_1 = require("../../lib/email/verify");
 const utils_1 = require("../../db/utils");
+const email_1 = __importDefault(require("../../lib/email"));
 class UserService {
     async getUsers(request, response) {
         try {
@@ -40,9 +40,8 @@ class UserService {
                 httpOnly: true,
                 secure: env_1.default.NODE_ENV === "production", // Required for HTTPS
                 sameSite: env_1.default.NODE_ENV === "production" ? 'lax' : 'strict', // Required for cross-domain cookies
-                // domain: env.NODE_ENV === "production" ? '.aismartlite.cloud' : undefined, // Share cookie across subdomains
+                domain: env_1.default.NODE_ENV === "production" ? '.tien-music-player.site' : undefined, // Share cookie across subdomains
                 maxAge: 1 * 24 * 60 * 60 * 1000 // 1 day
-                // maxAge: 10000
             });
             return response.json({
                 message: 'User logged in successfully',
@@ -65,7 +64,23 @@ class UserService {
             const verifyToken = await new password_1.Password().hash((0, utils_1.createId)());
             const verifyTokenExpires = new Date(Date.now() + 1 * 60 * 60 * 1000); // 1 hour from now
             const user = await db_1.db.insert(schemas_1.users).values({ fullname, email, password: hashedPassword, verifyToken, verifyTokenExpires }).$returningId();
-            (0, verify_1.sendVerifyEmail)(email, fullname, verifyToken, String(user[0].id)).catch(err => console.error('Failed to send welcome email:', err));
+            const verifyLink = `${env_1.default.WEB_URL}/verify/${user[0].id}?token=${verifyToken}`;
+            (0, email_1.default)({
+                to: email,
+                subject: 'Verify Your Email - Yukikaze Music Player',
+                template: 'VerifyEmail',
+                data: { username: fullname, verifyLink }
+            })
+                .then(_ => console.log('Verification email sent successfully'))
+                .catch(err => console.error('Failed to send verification email:', err));
+            const token = jsonwebtoken_1.default.sign({ id: user[0].id }, env_1.default.JWT_SECRET, { expiresIn: '1d', algorithm: 'HS256' });
+            response.cookie('accessToken', token, {
+                httpOnly: true,
+                secure: env_1.default.NODE_ENV === "production", // Required for HTTPS
+                sameSite: env_1.default.NODE_ENV === "production" ? 'lax' : 'strict', // Required for cross-domain cookies
+                domain: env_1.default.NODE_ENV === "production" ? '.tien-music-player.site' : undefined, // Share cookie across subdomains
+                maxAge: 1 * 24 * 60 * 60 * 1000 // 1 day
+            });
             return response.status(201).json({ message: 'User registered successfully' });
         }
         catch (error) {
@@ -117,7 +132,7 @@ class UserService {
                 httpOnly: true,
                 secure: env_1.default.NODE_ENV === "production", // Required for HTTPS
                 sameSite: env_1.default.NODE_ENV === "production" ? 'lax' : 'strict', // Required for cross-domain cookies
-                // domain: env.NODE_ENV === "production" ? '.aismartlite.cloud' : undefined, // Share cookie across subdomains
+                domain: env_1.default.NODE_ENV === "production" ? '.tien-music-player.site' : undefined, // Share cookie across subdomains
             });
             return response.json({ message: 'User signed out successfully' });
         }

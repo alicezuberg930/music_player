@@ -5,7 +5,7 @@ import { LoginUserDto } from "./dto/login-user.dto"
 import { UpdateUserDto } from "./dto/update-user.dto"
 
 class UserController {
-    private readonly userService
+    private readonly userService: UserService
 
     constructor() {
         this.userService = new UserService()

@@ -30,7 +30,7 @@ const createEntropy = (len = 24): string => {
         .slice(0, len)
 }
 
-const hash = (input: string) => {
+const hash = (input: string): string => {
     const hashBuf = createHash('sha3-512').update(input).digest()
     return bufToBigInt(hashBuf).toString(36)
 }

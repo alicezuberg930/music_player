@@ -8,9 +8,9 @@ import { CreateUserDto } from "./dto/create-user.dto"
 import { Password } from "../../lib/bcrypt/password"
 import { LoginUserDto } from "./dto/login-user.dto"
 import env from "../../lib/helpers/env"
-import { sendVerifyEmail } from "../../lib/email/verify"
 import { UpdateUserDto } from "./dto/update-user.dto"
 import { createId } from "../../db/utils"
+import sendEmail from "../../lib/email"
 
 export class UserService {
     public async getUsers(request: Request, response: Response) {
@@ -61,7 +61,15 @@ export class UserService {
             const verifyToken = await new Password().hash(createId())
             const verifyTokenExpires = new Date(Date.now() + 1 * 60 * 60 * 1000) // 1 hour from now
             const user = await db.insert(users).values({ fullname, email, password: hashedPassword, verifyToken, verifyTokenExpires }).$returningId()
-            sendVerifyEmail(email, fullname, verifyToken, user[0].id).catch(err => console.error('Failed to send welcome email:', err))
+            const verifyLink = `${env.WEB_URL}/verify/${user[0].id}?token=${verifyToken}`
+            sendEmail({
+                to: email,
+                subject: 'Verify Your Email - Yukikaze Music Player',
+                template: 'VerifyEmail',
+                data: { username: fullname, verifyLink }
+            })
+                .then(_ => console.log('Verification email sent successfully'))
+                .catch(err => console.error('Failed to send verification email:', err))
             const token = jwt.sign({ id: user[0].id }, env.JWT_SECRET!, { expiresIn: '1d', algorithm: 'HS256' })
             response.cookie('accessToken', token, {
                 httpOnly: true,

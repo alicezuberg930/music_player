@@ -29,7 +29,7 @@ const LyricsDrawer: React.FC<Props> = ({ drawerTrigger, audioRef }) => {
             if (currentSong?.lyricsFile) {
                 const res = await fetch(currentSong.lyricsFile)
                 const lyrics = await res.text()
-                setLyrics(lyrics.replace(/\r\n/g, '\n'))
+                setLyrics(lyrics.replaceAll('\r\n', '\n'))
             }
         }
         downloadLyrics()
@@ -45,9 +45,8 @@ const LyricsDrawer: React.FC<Props> = ({ drawerTrigger, audioRef }) => {
         if (activeLyricRef.current && scrollContainerRef.current) {
             const containerHeight = activeLyricRef.current.clientHeight
             const lineTop = activeLyricRef.current.offsetTop
-            const lineHeight = activeLyricRef.current.clientHeight
             // automatically scroll with enough height so that the active line is centered in the parent container
-            const scrollTo = lineTop - (containerHeight / 2) - (lineHeight / 2)
+            const scrollTo = lineTop - (containerHeight * 10)
             scrollContainerRef.current.scrollTo({ top: scrollTo, behavior: 'smooth' })
         }
     }, [currentTime])

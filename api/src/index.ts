@@ -4,9 +4,8 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 import env from './lib/helpers/env'
 import { errorInterceptor, notFoundHandlerMiddleware, responseInterceptor } from './middleware'
-import { artistRouter, playlistRouter, songRouter, userRouter } from './modules'
+import { artistRouter, playlistRouter, songRouter, userRouter, sitemapRouter } from './modules'
 import { rateLimiter } from './middleware/rate.limiter'
-
 const app = express()
 
 // Add response interceptor early
@@ -38,6 +37,9 @@ app.get('/', (_: Request, res: Response) => {
 
 // map routers to express server
 app.use('/api/v1', [userRouter, playlistRouter, songRouter, artistRouter])
+
+// Sitemap routes (public)
+app.use('/', sitemapRouter)
 
 // assign global middlewares to express server
 app.use([notFoundHandlerMiddleware, errorInterceptor])

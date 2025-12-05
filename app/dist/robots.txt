@@ -1,12 +1,7 @@
 User-agent: *
-Allow: /
-Allow: /search/all
-Allow: /search/songs
-Allow: /search/playlists
-Allow: /search/artists
-Allow: /search/mv
-Allow: /chart
-Allow: /chart/week
+Allow: *
 Disallow: /profile
+Disallow: /verify/*
+Disallow: /reset-password/*
 
-Sitemap: http://localhost/sitemap.xml
+Sitemap: https://tien-music-player.site/sitemap.xml

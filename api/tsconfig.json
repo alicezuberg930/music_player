@@ -9,9 +9,10 @@
     "skipLibCheck": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "jsx": "react-jsx",
   },
   "include": [
-    "src/**/*.ts",
+    "src",
     "src/drizzle.config.ts"
   ],
   "exclude": [

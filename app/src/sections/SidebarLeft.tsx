@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils"
 import CreateNewPlaylistDialog from "./me/CreateNewPlaylist"
 import { useAuthContext } from "@/lib/auth/useAuthContext"
 import { useLocales } from "@/lib/locales"
+import { memo } from "react"
 
 const SidebarLeft: React.FC = () => {
     const { isAuthenticated } = useAuthContext()
@@ -17,7 +18,7 @@ const SidebarLeft: React.FC = () => {
                 <div className="w-full h-16 py-4 px-6 flex justify-start items-center gap-1">
                     <img src='/vite.svg' alt="logo" />
                     <div className="hidden lg:block">
-                        <Typography className="m-0 font-semibold">Tiến's MP3</Typography>
+                        <Typography className="m-0 font-semibold">Yukikaze's MP3</Typography>
                     </div>
                 </div>
                 <div className="flex flex-col">
@@ -49,4 +50,4 @@ const SidebarLeft: React.FC = () => {
     )
 }
 
-export default SidebarLeft
+export default memo(SidebarLeft)

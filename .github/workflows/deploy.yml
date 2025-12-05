@@ -1,4 +1,4 @@
-name: Deploy Mono Repo
+name: Release
 
 on:
     push:
@@ -36,7 +36,7 @@ jobs:
                       FRONTEND_PATH="${{ secrets.FRONTEND_PATH }}"
 
                       SERVER_NAME="music-player-server"
-                      FRONTEND_NAME="music-player-frontend"
+                      FRONTEND_NAME="music-player-app"
 
                       # Ensure Node & pm2 exist
                       if ! command -v node >/dev/null 2>&1; then

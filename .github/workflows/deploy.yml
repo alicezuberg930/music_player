@@ -3,11 +3,11 @@ name: Deploy Mono Repo
 on:
     push:
         branches:
-            - dev/rework
+            - main
 
 jobs:
     deploy-backend:
-        if: github.ref == 'refs/heads/dev/rework'
+        if: github.ref == 'refs/heads/main'
         runs-on: ubuntu-latest
         steps:
             - name: Checkout (for context only)

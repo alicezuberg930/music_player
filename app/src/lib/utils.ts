@@ -35,7 +35,7 @@ export const deepObjectComparison = (obj1: any, obj2: any): boolean => {
 }
 
 export const getBaseUrl = (): string => {
-  if (typeof window !== 'undefined') return window.location.origin
+  if (typeof globalThis !== 'undefined') return globalThis.location.origin
   if (import.meta.env.PRODUCTION_URL) return import.meta.env.PRODUCTION_URL
   return `http://localhost:${import.meta.env.PORT ?? 3000}`
 }
@@ -44,12 +44,11 @@ export const alpha = (color: string, opacity: number): string => {
   // Handle hex colors
   if (color.startsWith('#')) {
     const hex = color.replace('#', '')
-    const r = parseInt(hex.substring(0, 2), 16)
-    const g = parseInt(hex.substring(2, 4), 16)
-    const b = parseInt(hex.substring(4, 6), 16)
+    const r = Number.parseInt(hex.substring(0, 2), 16)
+    const g = Number.parseInt(hex.substring(2, 4), 16)
+    const b = Number.parseInt(hex.substring(4, 6), 16)
     return `rgba(${r}, ${g}, ${b}, ${opacity})`
   }
-
   // Handle rgb/rgba colors
   if (color.startsWith('rgb')) {
     const match = color.match(/\d+/g)
@@ -57,7 +56,6 @@ export const alpha = (color: string, opacity: number): string => {
       return `rgba(${match[0]}, ${match[1]}, ${match[2]}, ${opacity})`
     }
   }
-
   return `rgba(0, 0, 0, ${opacity})`
 }
 

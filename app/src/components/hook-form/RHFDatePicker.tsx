@@ -18,7 +18,7 @@ export function RHFSingleDatePicker({
     name,
     fieldLabel,
     placeholder,
-    ...other
+    ...other 
 }: RHFDatePickerProps) {
     const { control } = useFormContext()
     const [open, setOpen] = useState(false)

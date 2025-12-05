@@ -1,5 +1,8 @@
 const cn = {
-  'login': '登录',
+  'sign_in': '登录',
+  'sign_up': '注册',
+  'sign_up_description': '注册账户以上传歌曲并创建您自己的播放列表。',
+  'sign_in_description': '登录您的账户以继续听音乐。',
   'all': '全部',
   'my_account': '我的账户',
   'new_songs': '新歌',

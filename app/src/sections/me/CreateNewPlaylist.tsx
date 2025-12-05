@@ -55,7 +55,9 @@ const CreateNewPlaylistDialog: React.FC<{ triggerElement: React.ReactNode }> = (
     const onSubmit = async (data: FormValuesProps) => {
         try {
             const formData = new FormData()
-            Object.entries(data).forEach(([key, value]) => formData.append(key, value as string))
+            for (const [key, value] of Object.entries(data)) {
+                formData.append(key, value as string)
+            }
             const response = await createPlaylist(formData)
             if (response?.statusCode && response?.statusCode === 201) {
                 setOpen(false)

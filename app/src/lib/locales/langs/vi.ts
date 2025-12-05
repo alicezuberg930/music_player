@@ -1,5 +1,8 @@
 const vi = {
-  'login': 'Đăng nhập',
+  'sign_in': 'Đăng nhập',
+  'sign_up': 'Đăng ký',
+  'sign_up_description': 'Đăng ký tài khoản để tải lên bài hát và tạo danh sách phát của riêng bạn.',
+  'sign_in_description': 'Đăng nhập vào tài khoản của bạn để tiếp tục nghe nhạc.',
   'all': 'Tất cả',
   'my_account': 'Tài khoản của tôi',
   'new_songs': 'Các bài hát mới',

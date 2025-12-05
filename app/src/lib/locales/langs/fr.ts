@@ -1,5 +1,8 @@
 const fr = {
-  'login': 'Connexion',
+  'sign_in': 'Se connecter',
+  'sign_up': 'S\'inscrire',
+  'sign_up_description': 'Inscrivez-vous pour télécharger des chansons et créer vos propres listes de lecture.',
+  'sign_in_description': 'Connectez-vous à votre compte pour continuer à écouter de la musique.',
   'all': 'Tout',
   'my_account': 'Mon compte',
   'new_songs': 'Nouvelles chansons',

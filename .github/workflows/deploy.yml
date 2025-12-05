@@ -52,12 +52,12 @@ jobs:
 
                       # Make sure we are on the right branch and up to date
                       git fetch origin
-                      git checkout dev/rework
-                      git pull --ff-only origin dev/rework
+                      git checkout main
+                      git pull --ff-only origin main
 
                       # Install deps, build, and run with PM2
                       npm ci --legacy-peer-deps
-                      npm run build
+                      # npm run build
 
                       # Start or reload the service
                       if pm2 describe "$SERVER_NAME" >/dev/null 2>&1; then
@@ -71,7 +71,7 @@ jobs:
                       
                       # Install deps, build, and run with PM2
                       npm ci --legacy-peer-deps
-                      npm run build
+                      # npm run build
 
                       # Start or reload the service
                       if pm2 describe "$FRONTEND_NAME" >/dev/null 2>&1; then

@@ -18,12 +18,7 @@ export const allLangs = [
     label: 'Chinese',
     value: 'cn',
     icon: '/assets/icons/flags/ic_flag_cn.svg',
-  },
-  {
-    label: 'Arabic (Sudan)',
-    value: 'ar',
-    icon: '/assets/icons/flags/ic_flag_sa.svg',
-  },
-];
+  }
+]
 
-export const defaultLang = allLangs[0]; // English
+export const defaultLang = allLangs[0] // English

@@ -1,16 +1,13 @@
-import { useSEO } from "@/lib/seo"
 import { FormProvider, RHFTextField } from '@/components/hook-form'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Field, FieldGroup } from '@/components/ui/field'
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Typography } from '@/components/ui/typography'
 import { useAuthContext } from '@/lib/auth/useAuthContext'
-import { Link } from "react-router-dom"
-import { paths } from "@/lib/route/paths"
+import { DialogClose, DialogDescription, DialogFooter, DialogHeader } from '@/components/ui/dialog'
+import { useLocales } from '@/lib/locales'
 
 interface FormValuesProps {
     email: string
@@ -19,17 +16,7 @@ interface FormValuesProps {
 
 const SigninPage: React.FC = () => {
     const { signin } = useAuthContext()
-    useSEO({
-        title: "Login Page",
-        description: "Login to upload songs and create your own playlist.",
-        canonical: "https://aismartlite.cloud/login",
-        schemaMarkup: {
-            '@context': 'https://schema.org',
-            '@type': 'WebSite',
-            name: 'Your Site',
-            url: 'https://yourdomain.com/',
-        }
-    })
+    const { translate } = useLocales()
 
     const FormSchema = Yup.object().shape({
         email: Yup.string().required('Email is required'),
@@ -53,41 +40,33 @@ const SigninPage: React.FC = () => {
     }
 
     return (
-        <div className="mx-auto max-w-md h-screen content-center px-2">
-            <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-                <Card className="w-full sm:max-w-md">
-                    <CardHeader className="text-center">
-                        <CardTitle>
-                            <Typography variant={'h5'}>Đăng nhập</Typography>
-                        </CardTitle>
-                        <CardDescription>Đăng nhập tài khoản để trải nghiệm thêm tính năng của Vina Smartlite.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <FieldGroup className="gap-4">
-                            <RHFTextField name="email" type="text" fieldLabel="Email" placeholder="Type your email" />
+        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+            <DialogHeader>
+                {/* <DialogTitle>{translate('sign_up')}</DialogTitle> */}
+                <DialogDescription>
+                    {translate('sign_in_description')}
+                </DialogDescription>
+            </DialogHeader>
 
-                            <RHFTextField name="password" type="password" fieldLabel="Password" placeholder="Type your password" />
-                        </FieldGroup>
-                    </CardContent>
-                    <CardFooter>
-                        <Field orientation="vertical">
-                            <Field orientation={'horizontal'}>
-                                <Button type="reset" variant="outline" className="flex-auto">
-                                    Reset
-                                </Button>
-                                <Button type="submit" className="flex-auto">Submit</Button>
-                            </Field>
-                            <Typography className="text-center">
-                                Bạn chưa có tài khoản?{' '}
-                                <Link to={paths.SIGNUP} className="text-primary hover:underline">
-                                    Đăng ký
-                                </Link>
-                            </Typography>
-                        </Field>
-                    </CardFooter>
-                </Card>
-            </FormProvider>
-        </div>
+            <FieldGroup className="gap-4 my-6">
+                <RHFTextField name="email" type="text" fieldLabel="Email" placeholder="Type your email" />
+
+                <RHFTextField name="password" type="password" fieldLabel="Password" placeholder="Type your password" />
+            </FieldGroup>
+
+            <DialogFooter>
+                <Field orientation="vertical">
+                    <Field orientation={'horizontal'}>
+                        <DialogClose asChild>
+                            <Button type="reset" variant="outline" className="flex-auto">
+                                Reset
+                            </Button>
+                        </DialogClose>
+                        <Button type="submit" className="flex-auto">Submit</Button>
+                    </Field>
+                </Field>
+            </DialogFooter>
+        </FormProvider >
     )
 }
 

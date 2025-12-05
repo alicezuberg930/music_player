@@ -4,22 +4,22 @@ import { ChartPie, Newspaper, Telescope, User } from "lucide-react"
 export const sidebarMenu = [
     {
         path: paths.MY_MUSIC,
-        text: 'Cá nhân',
+        text: 'personal',
         icon: <User />
     },
     {
         path: paths.HOME,
-        text: 'Khám phá',
+        text: 'discover',
         icon: <Telescope />
     },
     {
         path: paths.ZING_CHART,
-        text: '#zingchart',
+        text: 'tien_chart',
         icon: <ChartPie />
     },
     {
         path: paths.FOLLOW,
-        text: 'Theo dõi',
+        text: 'following',
         icon: <Newspaper />
     }
 ]

@@ -48,7 +48,9 @@ export function RHFSingleDatePicker({
                         <PopoverContent className='min-w-fit' align='start'>
                             <DayPicker
                                 {...other}
-                                navLayout='around'
+                                captionLayout='dropdown'
+                                startMonth={new Date(1900, 0)}
+                                endMonth={new Date(new Date().getFullYear(), 0)}
                                 mode='single'
                                 selected={field.value ? parse(field.value, 'yyyy-MM-dd', new Date()) : undefined}
                                 onSelect={(day) => {
@@ -77,15 +79,18 @@ export function RHFRangeDatePicker({
     const { control } = useFormContext()
     const [open, setOpen] = useState(false)
 
+    const displayValueStr = (start?: string, end?: string) => {
+        if (start && !end) return `${format(start, 'yyyy-MM-dd')} - ...`
+        return start && end ? `${format(start, 'yyyy-MM-dd')} - ${format(end, 'yyyy-MM-dd')} ` : ''
+    }
+
     return (
         <Controller
             name={name}
             control={control}
             render={({ field, fieldState: { error, invalid } }) => {
                 const [start, end] = field.value || [undefined, undefined]
-                const displayValue = start && end
-                    ? `${format(start, 'yyyy-MM-dd')} - ${format(end, 'yyyy-MM-dd')}` : start
-                        ? `${format(start, 'yyyy-MM-dd')} - ...` : ''
+                const displayValue = displayValueStr(start, end)
                 const selected: DateRange = {
                     from: start ? parse(start, 'yyyy-MM-dd', new Date()) : undefined,
                     to: end ? parse(end, 'yyyy-MM-dd', new Date()) : undefined
@@ -97,11 +102,11 @@ export function RHFRangeDatePicker({
                             <PopoverTrigger asChild>
                                 <Button
                                     variant='outline'
-                                    className={`justify-start text-left font-normal w-full ${invalid ? 'border-red-500' : ''}`}
+                                    className={`justify - start text - left font - normal w - full ${invalid ? 'border-red-500' : ''} `}
                                     onClick={() => setOpen(true)}
                                 >
                                     <CalendarIcon className='mr-2 h-4 w-4 opacity-50' />
-                                    {displayValue ? (
+                                    {displayValue.length ? (
                                         displayValue
                                     ) : (
                                         <span className='text-muted-foreground'>{placeholder}</span>

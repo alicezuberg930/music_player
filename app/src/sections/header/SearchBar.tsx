@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { Search, X } from 'lucide-react'
+import { useLocales } from '@/lib/locales'
 
 const SearchBar = () => {
+    const { translate } = useLocales()
     const navigate = useNavigate()
     const [keyword, setKeyword] = useState<string>('')
 
@@ -24,7 +26,7 @@ const SearchBar = () => {
                     </div>
                     <input
                         type='text' className='outline-none px-4 w-full bg-transparent'
-                        placeholder='Tìm kiếm bài hát, nghệ sĩ, lời bài hát'
+                        placeholder={translate('search_placeholder')}
                         onKeyUp={(e) => handleSubmit(e)}
                         onChange={(e) => { setKeyword(e.target.value) }} value={keyword}
                     />

@@ -222,12 +222,12 @@ const Player: React.FC = () => {
             }
         }
         // keyboard event for space bar to play/pause
-        window.addEventListener('keydown', handleSpaceKeyPress)
+        globalThis.addEventListener('keydown', handleSpaceKeyPress)
         // keyboard event for left/right arrow to previous/next song
-        window.addEventListener('keydown', handleArrowKeyPress)
+        globalThis.addEventListener('keydown', handleArrowKeyPress)
         return () => {
-            window.removeEventListener('keydown', handleSpaceKeyPress)
-            window.removeEventListener('keydown', handleArrowKeyPress)
+            globalThis.removeEventListener('keydown', handleSpaceKeyPress)
+            globalThis.removeEventListener('keydown', handleArrowKeyPress)
         }
     }, [isPlaying, handleToggleButton, handlePrevious, handleNext])
 

@@ -10,12 +10,15 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useAuthContext } from "@/lib/auth/useAuthContext"
+import { useLocales } from "@/lib/locales"
 import { paths } from "@/lib/route/paths"
-import { Settings, Upload, User } from "lucide-react"
+import { Settings, Spotlight, Upload, User } from "lucide-react"
 import { Link } from "react-router-dom"
 
 const UserDropdown: React.FC = () => {
     const { user, signout } = useAuthContext()
+    const { translate } = useLocales()
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -28,24 +31,30 @@ const UserDropdown: React.FC = () => {
                 </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56 z-100" align='end'>
-                <DropdownMenuLabel>Tài khoản của tôi</DropdownMenuLabel>
+                <DropdownMenuLabel>{translate('my_account')}</DropdownMenuLabel>
                 <DropdownMenuGroup>
                     <DropdownMenuItem>
-                        <Link to={paths.UPLOAD_MUSIC}>Hồ sơ</Link>
+                        <Link to={paths.UPLOAD_MUSIC}>{translate('profile')}</Link>
                         <DropdownMenuShortcut>
                             <User />
                         </DropdownMenuShortcut>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                        <Link to={paths.UPLOAD_MUSIC}>Cài đặt</Link>
+                        <Link to={paths.UPLOAD_MUSIC}>{translate('settings')}</Link>
                         <DropdownMenuShortcut>
                             <Settings />
                         </DropdownMenuShortcut>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                        <Link to={paths.UPLOAD_MUSIC}>Tải nhạc</Link>
+                        <Link to={paths.UPLOAD_MUSIC}>{translate('upload_music')}</Link>
                         <DropdownMenuShortcut>
                             <Upload />
+                        </DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                        <Link to={paths.ADD_ARTIST}>{translate('add_artist')}</Link>
+                        <DropdownMenuShortcut>
+                            <Spotlight />
                         </DropdownMenuShortcut>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
@@ -74,7 +83,7 @@ const UserDropdown: React.FC = () => {
                 {/* <DropdownMenuItem disabled>API</DropdownMenuItem> */}
                 {/* <DropdownMenuSeparator /> */}
                 <DropdownMenuItem onClick={signout}>
-                    Đăng xuất
+                    {translate('logout')}
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

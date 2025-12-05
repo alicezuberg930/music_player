@@ -7,6 +7,7 @@ import { useSnackbar } from '@/components/snackbar'
 // http requests
 import { fetchProfile, signIn, signOut, signUp } from '../httpClient'
 import { paths } from '../route/paths'
+import { useLocales } from '../locales'
 
 enum Types {
   INITIAL = 'INITIAL',
@@ -71,16 +72,17 @@ const reducer = (state: AuthStateType, action: ActionsType) => {
 
 export const AuthContext = createContext<JWTContextType | null>(null)
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export function AuthProvider({ children }: Readonly<{ children: React.ReactNode }>) {
   const [state, dispatch] = useReducer(reducer, initialState)
   const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
+  const { translate } = useLocales()
 
   const initialize = useCallback(async () => {
     try {
       const response = await fetchProfile()
       console.log(response)
-      if (response?.statusCode && response?.statusCode === 200) {
+      if (response.statusCode === 200) {
         dispatch({
           type: Types.INITIAL,
           payload: {
@@ -101,7 +103,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signin = useCallback(async (email: string, password: string) => {
     try {
       const response = await signIn(email, password)
-      if (response?.statusCode && response?.statusCode === 200) {
+      if (response.statusCode === 200) {
         navigate(paths.HOME, { replace: true })
         enqueueSnackbar(response.message, { variant: 'success' })
         dispatch({
@@ -112,10 +114,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         })
       }
       else {
-        enqueueSnackbar(response?.message ?? 'Lỗi không xác định', { variant: 'error' })
+        enqueueSnackbar(translate(response.message), { variant: 'error' })
       }
     } catch (error) {
-      enqueueSnackbar(error instanceof Error ? error.message : 'Internal Server Error', { variant: 'error' })
+      enqueueSnackbar(error instanceof Error ? error.message : translate('unknown_error'), { variant: 'error' })
     }
   }, [initialize])
 
@@ -132,10 +134,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         enqueueSnackbar(response.message)
         navigate('/', { replace: true })
       } else {
-        enqueueSnackbar(response.message ?? "Lỗi không xác định", { variant: 'error' })
+        enqueueSnackbar(translate(response.message), { variant: 'error' })
       }
     } catch (error) {
-      enqueueSnackbar(error instanceof Error ? error.message : 'Internal Server Error', { variant: 'error' })
+      enqueueSnackbar(error instanceof Error ? error.message : translate('unknown_error'), { variant: 'error' })
     }
   }, [initialize])
 
@@ -145,12 +147,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       dispatch({ type: Types.LOGOUT })
       navigate('/', { replace: true })
     } catch (error) {
-      enqueueSnackbar(error instanceof Error ? error.message : 'Internal Server Error', { variant: 'error' })
+      enqueueSnackbar(error instanceof Error ? error.message : translate('unknown_error'), { variant: 'error' })
     }
   }, [initialize])
 
   const signInWithProvider = useCallback((provider: string) => {
-    window.location.href = `/api/auth/${provider}`
+    globalThis.location.href = `/api/auth/${provider}`
   }, [])
 
   const memoizedValue = useMemo(() => ({

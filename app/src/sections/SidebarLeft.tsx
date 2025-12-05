@@ -5,9 +5,12 @@ import { Plus } from "lucide-react"
 import { cn } from "@/lib/utils"
 import CreateNewPlaylistDialog from "./me/CreateNewPlaylist"
 import { useAuthContext } from "@/lib/auth/useAuthContext"
+import { useLocales } from "@/lib/locales"
 
 const SidebarLeft: React.FC = () => {
     const { isAuthenticated } = useAuthContext()
+    const { translate } = useLocales()
+
     return (
         <div className="sm:block hidden lg:w-48 w-20 flex-none border bg-main-200 transition-all duration-1500 ease-in-out">
             <div className="h-full flex flex-col relative">
@@ -27,7 +30,7 @@ const SidebarLeft: React.FC = () => {
                             )}
                         >
                             {value.icon}
-                            <Typography className="hidden lg:inline m-0">{value.text}</Typography>
+                            <Typography className="hidden lg:inline m-0">{translate(value.text)}</Typography>
                         </NavLink>
                     ))}
                 </div>
@@ -36,7 +39,7 @@ const SidebarLeft: React.FC = () => {
                         triggerElement={
                             <div className="text-gray-500 text-sm py-2 px-6 font-bold flex gap-3 items-center justify-start absolute bottom-0 border-t border-gray-400 w-full">
                                 <Plus />
-                                <Typography className="hidden lg:inline m-0">Tạo playlist</Typography>
+                                <Typography className="hidden lg:inline m-0">{translate('create_playlist')}</Typography>
                             </div>
                         }
                     />

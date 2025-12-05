@@ -13,8 +13,7 @@ export default function SingleFilePreview({ file }: Props) {
     imgUrl = file
   } else {
     const format = fileFormat(file.path)
-    if (format !== 'image') imgUrl = fileThumb(format)
-    else imgUrl = file.preview!
+    imgUrl = format === 'image' ? file.preview! : fileThumb(format)
   }
 
   return (

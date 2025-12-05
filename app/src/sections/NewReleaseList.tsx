@@ -3,6 +3,7 @@ import SongItem from "./SongItem"
 import type { Song } from "@/@types/song"
 import { Button } from "@/components/ui/button"
 import { Typography } from "@/components/ui/typography"
+import { useLocales } from "@/lib/locales"
 
 type Props = {
     songs: Song[]
@@ -10,6 +11,7 @@ type Props = {
 
 const NewReleaseList: React.FC<Props> = ({ songs }) => {
     const [type, setType] = useState(-1)
+    const { translate } = useLocales()
 
     const memoizedSongs = useMemo(() => {
         if (type === -1) return songs //all
@@ -21,18 +23,18 @@ const NewReleaseList: React.FC<Props> = ({ songs }) => {
     return (
         <div className="mt-12">
             <div className="flex items-center justify-between mb-3">
-                <Typography variant={'h5'}>Các bài hát mới</Typography>
-                <span className="text-xs uppercase">Tất cả</span>
+                <Typography variant={'h5'}>{translate('new_songs')}</Typography>
+                <span className="text-xs uppercase">{translate('all')}</span>
             </div>
             <div className="flex items-center gap-4">
                 <Button onClick={() => setType(-1)} variant={type === -1 ? 'default' : 'secondary'} className='text-xs'>
-                    Tất cả
+                    {translate('all')}
                 </Button>
                 <Button onClick={() => setType(0)} variant={type === 0 ? 'default' : 'secondary'} className='text-xs'>
-                    Quốc tế
+                    {translate('international')}
                 </Button>
                 <Button onClick={() => setType(1)} variant={type === 1 ? 'default' : 'secondary'} className='text-xs'>
-                    Việt nam
+                    {translate('vietnam')}
                 </Button>
             </div>
             <div className="mt-5">

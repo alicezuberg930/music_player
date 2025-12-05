@@ -5,6 +5,7 @@ import { Typography } from "@/components/ui/typography"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import { useAuthContext } from "@/lib/auth/useAuthContext"
 import UserDropdown from "./UserDropdown"
+import LanguageDropdown from "./LanguageDropdown"
 
 const Header = () => {
     const navigate = useNavigate()
@@ -19,6 +20,7 @@ const Header = () => {
                 </div>
                 <SearchBar />
             </div>
+            <LanguageDropdown />
             {isAuthenticated ? (
                 <UserDropdown />
             ) : (

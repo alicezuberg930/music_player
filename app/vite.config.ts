@@ -1,7 +1,8 @@
-import path from "path"
+import path from "node:path"
 import tailwindcss from "@tailwindcss/vite"
 import react from "@vitejs/plugin-react"
 import { defineConfig } from "vite"
+import viteCompression from 'vite-plugin-compression'
 import ViteSitemap from 'vite-plugin-sitemap';
 import { createHtmlPlugin } from 'vite-plugin-html';
 
@@ -9,6 +10,11 @@ import { createHtmlPlugin } from 'vite-plugin-html';
 export default defineConfig({
   plugins: [
     react(), tailwindcss(),
+    viteCompression({
+      algorithm: 'gzip',
+      threshold: 10240, // Only compress files larger than 10KB
+      deleteOriginFile: false,
+    }),
     ViteSitemap({
       // hostname: 'https://aismartlite.cloud',
       generateRobotsTxt: true,
@@ -43,8 +49,21 @@ export default defineConfig({
       output: {
         minifyInternalExports: true,
         manualChunks: {
-          react: ['react', 'react-dom', 'react-router-dom'],
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'radix-ui-vendor': ['@radix-ui/react-slot', '@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
+          'redux-vendor': ['@reduxjs/toolkit', 'react-redux', 'redux-persist'],
         },
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]',
+      },
+    },
+    chunkSizeWarningLimit: 500, // Warn if chunk exceeds 500KB
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: false, // Remove console.log in production
+        drop_debugger: true,
       },
     },
   },

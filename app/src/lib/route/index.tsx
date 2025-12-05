@@ -18,6 +18,7 @@ import {
 } from '@/pages'
 import { HomePage, PublicPage } from './element'
 import VerifyPage from '@/pages/VerifyPage'
+import AddArtistPage from '@/pages/AddArtistPage'
 
 export default function Router() {
     return useRoutes([
@@ -52,6 +53,7 @@ export default function Router() {
                         { path: "upload-music", element: <UploadMusicPage /> },
                         { path: "profile", element: <></> },
                         { path: "settings", element: <></> },
+                        { path: "add-artist", element: <AddArtistPage /> },
                     ],
                 },
             ],

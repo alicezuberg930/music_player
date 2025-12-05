@@ -1,5 +1,4 @@
-import { varchar } from "drizzle-orm/mysql-core"
-import { mysqlTable } from "drizzle-orm/mysql-core"
+import { varchar, mysqlTable } from "drizzle-orm/mysql-core"
 import { createdAt, createId, updatedAt } from "../utils"
 import { relations } from "drizzle-orm"
 import { songGenres } from "./song.schema"

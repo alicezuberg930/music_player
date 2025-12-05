@@ -53,7 +53,7 @@ export default function UploadAvatar({
         </div>
       </div>
 
-      {helperText && helperText}
+      {helperText}
 
       <RejectionFiles fileRejections={fileRejections} />
     </>

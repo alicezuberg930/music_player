@@ -10,7 +10,7 @@ type Props = {
   fileRejections: FileRejection[]
 }
 
-export default function RejectionFiles({ fileRejections }: Props) {
+export default function RejectionFiles({ fileRejections }: Readonly<Props>) {
   if (!fileRejections.length) return null
 
   return (

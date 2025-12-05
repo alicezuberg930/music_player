@@ -62,6 +62,16 @@ export const fetchArtist = async (artistId: string): Promise<Response<Artist>> =
     }
 }
 
+export const createArtist = async (formData: FormData): Promise<Response> => {
+    try {
+        const response = await axios.post<Response>(`/artists`, formData)
+        return response.data
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
 export const createPlaylist = async (formData: FormData): Promise<Response> => {
     try {
         const response = await axios.post<Response>(`/playlists`, formData)

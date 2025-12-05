@@ -1,4 +1,5 @@
 import { useDropzone } from 'react-dropzone'
+import { useLocales } from '@/lib/locales'
 // assets
 import { UploadIllustration } from '@/lib/illustrations'
 //
@@ -28,12 +29,8 @@ export default function Upload({
   onRemove,
   onRemoveAll,
   ...other
-}: UploadProps) {
-  const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
-    multiple,
-    disabled,
-    ...other,
-  })
+}: Readonly<UploadProps>) {
+  const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({ multiple, disabled, ...other })
 
   const hasFile = !!file && !multiple
 
@@ -60,7 +57,7 @@ export default function Upload({
         {hasFile && <SingleFilePreview file={file} />}
       </div>
 
-      {helperText && helperText}
+      {helperText}
 
       <RejectionFiles fileRejections={fileRejections} />
 
@@ -99,7 +96,9 @@ export default function Upload({
   )
 }
 
-function Placeholder({ className, ...other }: React.HTMLAttributes<HTMLDivElement>) {
+function Placeholder({ className, ...other }: Readonly<React.HTMLAttributes<HTMLDivElement>>) {
+  const { translate } = useLocales()
+
   return (
     <div
       className={cn(
@@ -111,17 +110,17 @@ function Placeholder({ className, ...other }: React.HTMLAttributes<HTMLDivElemen
       <UploadIllustration style={{ width: 220 }} />
       <div>
         <Typography variant='h5'>
-          Drop or Select file
+          {translate('drop_or_select_file')}
         </Typography>
         <Typography variant='p' className='text-sm text-gray-500'>
-          Drop files here or click
+          {translate('drop_files_here_or_click')}
           <Typography
             variant='span'
             className='mx-1 underline text-main-500 inline-block lg:text-sm'
           >
-            browse
+            {translate('browse')}
           </Typography>
-          thorough your machine
+          {translate('thorough_your_machine')}
         </Typography>
       </div>
     </div>

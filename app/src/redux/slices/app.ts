@@ -3,13 +3,11 @@ import { createSlice } from '@reduxjs/toolkit'
 type AppState = {
     showSideBarRight: boolean
     scrollTop: boolean
-    language: string
 }
 
 const initialState: AppState = {
     showSideBarRight: false,
     scrollTop: false,
-    language: 'en',
 }
 
 const slice = createSlice({
@@ -21,9 +19,6 @@ const slice = createSlice({
         },
         setScrollTop(state, action) {
             state.scrollTop = action.payload as boolean
-        },
-        setLanguage(state, action) {
-            state.language = action.payload as string
         }
     }
 })
@@ -35,5 +30,4 @@ export default slice.reducer
 export const {
     setShowSidebarRight,
     setScrollTop,
-    setLanguage,
 } = slice.actions

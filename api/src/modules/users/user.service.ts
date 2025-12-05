@@ -39,9 +39,8 @@ export class UserService {
                 httpOnly: true,
                 secure: env.NODE_ENV === "production", // Required for HTTPS
                 sameSite: env.NODE_ENV === "production" ? 'lax' : 'strict', // Required for cross-domain cookies
-                // domain: env.NODE_ENV === "production" ? '.aismartlite.cloud' : undefined, // Share cookie across subdomains
+                domain: env.NODE_ENV === "production" ? '.tien-music-player.site' : undefined, // Share cookie across subdomains
                 maxAge: 1 * 24 * 60 * 60 * 1000 // 1 day
-                // maxAge: 10000
             });
             return response.json({
                 message: 'User logged in successfully',
@@ -62,7 +61,15 @@ export class UserService {
             const verifyToken = await new Password().hash(createId())
             const verifyTokenExpires = new Date(Date.now() + 1 * 60 * 60 * 1000) // 1 hour from now
             const user = await db.insert(users).values({ fullname, email, password: hashedPassword, verifyToken, verifyTokenExpires }).$returningId()
-            sendVerifyEmail(email, fullname, verifyToken, String(user[0].id)).catch(err => console.error('Failed to send welcome email:', err))
+            sendVerifyEmail(email, fullname, verifyToken, user[0].id).catch(err => console.error('Failed to send welcome email:', err))
+            const token = jwt.sign({ id: user[0].id }, env.JWT_SECRET!, { expiresIn: '1d', algorithm: 'HS256' })
+            response.cookie('accessToken', token, {
+                httpOnly: true,
+                secure: env.NODE_ENV === "production", // Required for HTTPS
+                sameSite: env.NODE_ENV === "production" ? 'lax' : 'strict', // Required for cross-domain cookies
+                domain: env.NODE_ENV === "production" ? '.tien-music-player.site' : undefined, // Share cookie across subdomains
+                maxAge: 1 * 24 * 60 * 60 * 1000 // 1 day
+            });
             return response.status(201).json({ message: 'User registered successfully' })
         } catch (error) {
             if (error instanceof HttpException) throw error
@@ -108,7 +115,7 @@ export class UserService {
                 httpOnly: true,
                 secure: env.NODE_ENV === "production", // Required for HTTPS
                 sameSite: env.NODE_ENV === "production" ? 'lax' : 'strict', // Required for cross-domain cookies
-                // domain: env.NODE_ENV === "production" ? '.aismartlite.cloud' : undefined, // Share cookie across subdomains
+                domain: env.NODE_ENV === "production" ? '.tien-music-player.site' : undefined, // Share cookie across subdomains
             })
             return response.json({ message: 'User signed out successfully' })
         } catch (error) {

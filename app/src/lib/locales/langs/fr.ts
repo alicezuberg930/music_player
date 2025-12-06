@@ -1,4 +1,6 @@
 const fr = {
+  'cancel': 'Annuler',
+  'add_to_playlist': 'Ajouter à la liste de lecture',
   'sign_in': 'Se connecter',
   'sign_up': 'S\'inscrire',
   'sign_up_description': 'Inscrivez-vous pour télécharger des chansons et créer vos propres listes de lecture.',
@@ -27,7 +29,17 @@ const fr = {
   'recently_played': 'Récemment joué',
   'next': 'Suivant',
   'from_playlist': 'De la liste de lecture',
+  // playlist creation
+  'privacy_setting_required': 'Le paramètre de confidentialité est requis',
+  'playlist_title_required': 'Le titre de la liste de lecture est requis',
+  'title': 'Titre',
+  'enter_playlist_title': 'Entrez le titre de la liste de lecture',
+  'enter_playlist_description': 'Entrez une description pour votre liste de lecture.',
+  'description': 'Description',
+  'private': 'Privé',
+  'private_mode': 'Définir en mode privé',
   'create_playlist': 'Créer une liste de lecture',
+  'enter_playlist_info': 'Entrez les informations de votre liste de lecture ci-dessous.',
   // header & navigation
   'discover': 'Découvrir',
   'personal': 'Personnel',

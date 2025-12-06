@@ -3,83 +3,87 @@ import {
     DropdownMenuContent,
     DropdownMenuGroup,
     DropdownMenuItem,
-    DropdownMenuRadioGroup,
-    DropdownMenuRadioItem,
+    DropdownMenuPortal,
     DropdownMenuSeparator,
     DropdownMenuSub,
     DropdownMenuSubContent,
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { ArchiveIcon, CalendarPlusIcon, ClockIcon, ListFilterPlusIcon, MailCheckIcon, MoreHorizontalIcon, TagIcon, Trash2Icon } from "lucide-react"
+import { useLocales } from "@/lib/locales"
+import { Heart, ListFilterPlusIcon, ListMusic, MoreHorizontalIcon, Plus } from "lucide-react"
+import CreateNewPlaylistDialog from "./me/CreateNewPlaylist"
+import { useEffect, useState } from "react"
+import { fetchUserPlaylistList } from "@/lib/httpClient"
+import { type Playlist } from "@/@types/playlist"
+import { Dialog, DialogTrigger } from "@/components/ui/dialog"
 
 type Props = {
-    addToPlaylist: (e: React.MouseEvent) => void
+    addToPlaylist: (playlistId: string) => void
 }
 
 const SongOptionDropdown: React.FC<Props> = ({ addToPlaylist }) => {
+    const { translate } = useLocales()
+    const [playlists, setPlaylists] = useState<Playlist[]>([])
+    const [open, setOpen] = useState(false)
+
+    useEffect(() => {
+        const fetchPlaylist = async () => {
+            const response = await fetchUserPlaylistList()
+            setPlaylists(response.data ?? [])
+        }
+        fetchPlaylist()
+    }, [])
+
     return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <MoreHorizontalIcon className="text-gray-500" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-52">
-                <DropdownMenuGroup>
-                    <DropdownMenuItem>
-                        <MailCheckIcon />
-                        Mark as Read
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        <ArchiveIcon />
-                        Archive
-                    </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                    <DropdownMenuItem>
-                        <ClockIcon />
-                        Snooze
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        <CalendarPlusIcon />
-                        Add to Calendar
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={addToPlaylist}>
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <MoreHorizontalIcon className="text-gray-500" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-52">
+                    <DropdownMenuGroup>
+                        <DropdownMenuItem>
+                            <Heart />
+                            Yêu Thích
+                        </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                        {/* <DropdownMenuItem onClick={addToPlaylist}>
                         <ListFilterPlusIcon />
                         Thêm vào danh sách
-                    </DropdownMenuItem>
-                    <DropdownMenuSub>
-                        <DropdownMenuSubTrigger>
-                            <TagIcon />
-                            Label As...
-                        </DropdownMenuSubTrigger>
-                        <DropdownMenuSubContent>
-                            <DropdownMenuRadioGroup
-                                value={"label"}
-                                onValueChange={() => { }}
-                            >
-                                <DropdownMenuRadioItem value="personal">
-                                    Personal
-                                </DropdownMenuRadioItem>
-                                <DropdownMenuRadioItem value="work">
-                                    Work
-                                </DropdownMenuRadioItem>
-                                <DropdownMenuRadioItem value="other">
-                                    Other
-                                </DropdownMenuRadioItem>
-                            </DropdownMenuRadioGroup>
-                        </DropdownMenuSubContent>
-                    </DropdownMenuSub>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                    <DropdownMenuItem variant="destructive">
-                        <Trash2Icon />
-                        Trash
-                    </DropdownMenuItem>
-                </DropdownMenuGroup>
-            </DropdownMenuContent>
-        </DropdownMenu>
+                    </DropdownMenuItem> */}
+                        <DropdownMenuSub>
+                            <DropdownMenuSubTrigger>
+                                <ListFilterPlusIcon />
+                                {translate('add_to_playlist')}
+                            </DropdownMenuSubTrigger>
+                            <DropdownMenuPortal>
+                                <DropdownMenuSubContent>
+                                    <DialogTrigger asChild>
+                                        <DropdownMenuItem >
+                                            <Plus />
+                                            {translate('create_playlist')}
+                                        </DropdownMenuItem>
+                                    </DialogTrigger>
+                                    {playlists.map(playlist => (
+                                        <DropdownMenuItem key={playlist.id} onClick={() => addToPlaylist(playlist.id)} >
+                                            <ListMusic />
+                                            {playlist.title}
+                                        </DropdownMenuItem>
+                                    ))}
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem>More...</DropdownMenuItem>
+                                </DropdownMenuSubContent>
+                            </DropdownMenuPortal>
+                        </DropdownMenuSub>
+                    </DropdownMenuGroup>
+                </DropdownMenuContent>
+            </DropdownMenu>
+            {/* create playlist dialog */}
+            <CreateNewPlaylistDialog onOpenChange={setOpen} />
+        </Dialog>
     )
 }
 

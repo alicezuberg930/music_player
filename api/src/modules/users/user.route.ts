@@ -18,6 +18,8 @@ const uploadOptions: Options = {
 const upload = multer(multerOptions(uploadOptions))
 const fileValidator = fileMimeAndSizeOptions(uploadOptions)
 
+userRouter.get("/users", (request: Request, response: Response) => userController.getUsers(request, response))
+
 // user profile public access (wont see playlist if it's private and uploaded songs)
 userRouter.get("/users/:id", (request: Request<{ id: string }>, response: Response) => userController.findUser(request, response))
 
@@ -64,7 +66,7 @@ userRouter.get("/users/artist/list",
 
 userRouter.get("/users/playlist/list",
     JWTMiddleware,
-    (request: Request, response: Response) => userController.userSongs(request, response)
+    (request: Request, response: Response) => userController.userPlaylists(request, response)
 )
 
 export { userRouter }

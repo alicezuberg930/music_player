@@ -189,5 +189,18 @@ class UserService {
             throw new exceptions_1.BadRequestException(error instanceof Error ? error.message : undefined);
         }
     }
+    async userPlaylists(request, response) {
+        try {
+            if (!request.userId)
+                throw new exceptions_1.BadRequestException('User ID is missing in request');
+            const data = await db_1.db.query.playlists.findMany({ where: (0, db_1.eq)(schemas_1.playlists.userId, request.userId) });
+            return response.json({ message: 'User playlists fetched successfully', data });
+        }
+        catch (error) {
+            if (error instanceof exceptions_1.HttpException)
+                throw error;
+            throw new exceptions_1.BadRequestException(error instanceof Error ? error.message : undefined);
+        }
+    }
 }
 exports.UserService = UserService;

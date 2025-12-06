@@ -25,9 +25,9 @@ const PlaylistPage: React.FC = () => {
     const location = useLocation()
 
     useMetaTags({
-        title: playlist?.title || 'Playlist - Yukikaze Music Player',
-        description: playlist?.description || 'Nghe playlist của bạn trên Yukikaze Music Player.',
-        image: playlist?.thumbnail || `${getBaseUrl()}/web-app-manifest-512x512.png`,
+        title: playlist?.title ?? 'Playlist - Yukikaze Music Player',
+        description: playlist?.description ?? 'Nghe danh sách phát của bạn trên Yukikaze Music Player.',
+        image: playlist?.thumbnail ?? `${getBaseUrl()}/web-app-manifest-512x512.png`,
         url: `${getBaseUrl()}/playlist/${id}`
     })
 

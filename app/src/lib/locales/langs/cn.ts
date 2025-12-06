@@ -1,4 +1,6 @@
 const cn = {
+  'cancel': '取消',
+  'add_to_playlist': '添加到播放列表',
   'sign_in': '登录',
   'sign_up': '注册',
   'sign_up_description': '注册账户以上传歌曲并创建您自己的播放列表。',
@@ -27,7 +29,17 @@ const cn = {
   'recently_played': '最近播放',
   'next': '下一首',
   'from_playlist': '来自播放列表',
+  // playlist creation
+  'privacy_setting_required': '隐私设置是必需的',
+  'playlist_title_required': '播放列表标题是必需的',
+  'title': '标题',
+  'enter_playlist_title': '输入播放列表标题',
+  'enter_playlist_description': '为您的播放列表输入描述。',
+  'description': '描述',
+  'private': '私人',
+  'private_mode': '设置为私人模式',
   'create_playlist': '创建播放列表',
+  'enter_playlist_info': '在下面输入您的播放列表信息。',
   // header & navigation
   'discover': '发现',
   'personal': '个人',

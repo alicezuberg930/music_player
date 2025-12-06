@@ -1,4 +1,6 @@
 const en = {
+    'cancel': 'Cancel',
+    'add_to_playlist': 'Add to playlist',
     'sign_in': 'Sign In',
     'sign_up': 'Sign Up',
     'sign_up_description': ' Sign up to upload songs and create your own playlists.',
@@ -27,7 +29,17 @@ const en = {
     'recently_played': 'Recently played',
     'next': 'Next',
     'from_playlist': 'From playlist',
+    // playlist creation
+    'privacy_setting_required': 'Privacy setting is required',
+    'playlist_title_required': 'Playlist title is required',
+    'title': 'Title',
+    'enter_playlist_title': 'Enter playlist title',
+    'enter_playlist_description': 'Enter a description for your playlist.',
+    'description': 'Description',
+    'private': 'Private',
+    'private_mode': 'Set to private mode',
     'create_playlist': 'Create playlist',
+    'enter_playlist_info': 'Enter your playlist information below.',
     // header & navigation
     'discover': 'Discover',
     'personal': 'Personal',

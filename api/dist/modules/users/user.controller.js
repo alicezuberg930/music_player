@@ -32,5 +32,8 @@ class UserController {
     async userSongs(request, response) {
         return await this.userService.userSongs(request, response);
     }
+    async userPlaylists(request, response) {
+        return await this.userService.userPlaylists(request, response);
+    }
 }
 exports.default = new UserController();

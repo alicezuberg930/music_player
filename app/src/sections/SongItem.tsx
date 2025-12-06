@@ -28,11 +28,13 @@ const SongItem: React.FC<Props> = ({ song, order, percent, imgSize, style, showT
         if (imgSize == 'lg') return 'w-14 h-14'
         if (imgSize == 'md') return 'w-12 h-12'
         if (imgSize == 'sm') return 'w-10 h-10'
+        return 'w-10 h-10'
     }
     const textColor = () => {
         if (order === 1) return 'text-shadow-1'
         if (order === 2) return 'text-shadow-2'
         if (order === 3) return 'text-shadow-3'
+        return 'text-shadow-3'
     }
     const { enqueueSnackbar } = useSnackbar()
 
@@ -41,10 +43,9 @@ const SongItem: React.FC<Props> = ({ song, order, percent, imgSize, style, showT
         dispatch(setCurrentSong(song))
     }
 
-    const addToPlaylist = async (songId: string, e?: React.MouseEvent) => {
-        e?.stopPropagation()
-        const response = await addSongsToPlaylist("m5ybbvy8yl89jvevp3on78sl", [songId])
-        if (response.statusCode && response.statusCode === 200) {
+    const addToPlaylist = async (playlistId: string) => {
+        const response = await addSongsToPlaylist(playlistId, [song.id])
+        if (response.statusCode === 200) {
             enqueueSnackbar('Đã thêm bài hát vào playlist', { variant: 'success' })
         } else {
             enqueueSnackbar(response.message, { variant: 'error' })
@@ -77,7 +78,7 @@ const SongItem: React.FC<Props> = ({ song, order, percent, imgSize, style, showT
                 </div>
                 {percent && <span className='pr-1 font-bold'>{percent}%</span>}
                 <HeartIcon className={`text-gray-500 ${song.liked && 'fill-main-500'}`} onClick={addToFavorite} />
-                <SongOptionDropdown addToPlaylist={(e: React.MouseEvent) => { addToPlaylist(song.id, e) }} />
+                <SongOptionDropdown addToPlaylist={(playlistId) => addToPlaylist(playlistId)} />
             </div>
         </div>
     )

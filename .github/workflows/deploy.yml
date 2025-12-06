@@ -56,7 +56,8 @@ jobs:
                       git pull --ff-only origin main
 
                       # Install deps, build, and run with PM2
-                      npm ci --legacy-peer-deps
+                      npm ci --only=production --legacy-peer-deps --no-audit --no-fund
+                      npm cache clean --force
                       # npm run build
 
                       # Start or reload the service
@@ -70,7 +71,8 @@ jobs:
                       cd "$FRONTEND_PATH"
                       
                       # Install deps, build, and run with PM2
-                      npm ci --legacy-peer-deps
+                      npm ci --only=production --legacy-peer-deps --no-audit --no-fund
+                      npm cache clean --force
                       # npm run build
 
                       # Start or reload the service
@@ -79,8 +81,8 @@ jobs:
                       else
                         # I'm running the command node server.js in app folder
                         # For production, consider: "start": "node dist/index.js"
-                        # PM2 will run "node server.js"
-                        pm2 start "node server.js" --name "$FRONTEND_NAME"
+                        # PM2 will run "npm run serve"
+                        pm2 start "npm run serve" --name "$FRONTEND_NAME"
                       fi
 
                       pm2 save

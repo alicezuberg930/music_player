@@ -46,6 +46,10 @@ class UserController {
     public async userSongs(request: Request, response: Response) {
         return await this.userService.userSongs(request, response)
     }
+
+    public async userPlaylists(request: Request, response: Response) {
+        return await this.userService.userPlaylists(request, response)
+    }
 }
 
 export default new UserController()

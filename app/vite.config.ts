@@ -59,11 +59,11 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
           assetFileNames: 'assets/[name]-[hash].[ext]',
         },
       },
-      chunkSizeWarningLimit: 500, // Warn if chunk exceeds 500KB
+      chunkSizeWarningLimit: 500,
       minify: 'terser',
       terserOptions: {
         compress: {
-          drop_console: false, // Remove console.log in production
+          drop_console: false,
           drop_debugger: true,
         },
       },

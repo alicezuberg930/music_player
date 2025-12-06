@@ -1,4 +1,6 @@
 const vi = {
+  'cancel': 'Hủy',
+  'add_to_playlist': 'Thêm vào danh sách',
   'sign_in': 'Đăng nhập',
   'sign_up': 'Đăng ký',
   'sign_up_description': 'Đăng ký tài khoản để tải lên bài hát và tạo danh sách phát của riêng bạn.',
@@ -27,7 +29,17 @@ const vi = {
   'recently_played': 'Nghe gần đây',
   'next': 'Tiếp theo',
   'from_playlist': 'Từ danh sách',
+  // playlist creation
+  'privacy_setting_required': 'Cài đặt quyền riêng tư là bắt buộc',
+  'playlist_title_required': 'Tiêu đề danh sách phát là bắt buộc',
+  'title': 'Tiêu đề',
+  'enter_playlist_title': 'Nhập tiêu đề danh sách phát',
+  'enter_playlist_description': 'Nhập mô tả cho danh sách phát của bạn.',
+  'description': 'Mô tả',
+  'private': 'Riêng tư',
+  'private_mode': 'Đặt chế độ riêng tư',
   'create_playlist': 'Tạo danh sách',
+  'enter_playlist_info': 'Nhập thông tin danh sách phát của bạn bên dưới.',
   // header & navigation
   'discover': 'Khám phá',
   'personal': 'Cá nhân',

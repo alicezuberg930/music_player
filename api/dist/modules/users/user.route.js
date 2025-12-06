@@ -21,6 +21,7 @@ const uploadOptions = {
 };
 const upload = (0, multer_1.default)((0, multer_options_1.multerOptions)(uploadOptions));
 const fileValidator = (0, middleware_1.fileMimeAndSizeOptions)(uploadOptions);
+userRouter.get("/users", (request, response) => user_controller_1.default.getUsers(request, response));
 // user profile public access (wont see playlist if it's private and uploaded songs)
 userRouter.get("/users/:id", (request, response) => user_controller_1.default.findUser(request, response));
 // user profile only accessible when login (can see all playlist including private and uploaded songs)
@@ -32,4 +33,4 @@ userRouter.put("/users/:id", upload.fields([{ name: "avatar", maxCount: 1 }]), f
 userRouter.get("/users/verify-email/:id", (request, response) => user_controller_1.default.verifyEmail(request, response));
 userRouter.get("/users/song/list", middleware_1.JWTMiddleware, (request, response) => user_controller_1.default.userSongs(request, response));
 userRouter.get("/users/artist/list", middleware_1.JWTMiddleware, (request, response) => user_controller_1.default.userSongs(request, response));
-userRouter.get("/users/playlist/list", middleware_1.JWTMiddleware, (request, response) => user_controller_1.default.userSongs(request, response));
+userRouter.get("/users/playlist/list", middleware_1.JWTMiddleware, (request, response) => user_controller_1.default.userPlaylists(request, response));

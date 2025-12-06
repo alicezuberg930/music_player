@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import jwt from "jsonwebtoken"
 import { and, db, eq } from "../../db"
-import { songs, users } from "../../db/schemas"
+import { playlists, songs, users } from "../../db/schemas"
 import { User } from "./user.model"
 import { BadRequestException, HttpException, NotFoundException } from "../../lib/exceptions"
 import { CreateUserDto } from "./dto/create-user.dto"
@@ -165,6 +165,17 @@ export class UserService {
             if (!request.userId) throw new BadRequestException('User ID is missing in request')
             const data = await db.query.songs.findMany({ where: eq(songs.userId, request.userId) })
             return response.json({ message: 'User songs fetched successfully', data })
+        } catch (error) {
+            if (error instanceof HttpException) throw error
+            throw new BadRequestException(error instanceof Error ? error.message : undefined)
+        }
+    }
+
+    public async userPlaylists(request: Request, response: Response) {
+        try {
+            if (!request.userId) throw new BadRequestException('User ID is missing in request')
+            const data = await db.query.playlists.findMany({ where: eq(playlists.userId, request.userId) })
+            return response.json({ message: 'User playlists fetched successfully', data })
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)

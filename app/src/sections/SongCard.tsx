@@ -51,7 +51,7 @@ const SongCard: React.FC<Props> = ({ song, playlistTitle, hideAlbum, order }) =>
             </div>
             {!hideAlbum && (
                 <div className="flex w-[45%] justify-start font-semibold whitespace-nowrap text-xs text-gray-500">
-                    <span className="text-ellipsis overflow-hidden">{"song?.album?.title"}</span>
+                    <span className="text-ellipsis overflow-hidden">{""}</span>
                 </div>
             )}
             <div className="flex w-[10%] justify-end text-xs font-semibold opacity-70">

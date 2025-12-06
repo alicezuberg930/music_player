@@ -14,7 +14,18 @@ type Props = {
 
 const SongCard: React.FC<Props> = ({ song, playlistTitle, hideAlbum, order }) => {
     const dispatch = useDispatch()
-    const orderCss = order === 1 ? 'text-shadow-1' : order === 2 ? 'text-shadow-2' : order === 3 ? 'text-shadow-3' : 'text-shadow-other'
+    const orderCss = () => {
+        switch (order) {
+            case 1:
+                return 'text-shadow-1'
+            case 2:
+                return 'text-shadow-2'
+            case 3:
+                return 'text-shadow-3'
+            default:
+                return 'text-shadow-other'
+        }
+    }
 
     const handleSongClick = () => {
         dispatch(setCurrentSong(song))

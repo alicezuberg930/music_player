@@ -28,13 +28,13 @@ const botUserAgents = [
 let routeMeta = {
     '/sign-in': {
         title: 'Đăng nhập',
-        description: 'Đăng nhập tài khoản để trải nghiệm thêm tính năng của MP3 Music Player.',
-        image: 'https://aismartlite.cloud/music-og.png',
+        description: 'Đăng nhập tài khoản để trải nghiệm thêm tính năng của Yukikaze Music Player.',
+        image: 'https://tien-music-player.site/web-app-manifest-512x512.png',
     },
     '/sign-up': {
         title: 'Đăng ký',
         description: 'Tạo tài khoản mới để upload nhạc và tạo playlist của riêng bạn.',
-        image: 'https://aismartlite.cloud/music-og.png',
+        image: 'https://tien-music-player.site/web-app-manifest-512x512.png',
     },
 }
 
@@ -48,14 +48,14 @@ app.get('/*splat', async (req, res) => {
         if (data && data.data) {
             routeMeta[req.path] = {
                 title: data.data.title,
-                description: data.data.description || 'Nghe playlist của bạn trên Tiến Music Player.',
-                image: data.data.thumbnail || 'https://aismartlite.cloud/music-og.png',
+                description: data.data.description || 'Nghe playlist của bạn trên Yukikaze Music Player.',
+                image: data.data.thumbnail || 'https://tien-music-player.site/web-app-manifest-512x512.png',
             }
         } else {
             routeMeta[req.path] = {
                 title: 'Playlist không tồn tại',
                 description: 'Playlist bạn đang tìm kiếm không tồn tại.',
-                image: 'https://aismartlite.cloud/music-og.png',
+                image: 'https://tien-music-player.site/web-app-manifest-512x512.png',
             }
         }
     }
@@ -68,14 +68,14 @@ app.get('/*splat', async (req, res) => {
         if (data && data.data) {
             routeMeta[req.path] = {
                 title: data.data.title,
-                description: data.data.description || `${data.data.title} - Tiến Music Player.`,
-                image: data.data.thumbnail || 'https://aismartlite.cloud/music-og.png',
+                description: data.data.description || `${data.data.title} - Yukikaze Music Player.`,
+                image: data.data.thumbnail || 'https://tien-music-player.site/web-app-manifest-512x512.png',
             }
         } else {
             routeMeta[req.path] = {
                 title: 'Nhạc sĩ không tồn tại',
                 description: 'Nhạc sĩ bạn đang tìm kiếm không tồn tại.',
-                image: 'https://aismartlite.cloud/music-og.png',
+                image: 'https://tien-music-player.site/web-app-manifest-512x512.png',
             }
         }
     }
@@ -104,7 +104,7 @@ app.get('/*splat', async (req, res) => {
         )
         html = html.replace(
             /<meta property="og:url" content=".*?"\/>/,
-            `<meta property="og:url" content="https://aismartlite.cloud${req.path}"/>`
+            `<meta property="og:url" content="https://tien-music-player.site${req.path}"/>`
         )
     }
     res.send(html)

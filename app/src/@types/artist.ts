@@ -6,6 +6,7 @@ export type Artist = {
     id: string
     name: string
     alias: string
+    description: string
     thumbnail: string
     likes: number
     totalFollow: number

@@ -29,5 +29,8 @@ class UserController {
     async verifyEmail(request, response) {
         return await this.userService.verifyEmail(request, response);
     }
+    async userSongs(request, response) {
+        return await this.userService.userSongs(request, response);
+    }
 }
 exports.default = new UserController();

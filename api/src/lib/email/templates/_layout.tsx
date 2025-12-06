@@ -22,7 +22,7 @@ export function EmailLayout({ preview, children }: Readonly<EmailLayoutProps>) {
         <Html lang='en'>
             <Head>
                 <Preview>
-                    {preview ?? 'This is an important email from Yukinu.'}
+                    {preview ?? 'This is an important email from Yukikaze Music Player.'}
                 </Preview>
 
                 <Font
@@ -47,7 +47,7 @@ export function EmailLayout({ preview, children }: Readonly<EmailLayoutProps>) {
                     }}
                 >
                     <Img
-                        src='https://tiesen.id.vn/web-app-manifest-512x512.png'
+                        src='https://tien-music-player.site/web-app-manifest-512x512.png'
                         width={80}
                         height={80}
                         alt='Yukikaze Music Player'
@@ -58,7 +58,7 @@ export function EmailLayout({ preview, children }: Readonly<EmailLayoutProps>) {
 
                     <Text>
                         Still have questions? Please contact{' '}
-                        <Link href='mailto:support@tiesen.id.vn'>Yukikaze Support</Link>
+                        <Link href='mailto:support@yukikaze-music-player.site'>Yukikaze Support</Link>
                     </Text>
                 </Container>
 

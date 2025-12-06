@@ -5,6 +5,7 @@ const fr = {
   'sign_in_description': 'Connectez-vous à votre compte pour continuer à écouter de la musique.',
   'all': 'Tout',
   'my_account': 'Mon compte',
+  'my_music': 'Ma musique',
   'new_songs': 'Nouvelles chansons',
   'international': 'International',
   'vietnam': 'Vietnam',

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { NavLink, useLocation, useParams } from "react-router-dom"
 import SongList from "../sections/SongList"
 import { setCurrentPlaylistSongs, setCurrentSong, setIsPlaying } from "@/redux/slices/music"
-import { roundPeopleAmount } from "@/lib/utils"
+import { getBaseUrl, roundPeopleAmount } from "@/lib/utils"
 import { fetchPlaylist } from "@/lib/httpClient"
 import { Audio } from "react-loader-spinner"
 import { useDispatch, useSelector } from "@/redux/store"
@@ -13,6 +13,7 @@ import { PlayCircle } from "lucide-react"
 import ArtistCard from "@/sections/ArtistCard"
 import { Typography } from "@/components/ui/typography"
 import { useIsMobile } from "@/hooks/useMobile"
+import { useMetaTags } from "@/hooks/useMetaTags"
 
 const PlaylistPage: React.FC = () => {
     const { id } = useParams()
@@ -22,6 +23,13 @@ const PlaylistPage: React.FC = () => {
     const [playlist, setPlaylist] = useState<Playlist | null>(null)
     const [inPlaylist, setInPlaylist] = useState<boolean>(false)
     const location = useLocation()
+
+    useMetaTags({
+        title: playlist?.title || 'Playlist - Yukikaze Music Player',
+        description: playlist?.description || 'Nghe playlist của bạn trên Yukikaze Music Player.',
+        image: playlist?.thumbnail || `${getBaseUrl()}/web-app-manifest-512x512.png`,
+        url: `${getBaseUrl()}/playlist/${id}`
+    })
 
     const getPlaylist = async () => {
         try {
@@ -34,7 +42,7 @@ const PlaylistPage: React.FC = () => {
                     dispatch(setCurrentSong(response.data.songs[0]))
                     dispatch(setIsPlaying(true))
                     // Clear the state so it doesn't auto-play on subsequent visits
-                    window.history.replaceState({}, document.title)
+                    globalThis.history.replaceState({}, document.title)
                 }
             }
         } catch (error) {

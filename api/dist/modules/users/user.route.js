@@ -30,3 +30,6 @@ userRouter.post("/users/sign-in", (0, middleware_1.validateDtoHanlder)(login_use
 userRouter.post("/users/sign-out", middleware_1.JWTMiddleware, (request, response) => user_controller_1.default.signOut(request, response));
 userRouter.put("/users/:id", upload.fields([{ name: "avatar", maxCount: 1 }]), fileValidator, (request, response) => user_controller_1.default.updateUser(request, response));
 userRouter.get("/users/verify-email/:id", (request, response) => user_controller_1.default.verifyEmail(request, response));
+userRouter.get("/users/song/list", middleware_1.JWTMiddleware, (request, response) => user_controller_1.default.userSongs(request, response));
+userRouter.get("/users/artist/list", middleware_1.JWTMiddleware, (request, response) => user_controller_1.default.userSongs(request, response));
+userRouter.get("/users/playlist/list", middleware_1.JWTMiddleware, (request, response) => user_controller_1.default.userSongs(request, response));

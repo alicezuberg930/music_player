@@ -52,4 +52,19 @@ userRouter.get("/users/verify-email/:id",
     (request: Request<{ id: string }, {}, {}, { token: string }>, response: Response) => userController.verifyEmail(request, response)
 )
 
+userRouter.get("/users/song/list",
+    JWTMiddleware,
+    (request: Request, response: Response) => userController.userSongs(request, response)
+)
+
+userRouter.get("/users/artist/list",
+    JWTMiddleware,
+    (request: Request, response: Response) => userController.userSongs(request, response)
+)
+
+userRouter.get("/users/playlist/list",
+    JWTMiddleware,
+    (request: Request, response: Response) => userController.userSongs(request, response)
+)
+
 export { userRouter }

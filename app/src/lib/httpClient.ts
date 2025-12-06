@@ -11,6 +11,7 @@ export const fetchSongList = async () => {
         const response = await axios.get<Response<Song[]>>(`/songs`)
         return response.data
     } catch (error) {
+        console.error(error)
         throw error
     }
 }
@@ -18,10 +19,9 @@ export const fetchSongList = async () => {
 export const createSong = async (formData: FormData): Promise<Response> => {
     try {
         const response = await axios.post<Response>(`/songs`, formData)
-        console.log(response)
         return response.data
     } catch (error) {
-        console.log(error)
+        console.error(error)
         throw error
     }
 }
@@ -31,6 +31,7 @@ export const fetchSong = async (songId: string): Promise<Response<Song>> => {
         const response = await axios.get<Response<Song>>(`/songs/${songId}`)
         return response.data
     } catch (error) {
+        console.error(error)
         throw error
     }
 }
@@ -40,6 +41,7 @@ export const fetchVideo = async (videoId: string): Promise<Response<Video>> => {
         const response = await axios.get<Response<Video>>(`/videos/${videoId}`)
         return response.data
     } catch (error) {
+        console.error(error)
         throw error
     }
 }
@@ -49,6 +51,7 @@ export const fetchArtistList = async (): Promise<Response<Artist[]>> => {
         const response = await axios.get<Response<Artist[]>>(`/artists`)
         return response.data
     } catch (error) {
+        console.error(error)
         throw error
     }
 }
@@ -58,6 +61,7 @@ export const fetchArtist = async (artistId: string): Promise<Response<Artist>> =
         const response = await axios.get<Response<Artist>>(`/artists/${artistId}`)
         return response.data
     } catch (error) {
+        console.error(error)
         throw error
     }
 }
@@ -67,7 +71,7 @@ export const createArtist = async (formData: FormData): Promise<Response> => {
         const response = await axios.post<Response>(`/artists`, formData)
         return response.data
     } catch (error) {
-        console.log(error)
+        console.error(error)
         throw error
     }
 }
@@ -77,6 +81,7 @@ export const createPlaylist = async (formData: FormData): Promise<Response> => {
         const response = await axios.post<Response>(`/playlists`, formData)
         return response.data
     } catch (error) {
+        console.error(error)
         throw error
     }
 }
@@ -86,6 +91,7 @@ export const updatePlaylist = async (id: string, formData: FormData): Promise<Re
         const response = await axios.put<Response>(`/playlists/${id}`, formData)
         return response.data
     } catch (error) {
+        console.error(error)
         throw error
     }
 }
@@ -95,6 +101,7 @@ export const addSongsToPlaylist = async (playlistId: string, songIds: string[]):
         const response = await axios.put<Response>(`/playlists/add-songs/${playlistId}`, { songIds })
         return response.data
     } catch (error) {
+        console.error(error)
         throw error
     }
 }
@@ -104,6 +111,7 @@ export const removeSongsFromPlaylist = async (playlistId: string, songIds: strin
         const response = await axios.put<Response>(`/playlists/remove-songs/${playlistId}`, { songIds })
         return response.data
     } catch (error) {
+        console.error(error)
         throw error
     }
 }
@@ -113,6 +121,7 @@ export const fetchPlaylist = async (playlistId: string): Promise<Response<Playli
         const response = await axios.get<Response<Playlist>>(`/playlists/${playlistId}`)
         return response.data
     } catch (error) {
+        console.error(error)
         throw error
     }
 }
@@ -122,6 +131,7 @@ export const fetchPlaylistList = async (): Promise<Response<Playlist[]>> => {
         const response = await axios.get<Response<Playlist[]>>(`/playlists`)
         return response.data
     } catch (error) {
+        console.error(error)
         throw error
     }
 }
@@ -131,6 +141,7 @@ export const signIn = async (email: string, password: string): Promise<Response>
         const response = await axios.post<Response>(`/users/sign-in`, { email, password })
         return response.data
     } catch (error) {
+        console.error(error)
         throw error
     }
 }
@@ -140,6 +151,7 @@ export const signUp = async (fullname: string, email: string, password: string):
         const response = await axios.post<Response>(`/users/sign-up`, { fullname, email, password })
         return response.data
     } catch (error) {
+        console.error(error)
         throw error
     }
 }
@@ -149,6 +161,7 @@ export const signOut = async (): Promise<Response> => {
         const response = await axios.post<Response>(`/users/sign-out`)
         return response.data
     } catch (error) {
+        console.error(error)
         throw error
     }
 }
@@ -158,6 +171,7 @@ export const fetchProfile = async (): Promise<Response<User>> => {
         const response = await axios.get<Response<User>>(`/me/profile`)
         return response.data
     } catch (error) {
+        console.error(error)
         throw error
     }
 }
@@ -167,6 +181,37 @@ export const verifyEmail = async (userId: string, token: string): Promise<Respon
         const response = await axios.get<Response>(`/users/verify-email/${userId}`, { params: { token } })
         return response.data
     } catch (error) {
+        console.error(error)
+        throw error
+    }
+}
+
+export const fetchUserSongList = async (): Promise<Response<Song[]>> => {
+    try {
+        const response = await axios.get<Response<Song[]>>(`/users/song/list`)
+        return response.data
+    } catch (error) {
+        console.error(error)
+        throw error
+    }
+}
+
+export const fetchUserPlaylistList = async (): Promise<Response<Playlist[]>> => {
+    try {
+        const response = await axios.get<Response<Playlist[]>>(`/users/playlist/list`)
+        return response.data
+    } catch (error) {
+        console.error(error)
+        throw error
+    }
+}
+
+export const fetchUserArtistList = async (): Promise<Response<Artist[]>> => {
+    try {
+        const response = await axios.get<Response<Artist[]>>(`/users/artist/list`)
+        return response.data
+    } catch (error) {
+        console.error(error)
         throw error
     }
 }

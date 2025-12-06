@@ -5,6 +5,7 @@ const cn = {
   'sign_in_description': '登录您的账户以继续听音乐。',
   'all': '全部',
   'my_account': '我的账户',
+  'my_music': '我的音乐',
   'new_songs': '新歌',
   'international': '国际',
   'vietnam': '越南',

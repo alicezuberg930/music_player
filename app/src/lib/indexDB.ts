@@ -28,15 +28,13 @@ const DB_VERSION = 1
 let dbPromise: Promise<IDBPDatabase<AudioCacheDB>> | null = null
 
 const getDB = async () => {
-    if (!dbPromise) {
-        dbPromise = openDB<AudioCacheDB>(DB_NAME, DB_VERSION, {
-            upgrade(db) {
-                if (!db.objectStoreNames.contains(STORE_NAME)) {
-                    db.createObjectStore(STORE_NAME)
-                }
-            },
-        })
-    }
+    dbPromise ??= openDB<AudioCacheDB>(DB_NAME, DB_VERSION, {
+        upgrade(db) {
+            if (!db.objectStoreNames.contains(STORE_NAME)) {
+                db.createObjectStore(STORE_NAME)
+            }
+        }
+    })
     return dbPromise
 }
 

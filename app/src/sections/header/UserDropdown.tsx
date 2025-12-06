@@ -12,7 +12,7 @@ import {
 import { useAuthContext } from "@/lib/auth/useAuthContext"
 import { useLocales } from "@/lib/locales"
 import { paths } from "@/lib/route/paths"
-import { Settings, Spotlight, Upload, User } from "lucide-react"
+import { LogOut, Settings, Spotlight, Upload, User } from "lucide-react"
 import { Link } from "react-router-dom"
 
 const UserDropdown: React.FC = () => {
@@ -84,6 +84,9 @@ const UserDropdown: React.FC = () => {
                 {/* <DropdownMenuSeparator /> */}
                 <DropdownMenuItem onClick={signout}>
                     {translate('logout')}
+                    <DropdownMenuShortcut>
+                        <LogOut />
+                    </DropdownMenuShortcut>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

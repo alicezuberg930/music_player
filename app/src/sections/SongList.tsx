@@ -28,7 +28,7 @@ const SongList: React.FC<Props> = ({ songs, totalDuration, playlistTitle, showHe
                 </div>
             )}
             <div className="flex flex-col">
-                {songs && songs.map(song => (
+                {songs?.map(song => (
                     <SongCard key={song.id} song={song} playlistTitle={playlistTitle} />
                 ))}
             </div>

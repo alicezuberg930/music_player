@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import jwt from "jsonwebtoken"
 import { and, db, eq } from "../../db"
-import { users } from "../../db/schemas"
+import { songs, users } from "../../db/schemas"
 import { User } from "./user.model"
 import { BadRequestException, HttpException, NotFoundException } from "../../lib/exceptions"
 import { CreateUserDto } from "./dto/create-user.dto"
@@ -154,6 +154,17 @@ export class UserService {
             if (user.verifyTokenExpires && user.verifyTokenExpires < new Date()) throw new BadRequestException('Verification token has expired')
             await db.update(users).set({ isVerified: true, verifyToken: null, verifyTokenExpires: null }).where(eq(users.id, user.id))
             return response.json({ message: 'Email verified successfully' })
+        } catch (error) {
+            if (error instanceof HttpException) throw error
+            throw new BadRequestException(error instanceof Error ? error.message : undefined)
+        }
+    }
+
+    public async userSongs(request: Request, response: Response) {
+        try {
+            if (!request.userId) throw new BadRequestException('User ID is missing in request')
+            const data = await db.query.songs.findMany({ where: eq(songs.userId, request.userId) })
+            return response.json({ message: 'User songs fetched successfully', data })
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)

@@ -8,3 +8,4 @@ const Loadable = (Component: ElementType) => (props: any) => (
 
 export const PublicPage = Loadable(lazy(() => import('@/pages/PublicPage')));
 export const HomePage = Loadable(lazy(() => import('@/pages/HomePage')));
+export const PlaylistPage = Loadable(lazy(() => import('@/pages/PlaylistPage')));

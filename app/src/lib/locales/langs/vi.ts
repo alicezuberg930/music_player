@@ -5,6 +5,7 @@ const vi = {
   'sign_in_description': 'Đăng nhập vào tài khoản của bạn để tiếp tục nghe nhạc.',
   'all': 'Tất cả',
   'my_account': 'Tài khoản của tôi',
+  'my_music': 'Nhạc của tôi',
   'new_songs': 'Các bài hát mới',
   'international': 'Quốc tế',
   'vietnam': 'Việt Nam',

@@ -10,9 +10,10 @@ class SitemapController {
     async generateSitemap(_, response) {
         try {
             const sitemap = await this.sitemapService.generateSitemap();
-            response.header('Content-Type', 'application/xml');
+            // response.header('Content-Type', 'application/xml')
             response.header('Cache-Control', 'public, max-age=86400'); // Cache for 24 hours
-            response.send(sitemap);
+            // response.send(sitemap)
+            return response.json(sitemap);
         }
         catch (error) {
             console.error('Error generating sitemap:', error);

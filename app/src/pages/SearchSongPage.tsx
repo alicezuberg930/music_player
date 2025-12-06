@@ -12,8 +12,6 @@ const SearchSongPage = () => {
 
     useEffect(() => {
         setSongs([])
-        // if (q)
-        // dispatch(searchTypeAction(q, 'song'))
     }, [q, dispatch])
 
     return (

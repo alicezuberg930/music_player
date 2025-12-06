@@ -14,3 +14,4 @@ export { default as VideoClipPage } from './VideoClipPage';
 export { default as WeeklyZingChartPage } from './WeeklyZingChartPage';
 export { default as ZingChartPage } from './ZingChartPage';
 export { default as UploadMusicPage } from './UploadMusicPage';
+export { default as MyMusicPage } from './MyMusicPage';

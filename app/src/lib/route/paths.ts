@@ -6,7 +6,7 @@ export const paths = {
     ALBUM__TITLE__ID: "/album/:title/:id",
     WEEKRANK__TITLE__ID: "/week-chart/:title/:id",
     ZING_CHART: "/chart",
-    MY_MUSIC: "/me/songs",
+    MY_MUSIC: "/me/music",
     FOLLOW: "follow",
     SEARCH: "search",
     SEARCH_ALL: "all",
@@ -19,5 +19,5 @@ export const paths = {
     ME: "/me",
     UPLOAD_MUSIC: "/me/upload-music",
     ADD_ARTIST: "/me/add-artist",
-    VERIFY: '/verify/:id'
+    VERIFY: '/verify/:id',
 }

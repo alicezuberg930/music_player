@@ -40,18 +40,20 @@ class SitemapService {
         }).from(schemas_1.artists);
         for (const artist of artistsList)
             urls.push(this.createUrlEntry(`/artist/${artist.id}`, '0.7', 'daily', artist.updatedAt));
-        return this.wrapInSitemapXml(urls);
+        return urls;
+        // return this.wrapInSitemapXml(urls)
     }
     createUrlEntry(path, priority, changefreq, lastmod) {
         const lastModDate = lastmod ? new Date(lastmod).toISOString() : new Date().toISOString();
-        return `
-            <url>
-                <loc>${this.baseUrl}${path}</loc>
-                <lastmod>${lastModDate}</lastmod>
-                <changefreq>${changefreq}</changefreq>
-                <priority>${priority}</priority>
-            </url>
-        `;
+        // return `
+        //     <url>
+        //         <loc>${this.baseUrl}${path}</loc>
+        //         <lastmod>${lastModDate}</lastmod>
+        //         <changefreq>${changefreq}</changefreq>
+        //         <priority>${priority}</priority>
+        //     </url>
+        // `
+        return { loc: this.baseUrl + path, lastmod: lastModDate, changefreq: changefreq, priority: priority };
     }
     wrapInSitemapXml(urls) {
         return `<?xml version="1.0" encoding="UTF-8"?>

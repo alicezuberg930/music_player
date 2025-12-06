@@ -5,6 +5,7 @@ const en = {
     'sign_in_description': 'Sign in to your account to continue listening to music.',
     'all': 'All',
     'my_account': 'My Account',
+    'my_music': 'My Music',
     'new_songs': 'New Songs',
     'international': 'International',
     'vietnam': 'Vietnam',

@@ -7,27 +7,37 @@ import PlaylistSection from '../sections/PlaylistSection'
 import ArtistCard from '../sections/ArtistCard'
 import MVSection from '../sections/MVSection'
 import type { Artist } from "@/@types/artist"
+import { useMetaTags } from '@/hooks/useMetaTags'
+import { getBaseUrl } from '@/lib/utils'
 
 const ArtistPage = () => {
     const { AiOutlineUserAdd, BsPlayFill } = icons
-    const { name } = useParams()
+    const { id } = useParams()
     const [artist, setArtist] = useState<Artist | null>(null)
     const ref = useRef<HTMLDivElement | null>(null)
     let displayAmount = 5
 
+    useMetaTags({
+        title: artist?.name ? `${artist.name} - Yukikaze Music Player` : 'Artist - Yukikaze Music Player',
+        description: artist?.description || `${artist?.name || 'Artist'} - Yukikaze Music Player.`,
+        image: artist?.thumbnail || `${getBaseUrl()}/web-app-manifest-512x512.png`,
+        url: `${getBaseUrl()}/artist/${id}`
+    })
+
     const getArtist = async () => {
         try {
             setArtist(null)
-            const response = await fetchArtist(name!)
+            const response = await fetchArtist(id!)
             console.log(response)
         } catch (error) {
+            console.error(error)
         }
     }
 
     useEffect(() => {
         getArtist()
         // ref.current.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' })
-    }, [name])
+    }, [id])
 
     return (
         <div className='flex flex-col w-full'>
@@ -112,7 +122,7 @@ const ArtistPage = () => {
                 <h3 className='text-lg font-bold mb-5'>Về {artist?.name}</h3>
                 <div className='flex gap-8 flex-col sm:flex-row'>
                     <div className='w-full sm:w-2/5 h-auto'>
-                        <img src={artist?.thumbnail} className='flex-auto object-cover rounded-md' />
+                        <img src={artist?.thumbnail} className='flex-auto object-cover rounded-md' alt='' />
                     </div>
                     <div className='w-full sm:w-3/5 flex-auto flex flex-col gap-8 text-xs'>
                         <p className='text-sm font-semibold text-gray-500' dangerouslySetInnerHTML={{ __html: artist?.biography || 'No description' }}></p>

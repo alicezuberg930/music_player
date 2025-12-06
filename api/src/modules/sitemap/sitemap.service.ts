@@ -5,8 +5,8 @@ import { artists, playlists } from "../../db/schemas"
 export class SitemapService {
     private readonly baseUrl = env.WEB_URL || 'https://tien-music-player.site'
 
-    public async generateSitemap(): Promise<string> {
-        const urls: string[] = []
+    public async generateSitemap(): Promise<any> {
+        const urls: any[] = []
 
         // Add static routes
         const staticRoutes = [
@@ -39,19 +39,22 @@ export class SitemapService {
 
         for (const artist of artistsList)
             urls.push(this.createUrlEntry(`/artist/${artist.id}`, '0.7', 'daily', artist.updatedAt))
-        return this.wrapInSitemapXml(urls)
+
+        return urls
+        // return this.wrapInSitemapXml(urls)
     }
 
-    private createUrlEntry(path: string, priority: string, changefreq: string, lastmod?: Date | string): string {
+    private createUrlEntry(path: string, priority: string, changefreq: string, lastmod?: Date | string): any {
         const lastModDate = lastmod ? new Date(lastmod).toISOString() : new Date().toISOString()
-        return `
-            <url>
-                <loc>${this.baseUrl}${path}</loc>
-                <lastmod>${lastModDate}</lastmod>
-                <changefreq>${changefreq}</changefreq>
-                <priority>${priority}</priority>
-            </url>
-        `
+        // return `
+        //     <url>
+        //         <loc>${this.baseUrl}${path}</loc>
+        //         <lastmod>${lastModDate}</lastmod>
+        //         <changefreq>${changefreq}</changefreq>
+        //         <priority>${priority}</priority>
+        //     </url>
+        // `
+        return { loc: this.baseUrl + path, lastmod: lastModDate, changefreq: changefreq, priority: priority }
     }
 
     private wrapInSitemapXml(urls: string[]): string {

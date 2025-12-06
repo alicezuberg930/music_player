@@ -3,7 +3,6 @@ import { paths } from './paths'
 import {
     ArtistPage,
     SignupPage,
-    PlaylistPage,
     SearchAllPage,
     SearchArtistPage,
     SearchMVPage,
@@ -14,15 +13,16 @@ import {
     WeeklyZingChartPage,
     ZingChartPage,
     UploadMusicPage,
-    SigninPage
+    SigninPage,
+    MyMusicPage
 } from '@/pages'
-import { HomePage, PublicPage } from './element'
+import { HomePage, PublicPage, PlaylistPage } from './element'
 import VerifyPage from '@/pages/VerifyPage'
 import AddArtistPage from '@/pages/AddArtistPage'
 
 export default function Router() {
     return useRoutes([
-        { path: '/', element: <Navigate to="/home" replace /> },
+        { path: '/', element: <Navigate to='/home' replace /> },
         {
             path: '/',
             element: <PublicPage />,
@@ -33,32 +33,33 @@ export default function Router() {
                 { path: '/album/:id', element: <PlaylistPage /> },
                 { path: '/week-chart/:title/:id', element: <WeeklyZingChartPage /> },
                 { path: '/chart', element: <ZingChartPage /> },
-                { path: "/artist/:name", element: <ArtistPage /> },
+                { path: '/artist/:name', element: <ArtistPage /> },
                 {
                     path: '/search',
                     element: <SearchPage />,
                     children: [
                         { element: <Navigate to={'/search/all'} replace />, index: true },
-                        { path: "all", element: <SearchAllPage /> },
-                        { path: "song", element: <SearchSongPage /> },
-                        { path: "playlist", element: <SearchPlaylistPage /> },
-                        { path: "artist", element: <SearchArtistPage /> },
-                        { path: "video", element: <SearchMVPage /> },
+                        { path: 'all', element: <SearchAllPage /> },
+                        { path: 'song', element: <SearchSongPage /> },
+                        { path: 'playlist', element: <SearchPlaylistPage /> },
+                        { path: 'artist', element: <SearchArtistPage /> },
+                        { path: 'video', element: <SearchMVPage /> },
                     ],
                 },
                 {
-                    path: "/me",
+                    path: '/me',
                     children: [
                         { element: <Navigate to={'/me/upload-music'} replace />, index: true },
-                        { path: "upload-music", element: <UploadMusicPage /> },
-                        { path: "profile", element: <></> },
-                        { path: "settings", element: <></> },
-                        { path: "add-artist", element: <AddArtistPage /> },
+                        { path: 'upload-music', element: <UploadMusicPage /> },
+                        { path: 'profile', element: <></> },
+                        { path: 'settings', element: <></> },
+                        { path: 'add-artist', element: <AddArtistPage /> },
+                        { path: 'music', element: <MyMusicPage /> }
                     ],
                 },
             ],
         },
-        { path: "/video-clip/:title/:id", element: <VideoClipPage /> },
+        { path: '/video-clip/:title/:id', element: <VideoClipPage /> },
         { path: paths.SIGNIN, element: <SigninPage /> },
         { path: paths.SIGNUP, element: <SignupPage /> },
         { path: paths.VERIFY, element: <VerifyPage /> },

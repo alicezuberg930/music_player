@@ -42,6 +42,10 @@ class UserController {
     public async verifyEmail(request: Request<{ id: string }, {}, {}, { token: string }>, response: Response) {
         return await this.userService.verifyEmail(request, response)
     }
+
+    public async userSongs(request: Request, response: Response) {
+        return await this.userService.userSongs(request, response)
+    }
 }
 
 export default new UserController()

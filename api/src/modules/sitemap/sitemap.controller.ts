@@ -9,13 +9,12 @@ export class SitemapController {
         this.sitemapService = new SitemapService()
     }
 
-    public async generateSitemap(_: Request, response: Response) {
+    public async generateSitemapXML(_: Request, response: Response) {
         try {
-            const sitemap = await this.sitemapService.generateSitemap()
-            // response.header('Content-Type', 'application/xml')
-            response.header('Cache-Control', 'public, max-age=86400') // Cache for 24 hours
-            // response.send(sitemap)
-            return response.json(sitemap)
+            const sitemap = await this.sitemapService.generateSitemapXML()
+            response.header('Content-Type', 'application/xml')
+            response.header('Cache-Control', 'public, max-age=86400')
+            response.send(sitemap)
         } catch (error) {
             console.error('Error generating sitemap:', error)
             throw new BadRequestException('Error generating sitemap')

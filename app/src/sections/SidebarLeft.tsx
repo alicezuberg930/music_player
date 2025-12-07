@@ -16,7 +16,7 @@ const SidebarLeft: React.FC = () => {
     const [open, setOpen] = useState(false)
 
     return (
-        <div className="sm:block hidden lg:w-48 w-20 flex-none border bg-main-200 transition-all duration-500 ease-in-out">
+        <aside className="sm:block hidden lg:w-48 w-20 flex-none border bg-main-200 transition-all duration-500 ease-in-out">
             <div className="h-full flex flex-col relative">
                 <div className="w-full h-16 py-4 px-6 flex justify-start items-center gap-1">
                     <img src='/favicon.ico' alt="logo" className="h-12 w-12 object-cover" />
@@ -53,7 +53,7 @@ const SidebarLeft: React.FC = () => {
                     </div>
                 )}
             </div>
-        </div>
+        </aside>
     )
 }
 

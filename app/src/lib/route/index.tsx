@@ -2,7 +2,6 @@ import { Navigate, useRoutes } from 'react-router-dom'
 import { paths } from './paths'
 import {
     ArtistPage,
-    SignupPage,
     SearchAllPage,
     SearchArtistPage,
     SearchMVPage,
@@ -13,7 +12,6 @@ import {
     WeeklyZingChartPage,
     ZingChartPage,
     UploadMusicPage,
-    SigninPage,
     MyMusicPage
 } from '@/pages'
 import { HomePage, PublicPage, PlaylistPage } from './element'
@@ -60,8 +58,6 @@ export default function Router() {
             ],
         },
         { path: '/video-clip/:title/:id', element: <VideoClipPage /> },
-        { path: paths.SIGNIN, element: <SigninPage /> },
-        { path: paths.SIGNUP, element: <SignupPage /> },
         { path: paths.VERIFY, element: <VerifyPage /> },
     ])
 }

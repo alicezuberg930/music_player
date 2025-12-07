@@ -22,7 +22,6 @@ const env = {
     GOOGLE_REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI,
     JWT_SECRET: process.env.JWT_SECRET,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
-    WEB_URL: process.env.WEB_URL,
 }
 
 export default env

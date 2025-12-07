@@ -74,6 +74,7 @@ const en = {
     'song_audio_file_is_required': 'Song audio file is required',
     'song_lyrics_file': 'Song lyrics file',
     'song_thumbnail_image': 'Song thumbnail image',
+    'thumbnail_must_be_square': 'Thumbnail must be of aspect ratio 1:1',
     // api responses and errors
     'unknown_error': 'Unknown error',
     'email_verified_successfully': 'Email verified successfully!',

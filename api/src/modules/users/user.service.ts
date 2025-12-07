@@ -61,7 +61,7 @@ export class UserService {
             const verifyToken = await new Password().hash(createId())
             const verifyTokenExpires = new Date(Date.now() + 1 * 60 * 60 * 1000) // 1 hour from now
             const user = await db.insert(users).values({ fullname, email, password: hashedPassword, verifyToken, verifyTokenExpires }).$returningId()
-            const verifyLink = `${env.WEB_URL}/verify/${user[0].id}?token=${verifyToken}`
+            const verifyLink = `${env.NODE_ENV === "production" ? 'https://tien-music-player.site' : 'http://localhost:5173'}/verify/${user[0].id}?token=${verifyToken}`
             sendEmail({
                 to: email,
                 subject: 'Verify Your Email - Yukikaze Music Player',

@@ -28,8 +28,8 @@ const MyMusicPage: React.FC = () => {
     return (
         <div className="p-0">
             <h1 className="text-2xl font-bold mb-6">{translate('my_music')}</h1>
-            <Tabs defaultValue="song" className="w-full">
-                <TabsList>
+            <Tabs defaultValue="song">
+                <TabsList className="w-full md:w-1/2">
                     <TabsTrigger value="song">{translate('song')}</TabsTrigger>
                     <TabsTrigger value="playlist">{translate('playlist')}</TabsTrigger>
                     <TabsTrigger value="album">{translate('album')}</TabsTrigger>

@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import express from 'express'
+import compression from 'compression'
 import path from 'node:path'
 import fs from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -9,6 +10,16 @@ const __dirname = path.dirname(__filename)
 
 const app = express()
 const PORT = process.env.PORT
+
+// Enable gzip compression for all responses
+app.use(compression({
+    level: 6,
+    threshold: 1024, // Only compress files bigger than 1KB
+    filter: (req, res) => {
+        if (req.headers['x-no-compression']) return false
+        return compression.filter(req, res)
+    }
+}))
 
 // Serve static files from client build
 app.use(express.static(path.join(__dirname, 'dist')))
@@ -23,6 +34,11 @@ app.get('/*splat', async (req, res) => {
         let meta = {}
         // Static routes - just update meta tags if needed
         const staticMeta = {
+            '/': {
+                title: 'Yukikaze Music Player',
+                description: 'Listen to your favorite music online. Stream songs, create playlists, and discover new artists on Yukikaze Music Player.',
+                image: `${currentBaseUrl}/web-app-manifest-512x512.png`,
+            },
             '/sign-in': {
                 title: 'Đăng nhập',
                 description: 'Đăng nhập tài khoản để trải nghiệm thêm tính năng của Yukikaze Music Player.',
@@ -46,8 +62,8 @@ app.get('/*splat', async (req, res) => {
                 const data = await response.json()
                 if (data && data.data) {
                     meta = {
-                        title: data.data.title ?? 'Playlist - Yukikaze Music Player',
-                        description: data.data.description ?? 'Nghe danh sách phát của bạn trên Yukikaze Music Player.',
+                        title: `Playlist - ${data.data.title ?? 'Yukikaze Music Player'}`,
+                        description: data.data.description ?? 'Nghe danh sách phát của bạn trên Yukikaze Music Player',
                         image: data.data.thumbnail ?? `${currentBaseUrl}/web-app-manifest-512x512.png`,
                     }
                 }
@@ -63,8 +79,8 @@ app.get('/*splat', async (req, res) => {
                 const data = await response.json()
                 if (data && data.data) {
                     meta = {
-                        title: data.data.name,
-                        description: data.data.description ?? `${data.data.name} - Yukikaze Music Player.`,
+                        title: `Artist - ${data.data.name ?? 'Yukikaze Music Player'}`,
+                        description: data.data.description ?? `${data.data.name} - Thông tin nhạc sĩ`,
                         image: data.data.thumbnail ?? `${currentBaseUrl}/web-app-manifest-512x512.png`,
                     }
                 }

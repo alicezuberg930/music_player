@@ -74,6 +74,7 @@ const fr = {
   'song_audio_file_is_required': 'Le fichier audio est requis',
   'song_lyrics_file': 'Fichier de paroles',
   'song_thumbnail_image': 'Image miniature de la chanson',
+  'thumbnail_must_be_square': 'La miniature doit être carrée',
   // api responses and errors
   'unknown_error': 'Erreur inconnue',
   'email_verified_successfully': 'E-mail vérifié avec succès!',

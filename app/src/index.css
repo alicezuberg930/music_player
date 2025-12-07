@@ -243,15 +243,6 @@ body {
   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5), -1px 1px 0 rgba(0, 0, 0, 0.5), -1px -1px 0 rgba(0, 0, 0, 0.5), 1px -1px 0 rgba(0, 0, 0, 0.5);
 }
 
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-.hide-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
 .thin-scrollbar::-webkit-scrollbar {
   height: 4px;
 }
@@ -274,14 +265,7 @@ body {
   scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
 
-.zing-chart-section {
-  background: radial-gradient(50% 124.93% at 95.86% -10%, #3efad9 0, hsla(0, 0%, 100%, 0) 100%), linear-gradient(91.56deg, #ff9357 1.54%, #9100ff 98.71%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-}
-
+/* Chrome, Edge, Opera, Safari support */
 ::-webkit-scrollbar {
   width: 5px;
 }
@@ -289,6 +273,24 @@ body {
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(#642bff, #ff22e6);
   border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(#7759c7, #c768bc);
+}
+
+/* Firefox support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #642bff transparent;
+}
+
+.zing-chart-section {
+  background: radial-gradient(50% 124.93% at 95.86% -10%, #3efad9 0, hsla(0, 0%, 100%, 0) 100%), linear-gradient(91.56deg, #ff9357 1.54%, #9100ff 98.71%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .video-container.theater {

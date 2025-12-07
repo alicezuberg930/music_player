@@ -1,28 +1,24 @@
-import env from "../../lib/helpers/env"
 import { db, eq } from "../../db"
 import { artists, playlists } from "../../db/schemas"
 
 export class SitemapService {
-    private readonly baseUrl = env.WEB_URL || 'https://tien-music-player.site'
+    private readonly baseUrl = 'https://tien-music-player.site'
 
-    public async generateSitemap(): Promise<any> {
-        const urls: any[] = []
-
-        // Add static routes
+    public async generateSitemapXML(): Promise<string> {
+        const urls: string[] = []
         const staticRoutes = [
             { path: '/', priority: '1.0', changefreq: 'daily' },
-            { path: '/search', priority: '0.8', changefreq: 'daily' },
-            { path: '/search/all', priority: '0.8', changefreq: 'daily' },
-            { path: '/search/songs', priority: '0.8', changefreq: 'daily' },
-            { path: '/search/playlists', priority: '0.8', changefreq: 'daily' },
-            { path: '/search/artists', priority: '0.8', changefreq: 'daily' },
-            { path: '/search/mv', priority: '0.8', changefreq: 'daily' },
-            { path: '/chart', priority: '0.8', changefreq: 'daily' },
-            { path: '/chart/week', priority: '0.8', changefreq: 'weekly' },
+            { path: '/search', priority: '0.9', changefreq: 'daily' },
+            { path: '/search/all', priority: '0.9', changefreq: 'daily' },
+            { path: '/search/songs', priority: '0.9', changefreq: 'daily' },
+            { path: '/search/playlists', priority: '0.9', changefreq: 'daily' },
+            { path: '/search/artists', priority: '0.9', changefreq: 'daily' },
+            { path: '/search/mv', priority: '0.9', changefreq: 'daily' },
+            { path: '/chart', priority: '0.9', changefreq: 'daily' },
+            { path: '/chart/week', priority: '0.9', changefreq: 'weekly' },
         ]
-        // add static routes
         for (const route of staticRoutes)
-            urls.push(this.createUrlEntry(route.path, route.priority, route.changefreq))
+            urls.push(this.createUrlEntryXML(route.path, route.priority, route.changefreq))
 
         // Add dynamic playlist routes
         const playlistsList = await db.select({
@@ -30,7 +26,7 @@ export class SitemapService {
         }).from(playlists).where(eq(playlists.isPrivate, false))
 
         for (const playlist of playlistsList)
-            urls.push(this.createUrlEntry(`/playlist/${playlist.id}`, '0.7', 'daily', playlist.updatedAt))
+            urls.push(this.createUrlEntryXML(`/playlist/${playlist.id}`, '0.8', 'daily', playlist.updatedAt))
 
         // Add dynamic artist routes
         const artistsList = await db.select({
@@ -38,28 +34,26 @@ export class SitemapService {
         }).from(artists)
 
         for (const artist of artistsList)
-            urls.push(this.createUrlEntry(`/artist/${artist.id}`, '0.7', 'daily', artist.updatedAt))
+            urls.push(this.createUrlEntryXML(`/artist/${artist.id}`, '0.8', 'daily', artist.updatedAt))
 
-        return urls
-        // return this.wrapInSitemapXml(urls)
+        return this.wrapInSitemapXML(urls)
     }
 
-    private createUrlEntry(path: string, priority: string, changefreq: string, lastmod?: Date | string): any {
+    private createUrlEntryXML(path: string, priority: string, changefreq: string, lastmod?: Date | string): string {
         const lastModDate = lastmod ? new Date(lastmod).toISOString() : new Date().toISOString()
-        // return `
-        //     <url>
-        //         <loc>${this.baseUrl}${path}</loc>
-        //         <lastmod>${lastModDate}</lastmod>
-        //         <changefreq>${changefreq}</changefreq>
-        //         <priority>${priority}</priority>
-        //     </url>
-        // `
-        return { loc: this.baseUrl + path, lastmod: lastModDate, changefreq: changefreq, priority: priority }
+        return `
+            <url>
+                <loc>${this.baseUrl}${path}</loc>
+                <lastmod>${lastModDate}</lastmod>
+                <changefreq>${changefreq}</changefreq>
+                <priority>${priority}</priority>
+            </url>
+        `
     }
 
-    private wrapInSitemapXml(urls: string[]): string {
+    private wrapInSitemapXML(urls: string[]): string {
         return `<?xml version="1.0" encoding="UTF-8"?>
-            <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+            <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
                 ${urls.join('\n')}
             </urlset>
         `

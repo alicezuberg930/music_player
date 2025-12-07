@@ -19,7 +19,7 @@ const SidebarRight: React.FC = () => {
     }, [dispatch])
 
     return (
-        <div className={`absolute bottom-0 top-0 w-[330px] border-l transition-all duration-500 ease-in-out z-50 bg-main-300 ${showSideBarRight ? 'right-0' : 'right-[-330px]'}`}>
+        <aside className={`absolute bottom-0 top-0 w-[330px] border-l transition-all duration-500 ease-in-out z-50 bg-main-300 ${showSideBarRight ? 'right-0' : 'right-[-330px]'}`}>
             <div className="flex flex-col h-full">
                 <Tabs defaultValue="playlist" className="px-2 mt-4">
                     <div className="flex items-center justify-between gap-2">
@@ -57,7 +57,7 @@ const SidebarRight: React.FC = () => {
                     </TabsContent>
                 </Tabs>
             </div>
-        </div>
+        </aside>
     )
 }
 

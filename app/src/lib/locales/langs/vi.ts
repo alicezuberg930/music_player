@@ -74,6 +74,7 @@ const vi = {
   'song_audio_file_is_required': 'Tệp bài hát là bắt buộc',
   'song_lyrics_file': 'Tập tin lời bài hát',
   'song_thumbnail_image': 'Ảnh bìa bài hát',
+  'thumbnail_must_be_square': 'Ảnh bìa phải là tỉ lệ 1:1',
   // api responses and errors
   'unknown_error': 'Lỗi không xác định',
   'email_verified_successfully': 'Email đã được xác minh thành công!',

@@ -2,24 +2,23 @@ import path from "node:path"
 import tailwindcss from "@tailwindcss/vite"
 import react from "@vitejs/plugin-react"
 import { defineConfig, type UserConfig } from "vite"
-import viteCompression from 'vite-plugin-compression'
 import ViteSitemap from 'vite-plugin-sitemap';
 
 // https://vite.dev/config/
 export default defineConfig(async ({ mode }): Promise<UserConfig> => {
   const hostname = mode === 'production' ? 'https://tien-music-player.site' : 'http://localhost:5173'
-  // const apiUrl = mode === 'production' ? 'https://api.tien-music-player.site' : 'http://localhost:5000'
 
-  // Fetch dynamic routes from API
+  // Fetch dynamic routes from API sitemap
   let dynamicRoutes: string[] = []
   try {
-    const response = await fetch(`${'http://localhost:5000'}/sitemap.xml`)
-    const sitemapData = await response.json() as { loc: string }[]
-    dynamicRoutes = sitemapData.map(entry => {
-      // Extract path from full URL (remove hostname)
-      const url = new URL(entry.loc)
-      return url.pathname
-    })
+    const response = await fetch('http://localhost:5000/sitemap.xml')
+    const xmlText = await response.text()
+    // Parse XML to extract <loc> URLs
+    const locMatches = xmlText.matchAll(/<loc>(.*?)<\/loc>/g)
+    for (const match of locMatches) {
+      const url = new URL(match[1])
+      dynamicRoutes.push(url.pathname)
+    }
   } catch (error) {
     console.warn('Failed to fetch sitemap from API:', error)
   }
@@ -27,11 +26,6 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
   return {
     plugins: [
       react(), tailwindcss(),
-      viteCompression({
-        algorithm: 'gzip',
-        threshold: 7168, // Only compress files larger than 7KB
-        deleteOriginFile: false,
-      }),
       ViteSitemap({
         hostname,
         dynamicRoutes,
@@ -50,12 +44,14 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
         output: {
           minifyInternalExports: true,
           manualChunks: {
-            'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-            'radix-ui-vendor': ['@radix-ui/react-slot', '@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
-            'redux-vendor': ['@reduxjs/toolkit', 'react-redux', 'redux-persist'],
+            'react-chunk': ['react', 'react-dom', 'react-router-dom'],
+            'radix-ui-chunk': ['@radix-ui/react-tooltip', '@radix-ui/react-tabs', '@radix-ui/react-switch', '@radix-ui/react-avatar', '@radix-ui/react-slot', '@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-label', '@radix-ui/react-popover', '@radix-ui/react-scroll-area', '@radix-ui/react-select', '@radix-ui/react-separator'],
+            'redux-chunk': ['@reduxjs/toolkit', 'react-redux', 'redux-persist', 'redux-thunk'],
+            'i18next-chunk': ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
+            'mix-chunk': ['axios', 'class-variance-authority', 'clsx', 'cmdk', 'dayjs', 'framer-motion', 'hls.js', 'idb', 'notistack', 'lucide-react']
           },
-          chunkFileNames: 'assets/[name]-[hash].js',
-          entryFileNames: 'assets/[name]-[hash].js',
+          chunkFileNames: 'chunks/[name]-[hash].js',
+          entryFileNames: 'entries/[name]-[hash].js',
           assetFileNames: 'assets/[name]-[hash].[ext]',
         },
       },
@@ -63,8 +59,13 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
       minify: 'terser',
       terserOptions: {
         compress: {
-          drop_console: false,
+          drop_console: true,
           drop_debugger: true,
+          pure_funcs: ['console.log', 'console.info', 'console.debug'],
+          passes: 2,
+        },
+        mangle: {
+          safari10: true,
         },
       },
     },

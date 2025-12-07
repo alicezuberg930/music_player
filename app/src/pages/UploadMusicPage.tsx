@@ -44,7 +44,20 @@ const UploadMusicPage: React.FC<{ editSong?: Song, id?: string }> = ({ editSong,
     const SongSchema: Yup.ObjectSchema<FormValuesProps> = Yup.object().shape({
         audio: Yup.mixed<CustomFile | string>().required(translate('song_audio_file_is_required')),
         lyrics: Yup.mixed<CustomFile | string>().optional(),
-        thumbnail: Yup.mixed<CustomFile | string>().optional(),
+        thumbnail: Yup.mixed<CustomFile | string>().optional()
+            .test('aspect-ratio', translate('thumbnail_must_be_square'), value => {
+                if (!value || typeof value === 'string') return true
+                const img = new Image()
+                img.onload = () => {
+                    URL.revokeObjectURL(img.src)
+                    return img.naturalWidth / img.naturalHeight === 1
+                }
+                img.onerror = () => {
+                    URL.revokeObjectURL(img.src)
+                    return false
+                }
+                img.src = URL.createObjectURL(value as File)
+            }),
         title: Yup.string().required(translate('song_name_is_required')),
         releaseDate: Yup.string().required(translate('song_release_date_is_required')),
         artistIds: Yup.array().min(1, translate('at_least_one_artist_required')).required(translate('artist_is_required')),

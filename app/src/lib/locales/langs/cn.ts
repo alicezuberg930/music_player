@@ -74,6 +74,7 @@ const cn = {
   'song_audio_file_is_required': '歌曲音频文件是必需的',
   'song_lyrics_file': '歌词文件',
   'song_thumbnail_image': '歌曲缩略图',
+  'thumbnail_must_be_square': '缩略图必须是正方形',
   // api responses and errors
   'unknown_error': '未知错误',
   'email_verified_successfully': '电子邮件验证成功！',

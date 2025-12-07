@@ -34,8 +34,8 @@ const CreateNewPlaylistDialog: React.FC<Props> = ({ onOpenChange }) => {
     const { translate } = useLocales()
 
     const PlaylistSchema: Yup.ObjectSchema<FormValuesProps> = Yup.object().shape({
-        isPrivate: Yup.boolean().required('privacy_setting_required'),
-        title: Yup.string().required('playlist_title_required'),
+        isPrivate: Yup.boolean().required(translate('privacy_setting_required')),
+        title: Yup.string().required(translate('playlist_title_required')),
         description: Yup.string().optional(),
     })
 

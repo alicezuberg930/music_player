@@ -22,7 +22,6 @@ export const songs = mysqlTable("songs", {
     userId: varchar({ length: 36 }).notNull().references(() => users.id, { onDelete: "restrict" }),
     likes: int().default(0),
     listens: int().default(0),
-    liked: boolean().default(false),
     comments: int().default(0),
     size: int().notNull(),
     createdAt,

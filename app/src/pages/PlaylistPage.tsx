@@ -63,7 +63,7 @@ const PlaylistPage: React.FC = () => {
             <div className="flex flex-col md:flex-row gap-6">
                 {playlist && (
                     <>
-                        <div className="w-full md:w-1/4 h-fit space-y-3 relative md:sticky md:top-20 self-start shrink-0">
+                        <div className="w-full md:w-1/4 h-fit space-y-3 relative md:sticky top-0 self-start shrink-0">
                             <div className="relative">
                                 <LazyLoadImage
                                     src={playlist.thumbnail} alt="thumbnail" effect="blur"
@@ -71,13 +71,13 @@ const PlaylistPage: React.FC = () => {
                                     wrapperClassName="w-full"
                                 />
                                 <div className={`${(inPlaylist && isPlaying) ? 'rounded-full' : 'rounded-md'} text-white absolute top-0 left-0 bottom-0 right-0 flex items-center justify-center`}>
-                                    <span onClick={() => dispatch(setIsPlaying(!isPlaying))}>
+                                    <button onClick={() => dispatch(setIsPlaying(!isPlaying))}>
                                         {(inPlaylist && isPlaying) ? (
                                             <Audio color="white" width={48} height={48} />
                                         ) : (
                                             <PlayCircle size={48} />
                                         )}
-                                    </span>
+                                    </button>
                                 </div>
                             </div>
                             <Typography className="text-center" variant={'h5'}>{playlist.title}</Typography>

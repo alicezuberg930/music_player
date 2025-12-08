@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SongService = void 0;
 const esm_module_1 = require("../../lib/helpers/esm.module");
-const fs_1 = __importDefault(require("fs"));
+const node_fs_1 = __importDefault(require("node:fs"));
 const node_id3_1 = __importDefault(require("node-id3"));
 // database
 const db_1 = require("../../db");
@@ -19,6 +19,7 @@ class SongService {
     async getSongs(request, response) {
         try {
             const {} = request.query;
+            const userId = request.userId; // Get user ID from JWT middleware (undefined if not logged in)
             const data = await db_1.db.query.songs.findMany({
                 with: {
                     user: { columns: { password: false, email: false } },
@@ -36,7 +37,21 @@ class SongService {
                 artists: song.artists.map(a => a.artist),
                 genres: song.genres.map(g => g.genre)
             })));
-            return response.json({ message: 'Song list fetched successfully', data });
+            // If user is logged in, check which songs they've liked
+            let likedSongIds = new Set();
+            if (userId) {
+                const songIds = data.map(song => song.id);
+                const likedSongs = await db_1.db.query.userFavoriteSongs.findMany({
+                    where: (0, db_1.and)((0, db_1.eq)(schemas_1.userFavoriteSongs.userId, userId), (0, db_1.inArray)(schemas_1.userFavoriteSongs.songId, songIds)),
+                    columns: { songId: true }
+                });
+                likedSongIds = new Set(likedSongs.map(ls => ls.songId));
+            }
+            const songsWithLikedStatus = data.map(song => ({
+                ...song,
+                liked: likedSongIds.has(song.id)
+            }));
+            return response.json({ message: 'Song list fetched successfully', data: songsWithLikedStatus });
         }
         catch (error) {
             if (error instanceof exceptions_1.HttpException)
@@ -76,7 +91,7 @@ class SongService {
                         mime: thumbnailFile.mimetype,
                         type: { id: 3, name: 'Album cover' },
                         description: 'Cover Art',
-                        imageBuffer: fs_1.default.readFileSync(thumbnailFile.path)
+                        imageBuffer: node_fs_1.default.readFileSync(thumbnailFile.path)
                     }
                 }, audioFile.path);
                 thumbnailUrl = (await (0, cloudinary_file_1.uploadFile)(thumbnailFile, '/cover', (0, utils_1.createId)()));
@@ -85,7 +100,7 @@ class SongService {
                 const picture = metadata.common.picture?.[0];
                 if (picture) {
                     const coverPath = `uploads/${Date.now() + '-' + Math.round(Math.random() * 1e9)}.${picture.format.split('/')[1]}`;
-                    fs_1.default.writeFileSync(coverPath, Buffer.from(picture.data));
+                    node_fs_1.default.writeFileSync(coverPath, Buffer.from(picture.data));
                     const coverFile = {
                         path: coverPath,
                         mimetype: picture.format,
@@ -164,7 +179,7 @@ class SongService {
                             mime: thumbnailFile.mimetype,
                             type: { id: 3, name: 'front cover' },
                             description: 'Cover Art',
-                            imageBuffer: fs_1.default.readFileSync(thumbnailFile.path)
+                            imageBuffer: node_fs_1.default.readFileSync(thumbnailFile.path)
                         }
                     }, audioFile.path);
                 }
@@ -181,7 +196,7 @@ class SongService {
                 const picture = metadata?.common.picture?.[0];
                 if (picture) {
                     const coverPath = `uploads/${Date.now() + '-' + Math.round(Math.random() * 1e9)}.${picture.format.split('/')[1]}`;
-                    fs_1.default.writeFileSync(coverPath, Buffer.from(picture.data));
+                    node_fs_1.default.writeFileSync(coverPath, Buffer.from(picture.data));
                     const coverFile = {
                         path: coverPath,
                         mimetype: picture.format,

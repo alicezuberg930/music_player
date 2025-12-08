@@ -20,6 +20,7 @@ jobs:
                   username: ${{ secrets.SSH_USER }}
                   password: ${{ secrets.SSH_PASSWORD }}
                   port: ${{ secrets.SSH_PORT }}
+                  # scripts for PM2 process deployment
                   script: |
                       set -euo pipefail
 
@@ -50,7 +51,7 @@ jobs:
 
                       cd "$SERVER_PATH"
 
-                      # Make sure we are on the right branch and up to date
+                      # fetch and pull newest code from github
                       git fetch origin
                       git checkout main
                       git pull --ff-only origin main
@@ -64,7 +65,6 @@ jobs:
                       if pm2 describe "$SERVER_NAME" >/dev/null 2>&1; then
                         pm2 reload "$SERVER_NAME"
                       else
-                        # PM2 will run "npm start"
                         pm2 start "npm run start" --name "$SERVER_NAME"
                       fi
 
@@ -80,8 +80,64 @@ jobs:
                         pm2 reload "$FRONTEND_NAME"
                       else
                         # running the command node server.js in app folder
-                        # PM2 will run "npm run serve"
                         pm2 start "npm run serve" --name "$FRONTEND_NAME"
                       fi
 
                       pm2 save
+                  # scripts for docker deployment
+                  # script: |
+                  #     set -euo pipefail
+
+                  #     PROJECT_PATH="${{ secrets.PROJECT_PATH }}"
+
+                  #     cd "$PROJECT_PATH"
+
+                  #     # fetch and pull newest code from github
+                  #     git fetch origin
+                  #     git checkout main
+                  #     git pull --ff-only origin main
+
+                  #     # check if docker is installed
+                  #     if ! command -v docker compose &> /dev/null; then
+                  #       echo "Docker Compose not found"
+                  #       echo "Installing Docker Compose"
+
+                  #       # Uninstall old versions if any
+                  #       sudo apt remove $(dpkg --get-selections docker.io docker-compose docker-compose-v2 docker-doc podman-docker containerd runc | cut -f1)
+
+                  #       # Add Docker's official GPG key:
+                  #       sudo apt install ca-certificates curl
+                  #       sudo install -m 0755 -d /etc/apt/keyrings
+                  #       sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+                  #       sudo chmod a+r /etc/apt/keyrings/docker.asc
+                        
+                  #       # Add the repository to Apt sources
+                  #       sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
+                  #       Types: deb
+                  #       URIs: https://download.docker.com/linux/ubuntu
+                  #       Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+                  #       Components: stable
+                  #       Signed-By: /etc/apt/keyrings/docker.asc
+                  #       EOF
+
+                  #       sudo apt update
+
+                  #       # Install the Docker packages
+                  #       sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+                  #       echo "Docker status:"
+                  #       sudo systemctl status docker  
+                  #     fi
+                        
+                  #     echo "Stopping existing containers"
+                  #     docker compose --profile prod down || true
+                        
+                  #     echo "Removing old images"
+                  #     docker compose --profile prod rm -f || true
+                        
+                  #     echo "Building and starting containers"
+                  #     docker compose --profile prod up --build -d
+                        
+                  #     echo "Deployment completed successfully"
+                        
+                  #     echo "Container status:"
+                  #     docker compose --profile prod ps

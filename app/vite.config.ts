@@ -22,7 +22,8 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
 
   return {
     plugins: [
-      react(), tailwindcss(),
+      react(),
+      tailwindcss(),
       ViteSitemap({
         hostname,
         dynamicRoutes,

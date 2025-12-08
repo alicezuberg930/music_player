@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.responseInterceptor = exports.fileMimeAndSizeOptions = exports.JWTMiddleware = exports.validateDtoHanlder = exports.errorInterceptor = exports.notFoundHandlerMiddleware = void 0;
+exports.responseInterceptor = exports.fileMimeAndSizeOptions = exports.OptionalJWTMiddleware = exports.JWTMiddleware = exports.validateDtoHanlder = exports.errorInterceptor = exports.notFoundHandlerMiddleware = void 0;
 var notfound_middleware_1 = require("./notfound.middleware");
 Object.defineProperty(exports, "notFoundHandlerMiddleware", { enumerable: true, get: function () { return notfound_middleware_1.notFoundHandlerMiddleware; } });
 var error_interceptor_1 = require("./error.interceptor");
@@ -9,6 +9,7 @@ var dto_validator_middleware_1 = require("./dto.validator.middleware");
 Object.defineProperty(exports, "validateDtoHanlder", { enumerable: true, get: function () { return dto_validator_middleware_1.validateDtoHanlder; } });
 var jwt_middleware_1 = require("./jwt.middleware");
 Object.defineProperty(exports, "JWTMiddleware", { enumerable: true, get: function () { return jwt_middleware_1.JWTMiddleware; } });
+Object.defineProperty(exports, "OptionalJWTMiddleware", { enumerable: true, get: function () { return jwt_middleware_1.OptionalJWTMiddleware; } });
 var file_type_validator_middleware_1 = require("./file.type.validator.middleware");
 Object.defineProperty(exports, "fileMimeAndSizeOptions", { enumerable: true, get: function () { return file_type_validator_middleware_1.fileMimeAndSizeOptions; } });
 var response_interceptor_1 = require("./response.interceptor");

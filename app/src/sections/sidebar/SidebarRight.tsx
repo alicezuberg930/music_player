@@ -1,6 +1,6 @@
 import { memo, useCallback } from "react"
 import { useDispatch, useSelector } from "@/redux/store"
-import SongItem from "./SongItem"
+import SongItem from "../SongItem"
 import { Trash } from "lucide-react"
 import { Typography } from "@/components/ui/typography"
 import { deleteCurrentSongs } from "@/redux/slices/music"

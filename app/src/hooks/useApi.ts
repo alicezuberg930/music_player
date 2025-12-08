@@ -6,6 +6,8 @@ import type { Artist } from '@/@types/artist'
 import type { Playlist } from '@/@types/playlist'
 import type { User } from '@/@types/user'
 import * as api from '@/lib/httpClient'
+import { useLocales } from '@/lib/locales'
+import { useSnackbar } from 'notistack'
 
 // Query Keys
 export const queryKeys = {
@@ -196,6 +198,216 @@ export const useVerifyEmail = (options?: UseMutationOptions<Response, Error, { u
         mutationFn: ({ userId, token }) => api.verifyEmail(userId, token),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: queryKeys.profile })
+        },
+        ...options,
+    })
+}
+
+export const useAddFavoriteSong = (options?: UseMutationOptions<Response, Error, string>) => {
+    const queryClient = useQueryClient()
+    const { translate } = useLocales()
+    const { enqueueSnackbar } = useSnackbar()
+    return useMutation({
+        mutationFn: (songId: string) => api.addFavoriteSong(songId),
+        onMutate: async (songId) => {
+            // Cancel outgoing refetches
+            await queryClient.cancelQueries({ queryKey: queryKeys.songs })
+            await queryClient.cancelQueries({ queryKey: queryKeys.userSongs })
+            // Optimistically update song list
+            queryClient.setQueryData<Response<Song[]>>(queryKeys.songs, (old) => {
+                if (!old?.data) return old
+                return {
+                    ...old,
+                    data: old.data.map(song => song.id === songId ? { ...song, liked: true } : song)
+                }
+            })
+            // Optimistically add to user songs
+            queryClient.setQueryData<Response<Song[]>>(queryKeys.userSongs, (old) => {
+                if (!old?.data) return old
+                const songExists = old.data.some(song => song.id === songId)
+                if (songExists) {
+                    return {
+                        ...old,
+                        data: old.data.map(song => song.id === songId ? { ...song, liked: true } : song)
+                    }
+                }
+                // If song not in user songs, we need to fetch it from the songs cache
+                const allSongs = queryClient.getQueryData<Response<Song[]>>(queryKeys.songs)
+                const songToAdd = allSongs?.data?.find(s => s.id === songId)
+                if (songToAdd) {
+                    return {
+                        ...old,
+                        data: [{ ...songToAdd, liked: true }, ...old.data]
+                    }
+                }
+                return old
+            })
+        },
+        onSuccess: (response) => {
+            enqueueSnackbar(translate(response.message), { variant: 'success' })
+        },
+        onError: (error) => {
+            // Revert optimistic update on error
+            queryClient.invalidateQueries({ queryKey: queryKeys.songs })
+            queryClient.invalidateQueries({ queryKey: queryKeys.userSongs })
+            enqueueSnackbar(translate(error.message ?? 'unknown_error'), { variant: 'error' })
+        },
+        ...options,
+    })
+}
+
+export const useRemoveFavoriteSong = (options?: UseMutationOptions<Response, Error, string>) => {
+    const queryClient = useQueryClient()
+    const { translate } = useLocales()
+    const { enqueueSnackbar } = useSnackbar()
+    return useMutation({
+        mutationFn: (songId: string) => api.removeFavoriteSong(songId),
+        onMutate: async (songId) => {
+            // Cancel outgoing refetches
+            await queryClient.cancelQueries({ queryKey: queryKeys.songs })
+            await queryClient.cancelQueries({ queryKey: queryKeys.userSongs })
+            // Optimistically update song list
+            queryClient.setQueryData<Response<Song[]>>(queryKeys.songs, (old) => {
+                if (!old?.data) return old
+                return {
+                    ...old,
+                    data: old.data.map(song => song.id === songId ? { ...song, liked: false } : song)
+                }
+            })
+            // Optimistically remove from user songs
+            queryClient.setQueryData<Response<Song[]>>(queryKeys.userSongs, (old) => {
+                if (!old?.data) return old
+                return {
+                    ...old,
+                    data: old.data.filter(song => song.id !== songId)
+                }
+            })
+        },
+        onSuccess: (response) => {
+            enqueueSnackbar(translate(response.message), { variant: 'success' })
+        },
+        onError: (error) => {
+            // Revert optimistic update on error
+            queryClient.invalidateQueries({ queryKey: queryKeys.songs })
+            queryClient.invalidateQueries({ queryKey: queryKeys.userSongs })
+            enqueueSnackbar(translate(error.message ?? 'unknown_error'), { variant: 'error' })
+        },
+        ...options,
+    })
+}
+
+export const useAddFavoritePlaylist = (options?: UseMutationOptions<Response, Error, string>) => {
+    const queryClient = useQueryClient()
+    const { translate } = useLocales()
+    const { enqueueSnackbar } = useSnackbar()
+    return useMutation({
+        mutationFn: (playlistId: string) => api.addFavoritePlaylist(playlistId),
+        onMutate: async (playlistId) => {
+            // Cancel outgoing refetches
+            await queryClient.cancelQueries({ queryKey: queryKeys.playlists })
+            await queryClient.cancelQueries({ queryKey: queryKeys.userPlaylists })
+            // Optimistically update playlist list
+            queryClient.setQueryData<Response<Playlist[]>>(queryKeys.playlists, (old) => {
+                if (!old?.data) return old
+                return {
+                    ...old,
+                    data: old.data.map(playlist => 
+                        playlist.id === playlistId ? { ...playlist, liked: true } : playlist
+                    )
+                }
+            })
+            // Optimistically update individual playlist
+            queryClient.setQueryData<Response<Playlist>>(queryKeys.playlist(playlistId), (old) => {
+                if (!old?.data) return old
+                return {
+                    ...old,
+                    data: { ...old.data, liked: true }
+                }
+            })
+            // Optimistically add to user playlists
+            queryClient.setQueryData<Response<Playlist[]>>(queryKeys.userPlaylists, (old) => {
+                if (!old?.data) return old
+                const playlistExists = old.data.some(playlist => playlist.id === playlistId)
+                if (playlistExists) {
+                    return {
+                        ...old,
+                        data: old.data.map(playlist => 
+                            playlist.id === playlistId ? { ...playlist, liked: true } : playlist
+                        )
+                    }
+                }
+                // If playlist not in user playlists, fetch it from the playlists cache
+                const allPlaylists = queryClient.getQueryData<Response<Playlist[]>>(queryKeys.playlists)
+                const playlistToAdd = allPlaylists?.data?.find(p => p.id === playlistId)
+                if (playlistToAdd) {
+                    return {
+                        ...old,
+                        data: [{ ...playlistToAdd, liked: true }, ...old.data]
+                    }
+                }
+                return old
+            })
+        },
+        onSuccess: (response) => {
+            enqueueSnackbar(translate(response.message), { variant: 'success' })
+        },
+        onError: (error, playlistId) => {
+            // Revert optimistic update on error
+            queryClient.invalidateQueries({ queryKey: queryKeys.playlists })
+            queryClient.invalidateQueries({ queryKey: queryKeys.playlist(playlistId) })
+            queryClient.invalidateQueries({ queryKey: queryKeys.userPlaylists })
+            enqueueSnackbar(translate(error.message ?? 'unknown_error'), { variant: 'error' })
+        },
+        ...options,
+    })
+}
+
+export const useRemoveFavoritePlaylist = (options?: UseMutationOptions<Response, Error, string>) => {
+    const queryClient = useQueryClient()
+    const { translate } = useLocales()
+    const { enqueueSnackbar } = useSnackbar()
+    return useMutation({
+        mutationFn: (playlistId: string) => api.removeFavoritePlaylist(playlistId),
+        onMutate: async (playlistId) => {
+            // Cancel outgoing refetches
+            await queryClient.cancelQueries({ queryKey: queryKeys.playlists })
+            await queryClient.cancelQueries({ queryKey: queryKeys.userPlaylists })
+            // Optimistically update playlist list
+            queryClient.setQueryData<Response<Playlist[]>>(queryKeys.playlists, (old) => {
+                if (!old?.data) return old
+                return {
+                    ...old,
+                    data: old.data.map(playlist => 
+                        playlist.id === playlistId ? { ...playlist, liked: false } : playlist
+                    )
+                }
+            })
+            // Optimistically update individual playlist
+            queryClient.setQueryData<Response<Playlist>>(queryKeys.playlist(playlistId), (old) => {
+                if (!old?.data) return old
+                return {
+                    ...old,
+                    data: { ...old.data, liked: false }
+                }
+            })
+            // Optimistically remove from user playlists
+            queryClient.setQueryData<Response<Playlist[]>>(queryKeys.userPlaylists, (old) => {
+                if (!old?.data) return old
+                return {
+                    ...old,
+                    data: old.data.filter(playlist => playlist.id !== playlistId)
+                }
+            })
+        },
+        onSuccess: (response) => {
+            enqueueSnackbar(translate(response.message), { variant: 'success' })
+        },
+        onError: (error, playlistId) => {
+            // Revert optimistic update on error
+            queryClient.invalidateQueries({ queryKey: queryKeys.playlists })
+            queryClient.invalidateQueries({ queryKey: queryKeys.playlist(playlistId) })
+            queryClient.invalidateQueries({ queryKey: queryKeys.userPlaylists })
+            enqueueSnackbar(translate(error.message ?? 'unknown_error'), { variant: 'error' })
         },
         ...options,
     })

@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import jwt from "jsonwebtoken"
 import { and, db, eq } from "../../db"
-import { playlists, songs, users } from "../../db/schemas"
+import { playlists, songs, userFavoritePlaylists, userFavoriteSongs, users } from "../../db/schemas"
 import { User } from "./user.model"
 import { BadRequestException, HttpException, NotFoundException } from "../../lib/exceptions"
 import { CreateUserDto } from "./dto/create-user.dto"
@@ -180,6 +180,100 @@ export class UserService {
             if (!request.userId) throw new BadRequestException('User ID is missing in request')
             const data = await db.query.playlists.findMany({ where: eq(playlists.userId, request.userId) })
             return response.json({ message: 'User playlists fetched successfully', data })
+        } catch (error) {
+            if (error instanceof HttpException) throw error
+            throw new BadRequestException(error instanceof Error ? error.message : undefined)
+        }
+    }
+
+    public async addFavoriteSong(request: Request<{ id: string }>, response: Response) {
+        try {
+            const { id } = request.params
+            const song = await db.query.songs.findFirst({ where: eq(songs.id, id) })
+            if (!song) throw new NotFoundException('Song not found')
+            const checkExisting = await db.query.userFavoriteSongs.findFirst({
+                where: and(
+                    eq(userFavoriteSongs.userId, request.userId!),
+                    eq(userFavoriteSongs.songId, id)
+                )
+            })
+            if (checkExisting) throw new BadRequestException('Song is already in favorites')
+            await db.insert(userFavoriteSongs).values({ userId: request.userId!, songId: id })
+            await db.update(songs).set({ likes: song.likes! + 1 }).where(eq(songs.id, id))
+            return response.json({ message: 'Song added to favorites successfully' })
+        } catch (error) {
+            if (error instanceof HttpException) throw error
+            throw new BadRequestException(error instanceof Error ? error.message : undefined)
+        }
+    }
+
+    public async removeFavoriteSong(request: Request<{ id: string }>, response: Response) {
+        try {
+            const { id } = request.params
+            const song = await db.query.songs.findFirst({ where: eq(songs.id, id) })
+            if (!song) throw new NotFoundException('Song not found')
+            const checkExisting = await db.query.userFavoriteSongs.findFirst({
+                where: and(
+                    eq(userFavoriteSongs.userId, request.userId!),
+                    eq(userFavoriteSongs.songId, id)
+                )
+            })
+            if (!checkExisting) throw new BadRequestException('Song is not in favorites')
+            await db.delete(userFavoriteSongs).where(
+                and(
+                    eq(userFavoriteSongs.userId, request.userId!),
+                    eq(userFavoriteSongs.songId, id)
+                )
+            )
+            await db.update(songs).set({ likes: song.likes! - 1 }).where(eq(songs.id, id))
+            return response.json({ message: 'Song removed from favorites successfully' })
+        } catch (error) {
+            if (error instanceof HttpException) throw error
+            throw new BadRequestException(error instanceof Error ? error.message : undefined)
+        }
+    }
+
+    public async addFavoritePlaylist(request: Request<{ id: string }>, response: Response) {
+        try {
+            const { id } = request.params
+            const playlist = await db.query.playlists.findFirst({ where: eq(playlists.id, id) })
+            if (!playlist) throw new NotFoundException('Playlist not found')
+            const checkExisting = await db.query.userFavoritePlaylists.findFirst({
+                where: and(
+                    eq(userFavoritePlaylists.userId, request.userId!),
+                    eq(userFavoritePlaylists.playlistId, id)
+                )
+            })
+            if (checkExisting) throw new BadRequestException('Playlist is already in favorites')
+            await db.insert(userFavoritePlaylists).values({ userId: request.userId!, playlistId: id })
+            await db.update(playlists).set({ likes: playlist.likes! + 1 }).where(eq(playlists.id, id))
+            return response.json({ message: 'Playlist added to favorites successfully' })
+        } catch (error) {
+            if (error instanceof HttpException) throw error
+            throw new BadRequestException(error instanceof Error ? error.message : undefined)
+        }
+    }
+
+    public async removeFavoritePlaylist(request: Request<{ id: string }>, response: Response) {
+        try {
+            const { id } = request.params
+            const playlist = await db.query.playlists.findFirst({ where: eq(playlists.id, id) })
+            if (!playlist) throw new NotFoundException('Playlist not found')
+            const checkExisting = await db.query.userFavoritePlaylists.findFirst({
+                where: and(
+                    eq(userFavoritePlaylists.userId, request.userId!),
+                    eq(userFavoritePlaylists.playlistId, id)
+                )
+            })
+            if (!checkExisting) throw new BadRequestException('Playlist is not in favorites')
+            await db.delete(userFavoritePlaylists).where(
+                and(
+                    eq(userFavoritePlaylists.userId, request.userId!),
+                    eq(userFavoritePlaylists.playlistId, id)
+                )
+            )
+            await db.update(playlists).set({ likes: playlist.likes! - 1 }).where(eq(playlists.id, id))
+            return response.json({ message: 'Playlist removed from favorites successfully' })
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react"
-import SongItem from "./SongItem"
+import SongItem from "../SongItem"
 import type { Song } from "@/@types/song"
 import { Button } from "@/components/ui/button"
 import { Typography } from "@/components/ui/typography"
@@ -9,7 +9,7 @@ type Props = {
     songs: Song[]
 }
 
-const NewReleaseList: React.FC<Props> = ({ songs }) => {
+const NewReleaseListSection: React.FC<Props> = ({ songs }) => {
     const [type, setType] = useState(-1)
     const { translate } = useLocales()
 
@@ -21,7 +21,7 @@ const NewReleaseList: React.FC<Props> = ({ songs }) => {
     }, [type, songs])
 
     return (
-        <div className="mt-12">
+        <section className="mt-12">
             <div className="flex items-center justify-between mb-3">
                 <Typography variant={'h5'}>{translate('new_songs')}</Typography>
                 <span className="text-xs uppercase">{translate('all')}</span>
@@ -52,8 +52,8 @@ const NewReleaseList: React.FC<Props> = ({ songs }) => {
                     <>loading</>
                 )}
             </div>
-        </div >
+        </section >
     )
 }
 
-export default NewReleaseList
+export default NewReleaseListSection

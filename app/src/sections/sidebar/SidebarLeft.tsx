@@ -3,7 +3,7 @@ import { sidebarMenu } from "@/lib/menu"
 import { Typography } from "@/components/ui/typography"
 import { Plus } from "lucide-react"
 import { cn } from "@/lib/utils"
-import CreateNewPlaylistDialog from "./me/CreateNewPlaylist"
+import CreateNewPlaylistDialog from "../me/CreateNewPlaylist"
 import { useAuthContext } from "@/lib/auth/useAuthContext"
 import { useLocales } from "@/lib/locales"
 import { memo, useState } from "react"
@@ -18,26 +18,26 @@ const SidebarLeft: React.FC = () => {
     return (
         <aside className="sm:block hidden lg:w-48 w-20 flex-none border bg-main-200 transition-all duration-500 ease-in-out">
             <div className="h-full flex flex-col relative">
-                <div className="w-full h-16 py-4 px-6 flex justify-start items-center gap-1">
+                <div className="w-full my-5 flex justify-center items-center">
                     <img src='/favicon.ico' alt="logo" className="h-12 w-12 object-cover" />
-                    <div className="hidden lg:block">
+                    <div className="hidden lg:block ml-1">
                         <Typography className="m-0 font-semibold">YukikazeMP3</Typography>
                     </div>
                 </div>
                 <div className="flex flex-col">
                     {sidebarMenu.map(value => (
-                        <NavLink
-                            to={value.path} key={value.path}
-                            className={({ isActive }) => cn(
-                                'text-gray-500 text-sm py-2 px-6 font-bold flex gap-3 items-center justify-start',
-                                isActive && 'text-[#0F7070] bg-main-100',
-                                (!isAuthenticated && value.path === paths.MY_MUSIC) && 'hidden'
-                            )}
-                        >
-                            {value.icon}
-                            <Typography className="hidden lg:inline m-0">{translate(value.text)}</Typography>
-                        </NavLink>
-                    ))}
+                        !isAuthenticated && value.path === paths.MY_MUSIC ? null : (
+                            <NavLink
+                                to={value.path} key={value.path}
+                                className={({ isActive }) => cn(
+                                    'text-gray-500 text-sm px-6 py-2 font-bold flex gap-3 justify-start items-center',
+                                    isActive && 'text-[#0F7070] bg-main-400',
+                                )}
+                            >
+                                {value.icon}
+                                <Typography className="hidden lg:inline m-0">{translate(value.text)}</Typography>
+                            </NavLink>
+                        )))}
                 </div>
                 {isAuthenticated && (
                     <div className="absolute bottom-0 border-t border-gray-400 w-full">

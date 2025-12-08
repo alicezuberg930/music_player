@@ -19,8 +19,8 @@ const SearchPlaylistPage = () => {
         <div className='w-full'>
             <h3 className='text-xl font-bold mb-4'>Danh sách phát/album</h3>
             <div className='flex flex-wrap -mx-2'>
-                {playlists && playlists.map(playlist => (
-                    <PlaylistCard item={playlist} key={playlist?.id} sectionId='h100' isSearch={true} />
+                {playlists?.map(playlist => (
+                    <PlaylistCard playlist={playlist} key={playlist?.id} sectionId='h100' isSearch={true} />
                 ))}
             </div>
         </div>

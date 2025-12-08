@@ -24,7 +24,6 @@ exports.songs = (0, mysql_core_1.mysqlTable)("songs", {
     userId: (0, mysql_core_1.varchar)({ length: 36 }).notNull().references(() => _1.users.id, { onDelete: "restrict" }),
     likes: (0, mysql_core_1.int)().default(0),
     listens: (0, mysql_core_1.int)().default(0),
-    liked: (0, mysql_core_1.boolean)().default(false),
     comments: (0, mysql_core_1.int)().default(0),
     size: (0, mysql_core_1.int)().notNull(),
     createdAt: utils_1.createdAt,

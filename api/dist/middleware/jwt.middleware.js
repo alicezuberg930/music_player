@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.JWTMiddleware = exports.jwtDecode = void 0;
+exports.OptionalJWTMiddleware = exports.JWTMiddleware = exports.jwtDecode = void 0;
 const exceptions_1 = require("../lib/exceptions");
 const jwtDecode = (token) => {
     const base64Url = token.split('.')[1];
@@ -9,7 +9,7 @@ const jwtDecode = (token) => {
     return JSON.parse(jsonPayload);
 };
 exports.jwtDecode = jwtDecode;
-const JWTMiddleware = async (request, response, next) => {
+const JWTMiddleware = async (request, _, next) => {
     let token = request.cookies?.["accessToken"];
     if (!token && request.headers.authorization?.startsWith("Bearer")) {
         token = request.headers.authorization.split(" ")[1];
@@ -25,6 +25,19 @@ const JWTMiddleware = async (request, response, next) => {
     next();
 };
 exports.JWTMiddleware = JWTMiddleware;
+// Optional JWT middleware - extracts user ID if token exists, but doesn't require authentication
+const OptionalJWTMiddleware = async (request, _, next) => {
+    let token = request.cookies?.["accessToken"];
+    if (!token && request.headers.authorization?.startsWith("Bearer")) {
+        token = request.headers.authorization.split(" ")[1];
+    }
+    if (token) {
+        const jwt = (0, exports.jwtDecode)(token);
+        request.userId = jwt.id;
+    }
+    next();
+};
+exports.OptionalJWTMiddleware = OptionalJWTMiddleware;
 // export const SocketMiddleware = async (socket, next) => {
 //     try {
 //         let token = null

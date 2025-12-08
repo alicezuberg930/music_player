@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { and, db, eq, inArray } from "../../db"
 import { CreatePlayList, PlayList } from "./playlist.model"
-import { playlistArtists, playlists, playlistSongs, songs } from "../../db/schemas"
+import { playlistArtists, playlists, playlistSongs, songs, userFavoritePlaylists } from "../../db/schemas"
 import { BadRequestException, HttpException, NotFoundException } from "../../lib/exceptions"
 import { CreatePlaylistDto } from "./dto/create-playlist.dto"
 import { deleteFile, extractPublicId, uploadFile } from "../../lib/helpers/cloudinary.file"
@@ -14,7 +14,8 @@ export class PlaylistService {
     public async getPlaylists(request: Request<{}, {}, {}, QueryPlaylistDto>, response: Response) {
         try {
             // const { artistName, songTitle, title, releaseDate } = request.query
-            const queryResult = await db.query.playlists.findMany({
+            const userId = request.userId // Get user ID from JWT middleware (undefined if not logged in)
+            const data = await db.query.playlists.findMany({
                 with: {
                     user: { columns: { password: false, email: false } },
                     // artists: {
@@ -26,14 +27,29 @@ export class PlaylistService {
                         with: { song: true }  // Include all song columns to match Song type
                     }
                 }
-            })
-            const data: PlayList[] = queryResult.map(playlist => ({
+            }).then(results => results.map(playlist => ({
                 ...playlist,
-                user: playlist.user,
                 // artists: playlist.artists.map(a => a.artist),
                 songs: playlist.songs.map(s => s.song)
+            })))
+            // If user is logged in, check which playlists they've liked
+            let likedPlaylistIds: Set<string> = new Set()
+            if (userId) {
+                const playlistIds = data.map(playlist => playlist.id)
+                const likedPlaylists = await db.query.userFavoritePlaylists.findMany({
+                    where: and(
+                        eq(userFavoritePlaylists.userId, userId),
+                        inArray(userFavoritePlaylists.playlistId, playlistIds)
+                    ),
+                    columns: { playlistId: true }
+                })
+                likedPlaylistIds = new Set(likedPlaylists.map(lp => lp.playlistId))
+            }
+            const playlistsWithLikedStatus = data.map(playlist => ({
+                ...playlist,
+                liked: likedPlaylistIds.has(playlist.id)
             }))
-            return response.json({ message: 'Playlists fetched successfully', data })
+            return response.json({ message: 'Playlists fetched successfully', data: playlistsWithLikedStatus })
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)

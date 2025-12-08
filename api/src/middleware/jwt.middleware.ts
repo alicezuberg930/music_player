@@ -8,7 +8,7 @@ export const jwtDecode = (token: string): Record<string, string> => {
     return JSON.parse(jsonPayload)
 }
 
-export const JWTMiddleware = async (request: Request, response: Response, next: NextFunction) => {
+export const JWTMiddleware = async (request: Request, _: Response, next: NextFunction) => {
     let token: string | undefined = request.cookies?.["accessToken"]
 
     if (!token && request.headers.authorization?.startsWith("Bearer")) {
@@ -27,6 +27,19 @@ export const JWTMiddleware = async (request: Request, response: Response, next: 
 
     request.userId = jwt.id
 
+    next()
+}
+
+// Optional JWT middleware - extracts user ID if token exists, but doesn't require authentication
+export const OptionalJWTMiddleware = async (request: Request, _: Response, next: NextFunction) => {
+    let token: string | undefined = request.cookies?.["accessToken"]
+    if (!token && request.headers.authorization?.startsWith("Bearer")) {
+        token = request.headers.authorization.split(" ")[1]
+    }
+    if (token) {
+        const jwt = jwtDecode(token)
+        request.userId = jwt.id
+    }
     next()
 }
 

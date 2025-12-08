@@ -118,7 +118,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
     } catch (error) {
       enqueueSnackbar(error instanceof Error ? error.message : translate('unknown_error'), { variant: 'error' })
     }
-  }, [initialize])
+  }, [initialize])  
 
   const signup = useCallback(async (fullname: string, email: string, password: string) => {
     try {

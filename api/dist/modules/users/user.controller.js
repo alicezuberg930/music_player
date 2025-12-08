@@ -35,5 +35,17 @@ class UserController {
     async userPlaylists(request, response) {
         return await this.userService.userPlaylists(request, response);
     }
+    async addFavoriteSong(request, response) {
+        return await this.userService.addFavoriteSong(request, response);
+    }
+    async removeFavoriteSong(request, response) {
+        return await this.userService.removeFavoriteSong(request, response);
+    }
+    async addFavoritePlaylist(request, response) {
+        return await this.userService.addFavoritePlaylist(request, response);
+    }
+    async removeFavoritePlaylist(request, response) {
+        return await this.userService.removeFavoritePlaylist(request, response);
+    }
 }
 exports.default = new UserController();

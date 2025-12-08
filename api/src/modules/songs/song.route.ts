@@ -4,7 +4,7 @@ import { CreateSongDto } from "./dto/create-song.dto"
 import multer from "multer"
 import { multerOptions, Options } from "../../lib/helpers/multer.options"
 import { UpdateSongDto } from "./dto/update-song.dto"
-import { fileMimeAndSizeOptions, validateDtoHanlder, JWTMiddleware } from "../../middleware"
+import { fileMimeAndSizeOptions, validateDtoHanlder, JWTMiddleware, OptionalJWTMiddleware } from "../../middleware"
 
 const songRouter = express.Router()
 
@@ -19,7 +19,10 @@ const uploadOptions: Options = {
 const upload = multer(multerOptions(uploadOptions))
 const fileValidator = fileMimeAndSizeOptions(uploadOptions)
 
-songRouter.get("/songs", (request: Request, response: Response) => songController.getSongs(request, response))
+songRouter.get("/songs",
+    OptionalJWTMiddleware,
+    (request: Request, response: Response) => songController.getSongs(request, response)
+)
 
 songRouter.post("/songs",
     JWTMiddleware,
@@ -46,6 +49,7 @@ songRouter.put("/songs/:id",
 )
 
 songRouter.get("/songs/:id",
+    OptionalJWTMiddleware,
     (request: Request<{ id: string }>, response: Response) => songController.findSong(request, response)
 )
 

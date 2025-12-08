@@ -18,7 +18,6 @@ export const playlists = mysqlTable("playlists", {
     totalDuration: int().default(0),
     likes: int().default(0),
     listens: int().default(0),
-    liked: boolean().default(false),
     comments: int().default(0),
     isAlbum: boolean().default(false),
     createdAt,

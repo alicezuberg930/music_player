@@ -1,5 +1,6 @@
-import type { Response } from '@/@types/response'
 import { axios } from './axiosConfig'
+// types
+import type { Response } from '@/@types/response'
 import type { Song } from '@/@types/song'
 import type { Video } from '@/@types/video'
 import type { Artist } from '@/@types/artist'
@@ -209,6 +210,46 @@ export const fetchUserPlaylistList = async (): Promise<Response<Playlist[]>> => 
 export const fetchUserArtistList = async (): Promise<Response<Artist[]>> => {
     try {
         const response = await axios.get<Response<Artist[]>>(`/users/artist/list`)
+        return response.data
+    } catch (error) {
+        console.error(error)
+        throw error
+    }
+}
+
+export const addFavoriteSong = async (songId: string): Promise<Response> => {
+    try {
+        const response = await axios.put<Response>(`/users/favorite/song/${songId}`)
+        return response.data
+    } catch (error) {
+        console.error(error)
+        throw error
+    }
+}
+
+export const removeFavoriteSong = async (songId: string): Promise<Response> => {
+    try {
+        const response = await axios.delete<Response>(`/users/favorite/song/${songId}`)
+        return response.data
+    } catch (error) {
+        console.error(error)
+        throw error
+    }
+}
+
+export const addFavoritePlaylist = async (playlistId: string): Promise<Response> => {
+    try {
+        const response = await axios.put<Response>(`/users/favorite/playlist/${playlistId}`)
+        return response.data
+    } catch (error) {
+        console.error(error)
+        throw error
+    }
+}
+
+export const removeFavoritePlaylist = async (playlistId: string): Promise<Response> => {
+    try {
+        const response = await axios.delete<Response>(`/users/favorite/playlist/${playlistId}`)
         return response.data
     } catch (error) {
         console.error(error)

@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useAuthContext } from '@/lib/auth/useAuthContext'
-import { DialogClose, DialogDescription, DialogFooter, DialogHeader } from '@/components/ui/dialog'
+import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useLocales } from '@/lib/locales'
 
 interface FormValuesProps {
@@ -42,7 +42,7 @@ const SigninPage: React.FC = () => {
     return (
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <DialogHeader>
-                {/* <DialogTitle>{translate('sign_up')}</DialogTitle> */}
+                <DialogTitle></DialogTitle>
                 <DialogDescription>
                     {translate('sign_in_description')}
                 </DialogDescription>

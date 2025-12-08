@@ -6,7 +6,7 @@ type Props = {
   file: CustomFile | string | null
 }
 
-export default function SingleFilePreview({ file }: Props) {
+export default function SingleFilePreview({ file }: Readonly<Props>) {
   if (!file) return null
   let imgUrl = ''
   if (typeof file === 'string') {

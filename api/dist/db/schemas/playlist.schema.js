@@ -20,7 +20,6 @@ exports.playlists = (0, mysql_core_1.mysqlTable)("playlists", {
     totalDuration: (0, mysql_core_1.int)().default(0),
     likes: (0, mysql_core_1.int)().default(0),
     listens: (0, mysql_core_1.int)().default(0),
-    liked: (0, mysql_core_1.boolean)().default(false),
     comments: (0, mysql_core_1.int)().default(0),
     isAlbum: (0, mysql_core_1.boolean)().default(false),
     createdAt: utils_1.createdAt,

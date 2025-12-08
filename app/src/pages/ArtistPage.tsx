@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { fetchArtist } from '@/lib/httpClient'
 import { icons } from '@/lib/icons'
 import SongItem from '../sections/SongItem'
-import PlaylistSection from '../sections/PlaylistSection'
+import PlaylistSection from '../sections/home/PlaylistSection'
 import ArtistCard from '../sections/ArtistCard'
 import MVSection from '../sections/MVSection'
 import type { Artist } from "@/@types/artist"

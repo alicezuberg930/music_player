@@ -59,14 +59,47 @@ userRouter.get("/users/song/list",
     (request: Request, response: Response) => userController.userSongs(request, response)
 )
 
-userRouter.get("/users/artist/list",
-    JWTMiddleware,
-    (request: Request, response: Response) => userController.userSongs(request, response)
-)
-
 userRouter.get("/users/playlist/list",
     JWTMiddleware,
     (request: Request, response: Response) => userController.userPlaylists(request, response)
+)
+
+// following artist list
+// userRouter.get("/users/artist/follow",
+//     JWTMiddleware,
+//     (request: Request, response: Response) => userController.followingArtistList(request, response)
+// )
+
+// follow artist
+// userRouter.put("/users/artist/follow/:id",
+//     JWTMiddleware,
+//     (request: Request, response: Response) => userController.followArtist(request, response)
+// )
+
+// unfollow artist
+// userRouter.delete("/users/artist/follow/:id",
+//     JWTMiddleware,
+//     (request: Request, response: Response) => userController.unfollowArtist(request, response)
+// )
+
+userRouter.put('/users/favorite/song/:id',
+    JWTMiddleware,
+    (request: Request<{ id: string }>, response: Response) => userController.addFavoriteSong(request, response)
+)
+
+userRouter.delete('/users/favorite/song/:id',
+    JWTMiddleware,
+    (request: Request<{ id: string }>, response: Response) => userController.removeFavoriteSong(request, response)
+)
+
+userRouter.put('/users/favorite/playlist/:id',
+    JWTMiddleware,
+    (request: Request<{ id: string }>, response: Response) => userController.addFavoritePlaylist(request, response)
+)
+
+userRouter.delete('/users/favorite/playlist/:id',
+    JWTMiddleware,
+    (request: Request<{ id: string }>, response: Response) => userController.removeFavoritePlaylist(request, response)
 )
 
 export { userRouter }

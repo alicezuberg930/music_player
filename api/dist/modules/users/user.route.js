@@ -32,5 +32,23 @@ userRouter.post("/users/sign-out", middleware_1.JWTMiddleware, (request, respons
 userRouter.put("/users/:id", upload.fields([{ name: "avatar", maxCount: 1 }]), fileValidator, (request, response) => user_controller_1.default.updateUser(request, response));
 userRouter.get("/users/verify-email/:id", (request, response) => user_controller_1.default.verifyEmail(request, response));
 userRouter.get("/users/song/list", middleware_1.JWTMiddleware, (request, response) => user_controller_1.default.userSongs(request, response));
-userRouter.get("/users/artist/list", middleware_1.JWTMiddleware, (request, response) => user_controller_1.default.userSongs(request, response));
 userRouter.get("/users/playlist/list", middleware_1.JWTMiddleware, (request, response) => user_controller_1.default.userPlaylists(request, response));
+// following artist list
+// userRouter.get("/users/artist/follow",
+//     JWTMiddleware,
+//     (request: Request, response: Response) => userController.followingArtistList(request, response)
+// )
+// follow artist
+// userRouter.put("/users/artist/follow/:id",
+//     JWTMiddleware,
+//     (request: Request, response: Response) => userController.followArtist(request, response)
+// )
+// unfollow artist
+// userRouter.delete("/users/artist/follow/:id",
+//     JWTMiddleware,
+//     (request: Request, response: Response) => userController.unfollowArtist(request, response)
+// )
+userRouter.put('/users/favorite/song/:id', middleware_1.JWTMiddleware, (request, response) => user_controller_1.default.addFavoriteSong(request, response));
+userRouter.delete('/users/favorite/song/:id', middleware_1.JWTMiddleware, (request, response) => user_controller_1.default.removeFavoriteSong(request, response));
+userRouter.put('/users/favorite/playlist/:id', middleware_1.JWTMiddleware, (request, response) => user_controller_1.default.addFavoritePlaylist(request, response));
+userRouter.delete('/users/favorite/playlist/:id', middleware_1.JWTMiddleware, (request, response) => user_controller_1.default.removeFavoritePlaylist(request, response));

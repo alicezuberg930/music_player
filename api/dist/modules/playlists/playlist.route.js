@@ -22,7 +22,7 @@ const uploadOptions = {
 };
 const upload = (0, multer_1.default)((0, multer_options_1.multerOptions)(uploadOptions));
 const fileValidator = (0, middleware_1.fileMimeAndSizeOptions)(uploadOptions);
-playlistRouter.get("/playlists", (request, response) => playlist_controller_1.default.getPlaylists(request, response));
+playlistRouter.get("/playlists", middleware_1.OptionalJWTMiddleware, (request, response) => playlist_controller_1.default.getPlaylists(request, response));
 playlistRouter.post("/playlists", middleware_1.JWTMiddleware, upload.fields([{ name: "thumbnail", maxCount: 1 }]), fileValidator, (0, middleware_1.validateDtoHanlder)(create_playlist_dto_1.CreatePlaylistDto), (request, response) => playlist_controller_1.default.createPlaylist(request, response));
 playlistRouter.get("/playlists/:id", (request, response) => playlist_controller_1.default.findPlaylist(request, response));
 playlistRouter.put("/playlists/:id", middleware_1.JWTMiddleware, upload.fields([{ name: "thumbnail", maxCount: 1 }]), fileValidator, (0, middleware_1.validateDtoHanlder)(update_playlist_dto_1.UpdatePlaylistDto), (request, response) => playlist_controller_1.default.updatePlaylist(request, response));

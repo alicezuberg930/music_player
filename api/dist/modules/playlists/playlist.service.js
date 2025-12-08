@@ -10,7 +10,8 @@ class PlaylistService {
     async getPlaylists(request, response) {
         try {
             // const { artistName, songTitle, title, releaseDate } = request.query
-            const queryResult = await db_1.db.query.playlists.findMany({
+            const userId = request.userId; // Get user ID from JWT middleware (undefined if not logged in)
+            const data = await db_1.db.query.playlists.findMany({
                 with: {
                     user: { columns: { password: false, email: false } },
                     // artists: {
@@ -22,14 +23,26 @@ class PlaylistService {
                         with: { song: true } // Include all song columns to match Song type
                     }
                 }
-            });
-            const data = queryResult.map(playlist => ({
+            }).then(results => results.map(playlist => ({
                 ...playlist,
-                user: playlist.user,
                 // artists: playlist.artists.map(a => a.artist),
                 songs: playlist.songs.map(s => s.song)
+            })));
+            // If user is logged in, check which playlists they've liked
+            let likedPlaylistIds = new Set();
+            if (userId) {
+                const playlistIds = data.map(playlist => playlist.id);
+                const likedPlaylists = await db_1.db.query.userFavoritePlaylists.findMany({
+                    where: (0, db_1.and)((0, db_1.eq)(schemas_1.userFavoritePlaylists.userId, userId), (0, db_1.inArray)(schemas_1.userFavoritePlaylists.playlistId, playlistIds)),
+                    columns: { playlistId: true }
+                });
+                likedPlaylistIds = new Set(likedPlaylists.map(lp => lp.playlistId));
+            }
+            const playlistsWithLikedStatus = data.map(playlist => ({
+                ...playlist,
+                liked: likedPlaylistIds.has(playlist.id)
             }));
-            return response.json({ message: 'Playlists fetched successfully', data });
+            return response.json({ message: 'Playlists fetched successfully', data: playlistsWithLikedStatus });
         }
         catch (error) {
             if (error instanceof exceptions_1.HttpException)

@@ -23,7 +23,7 @@ const uploadOptions = {
 };
 const upload = (0, multer_1.default)((0, multer_options_1.multerOptions)(uploadOptions));
 const fileValidator = (0, middleware_1.fileMimeAndSizeOptions)(uploadOptions);
-songRouter.get("/songs", (request, response) => song_controller_1.default.getSongs(request, response));
+songRouter.get("/songs", middleware_1.OptionalJWTMiddleware, (request, response) => song_controller_1.default.getSongs(request, response));
 songRouter.post("/songs", middleware_1.JWTMiddleware, upload.fields([
     { name: "audio", maxCount: 1 },
     { name: "lyrics", maxCount: 1 },
@@ -34,5 +34,5 @@ songRouter.put("/songs/:id", middleware_1.JWTMiddleware, upload.fields([
     { name: "lyrics", maxCount: 1 },
     { name: "thumbnail", maxCount: 1 }
 ]), fileValidator, (0, middleware_1.validateDtoHanlder)(update_song_dto_1.UpdateSongDto), (request, response) => song_controller_1.default.updateSong(request, response));
-songRouter.get("/songs/:id", (request, response) => song_controller_1.default.findSong(request, response));
+songRouter.get("/songs/:id", middleware_1.OptionalJWTMiddleware, (request, response) => song_controller_1.default.findSong(request, response));
 songRouter.delete("/songs/:id", middleware_1.JWTMiddleware, (request, response) => song_controller_1.default.deleteSong(request, response));

@@ -1,6 +1,7 @@
 import {
     Dialog,
     DialogContent,
+    DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
 import {
@@ -22,6 +23,7 @@ const AuthPopover: React.FC = () => {
                 <Typography variant={'span'} className="text-white">{translate('sign_in')}</Typography>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
+                <DialogTitle></DialogTitle>
                 <Tabs defaultValue="sign_in">
                     <TabsList>
                         <TabsTrigger value="sign_in">{translate('sign_in')}</TabsTrigger>

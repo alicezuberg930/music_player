@@ -4,7 +4,7 @@ import { icons } from "@/lib/icons"
 
 let interval: number | undefined
 
-const HomeBannerSlider = () => {
+const BannerSliderSection: React.FC = () => {
     const banners: any = []
     // const navigate = useNavigate()
     const { MdArrowBackIosNew, MdArrowForwardIos } = icons
@@ -115,4 +115,4 @@ const HomeBannerSlider = () => {
     )
 }
 
-export default HomeBannerSlider
+export default BannerSliderSection

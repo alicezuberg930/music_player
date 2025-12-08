@@ -20,7 +20,7 @@ export default function FileThumbnail({
   onDownload,
   imageProps,
   fileProps
-}: FileIconProps) {
+}: Readonly<FileIconProps>) {
   const { name = '', path = '', preview = '' } = fileData(file)
 
   const format = fileFormat(path || preview)

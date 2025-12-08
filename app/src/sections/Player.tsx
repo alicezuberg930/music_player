@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react'
 // components
 import { RotatingLines } from 'react-loader-spinner'
 import { Typography } from '@/components/ui/typography'
@@ -31,7 +31,7 @@ const Player: React.FC = () => {
     const shuffleRef = useRef<boolean>(false)
     const repeatModeRef = useRef<number>(0)
     const thumbRef = useRef<HTMLDivElement | null>(null)
-    const trackRef = useRef<HTMLDivElement | null>(null)
+    const trackRef = useRef<HTMLButtonElement | null>(null)
     const audioRef = useRef<HTMLAudioElement | null>(null)
     const currentTimeRef = useRef<HTMLElement | null>(null)
     const isDraggingRef = useRef<boolean>(false)
@@ -52,18 +52,18 @@ const Player: React.FC = () => {
     }
 
     // handle click on progress bar
-    const handleClickProgressBar = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const handleClickProgressBar = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         seekBar(e.clientX)
     }
 
     // handle mouse down on progress bar
-    const handleMouseDownProgressBar = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const handleMouseDownProgressBar = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         isDraggingRef.current = true
         seekBar(e.clientX)
     }
 
     // handle drag on progress bar
-    const handleMouseMoveProgressBar = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const handleMouseMoveProgressBar = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         if (!isDraggingRef.current) return
         seekBar(e.clientX)
     }
@@ -101,7 +101,7 @@ const Player: React.FC = () => {
         }
     }, [currentPlaylistSongs, currentSong, dispatch])
 
-    const handleToggleButton = useCallback(async () => {
+    const handleTogglePlay = useCallback(async () => {
         if (!audioRef.current) return
         if (isPlaying && !audioRef.current.paused) {
             dispatch(setIsPlaying(false))
@@ -188,6 +188,8 @@ const Player: React.FC = () => {
         }
     }
 
+    const handleSetVolume = (e: ChangeEvent<HTMLInputElement>) => setVolume(Number(e.target.value))
+
     // initialize player when current song changes and update player UI
     useEffect(() => {
         initializePlayer()
@@ -208,7 +210,7 @@ const Player: React.FC = () => {
                 const tagName = e.target.tagName.toLowerCase()
                 if (tagName === 'input' || tagName === 'textarea' || e.target.isContentEditable) return
                 e.preventDefault()
-                handleToggleButton()
+                handleTogglePlay()
             }
         }
         const handleArrowKeyPress = (e: KeyboardEvent) => {
@@ -229,7 +231,7 @@ const Player: React.FC = () => {
             globalThis.removeEventListener('keydown', handleSpaceKeyPress)
             globalThis.removeEventListener('keydown', handleArrowKeyPress)
         }
-    }, [isPlaying, handleToggleButton, handlePrevious, handleNext])
+    }, [isPlaying, handleTogglePlay, handlePrevious, handleNext])
 
     // change audio during song playing
     useEffect(() => {
@@ -287,7 +289,7 @@ const Player: React.FC = () => {
                         <span className={`${currentPlaylistSongs.length ? 'cursor-pointer' : 'text-gray-500'}`}>
                             <SkipBack size={20} onClick={handlePrevious} />
                         </span>
-                        <span onClick={handleToggleButton} className='hover:text-main-500' >
+                        <button onClick={handleTogglePlay} className='hover:text-main-500' >
                             {isLoadingAudio ? (
                                 <RotatingLines strokeColor='#0E8080' width={42} height={42} />
                             ) : isPlaying ? (
@@ -295,30 +297,24 @@ const Player: React.FC = () => {
                             ) : (
                                 <PlayCircle size={42} />
                             )}
-                        </span>
+                        </button>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <span className={`${currentPlaylistSongs.length ? 'cursor-pointer' : 'text-gray-500'}`}>
-                                    <SkipForward size={20} onClick={handleNext} />
-                                </span>
+                                <SkipForward size={20} onClick={handleNext}
+                                    className={`${currentPlaylistSongs.length ? 'cursor-pointer' : 'text-gray-500'}`}
+                                />
                             </TooltipTrigger>
                             {nextSong && (
                                 <TooltipContent>
                                     <Typography className='font-semibold'>Phát tiếp theo</Typography>
                                     <div className='flex gap-2 items-center'>
                                         <LazyLoadImage
-                                            src={nextSong.thumbnail}
-                                            effect='blur'
-                                            alt='thumbnail'
+                                            src={nextSong.thumbnail} effect='blur' alt='thumbnail'
                                             className='w-10 h-10 object-cover rounded-md'
                                         />
-                                        <div>
-                                            <Typography className='m-0 text-gray-400'>
-                                                {nextSong.title}
-                                            </Typography>
-                                            <Typography className='m-0 text-gray-400'>
-                                                {nextSong.artistNames}
-                                            </Typography>
+                                        <div className='text-gray-400'>
+                                            <Typography className='m-0'>{nextSong.title}</Typography>
+                                            <Typography className='m-0 lg:text-xs'>{nextSong.artistNames}</Typography>
                                         </div>
                                     </div>
                                 </TooltipContent>
@@ -338,7 +334,7 @@ const Player: React.FC = () => {
                     </div>
                     <div className='w-full flex items-center justify-center gap-3 text-sm'>
                         <Typography ref={currentTimeRef} className='font-semibold text-gray-500 m-0'>00:00</Typography>
-                        <div
+                        <button
                             className='relative h-1 hover:h-2 bg-[#0000001a] w-3/5 rounded-full cursor-pointer'
                             onClick={handleClickProgressBar}
                             onMouseDown={handleMouseDownProgressBar}
@@ -348,7 +344,7 @@ const Player: React.FC = () => {
                             ref={trackRef}
                         >
                             <div ref={thumbRef} className='absolute top-0 left-0 bottom-0 h-full bg-main-500 rounded-full'></div>
-                        </div>
+                        </button>
                         <Typography className='font-semibold text-gray-500 m-0'>{formatDuration(currentSong?.duration ?? 0)}</Typography>
                     </div>
                 </div>
@@ -357,7 +353,7 @@ const Player: React.FC = () => {
                     <Button size={'icon-lg'} variant={'ghost'} onClick={() => setVolume(volume === 0 ? 50 : 0)}>
                         {volume >= 50 ? <Volume2 /> : volume === 0 ? <VolumeX /> : <Volume1 />}
                     </Button>
-                    <input type='range' step={1} min={0} max={100} onChange={(e) => setVolume(Number(e.target.value))} value={volume} className='h-1 hover:h-2' />
+                    <input type='range' step={1} min={0} max={100} onChange={handleSetVolume} value={volume} className='h-1 hover:h-2' />
                     <Button className='text-white' size={'lg'} onClick={() => dispatch(setShowSidebarRight(!showSideBarRight))}>
                         <MusicIcon />
                     </Button>

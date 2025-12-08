@@ -11,7 +11,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useLocales } from "@/lib/locales"
-import { Heart, ListFilterPlusIcon, ListMusic, MoreHorizontalIcon, Plus } from "lucide-react"
+import { Heart, ListFilterPlusIcon, ListMusic, Plus } from "lucide-react"
 import CreateNewPlaylistDialog from "./me/CreateNewPlaylist"
 import { useEffect, useState } from "react"
 import { fetchUserPlaylistList } from "@/lib/httpClient"
@@ -20,9 +20,10 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog"
 
 type Props = {
     addToPlaylist: (playlistId: string) => void
+    triggerElement: React.ReactNode
 }
 
-const SongOptionDropdown: React.FC<Props> = ({ addToPlaylist }) => {
+const SongOptionDropdown: React.FC<Props> = ({ addToPlaylist, triggerElement }) => {
     const { translate } = useLocales()
     const [playlists, setPlaylists] = useState<Playlist[]>([])
     const [open, setOpen] = useState(false)
@@ -39,7 +40,7 @@ const SongOptionDropdown: React.FC<Props> = ({ addToPlaylist }) => {
         <Dialog open={open} onOpenChange={setOpen}>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <MoreHorizontalIcon className="text-gray-500" />
+                    {triggerElement}
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-52">
                     <DropdownMenuGroup>

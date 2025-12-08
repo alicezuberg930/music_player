@@ -63,7 +63,7 @@ const SearchAllPage = () => {
                     <h3 className='text-lg font-bold mb-4'>Playlist/Album</h3>
                     <div className='flex justify-start mb-7 -mx-3'>
                         {searchData?.playlists?.slice(0, 5).map((playlist: any) => (
-                            <PlaylistCard item={playlist} key={playlist?.encodeId} />
+                            <PlaylistCard playlist={playlist} key={playlist?.encodeId} />
                         ))}
                     </div>
                 </div>

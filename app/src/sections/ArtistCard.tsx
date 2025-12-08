@@ -14,12 +14,11 @@ type Props = {
 const ArtistCard = ({ artist, visibleSlides = 5 }: Props) => {
     return (
         <div className="space-x-3 text-center flex flex-col items-center gap-3 px-2" style={{ width: `${100 / visibleSlides}%` }}>
-            <Link className="w-full h-full relative overflow-hidden rounded-full group" to={`/artist/${artist.id}`}>
+            <Link className="w-full h-full relative aspect-square rounded-full overflow-hidden group" to={`/artist/${artist.id}`}>
                 <LazyLoadImage
-                    src={artist.thumbnail} alt="artist"
-                    className="group-hover:animate-scale-up-center object-cover w-full h-full"
-                    wrapperClassName="w-full h-full"
-                    effect="blur"
+                    src={artist.thumbnail} alt={artist.name}
+                    effect="blur" wrapperClassName="w-full"
+                    className="group-hover:animate-scale-up-center object-cover w-full"
                 />
                 <div className="absolute left-0 right-0 top-0 bottom-0 z-30 group-hover:bg-overlay"></div>
             </Link>

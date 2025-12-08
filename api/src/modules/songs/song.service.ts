@@ -1,25 +1,26 @@
 // lib
 import { Request, Response } from 'express'
 import { esmMusicMetadata } from '../../lib/helpers/esm.module'
-import fs from 'fs'
+import fs from 'node:fs'
 import NodeID3 from 'node-id3'
 // database
-import { db, eq, inArray } from '../../db'
+import { db, eq, inArray, and } from '../../db'
 import { CreateSong, Song } from './song.model'
-import { artists, songs, artistsSongs } from '../../db/schemas'
+import { artists, songs, artistsSongs, userFavoriteSongs } from '../../db/schemas'
 // utils
 import { HttpException, BadRequestException, NotFoundException } from '../../lib/exceptions'
 import slugify from '../../lib/helpers/slugify'
 import { deleteFile, extractPublicId, uploadFile } from "../../lib/helpers/cloudinary.file"
+import { createId } from '../../db/utils'
 // dto
 import { CreateSongDto } from './dto/create-song.dto'
 import { UpdateSongDto } from './dto/update-song.dto'
-import { createId } from '../../db/utils'
 
 export class SongService {
     public async getSongs(request: Request, response: Response) {
         try {
             const { } = request.query
+            const userId = request.userId // Get user ID from JWT middleware (undefined if not logged in)
             const data: Song[] = await db.query.songs.findMany({
                 with: {
                     user: { columns: { password: false, email: false } },
@@ -37,7 +38,24 @@ export class SongService {
                 artists: song.artists.map(a => a.artist),
                 genres: song.genres.map(g => g.genre)
             })))
-            return response.json({ message: 'Song list fetched successfully', data })
+            // If user is logged in, check which songs they've liked
+            let likedSongIds: Set<string> = new Set()
+            if (userId) {
+                const songIds = data.map(song => song.id)
+                const likedSongs = await db.query.userFavoriteSongs.findMany({
+                    where: and(
+                        eq(userFavoriteSongs.userId, userId),
+                        inArray(userFavoriteSongs.songId, songIds)
+                    ),
+                    columns: { songId: true }
+                })
+                likedSongIds = new Set(likedSongs.map(ls => ls.songId))
+            }
+            const songsWithLikedStatus = data.map(song => ({
+                ...song,
+                liked: likedSongIds.has(song.id)
+            }))
+            return response.json({ message: 'Song list fetched successfully', data: songsWithLikedStatus })
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)

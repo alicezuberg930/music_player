@@ -2,7 +2,7 @@ import express, { Request, Response } from "express"
 import playlistController from "./playlist.controller"
 import multer from "multer"
 import { multerOptions, Options } from "../../lib/helpers/multer.options"
-import { validateDtoHanlder, JWTMiddleware, fileMimeAndSizeOptions } from "../../middleware"
+import { validateDtoHanlder, JWTMiddleware, fileMimeAndSizeOptions, OptionalJWTMiddleware } from "../../middleware"
 import { CreatePlaylistDto } from "./dto/create-playlist.dto"
 import { UpdatePlaylistDto } from "./dto/update-playlist.dto"
 import { QueryPlaylistDto } from "./dto/query-playlist.dto"
@@ -20,6 +20,7 @@ const upload = multer(multerOptions(uploadOptions))
 const fileValidator = fileMimeAndSizeOptions(uploadOptions)
 
 playlistRouter.get("/playlists",
+    OptionalJWTMiddleware,
     (request: Request<{}, {}, {}, QueryPlaylistDto>, response: Response) => playlistController.getPlaylists(request, response)
 )
 

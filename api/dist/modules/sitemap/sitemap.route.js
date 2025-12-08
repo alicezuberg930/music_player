@@ -7,3 +7,4 @@ const sitemapRouter = (0, express_1.Router)();
 exports.sitemapRouter = sitemapRouter;
 const sitemapController = new sitemap_controller_1.SitemapController();
 sitemapRouter.get('/sitemap.xml', (request, response) => sitemapController.generateSitemapXML(request, response));
+sitemapRouter.get('/sitemap-urls', (request, response) => sitemapController.generateSitemapURLS(request, response));

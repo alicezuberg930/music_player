@@ -6,4 +6,6 @@ const sitemapController = new SitemapController()
 
 sitemapRouter.get('/sitemap.xml', (request: Request, response: Response) => sitemapController.generateSitemapXML(request, response))
 
+sitemapRouter.get('/sitemap-urls', (request: Request, response: Response) => sitemapController.generateSitemapURLS(request, response))
+
 export { sitemapRouter }

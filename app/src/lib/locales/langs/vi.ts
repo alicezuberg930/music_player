@@ -1,4 +1,7 @@
 const vi = {
+  'artist': ' Nghệ sĩ',
+  'album': ' Album',
+  'song': ' Bài hát',
   'cancel': 'Hủy',
   'add_to_playlist': 'Thêm vào danh sách',
   'sign_in': 'Đăng nhập',

@@ -34,12 +34,12 @@ const PlaylistPage: React.FC = () => {
     const getPlaylist = async () => {
         try {
             const response = await fetchPlaylist(id!)
-            if (response.statusCode && response.statusCode === 200) {
-                setPlaylist(response.data)
+            if (response.statusCode === 200) {
+                setPlaylist(response.data ?? null)
                 // Only auto-play if navigating from PlaylistCard
                 if (location.state?.playAlbum) {
-                    dispatch(setCurrentPlaylistSongs(response.data.songs))
-                    dispatch(setCurrentSong(response.data.songs[0]))
+                    dispatch(setCurrentPlaylistSongs(response.data?.songs ?? []))
+                    dispatch(setCurrentSong(response.data?.songs[0]))
                     dispatch(setIsPlaying(true))
                     // Clear the state so it doesn't auto-play on subsequent visits
                     globalThis.history.replaceState({}, document.title)

@@ -3,7 +3,6 @@ import { useCallback } from 'react'
 import { RotatingLines } from 'react-loader-spinner'
 import { useLocales } from '@/lib/locales'
 // types
-import type { Response } from '@/@types/response'
 import type { CustomFile } from '@/components/upload'
 // form
 import { useForm } from 'react-hook-form'
@@ -13,8 +12,8 @@ import { FormProvider, RHFTextField } from '@/components/hook-form'
 import { RHFUpload } from '@/components/hook-form/RHFUpload'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { createArtist } from '@/lib/httpClient'
 import { useSnackbar } from '@/components/snackbar'
+import { useCreateArtist } from '@/hooks/useApi'
 
 type FormValuesProps = {
     thumbnail?: CustomFile | string
@@ -24,6 +23,16 @@ type FormValuesProps = {
 const AddArtistPage: React.FC = () => {
     const { enqueueSnackbar } = useSnackbar()
     const { translate } = useLocales()
+
+    const createArtistMutation = useCreateArtist({
+        onSuccess: (response) => {
+            reset()
+            enqueueSnackbar(translate(response.message), { variant: 'success' })
+        },
+        onError: (error) => {
+            enqueueSnackbar(translate(error.message ?? 'unknown_error'), { variant: 'error' })
+        }
+    })
 
     const ArtistSchema: Yup.ObjectSchema<FormValuesProps> = Yup.object().shape({
         thumbnail: Yup.mixed<CustomFile | string>().optional(),
@@ -48,21 +57,11 @@ const AddArtistPage: React.FC = () => {
     } = methods
 
     const onSubmit = async (data: FormValuesProps) => {
-        try {
-            const formData = new FormData()
-            for (const [key, value] of Object.entries(data)) {
-                if (value !== undefined) formData.append(key, value as string | Blob)
-            }
-            const response: Response = await createArtist(formData)
-            if (response?.statusCode && response?.statusCode === 201) {
-                reset()
-                enqueueSnackbar(translate(response.message), { variant: 'success' })
-            } else {
-                enqueueSnackbar(translate(response.message ?? 'unknown_error'), { variant: 'error' })
-            }
-        } catch (error) {
-            console.error(error)
+        const formData = new FormData()
+        for (const [key, value] of Object.entries(data)) {
+            if (value !== undefined) formData.append(key, value as string | Blob)
         }
+        createArtistMutation.mutate(formData)
     }
 
     const handleDropThumbnail = useCallback((acceptedFiles: File[]) => {

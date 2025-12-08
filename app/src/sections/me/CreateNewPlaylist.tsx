@@ -1,8 +1,8 @@
 import * as Yup from 'yup'
 import { RotatingLines } from 'react-loader-spinner'
-import { createPlaylist } from '@/lib/httpClient'
 // form
 import { useForm } from 'react-hook-form'
+import { useCreatePlaylist } from '@/hooks/useApi'
 import { yupResolver } from '@hookform/resolvers/yup'
 // components
 import { FormProvider, RHFTextField } from '@/components/hook-form'
@@ -33,6 +33,17 @@ const CreateNewPlaylistDialog: React.FC<Props> = ({ onOpenChange }) => {
     const { enqueueSnackbar } = useSnackbar()
     const { translate } = useLocales()
 
+    const createPlaylistMutation = useCreatePlaylist({
+        onSuccess: (response) => {
+            onOpenChange?.(false)
+            reset()
+            enqueueSnackbar(response.message, { variant: 'success' })
+        },
+        onError: (error) => {
+            enqueueSnackbar(translate(error.message ?? 'unknown_error'), { variant: 'error' })
+        }
+    })
+
     const PlaylistSchema: Yup.ObjectSchema<FormValuesProps> = Yup.object().shape({
         isPrivate: Yup.boolean().required(translate('privacy_setting_required')),
         title: Yup.string().required(translate('playlist_title_required')),
@@ -55,22 +66,11 @@ const CreateNewPlaylistDialog: React.FC<Props> = ({ onOpenChange }) => {
     } = methods
 
     const onSubmit = async (data: FormValuesProps) => {
-        try {
-            const formData = new FormData()
-            for (const [key, value] of Object.entries(data)) {
-                formData.append(key, value as string)
-            }
-            const response = await createPlaylist(formData)
-            if (response.statusCode === 201) {
-                onOpenChange?.(false)
-                reset()
-                enqueueSnackbar(response.message, { variant: 'success' })
-            } else {
-                enqueueSnackbar(translate(response.message ?? 'unknown_error'), { variant: 'error' })
-            }
-        } catch (error) {
-            console.error(error)
+        const formData = new FormData()
+        for (const [key, value] of Object.entries(data)) {
+            if (value !== undefined) formData.append(key, value as string)
         }
+        createPlaylistMutation.mutate(formData)
     }
 
     return (

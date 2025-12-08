@@ -11,13 +11,10 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
   // Fetch dynamic routes from API sitemap
   let dynamicRoutes: string[] = []
   try {
-    const response = await fetch('http://localhost:5000/sitemap.xml')
-    const xmlText = await response.text()
-    // Parse XML to extract <loc> URLs
-    const locMatches = xmlText.matchAll(/<loc>(.*?)<\/loc>/g)
-    for (const match of locMatches) {
-      const url = new URL(match[1])
-      dynamicRoutes.push(url.pathname)
+    const response = await fetch('http://localhost:5000/sitemap-urls')
+    const data = await response.json() as { data: string[] }
+    for (const url of data.data) {
+      dynamicRoutes.push(url)
     }
   } catch (error) {
     console.warn('Failed to fetch sitemap from API:', error)

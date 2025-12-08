@@ -1,4 +1,7 @@
 const en = {
+    'artist': 'Artist',
+    'album': 'Album',
+    'song': 'Song',
     'cancel': 'Cancel',
     'add_to_playlist': 'Add to playlist',
     'sign_in': 'Sign In',

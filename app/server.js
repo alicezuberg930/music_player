@@ -34,7 +34,7 @@ app.get('/*splat', async (req, res) => {
         let meta = {}
         // Static routes - just update meta tags if needed
         const staticMeta = {
-            '/': {
+            '/home': {
                 title: 'Yukikaze Music Player',
                 description: 'Listen to your favorite music online. Stream songs, create playlists, and discover new artists on Yukikaze Music Player.',
                 image: `${currentBaseUrl}/web-app-manifest-512x512.png`,

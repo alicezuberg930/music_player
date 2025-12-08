@@ -4,6 +4,36 @@ import { artists, playlists } from "../../db/schemas"
 export class SitemapService {
     private readonly baseUrl = 'https://tien-music-player.site'
 
+    public async generateSitemapURLs(): Promise<string[]> {
+        const urls: string[] = [
+            '/',
+            '/search',
+            '/search/all',
+            '/search/songs',
+            '/search/playlists',
+            '/search/artists',
+            '/search/mv',
+            '/chart',
+            '/chart/week',
+        ]
+
+        // Add dynamic playlist routes
+        const playlistsList = await db.select({
+            id: playlists.id, updatedAt: playlists.updatedAt
+        }).from(playlists).where(eq(playlists.isPrivate, false))
+
+        for (const playlist of playlistsList) urls.push(`/playlist/${playlist.id}`)
+
+        // Add dynamic artist routes
+        const artistsList = await db.select({
+            id: artists.id, updatedAt: artists.updatedAt
+        }).from(artists)
+
+        for (const artist of artistsList) urls.push(`/artist/${artist.id}`)
+
+        return urls
+    }
+
     public async generateSitemapXML(): Promise<string> {
         const urls: string[] = []
         const staticRoutes = [

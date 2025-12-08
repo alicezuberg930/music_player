@@ -74,6 +74,7 @@ class UserService {
                 .then(_ => console.log('Verification email sent successfully'))
                 .catch(err => console.error('Failed to send verification email:', err));
             const token = jsonwebtoken_1.default.sign({ id: user[0].id }, env_1.default.JWT_SECRET, { expiresIn: '1d', algorithm: 'HS256' });
+            response.set('Cache-Control', 'private, must-revalidate, max-age=3600');
             response.cookie('accessToken', token, {
                 httpOnly: true,
                 secure: env_1.default.NODE_ENV === "production", // Required for HTTPS
@@ -117,7 +118,8 @@ class UserService {
             });
             if (!data)
                 throw new exceptions_1.NotFoundException('User not found');
-            response.set('Cache-Control', 'public, max-age=0, must-revalidate');
+            // Cache privately (per-user), must revalidate on each request
+            response.set('Cache-Control', 'private, must-revalidate, max-age=3600');
             return response.json({ message: 'User details fetched successfully', data });
         }
         catch (error) {
@@ -134,6 +136,8 @@ class UserService {
                 sameSite: env_1.default.NODE_ENV === "production" ? 'lax' : 'strict', // Required for cross-domain cookies
                 domain: env_1.default.NODE_ENV === "production" ? '.tien-music-player.site' : undefined, // Share cookie across subdomains
             });
+            // Tell browser to clear cached responses that depend on auth
+            response.set('Clear-Site-Data', '"cache", "cookies"');
             return response.json({ message: 'User signed out successfully' });
         }
         catch (error) {

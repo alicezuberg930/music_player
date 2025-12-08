@@ -81,13 +81,12 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
   const initialize = useCallback(async () => {
     try {
       const response = await fetchProfile()
-      console.log(response)
       if (response.statusCode === 200) {
         dispatch({
           type: Types.INITIAL,
           payload: {
             isAuthenticated: true,
-            user: response.data
+            user: response.data!
           },
         })
       }
@@ -109,7 +108,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
         dispatch({
           type: Types.LOGIN,
           payload: {
-            user: response.data.user as AuthUser
+            user: response.data?.user!
           },
         })
       }

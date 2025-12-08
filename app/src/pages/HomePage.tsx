@@ -1,36 +1,13 @@
 import NewReleaseList from "@/sections/NewReleaseList"
 import PlaylistSection from "@/sections/PlaylistSection"
-import type { Song } from "@/@types/song"
-import { useEffect, useState } from "react"
-import { fetchPlaylistList, fetchSongList } from "@/lib/httpClient"
-import type { Playlist } from "@/@types/playlist"
+import { useSongList, usePlaylistList } from "@/hooks/useApi"
 
 const HomePage: React.FC = () => {
-    const [songs, setSongs] = useState<Song[]>([])
-    const [playlists, setPlaylists] = useState<Playlist[]>([])
+    const { data: songsData } = useSongList()
+    const { data: playlistsData } = usePlaylistList()
 
-    const setNewReleaseSongs = async () => {
-        try {
-            const response = await fetchSongList()
-            setSongs(response.data || [])
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const setNewPlaylists = async () => {
-        try {
-            const response = await fetchPlaylistList()
-            setPlaylists(response.data || [])
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    useEffect(() => {
-        setNewReleaseSongs()
-        setNewPlaylists()
-    }, [])
+    const songs = songsData?.data || []
+    const playlists = playlistsData?.data || []
 
     return (
         <>

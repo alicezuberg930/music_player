@@ -1,4 +1,7 @@
 const fr = {
+  'artist': 'Artiste',
+  'album': 'Album',
+  'song': 'Chanson',
   'cancel': 'Annuler',
   'add_to_playlist': 'Ajouter à la liste de lecture',
   'sign_in': 'Se connecter',

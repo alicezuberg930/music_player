@@ -1,4 +1,7 @@
 const cn = {
+  'artist': '艺术家',
+  'album': '专辑',
+  'song': '歌曲',
   'cancel': '取消',
   'add_to_playlist': '添加到播放列表',
   'sign_in': '登录',

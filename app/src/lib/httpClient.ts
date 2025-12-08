@@ -136,9 +136,9 @@ export const fetchPlaylistList = async (): Promise<Response<Playlist[]>> => {
     }
 }
 
-export const signIn = async (email: string, password: string): Promise<Response> => {
+export const signIn = async (email: string, password: string): Promise<Response<{ user: User }>> => {
     try {
-        const response = await axios.post<Response>(`/users/sign-in`, { email, password })
+        const response = await axios.post<Response<{ user: User }>>(`/users/sign-in`, { email, password })
         return response.data
     } catch (error) {
         console.error(error)

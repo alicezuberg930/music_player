@@ -7,6 +7,32 @@ class SitemapService {
     constructor() {
         this.baseUrl = 'https://tien-music-player.site';
     }
+    async generateSitemapURLs() {
+        const urls = [
+            '/',
+            '/search',
+            '/search/all',
+            '/search/songs',
+            '/search/playlists',
+            '/search/artists',
+            '/search/mv',
+            '/chart',
+            '/chart/week',
+        ];
+        // Add dynamic playlist routes
+        const playlistsList = await db_1.db.select({
+            id: schemas_1.playlists.id, updatedAt: schemas_1.playlists.updatedAt
+        }).from(schemas_1.playlists).where((0, db_1.eq)(schemas_1.playlists.isPrivate, false));
+        for (const playlist of playlistsList)
+            urls.push(`/playlist/${playlist.id}`);
+        // Add dynamic artist routes
+        const artistsList = await db_1.db.select({
+            id: schemas_1.artists.id, updatedAt: schemas_1.artists.updatedAt
+        }).from(schemas_1.artists);
+        for (const artist of artistsList)
+            urls.push(`/artist/${artist.id}`);
+        return urls;
+    }
     async generateSitemapXML() {
         const urls = [];
         const staticRoutes = [

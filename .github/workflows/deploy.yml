@@ -79,8 +79,7 @@ jobs:
                       if pm2 describe "$FRONTEND_NAME" >/dev/null 2>&1; then
                         pm2 reload "$FRONTEND_NAME"
                       else
-                        # I'm running the command node server.js in app folder
-                        # For production, consider: "start": "node dist/index.js"
+                        # running the command node server.js in app folder
                         # PM2 will run "npm run serve"
                         pm2 start "npm run serve" --name "$FRONTEND_NAME"
                       fi

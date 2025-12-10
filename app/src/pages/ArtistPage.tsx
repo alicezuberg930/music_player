@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { fetchArtist } from '@/lib/httpClient'
-import { icons } from '@/lib/icons'
 import SongItem from '../sections/SongItem'
 import PlaylistSection from '../sections/home/PlaylistSection'
 import ArtistCard from '../sections/ArtistCard'
@@ -9,9 +8,9 @@ import MVSection from '../sections/MVSection'
 import type { Artist } from "@/@types/artist"
 import { useMetaTags } from '@/hooks/useMetaTags'
 import { getBaseUrl } from '@/lib/utils'
+import { PlayCircle, UserPlus } from 'lucide-react'
 
 const ArtistPage = () => {
-    const { AiOutlineUserAdd, BsPlayFill } = icons
     const { id } = useParams()
     const [artist, setArtist] = useState<Artist | null>(null)
     const ref = useRef<HTMLDivElement | null>(null)
@@ -50,7 +49,7 @@ const ArtistPage = () => {
                             <div className='flex items-center gap-8 mb-4'>
                                 <h1 className='text-3xl md:text-6xl font-bold'>{artist?.name}</h1>
                                 <span className='p-2 text-main-500 hover:bg-main-200 cursor-pointer rounded-full bg-white'>
-                                    <BsPlayFill size={36} />
+                                    <PlayCircle size={36} />
                                 </span>
                             </div>
                             <div className='flex items-center gap-4'>
@@ -58,7 +57,7 @@ const ArtistPage = () => {
                                     {(+(artist?.totalFollow ?? 0)).toLocaleString()} người quan tâm
                                 </span>
                                 <button className='bg-main-500 text-white px-4 py-2 text-sm rounded-full flex items-center justify-center gap-1'>
-                                    <span><AiOutlineUserAdd /></span>
+                                    <UserPlus />
                                     <span className='text-xs'>QUAN TÂM</span>
                                 </button>
                             </div>

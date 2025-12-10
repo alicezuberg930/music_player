@@ -4,13 +4,12 @@ import SongItem from "@/sections/SongItem"
 import { deepObjectComparison } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { paths } from '@/lib/route/paths';
-import { icons } from "@/lib/icons";
 import { Line } from "react-chartjs-2";
 import type { ChartOptions, TooltipModel } from "chart.js/auto";
 import type { Song } from "@/@types/song";
+import { PlayCircle } from "lucide-react";
 
 const ChartSection = () => {
-    const { BsPlayFill } = icons
     const [data, setData] = useState<any>(null)
     const { chart, ranks }: any = {}
     const [tooltipData, setTooltipData] = useState({ opacity: 0, top: 0, left: 0 })
@@ -98,7 +97,7 @@ const ChartSection = () => {
                 <Link to={paths.ZING_CHART} className="flex gap-2 items-center">
                     <h3 className="text-2xl text-white font-bold zing-chart-section">#zingchart</h3>
                     <span className="text-green-400 bg-white rounded-full p-1">
-                        <BsPlayFill color="green" size={20} />
+                        <PlayCircle size={20} />
                     </span>
                 </Link>
                 <div className="flex lg:flex-row flex-col gap-4 h-full">

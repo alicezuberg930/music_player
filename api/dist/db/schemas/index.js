@@ -20,3 +20,4 @@ __exportStar(require("./artist.schema"), exports);
 __exportStar(require("./playlist.schema"), exports);
 __exportStar(require("./artist_song.schema"), exports);
 __exportStar(require("./genre.schema"), exports);
+__exportStar(require("./banner.schema"), exports);

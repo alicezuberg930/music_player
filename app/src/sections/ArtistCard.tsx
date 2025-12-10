@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 import type { Artist } from "@/@types/artist"
 import { UserRoundPlus } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { LazyLoadImage } from "react-lazy-load-image-component"
+import LazyLoadImage from "@/components/lazy-load-image/LazyLoadImage"
 
 type Props = {
     artist: Omit<Artist, 'recommendedArtists' | 'songs' | 'topAlbum' | 'playlists' | 'videos'>

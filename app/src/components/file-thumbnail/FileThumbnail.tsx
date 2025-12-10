@@ -1,8 +1,8 @@
 import { fileData, fileFormat, fileThumb } from './utils'
 import DownloadButton from './DownloadButton'
-import { LazyLoadImage, type LazyLoadImageProps } from 'react-lazy-load-image-component'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 import { cn } from '@/lib/utils'
+import { type LazyLoadImageProps, LazyLoadImage } from '@/components/lazy-load-image'
 
 type FileIconProps = {
   file: File | string

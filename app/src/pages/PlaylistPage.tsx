@@ -8,12 +8,12 @@ import { Audio } from "react-loader-spinner"
 import { useDispatch, useSelector } from "@/redux/store"
 import type { Playlist } from "@/@types/playlist"
 import { fDate } from "@/lib/formatTime"
-import { LazyLoadImage } from "react-lazy-load-image-component"
 import { PlayCircle } from "lucide-react"
 import ArtistCard from "@/sections/ArtistCard"
 import { Typography } from "@/components/ui/typography"
 import { useIsMobile } from "@/hooks/useMobile"
 import { useMetaTags } from "@/hooks/useMetaTags"
+import LazyLoadImage from "@/components/lazy-load-image/LazyLoadImage"
 
 const PlaylistPage: React.FC = () => {
     const { id } = useParams()

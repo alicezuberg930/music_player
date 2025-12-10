@@ -33,7 +33,7 @@ app.get('/', (_, res) => {
     res.json({ message: 'Welcome to Tiếns MP3 Express Server!' });
 });
 // map routers to express server
-app.use('/api/v1', [modules_1.userRouter, modules_1.playlistRouter, modules_1.songRouter, modules_1.artistRouter]);
+app.use('/api/v1', [modules_1.userRouter, modules_1.playlistRouter, modules_1.songRouter, modules_1.artistRouter, modules_1.bannerRouter]);
 // Sitemap routes (public)
 app.use('/', modules_1.sitemapRouter);
 // assign global middlewares to express server

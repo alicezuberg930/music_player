@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } f
 import { RotatingLines } from 'react-loader-spinner'
 import { Typography } from '@/components/ui/typography'
 import { Button } from '@/components/ui/button'
-import { LazyLoadImage } from 'react-lazy-load-image-component'
+import LazyLoadImage from '@/components/lazy-load-image/LazyLoadImage'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 // icons
 import { Ellipsis, Heart, MicVocal, MusicIcon, PauseCircle, PlayCircle, Repeat, Repeat1, Shuffle, SkipBack, SkipForward, Volume1, Volume2, VolumeX } from 'lucide-react'

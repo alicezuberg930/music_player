@@ -1,6 +1,4 @@
 import './index.css'
-// lazy load image css
-import 'react-lazy-load-image-component/src/effects/blur.css'
 // i18n
 import './lib/locales/i18n.ts'
 // redux provider config
@@ -11,9 +9,9 @@ import { persistor, store } from './redux/store.ts'
 import SnackbarProvider from './components/snackbar/SnackbarProvider.tsx'
 // authentication provider
 import { AuthProvider } from './lib/auth/AuthProvider.tsx'
-// react query provider
-import { QueryClientProvider } from '@tanstack/react-query'
-import { getQueryClient } from './lib/queryClient.ts'
+// react query provider with persistence
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
+import { getQueryClient, createIDBPersister } from './lib/queryClient.ts'
 // 
 import { StrictMode } from 'react'
 import { hydrateRoot } from 'react-dom/client'
@@ -22,7 +20,13 @@ import { BrowserRouter } from 'react-router-dom'
 
 hydrateRoot(document.getElementById('root') as HTMLElement,
   <StrictMode>
-    <QueryClientProvider client={getQueryClient()}>
+    <PersistQueryClientProvider
+      client={getQueryClient()}
+      persistOptions={{
+        persister: createIDBPersister(),
+        maxAge: 1000 * 60 * 60 * 6, // 6 hours
+      }}
+    >
       <SnackbarProvider>
         <ReduxProvider store={store}>
           <PersistGate loading={null} persistor={persistor}>
@@ -34,6 +38,6 @@ hydrateRoot(document.getElementById('root') as HTMLElement,
           </PersistGate>
         </ReduxProvider>
       </SnackbarProvider>
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   </StrictMode>
 )

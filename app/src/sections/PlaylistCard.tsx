@@ -1,9 +1,9 @@
 import { Link, useNavigate } from "react-router-dom"
 import type { Playlist } from "@/@types/playlist"
-import { LazyLoadImage } from "react-lazy-load-image-component"
 import { Ellipsis, Heart, PlayCircle } from "lucide-react"
 import { Typography } from "@/components/ui/typography"
 import { useAddFavoritePlaylist, useRemoveFavoritePlaylist } from "@/hooks/useApi"
+import LazyLoadImage from "@/components/lazy-load-image/LazyLoadImage"
 
 type Props = {
     playlist: Playlist

@@ -1,7 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OptionalJWTMiddleware = exports.JWTMiddleware = exports.jwtDecode = void 0;
+exports.OptionalJWTMiddleware = exports.JWTMiddleware = exports.a = exports.jwtDecode = void 0;
 const exceptions_1 = require("../lib/exceptions");
+const jsonwebtoken_1 = require("jsonwebtoken");
+const env_1 = __importDefault(require("../lib/helpers/env"));
 const jwtDecode = (token) => {
     const base64Url = token.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -9,6 +14,20 @@ const jwtDecode = (token) => {
     return JSON.parse(jsonPayload);
 };
 exports.jwtDecode = jwtDecode;
+const a = (token) => {
+    try {
+        const v = (0, jsonwebtoken_1.verify)(token, env_1.default.JWT_SECRET);
+        console.log(v);
+        return !!v;
+    }
+    catch (error) {
+        if (error instanceof jsonwebtoken_1.JsonWebTokenError) {
+            console.error("JWT Error:", error.message);
+            return false;
+        }
+    }
+};
+exports.a = a;
 const JWTMiddleware = async (request, _, next) => {
     let token = request.cookies?.["accessToken"];
     if (!token && request.headers.authorization?.startsWith("Bearer")) {
@@ -17,6 +36,7 @@ const JWTMiddleware = async (request, _, next) => {
     if (!token) {
         throw new exceptions_1.UnauthorizedException("Invalid credentials, please log in");
     }
+    (0, exports.a)(token);
     const jwt = (0, exports.jwtDecode)(token);
     if (!jwt || !jwt.id) {
         throw new exceptions_1.UnauthorizedException("Invalid or expired access token");

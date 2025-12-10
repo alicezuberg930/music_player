@@ -1,13 +1,12 @@
+import { MoveLeft, MoveRight } from "lucide-react"
 import { useCallback, useEffect, useState } from "react"
 // import { useNavigate } from "react-router-dom"
-import { icons } from "@/lib/icons"
 
 let interval: number | undefined
 
 const BannerSliderSection: React.FC = () => {
     const banners: any = []
     // const navigate = useNavigate()
-    const { MdArrowBackIosNew, MdArrowForwardIos } = icons
     const [min, setMin] = useState(0)
     const [max, setMax] = useState(2)
     const [isAuto, setIsAuto] = useState(true)
@@ -94,7 +93,7 @@ const BannerSliderSection: React.FC = () => {
             <button className="rounded-full p-3 z-30 absolute top-1/2 -translate-y-[50%] left-2 bg-[rgba(255,255,255,0.3)] text-white"
                 onClick={() => clickPreviousBanner(1)}
             >
-                <span><MdArrowBackIosNew size={30} /></span>
+                <MoveLeft size={30} />
             </button>
             {
                 banners?.map((item: any, index: number) => {
@@ -109,7 +108,7 @@ const BannerSliderSection: React.FC = () => {
             <button className="rounded-full p-3 z-30 absolute top-1/2 -translate-y-[50%] right-2 bg-[rgba(255,255,255,0.3)] text-white"
                 onClick={() => clickNextBanner(-1)}
             >
-                <span><MdArrowForwardIos size={30} /></span>
+                <MoveRight size={30} />
             </button>
         </div>
     )

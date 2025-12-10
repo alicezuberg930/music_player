@@ -2,7 +2,6 @@ import type { Song } from '@/@types/song'
 import { addRecentSong, setCurrentSong } from '@/redux/slices/music'
 import { memo, type MouseEvent } from 'react'
 import { useDispatch } from 'react-redux'
-import { LazyLoadImage } from 'react-lazy-load-image-component'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { HeartIcon, MoreHorizontalIcon } from 'lucide-react'
@@ -10,6 +9,7 @@ import { addSongsToPlaylist } from '@/lib/httpClient'
 import { useSnackbar } from '@/components/snackbar'
 import SongOptionDropdown from './SongOptionDropdown'
 import { useAddFavoriteSong, useRemoveFavoriteSong } from '@/hooks/useApi'
+import LazyLoadImage from '@/components/lazy-load-image/LazyLoadImage'
 
 dayjs.extend(relativeTime)
 

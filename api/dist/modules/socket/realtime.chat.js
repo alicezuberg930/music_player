@@ -11,7 +11,7 @@ const env_1 = __importDefault(require("../../lib/helpers/env"));
 const exceptions_1 = require("../../lib/exceptions");
 const verifyToken = (token) => {
     try {
-        return jsonwebtoken_1.default.verify(token, env_1.default.JWT_SECRET_KEY);
+        return jsonwebtoken_1.default.verify(token, env_1.default.JWT_SECRET);
     }
     catch (err) {
         return null;

@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react"
 import { fetchVideo } from "@/lib/httpClient"
 import { Link, NavLink, useParams } from "react-router-dom"
 import Hls from "hls.js"
-import { icons } from "@/lib/icons"
 import { formatDuration } from "@/lib/utils"
 import type { Video } from "@/@types/video"
 // import { useIsMobile } from "@/hooks/useMobile"
@@ -19,7 +18,7 @@ const VideoClipPage = () => {
     const [volume, setVolume] = useState(50)
     const [currentTime, setCurrentTime] = useState(0)
     // icons
-    const { BsPlayFill, BsPauseFill, LuRectangleHorizontal, MdFullscreen, MdOutlineFullscreenExit, MdPictureInPicture, SlVolume1, SlVolume2, SlVolumeOff, IoMdSettings } = icons
+    // const { BsPlayFill, BsPauseFill, LuRectangleHorizontal, MdFullscreen, MdOutlineFullscreenExit, MdPictureInPicture, SlVolume1, SlVolume2, SlVolumeOff, IoMdSettings } = icons
     let isScrubbing = false
     // const isMobile = useIsMobile()
     // const displayAmount = isTheater ? (isMobile ? 4 : 7) : video?.recommends?.length
@@ -204,15 +203,19 @@ const VideoClipPage = () => {
                         </div>
                         <div className="relative flex items-center text-white py-1 px-3 gap-3">
                             {isPlaying ? (
-                                <span onClick={toggleVideo}><BsPauseFill size={40} /></span>
+                                <span onClick={toggleVideo}>
+                                    {/* <BsPauseFill size={40} /> */}
+                                </span>
                             ) : (
-                                <span onClick={toggleVideo}><BsPlayFill size={40} /></span>
+                                <span onClick={toggleVideo}>
+                                    {/* <BsPlayFill size={40} /> */}
+                                </span>
                             )}
                             <div className="flex items-center group gap-2">
                                 <span onClick={muteAudio}>
-                                    {(volume < 50 && volume > 0) && <SlVolume1 size={30} />}
-                                    {volume >= 50 && <SlVolume2 size={30} />}
-                                    {volume === 0 && <SlVolumeOff size={30} />}
+                                    {/* {(volume < 50 && volume > 0) && <SlVolume1 size={30} />} */}
+                                    {/* {volume >= 50 && <SlVolume2 size={30} />} */}
+                                    {/* {volume === 0 && <SlVolumeOff size={30} />} */}
                                 </span>
                                 <input
                                     className="h-1 rounded-full transition-all w-0 scale-x-0 origin-left focus-within:w-24 focus-within:scale-x-100 group-hover:w-24 group-hover:scale-x-100"
@@ -224,52 +227,54 @@ const VideoClipPage = () => {
                                 <span>/</span>
                                 <span>{formatDuration(video?.duration)}</span>
                             </div>
-                            <IoMdSettings size={30} onClick={displaySettings} />
+                            {/* <IoMdSettings size={30} onClick={displaySettings} /> */}
                             {!isFullscreen && (
                                 <span onClick={toggleTheaterMode}>
-                                    <LuRectangleHorizontal size={30} />
+                                    {/* <LuRectangleHorizontal size={30} /> */}
                                 </span>
                             )}
                             <span onClick={toggleFullScreen}>
                                 {isFullscreen ? (
-                                    <MdOutlineFullscreenExit size={30} />
+                                    <></>
+                                    // <MdOutlineFullscreenExit size={30} />
                                 ) : (
-                                    <MdFullscreen size={30} />
+                                    <></>
+                                    // <MdFullscreen size={30} />
                                 )}
                             </span>
                             <span onClick={togglePictureInPicture}>
-                                <MdPictureInPicture size={30} />
+                                {/* <MdPictureInPicture size={30} /> */}
                             </span>
                             <div ref={settings} className="cursor-pointer hidden rounded-md w-[200px] bg-[rgba(255,255,255,0.3)] absolute bottom-14 right-0 py-2">
                                 <div onClick={() => changePlayBackRate(0.25)}
                                     className="p-2 hover:bg-[rgba(255,255,255,0.2)] flex justify-between items-center px-2"
                                 >
                                     <span>Tốc độ x0.25</span>
-                                    <span><BsPlayFill size={20} /></span>
+                                    {/* <span><BsPlayFill size={20} /></span> */}
                                 </div>
                                 <div onClick={() => changePlayBackRate(0.5)}
                                     className="p-2 hover:bg-[rgba(255,255,255,0.2)] flex justify-between items-center px-2"
                                 >
                                     <span>Tốc độ x0.5</span>
-                                    <span><BsPlayFill size={20} /></span>
+                                    {/* <span><BsPlayFill size={20} /></span> */}
                                 </div>
                                 <div onClick={() => changePlayBackRate(1)}
                                     className="p-2 hover:bg-[rgba(255,255,255,0.2)] flex justify-between items-center px-2"
                                 >
                                     <span>Tốc độ chuẩn</span>
-                                    <span><BsPlayFill size={20} /></span>
+                                    {/* <span><BsPlayFill size={20} /></span> */}
                                 </div>
                                 <div onClick={() => changePlayBackRate(1.5)}
                                     className="p-2 hover:bg-[rgba(255,255,255,0.2)] flex justify-between items-center px-2"
                                 >
                                     <span>Tốc độ x1.5</span>
-                                    <span><BsPlayFill size={20} /></span>
+                                    {/* <span><BsPlayFill size={20} /></span> */}
                                 </div>
                                 <div onClick={() => changePlayBackRate(2)}
                                     className="p-2 hover:bg-[rgba(255,255,255,0.2)] flex justify-between items-center px-2"
                                 >
                                     <span>Tốc độ x2</span>
-                                    <span><BsPlayFill size={20} /></span>
+                                    {/* <span><BsPlayFill size={20} /></span> */}
                                 </div>
                             </div>
                         </div>

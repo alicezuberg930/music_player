@@ -1,12 +1,11 @@
 import { NavLink, useParams } from "react-router-dom"
-import { icons } from "@/lib/icons"
 import { useCallback, useEffect, useState } from "react"
 import RankListCard from "@/sections/RankListCard"
 import type { Song } from "@/@types/song"
 
 const WeeklyZingChartPage = () => {
     const { id } = useParams()
-    const { BsPlayFill } = icons
+    // const { BsPlayFill } = icons
     const normalStyle = "mr-4 py-3 font-semibold text-2xl cursor-pointer h-full relative flex items-center"
     const activeStyle = " search-tab-item after:w-full text-main-500"
     const [songs, setSongs] = useState<Song[]>([])
@@ -41,7 +40,7 @@ const WeeklyZingChartPage = () => {
                     <span className="flex gap-2 text-main-500 items-center mb-10">
                         <h3 className="text-4xl font-bold">Bảng xếp hạng tuần</h3>
                         <span className="bg-white rounded-full p-1">
-                            <BsPlayFill color="green" size={20} />
+                            {/* <BsPlayFill color="green" size={20} /> */}
                         </span>
                     </span>
                     <div className="flex gap-8">

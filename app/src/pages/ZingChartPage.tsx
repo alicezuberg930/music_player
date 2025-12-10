@@ -1,10 +1,8 @@
 import "chart.js/auto"
 import { useEffect, useRef, useState } from "react"
 import { Line } from "react-chartjs-2"
-import { icons } from "@/lib/icons"
 import { deepObjectComparison } from "@/lib/utils"
 import SongItem from "@/sections/SongItem"
-import { toast } from "react-toastify"
 import { zingChartDataHC } from "@/assets/dummy_data"
 import RankListCard from "@/sections/RankListCard"
 import { useDispatch } from "react-redux"
@@ -14,7 +12,7 @@ import type { ChartOptions, TooltipModel } from "chart.js/auto"
 const ZingChartPage = () => {
     const [chartData, setChartData] = useState<any>(null)
     const chartRef = useRef(null)
-    const { BsPlayFill } = icons
+    // const { BsPlayFill } = icons
     const [data, setData] = useState<any>(null)
     const [tooltipData, setTooltipData] = useState({ opacity: 0, top: 0, left: 0 })
     const [selectedSong, setSelectedSong] = useState<Song | null>(null)
@@ -82,7 +80,6 @@ const ZingChartPage = () => {
             //     toast.warn(response.msg)
             // }
         } catch (error) {
-            toast.warn(error as string)
         }
     }
 
@@ -129,7 +126,7 @@ const ZingChartPage = () => {
                     <span className="flex gap-2 items-center mb-10">
                         <h3 className="text-4xl text-white font-bold zing-chart-section">#zingchart</h3>
                         <span className="text-green-400 bg-white rounded-full p-1">
-                            <BsPlayFill color="green" size={20} />
+                            {/* <BsPlayFill color="green" size={20} /> */}
                         </span>
                     </span>
                     <div className="h-[300px] relative">

@@ -11,6 +11,7 @@ import env from "../../lib/helpers/env"
 import { UpdateUserDto } from "./dto/update-user.dto"
 import { createId } from "../../db/utils"
 import sendEmail from "../../lib/email"
+import { Song } from "../songs/song.model"
 
 export class UserService {
     public async getUsers(request: Request, response: Response) {
@@ -164,10 +165,10 @@ export class UserService {
         }
     }
 
-    public async userSongs(request: Request, response: Response) {
+    public async userSongs(request: Request<{}, {}, { type?: 'upload' | 'favorite', page?: number, count?: number }>, response: Response) {
         try {
-            if (!request.userId) throw new BadRequestException('User ID is missing in request')
-            const data = await db.query.songs.findMany({ where: eq(songs.userId, request.userId) })
+            // const { type, page, count } = request.body
+            const data = await db.query.songs.findMany({ where: eq(songs.userId, request.userId!) })
             return response.json({ message: 'User songs fetched successfully', data })
         } catch (error) {
             if (error instanceof HttpException) throw error
@@ -177,8 +178,7 @@ export class UserService {
 
     public async userPlaylists(request: Request, response: Response) {
         try {
-            if (!request.userId) throw new BadRequestException('User ID is missing in request')
-            const data = await db.query.playlists.findMany({ where: eq(playlists.userId, request.userId) })
+            const data = await db.query.playlists.findMany({ where: eq(playlists.userId, request.userId!) })
             return response.json({ message: 'User playlists fetched successfully', data })
         } catch (error) {
             if (error instanceof HttpException) throw error

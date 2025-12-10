@@ -4,7 +4,7 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 import env from './lib/helpers/env'
 import { errorInterceptor, notFoundHandlerMiddleware, responseInterceptor } from './middleware'
-import { artistRouter, playlistRouter, songRouter, userRouter, sitemapRouter } from './modules'
+import { artistRouter, playlistRouter, songRouter, userRouter, sitemapRouter, bannerRouter } from './modules'
 import { rateLimiter } from './middleware/rate.limiter'
 const app = express()
 
@@ -36,7 +36,7 @@ app.get('/', (_: Request, res: Response) => {
 })
 
 // map routers to express server
-app.use('/api/v1', [userRouter, playlistRouter, songRouter, artistRouter])
+app.use('/api/v1', [userRouter, playlistRouter, songRouter, artistRouter, bannerRouter])
 
 // Sitemap routes (public)
 app.use('/', sitemapRouter)

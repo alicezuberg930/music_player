@@ -1,4 +1,24 @@
 import { defaultShouldDehydrateQuery, QueryClient } from '@tanstack/react-query'
+import type { PersistedClient, Persister } from '@tanstack/react-query-persist-client'
+import { persistReactQueryClient, removeReactQueryClient, restoreReactQueryClient } from './indexDB'
+
+/**
+ * Creates an IndexedDB persister for React Query cache
+ * Stores cache in IndexedDB for better performance and larger storage capacity
+ */
+export function createIDBPersister() {
+    return {
+        persistClient: async (client: PersistedClient) => {
+            await persistReactQueryClient(client)
+        },
+        restoreClient: async () => {
+            return await restoreReactQueryClient()
+        },
+        removeClient: async () => {
+            await removeReactQueryClient()
+        },
+    } satisfies Persister
+}
 
 export const createQueryClient = () => new QueryClient({
     defaultOptions: {
@@ -6,16 +26,16 @@ export const createQueryClient = () => new QueryClient({
             // With SSR, we usually want to set some default staleTime
             // above 0 to avoid refetching immediately on the client
             staleTime: 60 * 60 * 1000, // 60 minutes
-            gcTime: 5 * 60 * 1000, // 5 minutes (cache lifetime)
-            retry: 2, // Retry failed requests twice
-            retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff
+            gcTime: 1000 * 60 * 60 * 6, // 6 hours (must be >= maxAge for persister)
+            retry: 2, // retry 2 times on failure
+            retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
             refetchOnWindowFocus: false, // Disable refetch on window focus
             refetchOnReconnect: true, // Refetch when internet reconnects
             refetchOnMount: true, // Refetch when component mounts if data is stale
         },
         mutations: {
             retry: 1, // Retry mutations once
-            retryDelay: 1000, // Wait 1 second before retry
+            retryDelay: 3000, // Wait 3 seconds before retry
         },
         dehydrate: {
             shouldDehydrateQuery: (query) => defaultShouldDehydrateQuery(query) || query.state.status === 'pending',

@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { db, eq } from "../../db"
+import { db, eq, like } from "../../db"
 import { Artist } from "./artist.model"
 import { artists } from "../../db/schemas"
 import { BadRequestException, HttpException, NotFoundException } from "../../lib/exceptions"
@@ -34,6 +34,8 @@ export class ArtistService {
         try {
             const { name } = request.body
             let thumbnailUrl: string | null = null
+            // const checkExisting = await db.query.artists.findFirst({ where: like(artists.name, name) })
+            // if (checkExisting) throw new BadRequestException('Artist with the same name already exists')
             const files = request.files as { [fieldname: string]: Express.Multer.File[] }
             const thumbnailFile: Express.Multer.File | null = files['thumbnail']?.[0] ?? null
             if (thumbnailFile) {

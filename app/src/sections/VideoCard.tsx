@@ -1,5 +1,4 @@
 import { NavLink } from 'react-router-dom'
-import { icons } from '@/lib/icons'
 import { formatDuration } from '@/lib/utils'
 import type { Video } from '@/@types/video'
 
@@ -9,7 +8,7 @@ type Props = {
 }
 
 const VideoCard = ({ video, variant = 'horizontal' }: Props) => {
-    const { BsPlayFill } = icons
+    // const { BsPlayFill } = icons
 
     return (
         variant === 'horizontal' ? (
@@ -22,7 +21,7 @@ const VideoCard = ({ video, variant = 'horizontal' }: Props) => {
                     </div>
                     {/* Overlay */}
                     <div className='absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-all duration-300 top-0 left-0 right-0 bottom-0 flex items-center justify-center'>
-                        <BsPlayFill size={64} fill='white' />
+                        {/* <BsPlayFill size={64} fill='white' /> */}
                     </div>
                 </div>
                 <div className='flex gap-2 items-center'>

@@ -33,6 +33,8 @@ class ArtistService {
         try {
             const { name } = request.body;
             let thumbnailUrl = null;
+            // const checkExisting = await db.query.artists.findFirst({ where: like(artists.name, name) })
+            // if (checkExisting) throw new BadRequestException('Artist with the same name already exists')
             const files = request.files;
             const thumbnailFile = files['thumbnail']?.[0] ?? null;
             if (thumbnailFile) {

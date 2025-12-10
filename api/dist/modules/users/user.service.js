@@ -182,8 +182,7 @@ class UserService {
     }
     async userSongs(request, response) {
         try {
-            if (!request.userId)
-                throw new exceptions_1.BadRequestException('User ID is missing in request');
+            // const { type, page, count } = request.body
             const data = await db_1.db.query.songs.findMany({ where: (0, db_1.eq)(schemas_1.songs.userId, request.userId) });
             return response.json({ message: 'User songs fetched successfully', data });
         }
@@ -195,8 +194,6 @@ class UserService {
     }
     async userPlaylists(request, response) {
         try {
-            if (!request.userId)
-                throw new exceptions_1.BadRequestException('User ID is missing in request');
             const data = await db_1.db.query.playlists.findMany({ where: (0, db_1.eq)(schemas_1.playlists.userId, request.userId) });
             return response.json({ message: 'User playlists fetched successfully', data });
         }

@@ -1,4 +1,4 @@
-import { LazyLoadImage } from 'react-lazy-load-image-component'
+import LazyLoadImage from '@/components/lazy-load-image/LazyLoadImage'
 import { type CustomFile } from '../types'
 import { fileFormat, fileThumb } from '@/components/file-thumbnail'
 

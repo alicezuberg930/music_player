@@ -1,11 +1,11 @@
-import { LazyLoadImage } from 'react-lazy-load-image-component'
+import LazyLoadImage from '@/components/lazy-load-image/LazyLoadImage'
 import { type CustomFile } from '../types'
 
 type Props = {
   file: CustomFile | string | null
 }
 
-export default function AvatarPreview({ file }: Props) {
+export default function AvatarPreview({ file }: Readonly<Props>) {
   if (!file) return null
   const imgUrl = typeof file === 'string' ? file : file.preview
 

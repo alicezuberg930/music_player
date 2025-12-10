@@ -10,7 +10,7 @@ interface AuthenticatedSocket extends Socket {
 
 const verifyToken = (token: string) => {
     try {
-        return jwt.verify(token, env.JWT_SECRET_KEY!)
+        return jwt.verify(token, env.JWT_SECRET!)
     } catch (err) {
         return null
     }

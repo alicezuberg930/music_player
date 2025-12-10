@@ -7,7 +7,6 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config({ path: '.env' });
 const env = {
     PORT: process.env.PORT,
-    JWT_SECRET_KEY: process.env.JWT_SECRET_KEY,
     NODE_ENV: process.env.NODE_ENV,
     DATABASE_URL: process.env.DATABASE_URL,
     MYSQL_SSL_MODE: process.env.MYSQL_SSL_MODE,

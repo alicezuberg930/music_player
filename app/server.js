@@ -32,7 +32,7 @@ app.get('/*splat', async (req, res) => {
         const currentUrl = `${currentBaseUrl}${req.originalUrl}`
 
         let meta = {}
-        // Static routes - just update meta tags if needed
+        // Static routes
         const staticMeta = {
             '/home': {
                 title: 'Yukikaze Music Player',
@@ -93,8 +93,7 @@ app.get('/*splat', async (req, res) => {
             // HTML-escape inserted values
             const esc = (v) => String(v ?? '').replace(/[&<>\"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
             html = html.replace(/<title>.*?<\/title>/i, `<title>${esc(meta.title)}</title>`)
-            html = html.replace(/<meta[^>]*name=["']description["'][^>]*>/i,
-                `<meta name="description" content="${esc(meta.description)}" />`)
+            html = html.replace(/<meta[^>]*name=["']description["'][^>]*>/i, `<meta name="description" content="${esc(meta.description)}" />`)
             // Open Graph tags (match by property attribute, robust to whitespace/attribute order)
             html = html.replace(/<meta[^>]*property=["']og:title["'][^>]*>/i, `<meta property="og:title" content="${esc(meta.title)}" />`)
 

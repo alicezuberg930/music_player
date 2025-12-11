@@ -1,0 +1,162 @@
+@import '@yukikaze/ui/tailwind.css';
+@source '../../../packages/ui/src/**/*.tsx';
+
+/* custom css */
+.text-shadow-1 {
+  text-shadow: 1px 1px 0 #4a90e2, -1px 1px 0 #4a90e2, -1px -1px 0 #4a90e2, 1px -1px 0 #4a90e2;
+}
+
+.text-shadow-2 {
+  text-shadow: 1px 1px 0 #50e3c2, -1px 1px 0 #50e3c2, -1px -1px 0 #50e3c2, 1px -1px 0 #50e3c2;
+}
+
+.text-shadow-3 {
+  text-shadow: 1px 1px 0 #e35050, -1px 1px 0 #e35050, -1px -1px 0 #e35050, 1px -1px 0 #e35050;
+}
+
+.text-shadow-other {
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5), -1px 1px 0 rgba(0, 0, 0, 0.5), -1px -1px 0 rgba(0, 0, 0, 0.5), 1px -1px 0 rgba(0, 0, 0, 0.5);
+}
+
+.thin-scrollbar::-webkit-scrollbar {
+  height: 4px;
+}
+
+.thin-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(#642bff, #ff22e6);
+  border-radius: 4px;
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.thin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+/* Chrome, Edge, Opera, Safari support */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(#642bff, #ff22e6);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(#7759c7, #c768bc);
+}
+
+/* Firefox support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #642bff transparent;
+}
+
+.zing-chart-section {
+  background: radial-gradient(50% 124.93% at 95.86% -10%, #3efad9 0, hsla(0, 0%, 100%, 0) 100%), linear-gradient(91.56deg, #ff9357 1.54%, #9100ff 98.71%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.video-container.theater {
+  max-width: initial;
+  width: 100%;
+  max-height: 90vh;
+}
+
+.timeline {
+  background-color: rgba(100, 100, 100, 0.5);
+  height: 4px;
+  position: relative;
+  width: 100%;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: calc(100% - var(--preview-position)*100%);
+  background-color: rgb(150, 150, 150);
+  display: none;
+}
+
+.timeline-container.scrubbing .timeline,
+.timeline-container:hover .timeline {
+  height: 100%;
+}
+
+.timeline-container.scrubbing .timeline::before,
+.timeline-container:hover .timeline::before {
+  display: block;
+}
+
+.timeline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: calc(100% - var(--progress-position)*100%);
+  background-color: #721799;
+}
+
+.thumb-indicator {
+  scale: 0;
+  position: absolute;
+  transform: translateX(-50%) scale(var(--scale));
+  height: 200%;
+  top: -50%;
+  left: calc((var(--progress-position)*100%) - 2px);
+  background-color: #721799;
+  border-radius: 50%;
+  transition: transform 250ms ease-in-out;
+  aspect-ratio: 1/1;
+}
+
+.timeline-container.scrubbing .thumb-indicator,
+.timeline-container:hover .thumb-indicator {
+  scale: 1;
+}
+
+.preview-img {
+  position: absolute;
+  height: 80px;
+  aspect-ratio: 16/9;
+  top: -1rem;
+  transform: translate(-50%, -100%);
+  left: calc(var(--preview-position)*100%);
+  border-radius: 0.25rem;
+  border: 2px solid white;
+  display: none;
+}
+
+.timeline-container.scrubbing .preview-img,
+.timeline-container:hover .preview-img {
+  display: block;
+}
+
+.thumbnail-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  display: none;
+}
+
+.timeline-container.scrubbing .thumbnail-img {
+  display: block;
+}

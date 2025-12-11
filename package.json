@@ -1,1 +1,59 @@
-{}
+{
+  "name": "yukikaze-music",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alicezuberg930/music_player.git"
+  },
+  "devDependencies": {
+    "prettier": "^3.7.4",
+    "turbo": "^2.6.3",
+    "typescript": "catalog:"
+  },
+  "bugs": {
+    "url": "https://github.com/alicezuberg930/music_player/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "homepage": "https://tien-music-player.site",
+  "packageManager": "bun@1.3.4",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "clean:workspaces": "turbo run clean",
+    "db:generate": "turbo run db:generate -F @yukikaze-music/db",
+    "db:migrate": "turbo run db:migrate -F @yukikaze-music/db",
+    "db:studio": "turbo run db:studio -F @yukikaze-music/db",
+    "deps:bump": "bunx npm-check-updates --deep -u && bun install",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "check-types": "turbo run check-types",
+    "start": "turbo run start --filter=@yukikaze/web --parallel"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "catalog": {
+    "@tanstack/react-query": "^5.90.11",
+    "typescript": "5.9.2",
+    "tsdown": "^0.17.2"
+  },
+  "catalogs": {
+    "tailwind": {
+      "@tailwindcss/vite": "^4.1.15",
+      "tailwindcss": "^4.1.15"
+    },
+    "react": {
+      "react": "^19.1.1",
+      "react-dom": "^19.1.1",
+      "@types/react": "^19.1.16",
+      "@types/react-dom": "^19.1.9"
+    }
+  },
+  "dependencies": {
+    "date-fns": "^4.1.0",
+    "redux": "^5.0.1"
+  }
+}

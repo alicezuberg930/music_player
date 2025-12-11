@@ -125,7 +125,7 @@ const ArtistSection: React.FC<Props> = ({ artists }) => {
                 </div>
                 <div className="flex gap-3">
                     {favoriteArtistsHC.items?.slice(0, isMobile ? 2 : 5)?.map(singer => (
-                        <Link to={'/'} key={singer?.encodeId} className="flex-1 relative h-80">
+                        <Link to={'/'} key={singer?.encodeId} className="flex-1 relative h-80" aria-label={`View ${singer?.encodeId || 'artist'} profile`}>
                             <img src={singer?.thumbnail} alt={singer?.encodeId} className="w-full h-full object-cover rounded-md" />
                             <div className="absolute w-full flex justify-evenly bottom-[5%]">
                                 <img src={singer?.song?.items[0]?.thumbnail} alt="song" className="w-1/4 rounded-md object-cover" />

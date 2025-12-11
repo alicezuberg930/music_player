@@ -46,7 +46,7 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
             'react-chunk': ['react', 'react-dom', 'react-router-dom', 'react-day-picker', 'react-dropzone', 'react-loader-spinner', 'react-lrc',],
             'radix-ui-chunk': ['@radix-ui/react-tooltip', '@radix-ui/react-tabs', '@radix-ui/react-switch', '@radix-ui/react-avatar', '@radix-ui/react-slot', '@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-label', '@radix-ui/react-popover', '@radix-ui/react-scroll-area', '@radix-ui/react-select', '@radix-ui/react-separator'],
             'redux-chunk': ['@reduxjs/toolkit', 'react-redux', 'redux-persist', 'redux-thunk'],
-            'i18next-chunk': ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
+            'i18next-chunk': ['i18next', 'react-i18next'],
             'form-chunk': ['yup', '@hookform/resolvers', 'react-hook-form'],
             'mix-chunk': ['compression', 'numeral', 'axios', 'class-variance-authority', 'clsx', 'cmdk', 'dayjs', 'framer-motion', 'hls.js', 'idb', 'notistack', 'lucide-react']
           },

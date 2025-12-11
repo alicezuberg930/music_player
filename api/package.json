@@ -4,7 +4,7 @@
     "dev": "npx tsx --watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "lab": "npx drizzle-kit studio",
+    "studio": "npx drizzle-kit studio",
     "generate": "npx drizzle-kit generate",
     "migrate": "npx drizzle-kit migrate"
   },
@@ -16,7 +16,7 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
-    "drizzle-orm": "^0.44.7",
+    "drizzle-orm": "^0.45.0",
     "express": "^5.1.0",
     "express-rate-limit": "^7.0.0",
     "file-type": "^21.0.0",

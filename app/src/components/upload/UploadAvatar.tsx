@@ -43,7 +43,7 @@ export default function UploadAvatar({
 
         <div
           className={cn(
-            "w-[calc(100%-16px)] h-[calc(100%-16px)] placeholder z-7 flex rounded-full absolute items-center flex-col justify-center text-gray-400 bg-gray-50 transition-opacity hover:opacity-70",
+            "w-[calc(100%-16px)] h-[calc(100%-16px)] placeholder z-7 flex rounded-full absolute items-center flex-col justify-center text-gray-600 bg-gray-50 transition-opacity hover:opacity-70",
             hasFile && "z-10 opacity-0 text-white bg-gray-900/60",
             isError && "text-red-600 bg-red-50"
           )}

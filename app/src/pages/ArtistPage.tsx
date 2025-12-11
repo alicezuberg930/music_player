@@ -9,6 +9,7 @@ import type { Artist } from "@/@types/artist"
 import { useMetaTags } from '@/hooks/useMetaTags'
 import { getBaseUrl } from '@/lib/utils'
 import { PlayCircle, UserPlus } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 const ArtistPage = () => {
     const { id } = useParams()
@@ -56,10 +57,10 @@ const ArtistPage = () => {
                                 <span className='text-sm text-gray-300'>
                                     {(+(artist?.totalFollow ?? 0)).toLocaleString()} người quan tâm
                                 </span>
-                                <button className='bg-main-500 text-white px-4 py-2 text-sm rounded-full flex items-center justify-center gap-1'>
+                                <Button className='bg-main-500 text-white px-4 py-2 text-sm rounded-full flex items-center justify-center gap-1' aria-label="Follow artist">
                                     <UserPlus />
                                     <span className='text-xs'>QUAN TÂM</span>
-                                </button>
+                                </Button>
                             </div>
                         </div>
                     </div>
@@ -124,10 +125,10 @@ const ArtistPage = () => {
                         <img src={artist?.thumbnail} className='flex-auto object-cover rounded-md' alt='' />
                     </div>
                     <div className='w-full sm:w-3/5 flex-auto flex flex-col gap-8 text-xs'>
-                        <p className='text-sm font-semibold text-gray-500' dangerouslySetInnerHTML={{ __html: artist?.biography || 'No description' }}></p>
+                        <p className='text-sm font-semibold text-gray-700' dangerouslySetInnerHTML={{ __html: artist?.biography || 'No description' }}></p>
                         <div>
                             <span className='font-bold text-xl text-gray-700'>{(+(artist?.totalFollow ?? 0)).toLocaleString()}</span>
-                            <span className='block text-gray-500'>người quan tâm</span>
+                            <span className='block text-gray-700'>người quan tâm</span>
                         </div>
                     </div>
                 </div>

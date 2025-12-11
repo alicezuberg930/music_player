@@ -71,7 +71,7 @@ const PlaylistPage: React.FC = () => {
                                     wrapperClassName="w-full"
                                 />
                                 <div className={`${(inPlaylist && isPlaying) ? 'rounded-full' : 'rounded-md'} text-white absolute top-0 left-0 bottom-0 right-0 flex items-center justify-center`}>
-                                    <button onClick={() => dispatch(setIsPlaying(!isPlaying))}>
+                                    <button onClick={() => dispatch(setIsPlaying(!isPlaying))} aria-label={(inPlaylist && isPlaying) ? 'Pause playlist' : 'Play playlist'}>
                                         {(inPlaylist && isPlaying) ? (
                                             <Audio color="white" width={48} height={48} />
                                         ) : (
@@ -81,7 +81,7 @@ const PlaylistPage: React.FC = () => {
                                 </div>
                             </div>
                             <Typography className="text-center" variant={'h5'}>{playlist.title}</Typography>
-                            <div className="flex flex-col items-center gap-2 text-gray-500 text-xs">
+                            <div className="flex flex-col items-center gap-2 text-gray-700 text-xs">
                                 <span>Cập nhật: {fDate(playlist.updatedAt, 'dd-MM-yyyy')}</span>
                                 <NavLink to="artist" className="text-center">
                                     {playlist.artistNames}
@@ -91,7 +91,7 @@ const PlaylistPage: React.FC = () => {
                         </div>
                         <div className="flex-1">
                             <div className="text-sm">
-                                <span className="text-gray-500">Lời tựa: </span>
+                                <span className="text-gray-700">Lời tựa: </span>
                                 <span>{playlist.description}</span>
                             </div>
                             <SongList

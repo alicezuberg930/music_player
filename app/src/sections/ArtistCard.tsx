@@ -14,7 +14,7 @@ type Props = {
 const ArtistCard = ({ artist, visibleSlides = 5 }: Props) => {
     return (
         <div className="space-x-3 text-center flex flex-col items-center gap-3 px-2" style={{ width: `${100 / visibleSlides}%` }}>
-            <Link className="w-full h-full relative aspect-square rounded-full overflow-hidden group" to={`/artist/${artist.id}`}>
+            <Link className="w-full h-full relative aspect-square rounded-full overflow-hidden group" to={`/artist/${artist.id}`} aria-label={`View ${artist.name} profile`}>
                 <LazyLoadImage
                     src={artist.thumbnail} alt={artist.name}
                     effect="blur" wrapperClassName="w-full"
@@ -24,7 +24,7 @@ const ArtistCard = ({ artist, visibleSlides = 5 }: Props) => {
             </Link>
             <div className="flex flex-col items-center">
                 <span className="text-sm font-medium hover:underline hover:text-main-500">{artist.name}</span>
-                <span className="text-xs opacity-70">{roundPeopleAmount(artist.totalFollow)} quan tâm</span>
+                <span className="text-xs text-gray-600">{roundPeopleAmount(artist.totalFollow)} quan tâm</span>
             </div>
             <Button className="rounded-full">
                 <UserRoundPlus size={14} />

@@ -50,7 +50,7 @@ const SongCard: React.FC<Props> = ({ song, playlistTitle, hideAlbum, order }) =>
                     <span className="text-ellipsis overflow-hidden">{""}</span>
                 </div>
             )}
-            <div className="flex w-[10%] justify-end text-xs font-semibold opacity-70">
+            <div className="flex w-[10%] justify-end text-xs font-semibold text-gray-600">
                 {formatDuration(song.duration)}
             </div>
         </div>

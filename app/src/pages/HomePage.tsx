@@ -33,7 +33,7 @@ const HomePage: React.FC = () => {
                     {
                         weekCharts?.map(chart => {
                             return (
-                                <Link to={chart?.link?.split('.')[0]} key={chart?.link} className="flex-1">
+                                <Link to={chart?.link?.split('.')[0]} key={chart?.link} className="flex-1" aria-label={`View ${chart?.country || 'chart'}`}>
                                     <img src={chart?.cover} alt="cover" className="w-full object-cover rounded-md" />
                                 </Link>
                             )

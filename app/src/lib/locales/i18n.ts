@@ -1,5 +1,4 @@
 import i18next from 'i18next'
-import LanguageDetector from 'i18next-browser-languagedetector'
 import { initReactI18next } from 'react-i18next'
 //
 import { defaultLang } from './config-lang'
@@ -12,7 +11,6 @@ import cnLocales from './langs/cn'
 const lng = localStorage.getItem('i18nextLng') || defaultLang.value
 
 i18next
-  .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     resources: {

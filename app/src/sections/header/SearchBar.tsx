@@ -19,20 +19,16 @@ const SearchBar = () => {
 
     return (
         <div className='max-w-[440px] w-full'>
-            <div className='bg-[#ffffff54] text-gray-500 rounded-3xl py-2'>
+            <div className='bg-[#ffffff34] text-white rounded-3xl py-2'>
                 <div className='flex w-full'>
-                    <div className='pl-4 self-center'>
-                        <Search />
-                    </div>
+                    <Search className='ml-4' />
                     <input
-                        type='text' className='outline-none px-4 w-full bg-transparent'
-                        placeholder={translate('search_placeholder')}
+                        type='text' className='outline-none px-2 flex-1 bg-transparent'
+                        placeholder={translate('search_placeholder')} name='search'
                         onKeyUp={(e) => handleSubmit(e)}
                         onChange={(e) => { setKeyword(e.target.value) }} value={keyword}
                     />
-                    <div className={`${keyword ? 'block' : 'hidden'} self-center pr-4`} onClick={() => setKeyword('')}>
-                        <X />
-                    </div>
+                    <X onClick={() => setKeyword('')} className={`${keyword ? 'block' : 'hidden'} mr-4`} />
                 </div>
             </div>
         </div>

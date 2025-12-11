@@ -1,0 +1,7 @@
+User-agent: *
+Allow: *
+Disallow: /profile
+Disallow: /verify/*
+Disallow: /reset-password/*
+
+Sitemap: https://tien-music-player.site/sitemap.xml

@@ -112,7 +112,7 @@ function Placeholder({ className, ...other }: Readonly<React.HTMLAttributes<HTML
         <Typography variant='h5'>
           {translate('drop_or_select_file')}
         </Typography>
-        <Typography variant='p' className='text-sm text-gray-500'>
+        <Typography variant='p' className='text-sm text-gray-700'>
           {translate('drop_files_here_or_click')}
           <Typography
             variant='span'

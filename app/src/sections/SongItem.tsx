@@ -80,17 +80,18 @@ const SongItem: React.FC<Props> = ({ song, order, percent, imgSize, style, showT
                 />
                 <div className='flex flex-col flex-auto text-start'>
                     <span className='text-sm font-semibold line-clamp-1'>{song.title}</span>
-                    <span className='text-xs opacity-70 line-clamp-1'>{song.artistNames}</span>
-                    {showTime && <span className='text-xs opacity-70'>{dayjs(song.createdAt).fromNow()}</span>}
+                    <span className='text-xs line-clamp-1'>{song.artistNames}</span>
+                    {showTime && <span className='text-xs text-gray-600'>{dayjs(song.createdAt).fromNow()}</span>}
                 </div>
                 {percent && <span className='pr-1 font-bold'>{percent}%</span>}
                 <HeartIcon
                     className={`group-hover:opacity-100 opacity-0 ${song.liked && 'fill-main-500'}`}
                     onClick={handleFavorite}
+                    aria-label='like/unlike song'
                 />
-                <button onClick={(e) => e.stopPropagation()} className='group-hover:opacity-100 opacity-0'>
+                <button onClick={(e) => e.stopPropagation()} className='group-hover:opacity-100 opacity-0' aria-label="More song options">
                     <SongOptionDropdown
-                        triggerElement={<MoreHorizontalIcon />}
+                        triggerElement={<MoreHorizontalIcon aria-label='More song options' />}
                         addToPlaylist={(playlistId) => addToPlaylist(playlistId)}
                     />
                 </button>

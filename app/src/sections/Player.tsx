@@ -263,33 +263,50 @@ const Player: React.FC = () => {
                 <div className='flex-1 items-center gap-4 hidden md:flex'>
                     <LazyLoadImage src={currentSong?.thumbnail} effect='blur' alt='thumbnail' className='w-16 h-16 object-cover' />
                     <div>
-                        <Typography className='font-semibold text-gray-600 line-clamp-2 text-ellipsis max-w-40'>
+                        <Typography className='font-semibold text-gray-800 line-clamp-2 text-ellipsis max-w-40'>
                             {currentSong?.title}
                         </Typography>
-                        <Typography className='text-gray-500 line-clamp-2 text-ellipsis max-w-40 m-0 lg:text-xs'>
+                        <Typography className='text-gray-700 line-clamp-2 text-ellipsis max-w-40 m-0 lg:text-xs'>
                             {currentSong?.artistNames}
                         </Typography>
                     </div>
-                    <Heart size={20} />
-                    <Ellipsis size={20} />
+                    <Button size={'icon'} variant={'ghost'} aria-label="Like song">
+                        <Heart size={20} />
+                    </Button>
+                    <Button size={'icon'} variant={'ghost'} aria-label="More options">
+                        <Ellipsis size={20} />
+                    </Button>
                 </div>
                 <div className='flex flex-1 items-center gap-4 flex-col'>
                     <div className='flex gap-8 items-center'>
                         <Tooltip>
-                            <TooltipTrigger asChild
-                                className={`cursor-pointer ${shuffle && 'text-purple-600'}`}
-                                onClick={() => setShuffle(prev => !prev)}
-                            >
-                                <Shuffle size={20} />
+                            <TooltipTrigger asChild>
+                                <button
+                                    className={shuffle ? 'text-purple-600' : ''}
+                                    onClick={() => setShuffle(prev => !prev)}
+                                    aria-label="Toggle shuffle"
+                                >
+                                    <Shuffle size={20} />
+                                </button>
                             </TooltipTrigger>
                             <TooltipContent>
                                 Bật phát ngẫu nhiên
                             </TooltipContent>
                         </Tooltip>
-                        <span className={`${currentPlaylistSongs.length ? 'cursor-pointer' : 'text-gray-500'}`}>
-                            <SkipBack size={20} onClick={handlePrevious} />
-                        </span>
-                        <button onClick={handleTogglePlay} className='hover:text-main-500' >
+                        <Button
+                            size={'icon'}
+                            variant={'ghost'}
+                            onClick={handlePrevious}
+                            disabled={!currentPlaylistSongs.length}
+                            aria-label="Previous song"
+                        >
+                            <SkipBack size={20} />
+                        </Button>
+                        <button
+                            onClick={handleTogglePlay}
+                            className='hover:text-main-500 p-0'
+                            aria-label={isPlaying ? 'Pause' : 'Play'}
+                        >
                             {isLoadingAudio ? (
                                 <RotatingLines strokeColor='#0E8080' width={42} height={42} />
                             ) : isPlaying ? (
@@ -300,9 +317,13 @@ const Player: React.FC = () => {
                         </button>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <SkipForward size={20} onClick={handleNext}
-                                    className={`${currentPlaylistSongs.length ? 'cursor-pointer' : 'text-gray-500'}`}
-                                />
+                                <button
+                                    onClick={handleNext}
+                                    disabled={!currentPlaylistSongs.length}
+                                    aria-label="Next song"
+                                >
+                                    <SkipForward size={20} />
+                                </button>
                             </TooltipTrigger>
                             {nextSong && (
                                 <TooltipContent>
@@ -312,7 +333,7 @@ const Player: React.FC = () => {
                                             src={nextSong.thumbnail} effect='blur' alt='thumbnail'
                                             className='w-10 h-10 object-cover rounded-md'
                                         />
-                                        <div className='text-gray-400'>
+                                        <div>
                                             <Typography className='m-0'>{nextSong.title}</Typography>
                                             <Typography className='m-0 lg:text-xs'>{nextSong.artistNames}</Typography>
                                         </div>
@@ -321,11 +342,14 @@ const Player: React.FC = () => {
                             )}
                         </Tooltip>
                         <Tooltip>
-                            <TooltipTrigger asChild
-                                className={`cursor-pointer ${repeatMode && 'text-purple-600'}`}
-                                onClick={() => setRepeatMode(repeatMode === 2 ? 0 : repeatMode + 1)}
-                            >
-                                {repeatMode === 1 ? <Repeat1 size={20} /> : <Repeat size={20} />}
+                            <TooltipTrigger asChild>
+                                <button
+                                    className={repeatMode ? 'text-purple-600' : ''}
+                                    onClick={() => setRepeatMode(repeatMode === 2 ? 0 : repeatMode + 1)}
+                                    aria-label="Toggle repeat mode"
+                                >
+                                    {repeatMode === 1 ? <Repeat1 size={20} /> : <Repeat size={20} />}
+                                </button>
                             </TooltipTrigger>
                             <TooltipContent>
                                 Phát lại tất cả bài hát
@@ -333,7 +357,7 @@ const Player: React.FC = () => {
                         </Tooltip>
                     </div>
                     <div className='w-full flex items-center justify-center gap-3 text-sm'>
-                        <Typography ref={currentTimeRef} className='font-semibold text-gray-500 m-0'>00:00</Typography>
+                        <Typography ref={currentTimeRef} className='font-semibold text-gray-700 m-0'>00:00</Typography>
                         <button
                             className='relative h-1 hover:h-2 bg-[#0000001a] w-3/5 rounded-full cursor-pointer'
                             onClick={handleClickProgressBar}
@@ -342,19 +366,24 @@ const Player: React.FC = () => {
                             onMouseUp={handleMouseUpProgressBar}
                             onMouseLeave={handleMouseUpProgressBar}
                             ref={trackRef}
+                            aria-label="Seek audio"
+                        // role='slider'
+                        // aria-valuemin={0}
+                        // aria-valuemax={currentSong?.duration ?? 0}
+                        // aria-valuenow={audioRef.current?.currentTime ?? 0}
                         >
                             <div ref={thumbRef} className='absolute top-0 left-0 bottom-0 h-full bg-main-500 rounded-full'></div>
                         </button>
-                        <Typography className='font-semibold text-gray-500 m-0'>{formatDuration(currentSong?.duration ?? 0)}</Typography>
+                        <Typography className='font-semibold text-gray-700 m-0'>{formatDuration(currentSong?.duration ?? 0)}</Typography>
                     </div>
                 </div>
                 <div className='flex-1 items-center gap-4 hidden md:flex justify-end'>
                     <LyricsDrawer drawerTrigger={<MicVocal size={20} />} audioRef={audioRef} />
-                    <Button size={'icon-lg'} variant={'ghost'} onClick={() => setVolume(volume === 0 ? 50 : 0)}>
+                    <Button size={'icon-lg'} variant={'ghost'} onClick={() => setVolume(volume === 0 ? 50 : 0)} aria-label={volume === 0 ? 'Unmute' : 'Mute'}>
                         {volume >= 50 ? <Volume2 /> : volume === 0 ? <VolumeX /> : <Volume1 />}
                     </Button>
-                    <input type='range' step={1} min={0} max={100} onChange={handleSetVolume} value={volume} className='h-1 hover:h-2' />
-                    <Button className='text-white' size={'lg'} onClick={() => dispatch(setShowSidebarRight(!showSideBarRight))}>
+                    <input type='range' step={1} min={0} max={100} onChange={handleSetVolume} value={volume} className='h-1 hover:h-2' aria-label="Volume control" />
+                    <Button className='text-white' size={'lg'} onClick={() => dispatch(setShowSidebarRight(!showSideBarRight))} aria-label="Toggle playlist sidebar">
                         <MusicIcon />
                     </Button>
                 </div>

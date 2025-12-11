@@ -60,7 +60,7 @@ export default function MultiFilePreview({ thumbnail, files, onRemove }: UploadP
                 {isNotFormatFile ? file : name}
               </Typography>
 
-              <Typography variant='caption' className='text-gray-400'>
+              <Typography variant='caption' className='text-gray-600'>
                 {isNotFormatFile ? '' : fData(size)}
               </Typography>
             </div>

@@ -27,7 +27,7 @@ const SidebarRight: React.FC = () => {
                             <TabsTrigger value="playlist">{translate('playlist')}</TabsTrigger>
                             <TabsTrigger value="recently_played">{translate('recently_played')}</TabsTrigger>
                         </TabsList>
-                        <Button variant={'ghost'} onClick={handleClearAll}>
+                        <Button variant={'ghost'} onClick={handleClearAll} aria-label="Clear all songs">
                             <Trash className="cursor-pointer shrink-0" />
                         </Button>
                     </div>
@@ -37,7 +37,7 @@ const SidebarRight: React.FC = () => {
                             <div className="py-3">
                                 <Typography variant={'span'} className="font-bold">Tiếp theo</Typography>
                                 <div className="flex items-center text-xs gap-1 overflow-hidden">
-                                    <Typography className="opacity-70 flex-none">Từ playlist:</Typography>
+                                    <Typography className="text-gray-700 flex-none">Từ playlist:</Typography>
                                     <Typography className="font-semibold text-main-500 text-ellipsis line-clamp-1">{currentPlaylistName}</Typography>
                                 </div>
                             </div>

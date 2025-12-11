@@ -15,18 +15,12 @@ export default function LazyLoadImage({ placeholderSrc, effect, wrapperClassName
     // Generate srcset from widths array if provided
     const generateSrcSet = (src: string | undefined, widths: number[] | undefined) => {
         if (!src || !widths || widths.length === 0) return undefined
-
-        // Check if src is a Cloudinary URL
         const isCloudinary = src.includes('cloudinary.com')
-
         if (isCloudinary) {
-            // Extract parts of Cloudinary URL
             const urlParts = src.split('/upload/')
             if (urlParts.length !== 2) return undefined
-
             const baseUrl = urlParts[0] + '/upload'
             const imagePath = urlParts[1]
-
             // Generate srcset with Cloudinary transformations
             return widths
                 .map(width => `${baseUrl}/w_${width},f_auto,q_auto,dpr_1.0/${imagePath} ${width}w`)
@@ -60,9 +54,10 @@ export default function LazyLoadImage({ placeholderSrc, effect, wrapperClassName
             {isInView && (
                 <img
                     {...props}
+                    loading="lazy"
                     srcSet={srcSet}
                     sizes={sizes}
-                    loading="lazy"
+                    fetchPriority="high"
                     decoding="async"
                     onLoad={handleLoad}
                     alt={props.alt}

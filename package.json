@@ -20,6 +20,8 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
+    "build:web": "turbo run build --filter=@yukikaze/web",
+    "build:api": "turbo run build --filter=@yukikaze/services",
     "clean:workspaces": "turbo run clean",
     "db:generate": "turbo run db:generate -F @yukikaze/db",
     "db:migrate": "turbo run db:migrate -F @yukikaze/db",

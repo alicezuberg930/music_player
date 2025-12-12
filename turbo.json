@@ -31,7 +31,19 @@
       "persistent": true
     },
     "start": {
-      "cache": true,
+      "cache": false,
+      "persistent": true
+    },
+    "db:generate": {
+      "cache": false,
+      "interactive": true
+    },
+    "db:migrate": {
+      "cache": false,
+      "interactive": true
+    },
+    "db:studio": {
+      "cache": false,
       "persistent": true
     }
   }

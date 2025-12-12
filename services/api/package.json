@@ -33,8 +33,9 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.0.0",
     "@types/node": "^24.9.1",
-    "@types/react": "^19.2.7",
+    "@types/react": "catalog:react",
     "ts-node-dev": "^2.0.0",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "react": "catalog:react"
   }
 }

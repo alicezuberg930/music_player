@@ -21,15 +21,17 @@
   "scripts": {
     "build": "turbo run build",
     "clean:workspaces": "turbo run clean",
-    "db:generate": "turbo run db:generate -F @yukikaze-music/db",
-    "db:migrate": "turbo run db:migrate -F @yukikaze-music/db",
-    "db:studio": "turbo run db:studio -F @yukikaze-music/db",
+    "db:generate": "turbo run db:generate -F @yukikaze/db",
+    "db:migrate": "turbo run db:migrate -F @yukikaze/db",
+    "db:studio": "turbo run db:studio -F @yukikaze/db",
     "deps:bump": "bunx npm-check-updates --deep -u && bun install",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-    "start": "turbo run start --filter=@yukikaze/web --filter=@yukikaze/services --parallel"
+    "start": "turbo run start --filter=@yukikaze/web --filter=@yukikaze/services --parallel",
+    "start:web": "turbo run start --filter=@yukikaze/web",
+    "start:api": "turbo run start --filter=@yukikaze/services"
   },
   "workspaces": [
     "apps/*",
@@ -52,9 +54,5 @@
       "@types/react": "^19.1.16",
       "@types/react-dom": "^19.1.9"
     }
-  },
-  "dependencies": {
-    "date-fns": "^4.1.0",
-    "redux": "^5.0.1"
   }
 }

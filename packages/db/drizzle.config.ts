@@ -1,7 +1,5 @@
-import dotenv from 'dotenv';
+import { env } from '@yukikaze/lib/create-env';
 import { defineConfig } from 'drizzle-kit';
-
-dotenv.config({ path: '.env' })
 
 export default defineConfig({
     casing: "snake_case",
@@ -9,6 +7,6 @@ export default defineConfig({
     schema: './src/schemas',
     dialect: 'mysql',
     dbCredentials: {
-        url: process.env.DATABASE_URL!,
+        url: env.DATABASE_URL!,
     },
 });

@@ -4,10 +4,6 @@
   "workspaces": {
     "": {
       "name": "yukikaze-music",
-      "dependencies": {
-        "date-fns": "^4.1.0",
-        "redux": "^5.0.1",
-      },
       "devDependencies": {
         "prettier": "^3.7.4",
         "turbo": "^2.6.3",
@@ -27,6 +23,7 @@
         "axios": "^1.13.2",
         "chart.js": "^4.5.1",
         "compression": "^1.8.1",
+        "date-fns": "^4.1.0",
         "dayjs": "^1.11.19",
         "dotenv": "^17.2.3",
         "express": "^5.1.0",
@@ -47,6 +44,7 @@
         "react-lrc": "^3.2.1",
         "react-redux": "^9.2.0",
         "react-router-dom": "^7.9.6",
+        "redux": "^5.0.1",
         "redux-persist": "^6.0.0",
         "redux-thunk": "^3.1.0",
         "vite-plugin-sitemap": "^0.8.2",
@@ -73,7 +71,6 @@
       "version": "0.0.0",
       "dependencies": {
         "@yukikaze/lib": "workspace:*",
-        "dotenv": "^17.2.3",
         "drizzle-orm": "^0.45.0",
         "mysql2": "^3.15.3",
       },
@@ -193,7 +190,8 @@
         "@types/jsonwebtoken": "^9.0.10",
         "@types/multer": "^2.0.0",
         "@types/node": "^24.9.1",
-        "@types/react": "^19.2.7",
+        "@types/react": "catalog:react",
+        "react": "catalog:react",
         "ts-node-dev": "^2.0.0",
         "typescript": "catalog:",
       },

@@ -25,22 +25,18 @@ jobs:
                       set -euo pipefail
 
                       # Load NVM (Node Version Manager) if it exists
-                      export NVM_DIR="$HOME/.nvm"
-                      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                      # export NVM_DIR="$HOME/.nvm"
+                      # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
                       
                       # Or if using fnm
-                      if command -v fnm >/dev/null 2>&1; then
-                        eval "$(fnm env --use-on-cd)"
-                      fi
+                      # if command -v fnm >/dev/null 2>&1; then
+                      #   eval "$(fnm env --use-on-cd)"
+                      # fi
 
                       PATH="/var/www/html/music_player"
  
-                      SERVER_NAME="music-player-server"
-                      FRONTEND_NAME="music-player-app"
-                      
-                      if ! command -v pm2 >/dev/null 2>&1; then
-                        npm i -g pm2
-                      fi
+                      SERVER_NAME="music-api"
+                      FRONTEND_NAME="music-app"
 
                       cd "$PATH"
 

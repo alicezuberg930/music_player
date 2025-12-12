@@ -17,7 +17,7 @@
   "types": "./dist/index.d.mts",
   "scripts": {
     "build": "tsdown",
-    "~dev": "tsdown --watch ./src",
+    "dev": "tsdown --watch ./src",
     "lint": "eslint . --max-warnings 0",
     "generate:component": "turbo gen react-component",
     "check-types": "tsc --noEmit"

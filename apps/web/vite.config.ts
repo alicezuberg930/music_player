@@ -1,17 +1,19 @@
 import path from 'node:path'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
-import { defineConfig, type UserConfig } from 'vite'
+import { defineConfig, type UserConfig, loadEnv } from 'vite'
 import ViteSitemap from 'vite-plugin-sitemap';
 
 // https://vite.dev/config/
 export default defineConfig(async ({ mode }): Promise<UserConfig> => {
+  // Load env from root folder
+  loadEnv(mode, path.resolve(__dirname, '../../'), '')
   const hostname = mode === 'production' ? 'https://tien-music-player.site' : 'http://localhost:5173'
 
   // Fetch dynamic routes from API sitemap
   let dynamicRoutes: string[] = []
   try {
-    const response = await fetch('http://localhost:5000/sitemap-urls')
+    const response = await fetch('https://api.tien-music-player.site/sitemap-urls')
     const data = await response.json() as { data: string[] }
     for (const url of data.data) {
       dynamicRoutes.push(url)
@@ -47,7 +49,7 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
             'redux-chunk': ['@reduxjs/toolkit', 'react-redux', 'redux-persist', 'redux-thunk'],
             'i18next-chunk': ['i18next', 'react-i18next'],
             'form-chunk': ['yup', '@hookform/resolvers', 'react-hook-form'],
-            'mix-chunk': ['compression', 'numeral', 'axios', 'dayjs', 'framer-motion', 'hls.js', 'idb', 'notistack'],
+            'mix-chunk': ['compression', 'axios', 'dayjs', 'framer-motion', 'hls.js', 'idb', 'notistack'],
             'yukikaze-ui-chunk': ['@yukikaze/ui']
           },
           chunkFileNames: 'chunks/[name]-[hash].js',
@@ -78,5 +80,7 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
         '@': path.resolve(__dirname, './src'),
       },
     },
+    envDir: path.resolve(__dirname, '../../'),
+    envPrefix: 'VITE_',
   }
 })

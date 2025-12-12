@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const app = express()
-const PORT = process.env.PORT
+const PORT = process.env.WEB_PORT
 
 // Enable gzip compression for all responses
 app.use(compression({
@@ -58,7 +58,7 @@ app.get('/*splat', async (req, res) => {
         const playlistMatch = req.path.match(/^\/playlist\/([\w-]+)$/)
         if (playlistMatch) {
             try {
-                const response = await fetch(`${process.env.VITE_API_URL}/playlists/${playlistMatch[1]}`)
+                const response = await fetch(`${process.env.API_URL}/playlists/${playlistMatch[1]}`)
                 const data = await response.json()
                 if (data && data.data) {
                     meta = {
@@ -75,7 +75,7 @@ app.get('/*splat', async (req, res) => {
         const artistMatch = req.path.match(/^\/artist\/([\w-]+)$/)
         if (artistMatch) {
             try {
-                const response = await fetch(`${process.env.VITE_API_URL}/artists/${artistMatch[1]}`)
+                const response = await fetch(`${process.env.API_URL}/artists/${artistMatch[1]}`)
                 const data = await response.json()
                 if (data && data.data) {
                     meta = {

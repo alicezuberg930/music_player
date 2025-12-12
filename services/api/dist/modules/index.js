@@ -1,7 +1,4 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.bannerRouter = exports.sitemapRouter = exports.userRouter = exports.playlistRouter = exports.artistRouter = exports.songRouter = void 0;
 var song_route_1 = require("./songs/song.route");
@@ -15,4 +12,4 @@ Object.defineProperty(exports, "userRouter", { enumerable: true, get: function (
 var sitemap_route_1 = require("./sitemap/sitemap.route");
 Object.defineProperty(exports, "sitemapRouter", { enumerable: true, get: function () { return sitemap_route_1.sitemapRouter; } });
 var banner_route_1 = require("./banners/banner.route");
-Object.defineProperty(exports, "bannerRouter", { enumerable: true, get: function () { return __importDefault(banner_route_1).default; } });
+Object.defineProperty(exports, "bannerRouter", { enumerable: true, get: function () { return banner_route_1.bannerRouter; } });

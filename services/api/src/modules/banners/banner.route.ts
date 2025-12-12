@@ -46,4 +46,4 @@ bannerRouter.delete("/banners/:id",
     (request: Request<{ id: string }>, response: Response) => bannerController.deleteBanner(request, response)
 )
 
-export default bannerRouter
+export { bannerRouter }

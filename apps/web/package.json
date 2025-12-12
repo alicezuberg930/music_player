@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview --port 5173",
-    "start": "node server.js"
+    "start": "bun --env-file=../../.env server.js"
   },
   "dependencies": {
     "date-fns": "^4.1.0",
@@ -48,6 +48,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
+    "@types/compression": "^1.8.1",
+    "@types/express": "catalog:express",
     "@types/node": "^24.9.1",
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",

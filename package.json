@@ -47,6 +47,9 @@
     "tsdown": "^0.17.2"
   },
   "catalogs": {
+    "express": {
+      "@types/express": "^5.0.4"
+    },
     "tailwind": {
       "@tailwindcss/vite": "^4.1.15",
       "tailwindcss": "^4.1.15"

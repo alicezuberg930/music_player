@@ -2,7 +2,7 @@ import 'reflect-metadata'
 import express, { Request, Response } from 'express'
 import cors from "cors"
 import cookieParser from "cookie-parser"
-import env from './lib/helpers/env'
+import { env } from '@yukikaze/lib/create-env'
 import { errorInterceptor, notFoundHandlerMiddleware, responseInterceptor } from './middleware'
 import { artistRouter, playlistRouter, songRouter, userRouter, sitemapRouter, bannerRouter } from './modules'
 import { rateLimiter } from './middleware/rate.limiter'
@@ -26,7 +26,7 @@ app.use(cookieParser())
 app.use(express.urlencoded({ extended: true, limit: '21mb' }))
 app.use(express.json({ limit: '21mb' }))
 
-const port = env.PORT || 5000
+const port = env.PORT || 9999
 
 // global rate limiter
 app.use(rateLimiter)

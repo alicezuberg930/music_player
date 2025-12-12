@@ -1,26 +1,16 @@
-import { timestamp } from "drizzle-orm/mysql-core"
 import { createHash, randomBytes } from "node:crypto"
-
-export const createdAt = timestamp({ mode: 'date' })
-    .defaultNow()
-    .notNull()
-
-export const updatedAt = timestamp({ mode: 'date' })
-    .defaultNow()
-    .$onUpdateFn(() => new Date())
-    .notNull()
 
 const alphabet = 'abcdefghijklmnopqrstuvwxyz'
 
 const bufToBigInt = (buf: Buffer): bigint => {
-    let v = 0n
-    for (const i of buf) v = (v << 8n) + BigInt(i)
+    let v = BigInt(0)
+    for (const i of buf) v = (v << BigInt(8)) + BigInt(i)
     return v
 }
 
 const randomLetter = (): string => {
     const idx = Number(randomBytes(1)[0]) % alphabet.length
-    return alphabet[idx]
+    return alphabet[idx]!
 }
 
 const createEntropy = (len = 24): string => {

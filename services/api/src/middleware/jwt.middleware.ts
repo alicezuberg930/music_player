@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express"
 import { UnauthorizedException } from "../lib/exceptions"
 import { JwtPayload, verify } from "jsonwebtoken"
-import env from "../lib/helpers/env"
+import { env } from "@yukikaze/lib/create-env"
 
 export const JWTMiddleware = async (request: Request, _: Response, next: NextFunction) => {
     let token: string | undefined = request.cookies?.["accessToken"]

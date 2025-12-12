@@ -48,6 +48,7 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
             'i18next-chunk': ['i18next', 'react-i18next'],
             'form-chunk': ['yup', '@hookform/resolvers', 'react-hook-form'],
             'mix-chunk': ['compression', 'numeral', 'axios', 'dayjs', 'framer-motion', 'hls.js', 'idb', 'notistack'],
+            'yukikaze-ui-chunk': ['@yukikaze/ui']
           },
           chunkFileNames: 'chunks/[name]-[hash].js',
           entryFileNames: 'entries/[name]-[hash].js',

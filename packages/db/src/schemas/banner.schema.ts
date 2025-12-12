@@ -1,5 +1,6 @@
 import { varchar, mysqlTable } from "drizzle-orm/mysql-core"
-import { createdAt, createId, updatedAt } from "../utils"
+import { createdAt, updatedAt } from "../utils"
+import { createId } from "@yukikaze/lib/create-cuid"
 
 // banners table
 export const banners = mysqlTable("banners", {

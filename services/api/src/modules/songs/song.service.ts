@@ -4,14 +4,14 @@ import { esmMusicMetadata } from '../../lib/helpers/esm.module'
 import fs from 'node:fs'
 import NodeID3 from 'node-id3'
 // database
-import { db, eq, inArray, and } from '../../db'
+import { db, eq, inArray, and } from '@yukikaze/db'
 import { CreateSong, Song } from './song.model'
-import { artists, songs, artistsSongs, userFavoriteSongs } from '../../db/schemas'
+import { artists, songs, artistsSongs, userFavoriteSongs } from '@yukikaze/db/schemas'
 // utils
 import { HttpException, BadRequestException, NotFoundException } from '../../lib/exceptions'
 import slugify from '../../lib/helpers/slugify'
 import { deleteFile, extractPublicId, uploadFile } from "../../lib/helpers/cloudinary.file"
-import { createId } from '../../db/utils'
+import { createId } from "@yukikaze/lib/create-cuid"
 // dto
 import { CreateSongDto } from './dto/create-song.dto'
 import { UpdateSongDto } from './dto/update-song.dto'

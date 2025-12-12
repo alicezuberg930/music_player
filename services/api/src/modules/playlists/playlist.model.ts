@@ -1,4 +1,4 @@
-import { artists, playlists, playlistSongs, songs, users } from "../../db/schemas"
+import { artists, playlists, playlistSongs, songs, users } from "@yukikaze/db/schemas"
 
 export type CreatePlayList = typeof playlists.$inferInsert
 

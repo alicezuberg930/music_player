@@ -1,4 +1,4 @@
-import { playlists, songs, users } from "../../db/schemas"
+import { playlists, songs, users } from "@yukikaze/db/schemas"
 
 export type User = typeof users.$inferSelect & {
     songs?: typeof songs.$inferSelect[]

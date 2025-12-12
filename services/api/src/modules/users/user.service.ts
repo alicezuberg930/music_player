@@ -1,17 +1,16 @@
 import { Request, Response } from "express"
 import jwt from "jsonwebtoken"
-import { and, db, eq } from "../../db"
-import { playlists, songs, userFavoritePlaylists, userFavoriteSongs, users } from "../../db/schemas"
+import { and, db, eq } from "@yukikaze/db"
+import { playlists, songs, userFavoritePlaylists, userFavoriteSongs, users } from "@yukikaze/db/schemas"
 import { User } from "./user.model"
 import { BadRequestException, HttpException, NotFoundException } from "../../lib/exceptions"
 import { CreateUserDto } from "./dto/create-user.dto"
 import { Password } from "../../lib/bcrypt/password"
 import { LoginUserDto } from "./dto/login-user.dto"
-import env from "../../lib/helpers/env"
+import { env } from "@yukikaze/lib/create-env"
 import { UpdateUserDto } from "./dto/update-user.dto"
-import { createId } from "../../db/utils"
+import { createId } from "@yukikaze/lib/create-cuid"
 import sendEmail from "../../lib/email"
-import { Song } from "../songs/song.model"
 
 export class UserService {
     public async getUsers(request: Request, response: Response) {

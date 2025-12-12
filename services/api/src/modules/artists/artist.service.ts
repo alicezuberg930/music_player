@@ -1,12 +1,12 @@
 import { Request, Response } from "express"
-import { db, eq, like } from "../../db"
+import { db, eq, like } from "@yukikaze/db"
 import { Artist } from "./artist.model"
-import { artists } from "../../db/schemas"
+import { artists } from "@yukikaze/db/schemas"
 import { BadRequestException, HttpException, NotFoundException } from "../../lib/exceptions"
 import { deleteFile, extractPublicId, uploadFile } from "../../lib/helpers/cloudinary.file"
 import { CreateArtistDto } from "./dto/create-artist.dto"
 import { UpdateArtistDto } from "./dto/update-artist.dto"
-import { createId } from "../../db/utils"
+import { createId } from "@yukikaze/lib/create-cuid"
 
 export class ArtistService {
     public async getArtists(request: Request, response: Response) {

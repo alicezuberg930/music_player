@@ -29,7 +29,7 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-    "start": "turbo run start --filter=@yukikaze/web --parallel"
+    "start": "turbo run start --filter=@yukikaze/web --filter=@yukikaze/services --parallel"
   },
   "workspaces": [
     "apps/*",

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express"
 import { HttpException } from "../lib/exceptions/HttpException"
 import { MulterError } from "multer"
-import env from "../lib/helpers/env"
+import { env } from "@yukikaze/lib/create-env"
 
 export function errorInterceptor(err: HttpException | MulterError, req: Request, res: Response, _next: NextFunction) {
     let status = 500

@@ -1,13 +1,13 @@
 import { Request, Response } from "express"
-import { and, db, eq, inArray } from "../../db"
+import { and, db, eq, inArray } from "@yukikaze/db"
 import { CreatePlayList, PlayList } from "./playlist.model"
-import { playlistArtists, playlists, playlistSongs, songs, userFavoritePlaylists } from "../../db/schemas"
+import { playlistArtists, playlists, playlistSongs, songs, userFavoritePlaylists } from "@yukikaze/db/schemas"
 import { BadRequestException, HttpException, NotFoundException } from "../../lib/exceptions"
 import { CreatePlaylistDto } from "./dto/create-playlist.dto"
 import { deleteFile, extractPublicId, uploadFile } from "../../lib/helpers/cloudinary.file"
 import { UpdatePlaylistDto } from "./dto/update-playlist.dto"
 import { QueryPlaylistDto } from "./dto/query-playlist.dto"
-import { createId } from "../../db/utils"
+import { createId } from "@yukikaze/lib/create-cuid"
 import { PlaylistSongDto } from "./dto/playlist-songs.dto"
 
 export class PlaylistService {

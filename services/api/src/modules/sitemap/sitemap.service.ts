@@ -1,5 +1,5 @@
-import { db, eq } from "../../db"
-import { artists, playlists } from "../../db/schemas"
+import { db, eq } from "@yukikaze/db"
+import { artists, playlists } from "@yukikaze/db/schemas"
 
 export class SitemapService {
     private readonly baseUrl = 'https://tien-music-player.site'

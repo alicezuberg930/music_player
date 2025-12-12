@@ -1,4 +1,4 @@
-import { artists, genres, playlists, songs, users } from "../../db/schemas"
+import { artists, genres, playlists, songs, users } from "@yukikaze/db/schemas"
 
 export type Song = typeof songs.$inferSelect
     & { user?: Omit<typeof users.$inferSelect, 'password' | 'email'> }

@@ -1,11 +1,11 @@
 import { Request, Response } from "express"
-import { db, eq } from "../../db"
-import { banners } from "../../db/schemas"
+import { db, eq } from "@yukikaze/db"
+import { banners } from "@yukikaze/db/schemas"
 import { BadRequestException, HttpException, NotFoundException } from "../../lib/exceptions"
 import { CreateBannerDto } from "./dto/create-banner.dto"
 import { deleteFile, extractPublicId, uploadFile } from "../../lib/helpers/cloudinary.file"
 import { UpdateBannerDto } from "./dto/update-banner.dto"
-import { createId } from "../../db/utils"
+import { createId } from "@yukikaze/lib/create-cuid"
 import { Banner } from "./banner.model"
 
 export class BannerService {

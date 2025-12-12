@@ -1,6 +1,6 @@
 import { Resend } from 'resend'
 import * as Templates from './templates'
-import env from '../helpers/env'
+import { env } from '@yukikaze/lib/create-env'
 import { BadRequestException } from '../exceptions'
 
 const resend = new Resend(env.RESEND_API_KEY)

@@ -1,5 +1,6 @@
 import { index, mysqlTable, int, varchar, boolean, text, date } from "drizzle-orm/mysql-core"
-import { createdAt, createId, updatedAt } from "../utils"
+import { createdAt, updatedAt } from "../utils"
+import { createId } from "@yukikaze/lib/create-cuid"
 import { relations } from "drizzle-orm"
 import { artistsSongs, genres, users } from "./"
 
@@ -13,7 +14,7 @@ export const songs = mysqlTable("songs", {
     lyricsFile: text(),
     duration: int().notNull(),
     isPrivate: boolean().default(false),
-    releaseDate: date({ mode: 'string' }).default(new Date().toISOString().split('T')[0]),
+    releaseDate: date({ mode: 'string' }).$defaultFn(() => new Date().toISOString().split('T')[0]!),
     distributor: varchar({ length: 255 }),
     stream: varchar({ length: 255 }),
     isIndie: boolean().default(false),

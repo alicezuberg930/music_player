@@ -1,5 +1,6 @@
 import { mysqlTable, varchar, boolean, int, text } from "drizzle-orm/mysql-core"
-import { createdAt, createId, updatedAt } from "../utils"
+import { createdAt, updatedAt } from "../utils"
+import { createId } from "@yukikaze/lib/create-cuid"
 import { relations } from "drizzle-orm"
 import { artistsSongs, playlistArtists } from "./"
 

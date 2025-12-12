@@ -1,8 +1,13 @@
-import dotenv from 'dotenv'
+import { config } from 'dotenv'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-dotenv.config({ path: '.env' })
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
-const env = {
+config({ path: resolve(__dirname, '../../../', '.env') })
+
+export const env = {
     PORT: process.env.PORT,
     NODE_ENV: process.env.NODE_ENV,
     DATABASE_URL: process.env.DATABASE_URL,
@@ -22,5 +27,3 @@ const env = {
     JWT_SECRET: process.env.JWT_SECRET,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
 }
-
-export default env

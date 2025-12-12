@@ -41,9 +41,9 @@ jobs:
                       cd "$PATH"
 
                       # fetch and pull newest code from github
-                      git fetch origin
+                      git fetch
                       git checkout main
-                      git pull --ff-only origin main
+                      git pull origin main
 
                       # Install deps, build, and run with PM2
                       bun install

@@ -3,7 +3,12 @@ import { drizzle } from "drizzle-orm/mysql2"
 import type { MySql2Database } from "drizzle-orm/mysql2"
 import { env } from "@yukikaze/lib/create-env"
 import fs from "node:fs"
+import path from "node:path"
+import { fileURLToPath } from "node:url"
 import * as schema from './schemas'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const createMysqlClient = (): MySql2Database<typeof schema> => {
     const connection = mysql.createPool({
@@ -13,7 +18,7 @@ const createMysqlClient = (): MySql2Database<typeof schema> => {
         password: env.MYSQL_PASSWORD,
         database: env.MYSQL_DATABASE,
         ssl: {
-            ca: fs.readFileSync('ca.pem'),
+            ca: fs.readFileSync(path.resolve(__dirname, '../../../ca.pem')),
             rejectUnauthorized: true
         },
         waitForConnections: true,

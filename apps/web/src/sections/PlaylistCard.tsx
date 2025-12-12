@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom"
 import type { Playlist } from "@/@types/playlist"
 import { Ellipsis, Heart, PlayCircle } from '@yukikaze/ui/icons'
 import { Typography } from "@yukikaze/ui/typography"
-import { useAddFavoritePlaylist, useRemoveFavoritePlaylist } from "@/hooks/useApi"
+import { useApi } from "@/hooks/useApi"
 import LazyLoadImage from "@/components/lazy-load-image/LazyLoadImage"
 
 type Props = {
@@ -13,6 +13,7 @@ type Props = {
 }
 
 const PlaylistCard: React.FC<Props> = ({ playlist, sectionId, isSearch, visibleSlides = 5 }) => {
+    const { useRemoveFavoritePlaylist, useAddFavoritePlaylist } = useApi()
     const removeFavoritePlaylistMutation = useRemoveFavoritePlaylist()
     const addFavoritePlaylistMutation = useAddFavoritePlaylist()
     const navigate = useNavigate()
@@ -29,7 +30,6 @@ const PlaylistCard: React.FC<Props> = ({ playlist, sectionId, isSearch, visibleS
     return (
         <div
             onClick={() => navigate(`/playlist/${playlist.id}`)}
-            // to={`/playlist/${playlist.id}`}
             className={`flex flex-col gap-3 cursor-pointer px-3 ${isSearch ? 'mb-5' : ''}`}
             style={{ width: `${100 / visibleSlides}%`, flex: '0 0 auto' }}
         >
@@ -42,6 +42,10 @@ const PlaylistCard: React.FC<Props> = ({ playlist, sectionId, isSearch, visibleS
                     <Ellipsis />
                 </div>
                 <LazyLoadImage
+                    widths={[
+                        { screenWidth: 1024, imageWidth: 300 },  // Tablet & Phone
+                        { screenWidth: 1920, imageWidth: 600 },  // Desktop and larger
+                    ]}
                     src={playlist?.thumbnail} alt={playlist?.id}
                     className="group-hover:animate-scale-up-center object-cover w-full h-full"
                 />

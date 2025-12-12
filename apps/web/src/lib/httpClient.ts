@@ -6,6 +6,7 @@ import type { Video } from '@/@types/video'
 import type { Artist } from '@/@types/artist'
 import type { Playlist } from '@/@types/playlist'
 import type { User } from '@/@types/user'
+import type { Banner } from '@/@types/banner'
 
 export const fetchSongList = async () => {
     try {
@@ -250,6 +251,16 @@ export const addFavoritePlaylist = async (playlistId: string): Promise<Response>
 export const removeFavoritePlaylist = async (playlistId: string): Promise<Response> => {
     try {
         const response = await axios.delete<Response>(`/users/favorite/playlist/${playlistId}`)
+        return response.data
+    } catch (error) {
+        console.error(error)
+        throw error
+    }
+}
+
+export const fetchBannerList = async (): Promise<Response<Banner[]>> => {
+    try {
+        const response = await axios.get<Response<Banner[]>>(`/banners`)
         return response.data
     } catch (error) {
         console.error(error)

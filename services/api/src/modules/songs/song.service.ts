@@ -15,6 +15,7 @@ import { createId } from "@yukikaze/lib/create-cuid"
 // dto
 import { CreateSongDto } from './dto/create-song.dto'
 import { UpdateSongDto } from './dto/update-song.dto'
+import { resizeImageToBuffer } from '@yukikaze/lib/image-resize'
 
 export class SongService {
     public async getSongs(request: Request, response: Response) {
@@ -96,12 +97,30 @@ export class SongService {
                         imageBuffer: fs.readFileSync(thumbnailFile.path)
                     }
                 }, audioFile.path)
+                // Read file into buffer first to release file handle
+                const originalBuffer = fs.readFileSync(thumbnailFile.path)
+                // Resize image from buffer
+                const resizedBuffer = await resizeImageToBuffer(originalBuffer, {
+                    height: 100, width: 100,
+                    aspectRatio: '1:1',
+                    fit: 'cover',
+                })
+                fs.writeFileSync(thumbnailFile.path, resizedBuffer)
                 thumbnailUrl = (await uploadFile(thumbnailFile, '/cover', createId())) as string
             } else {
                 const picture = metadata.common.picture?.[0]
                 if (picture) {
                     const coverPath = `uploads/${Date.now() + '-' + Math.round(Math.random() * 1e9)}.${picture.format.split('/')[1]}`
                     fs.writeFileSync(coverPath, Buffer.from(picture.data))
+                    // Read file into buffer first to release file handle
+                    const originalBuffer = fs.readFileSync(coverPath)
+                    // Resize image from buffer
+                    const resizedBuffer = await resizeImageToBuffer(originalBuffer, {
+                        height: 100, width: 100,
+                        aspectRatio: '1:1',
+                        fit: 'cover',
+                    })
+                    fs.writeFileSync(coverPath, resizedBuffer)
                     const coverFile = {
                         path: coverPath,
                         mimetype: picture.format,
@@ -148,45 +167,52 @@ export class SongService {
             let thumbnail: string | null = null
             let lyrics: string | null = null
             let findArtists: { name: string }[] = []
-            // find artist names from artistIds array
+            // filter artistIds to add and remove 
             if (artistIds && artistIds.length > 0) {
-                await db.delete(artistsSongs).where(eq(artistsSongs.songId, id))
-                await db.insert(artistsSongs).values(artistIds.map(artistId => ({ songId: id, artistId })))
                 findArtists = await db.query.artists.findMany({ columns: { name: true }, where: inArray(artists.id, artistIds) })
+                const existingArtistSongs = await db.query.artistsSongs.findMany({
+                    where: eq(artistsSongs.songId, id),
+                    columns: { artistId: true }
+                })
+                const existingArtistIds = existingArtistSongs.map(a => a.artistId)
+                const artistIdsToAdd = artistIds.filter(aid => !existingArtistIds.includes(aid))
+                const artistIdsToRemove = existingArtistIds.filter(aid => !artistIds.includes(aid))
+                if (artistIdsToAdd.length > 0) {
+                    await db.insert(artistsSongs).values(artistIdsToAdd.map(artistId => ({
+                        songId: id, artistId
+                    })))
+                }
+                // remove old artist-song relations
+                if (artistIdsToRemove.length > 0) {
+                    await db.delete(artistsSongs).where(and(
+                        eq(artistsSongs.songId, id),
+                        inArray(artistsSongs.artistId, artistIdsToRemove)
+                    ))
+                }
             }
             // extract metadata from audio file
             let metadata = audioFile ? await esmMusicMetadata().then(m => m.parseFile(audioFile.path)) : null
             if (lyricsFile) {
-                if (!findSong.lyricsFile) {
-                    lyrics = (await uploadFile(lyricsFile, '/lyrics', createId())) as string
+                if (findSong.lyricsFile) {
+                    await uploadFile(lyricsFile, '/lyrics', extractPublicId(findSong.lyricsFile))
                 } else {
-                    await uploadFile(lyricsFile, '/lyrics', extractPublicId(findSong.lyricsFile!))
+                    lyrics = (await uploadFile(lyricsFile, '/lyrics', createId())) as string
                 }
             }
             if (thumbnailFile) {
-                if (audioFile) {
-                    // if the user uploaded a thumbnail file, embed it into the audio file's metadata
-                    NodeID3.update({
-                        title,
-                        releaseTime: releaseDate,
-                        ...(findArtists.length > 0 && { artist: findArtists.map(a => a.name).join("/") }),
-                        originalReleaseTime: releaseDate,
-                        ...(releaseDate && { year: new Date(releaseDate).getFullYear().toString() }),
-                        ...(releaseDate && { originalYear: new Date(releaseDate).getFullYear().toString() }),
-                        image: {
-                            mime: thumbnailFile.mimetype,
-                            type: { id: 3, name: 'front cover' },
-                            description: 'Cover Art',
-                            imageBuffer: fs.readFileSync(thumbnailFile.path)
-                        }
-                    }, audioFile.path)
-                } else {
-
-                }
+                // Read file into buffer first to release file handle
+                const originalBuffer = fs.readFileSync(thumbnailFile.path)
+                // Resize image from buffer
+                const resizedBuffer = await resizeImageToBuffer(originalBuffer, {
+                    height: 100, width: 100,
+                    aspectRatio: '1:1',
+                    fit: 'cover',
+                })
+                fs.writeFileSync(thumbnailFile.path, resizedBuffer)
                 if (findSong.thumbnail.includes('/assets/')) {
                     thumbnail = (await uploadFile(thumbnailFile, '/cover', createId())) as string
                 } else {
-                    await uploadFile(thumbnailFile, '/cover', extractPublicId(findSong.thumbnail!))
+                    await uploadFile(thumbnailFile, '/cover', extractPublicId(findSong.thumbnail))
                 }
             } else {
                 const picture = metadata?.common.picture?.[0]
@@ -198,14 +224,15 @@ export class SongService {
                         mimetype: picture.format,
                         originalname: `cover.${picture.format.split('/')[1]}`
                     } as Express.Multer.File
-                    await uploadFile(coverFile, '/cover', extractPublicId(findSong.thumbnail!))
+                    await uploadFile(coverFile, '/cover', extractPublicId(findSong.thumbnail))
                 }
             }
             // upload audio file to cloud storage and get the url
-            if (audioFile) {
-                await uploadFile(audioFile, '/audio', extractPublicId(findSong.stream!))
+            if (audioFile && findSong.stream) {
+                await uploadFile(audioFile, '/audio', extractPublicId(findSong.stream))
             }
             const song = {
+                ...findArtists.length > 0 && { artistNames: findArtists.map(a => a.name).join(", ") },
                 ...releaseDate && ({ releaseDate }),
                 ...title && ({ title }),
                 ...thumbnail && { thumbnail },

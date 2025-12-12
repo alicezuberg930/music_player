@@ -13,7 +13,7 @@ import { RHFUpload } from '@/components/hook-form/RHFUpload'
 import { Button } from '@yukikaze/ui/button'
 import { Card, CardContent } from '@yukikaze/ui/card'
 import { useSnackbar } from '@/components/snackbar'
-import { useCreateArtist } from '@/hooks/useApi'
+import { useApi } from '@/hooks/useApi'
 
 type FormValuesProps = {
     thumbnail?: CustomFile | string
@@ -24,7 +24,7 @@ const AddArtistPage: React.FC = () => {
     const { enqueueSnackbar } = useSnackbar()
     const { translate } = useLocales()
 
-    const createArtistMutation = useCreateArtist({
+    const createArtistMutation = useApi().useCreateArtist({
         onSuccess: (response) => {
             reset()
             enqueueSnackbar(translate(response.message), { variant: 'success' })

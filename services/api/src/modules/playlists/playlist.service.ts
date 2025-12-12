@@ -9,6 +9,8 @@ import { UpdatePlaylistDto } from "./dto/update-playlist.dto"
 import { QueryPlaylistDto } from "./dto/query-playlist.dto"
 import { createId } from "@yukikaze/lib/create-cuid"
 import { PlaylistSongDto } from "./dto/playlist-songs.dto"
+import { resizeImageToBuffer } from "@yukikaze/lib/image-resize"
+import fs from "node:fs"
 
 export class PlaylistService {
     public async getPlaylists(request: Request<{}, {}, {}, QueryPlaylistDto>, response: Response) {
@@ -63,6 +65,15 @@ export class PlaylistService {
             const files = request.files as { [fieldname: string]: Express.Multer.File[] }
             const thumbnailFile: Express.Multer.File | null = files['thumbnail']?.[0] ?? null
             if (thumbnailFile) {
+                // Read file into buffer first to release file handle
+                const originalBuffer = fs.readFileSync(thumbnailFile.path)
+                // Resize image from buffer
+                const resizedBuffer = await resizeImageToBuffer(originalBuffer, {
+                    height: 600, width: 600,
+                    aspectRatio: '1:1',
+                    fit: 'cover',
+                })
+                fs.writeFileSync(thumbnailFile.path, resizedBuffer)
                 thumbnailUrl = (await uploadFile(thumbnailFile, '/playlist', createId())) as string
             }
             const playlist = {
@@ -93,6 +104,15 @@ export class PlaylistService {
             const thumbnailFile: Express.Multer.File | null = files['thumbnail']?.[0] ?? null
             let thumbnail: string | null = null
             if (thumbnailFile) {
+                // Read file into buffer first to release file handle
+                const originalBuffer = fs.readFileSync(thumbnailFile.path)
+                // Resize image from buffer
+                const resizedBuffer = await resizeImageToBuffer(originalBuffer, {
+                    height: 600, width: 600,
+                    aspectRatio: '1:1',
+                    fit: 'cover',
+                })
+                fs.writeFileSync(thumbnailFile.path, resizedBuffer)
                 if (myPlaylist.thumbnail.includes('/assets/')) {
                     thumbnail = (await uploadFile(thumbnailFile, '/playlist', createId())) as string
                 } else {

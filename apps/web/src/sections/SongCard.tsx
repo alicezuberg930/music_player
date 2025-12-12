@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux"
 import { setIsPlaying, addRecentSong, setCurrentSong, setCurrentPlaylistName } from "@/redux/slices/music"
 import type { Song } from "@/@types/song"
 import { MusicIcon } from '@yukikaze/ui/icons'
+import { LazyLoadImage } from "@/components/lazy-load-image"
 
 type Props = {
     song: Song
@@ -39,7 +40,13 @@ const SongCard: React.FC<Props> = ({ song, playlistTitle, hideAlbum, order }) =>
                     </div>
                 )}
                 {!order && <MusicIcon size={16} />}
-                <img src={song.thumbnail} alt="thumbnail" className="w-10 h-10 object-cover rounded-md" />
+                <LazyLoadImage
+                    widths={[
+                        { screenWidth: 1024, imageWidth: 60 },  // Tablet & Phone
+                        { screenWidth: 1920, imageWidth: 100 },  // Desktop and larger
+                    ]}
+                    src={song.thumbnail} alt="thumbnail" className="w-10 h-10 object-cover rounded-md"
+                />
                 <div className="flex flex-col whitespace-nowrap w-3/4">
                     <span className="font-semibold text-sm text-ellipsis overflow-hidden">{song.title}</span>
                     <span className="text-xs text-ellipsis overflow-hidden">{song.artistNames}</span>

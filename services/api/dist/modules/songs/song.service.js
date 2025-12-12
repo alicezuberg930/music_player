@@ -15,6 +15,7 @@ const exceptions_1 = require("../../lib/exceptions");
 const slugify_1 = __importDefault(require("../../lib/helpers/slugify"));
 const cloudinary_file_1 = require("../../lib/helpers/cloudinary.file");
 const create_cuid_1 = require("@yukikaze/lib/create-cuid");
+const image_resize_1 = require("@yukikaze/lib/image-resize");
 class SongService {
     async getSongs(request, response) {
         try {
@@ -94,6 +95,15 @@ class SongService {
                         imageBuffer: node_fs_1.default.readFileSync(thumbnailFile.path)
                     }
                 }, audioFile.path);
+                // Read file into buffer first to release file handle
+                const originalBuffer = node_fs_1.default.readFileSync(thumbnailFile.path);
+                // Resize image from buffer
+                const resizedBuffer = await (0, image_resize_1.resizeImageToBuffer)(originalBuffer, {
+                    height: 100, width: 100,
+                    aspectRatio: '1:1',
+                    fit: 'cover',
+                });
+                node_fs_1.default.writeFileSync(thumbnailFile.path, resizedBuffer);
                 thumbnailUrl = (await (0, cloudinary_file_1.uploadFile)(thumbnailFile, '/cover', (0, create_cuid_1.createId)()));
             }
             else {
@@ -101,6 +111,15 @@ class SongService {
                 if (picture) {
                     const coverPath = `uploads/${Date.now() + '-' + Math.round(Math.random() * 1e9)}.${picture.format.split('/')[1]}`;
                     node_fs_1.default.writeFileSync(coverPath, Buffer.from(picture.data));
+                    // Read file into buffer first to release file handle
+                    const originalBuffer = node_fs_1.default.readFileSync(coverPath);
+                    // Resize image from buffer
+                    const resizedBuffer = await (0, image_resize_1.resizeImageToBuffer)(originalBuffer, {
+                        height: 100, width: 100,
+                        aspectRatio: '1:1',
+                        fit: 'cover',
+                    });
+                    node_fs_1.default.writeFileSync(coverPath, resizedBuffer);
                     const coverFile = {
                         path: coverPath,
                         mimetype: picture.format,
@@ -149,42 +168,46 @@ class SongService {
             let thumbnail = null;
             let lyrics = null;
             let findArtists = [];
-            // find artist names from artistIds array
+            // filter artistIds to add and remove 
             if (artistIds && artistIds.length > 0) {
-                await db_1.db.delete(schemas_1.artistsSongs).where((0, db_1.eq)(schemas_1.artistsSongs.songId, id));
-                await db_1.db.insert(schemas_1.artistsSongs).values(artistIds.map(artistId => ({ songId: id, artistId })));
                 findArtists = await db_1.db.query.artists.findMany({ columns: { name: true }, where: (0, db_1.inArray)(schemas_1.artists.id, artistIds) });
+                const existingArtistSongs = await db_1.db.query.artistsSongs.findMany({
+                    where: (0, db_1.eq)(schemas_1.artistsSongs.songId, id),
+                    columns: { artistId: true }
+                });
+                const existingArtistIds = existingArtistSongs.map(a => a.artistId);
+                const artistIdsToAdd = artistIds.filter(aid => !existingArtistIds.includes(aid));
+                const artistIdsToRemove = existingArtistIds.filter(aid => !artistIds.includes(aid));
+                if (artistIdsToAdd.length > 0) {
+                    await db_1.db.insert(schemas_1.artistsSongs).values(artistIdsToAdd.map(artistId => ({
+                        songId: id, artistId
+                    })));
+                }
+                // remove old artist-song relations
+                if (artistIdsToRemove.length > 0) {
+                    await db_1.db.delete(schemas_1.artistsSongs).where((0, db_1.and)((0, db_1.eq)(schemas_1.artistsSongs.songId, id), (0, db_1.inArray)(schemas_1.artistsSongs.artistId, artistIdsToRemove)));
+                }
             }
             // extract metadata from audio file
             let metadata = audioFile ? await (0, esm_module_1.esmMusicMetadata)().then(m => m.parseFile(audioFile.path)) : null;
             if (lyricsFile) {
-                if (!findSong.lyricsFile) {
-                    lyrics = (await (0, cloudinary_file_1.uploadFile)(lyricsFile, '/lyrics', (0, create_cuid_1.createId)()));
+                if (findSong.lyricsFile) {
+                    await (0, cloudinary_file_1.uploadFile)(lyricsFile, '/lyrics', (0, cloudinary_file_1.extractPublicId)(findSong.lyricsFile));
                 }
                 else {
-                    await (0, cloudinary_file_1.uploadFile)(lyricsFile, '/lyrics', (0, cloudinary_file_1.extractPublicId)(findSong.lyricsFile));
+                    lyrics = (await (0, cloudinary_file_1.uploadFile)(lyricsFile, '/lyrics', (0, create_cuid_1.createId)()));
                 }
             }
             if (thumbnailFile) {
-                if (audioFile) {
-                    // if the user uploaded a thumbnail file, embed it into the audio file's metadata
-                    node_id3_1.default.update({
-                        title,
-                        releaseTime: releaseDate,
-                        ...(findArtists.length > 0 && { artist: findArtists.map(a => a.name).join("/") }),
-                        originalReleaseTime: releaseDate,
-                        ...(releaseDate && { year: new Date(releaseDate).getFullYear().toString() }),
-                        ...(releaseDate && { originalYear: new Date(releaseDate).getFullYear().toString() }),
-                        image: {
-                            mime: thumbnailFile.mimetype,
-                            type: { id: 3, name: 'front cover' },
-                            description: 'Cover Art',
-                            imageBuffer: node_fs_1.default.readFileSync(thumbnailFile.path)
-                        }
-                    }, audioFile.path);
-                }
-                else {
-                }
+                // Read file into buffer first to release file handle
+                const originalBuffer = node_fs_1.default.readFileSync(thumbnailFile.path);
+                // Resize image from buffer
+                const resizedBuffer = await (0, image_resize_1.resizeImageToBuffer)(originalBuffer, {
+                    height: 100, width: 100,
+                    aspectRatio: '1:1',
+                    fit: 'cover',
+                });
+                node_fs_1.default.writeFileSync(thumbnailFile.path, resizedBuffer);
                 if (findSong.thumbnail.includes('/assets/')) {
                     thumbnail = (await (0, cloudinary_file_1.uploadFile)(thumbnailFile, '/cover', (0, create_cuid_1.createId)()));
                 }
@@ -206,10 +229,11 @@ class SongService {
                 }
             }
             // upload audio file to cloud storage and get the url
-            if (audioFile) {
+            if (audioFile && findSong.stream) {
                 await (0, cloudinary_file_1.uploadFile)(audioFile, '/audio', (0, cloudinary_file_1.extractPublicId)(findSong.stream));
             }
             const song = {
+                ...findArtists.length > 0 && { artistNames: findArtists.map(a => a.name).join(", ") },
                 ...releaseDate && ({ releaseDate }),
                 ...title && ({ title }),
                 ...thumbnail && { thumbnail },

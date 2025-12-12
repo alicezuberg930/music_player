@@ -11,7 +11,7 @@ const bannerRouter = express.Router()
 const uploadOptions: Options = {
     allowedFields: ["thumbnail"],
     allowed: {
-        thumbnail: { mimes: ["image/jpeg", "image/png"], exts: ["jpg", "jpeg", "png"] }
+        thumbnail: { mimes: ["image/jpeg", "image/png"], exts: ["jpg", "jpeg", "png"], maxSize: 2 * 1024 * 1024 }
     }
 }
 const upload = multer(multerOptions(uploadOptions))

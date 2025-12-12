@@ -16,6 +16,10 @@ const ArtistCard = ({ artist, visibleSlides = 5 }: Props) => {
         <div className="space-x-3 text-center flex flex-col items-center gap-3 px-2" style={{ width: `${100 / visibleSlides}%` }}>
             <Link className="w-full h-full relative aspect-square rounded-full overflow-hidden group" to={`/artist/${artist.id}`} aria-label={`View ${artist.name} profile`}>
                 <LazyLoadImage
+                    widths={[
+                        { screenWidth: 1024, imageWidth: 120 },  // Tablet & Phone
+                        { screenWidth: 1920, imageWidth: 240 },  // Desktop and larger
+                    ]}
                     src={artist.thumbnail} alt={artist.name}
                     effect="blur" wrapperClassName="w-full"
                     className="group-hover:animate-scale-up-center object-cover w-full"

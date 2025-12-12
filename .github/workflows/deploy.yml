@@ -33,23 +33,16 @@ jobs:
                         eval "$(fnm env --use-on-cd)"
                       fi
 
-                      SERVER_PATH="${{ secrets.SERVER_PATH }}"
-                      FRONTEND_PATH="${{ secrets.FRONTEND_PATH }}"
-
+                      PATH="/var/www/html/music_player"
+ 
                       SERVER_NAME="music-player-server"
                       FRONTEND_NAME="music-player-app"
-
-                      # Ensure Node & pm2 exist
-                      if ! command -v node >/dev/null 2>&1; then
-                        echo "Node.js is not installed or not in PATH"
-                        exit 1
-                      fi
                       
                       if ! command -v pm2 >/dev/null 2>&1; then
                         npm i -g pm2
                       fi
 
-                      cd "$SERVER_PATH"
+                      cd "$PATH"
 
                       # fetch and pull newest code from github
                       git fetch origin
@@ -57,30 +50,20 @@ jobs:
                       git pull --ff-only origin main
 
                       # Install deps, build, and run with PM2
-                      npm ci --only=production --legacy-peer-deps --no-audit --no-fund
-                      npm cache clean --force
-                      # npm run build
+                      bun install
+                      bun run build:web
+                      bun run build:packages
 
                       # Start or reload the service
                       if pm2 describe "$SERVER_NAME" >/dev/null 2>&1; then
                         pm2 reload "$SERVER_NAME"
                       else
-                        pm2 start "npm run start" --name "$SERVER_NAME"
+                        pm2 start "bun run start:api" --name "$SERVER_NAME"
                       fi
-
-                      cd "$FRONTEND_PATH"
-                      
-                      # Install deps, build, and run with PM2
-                      npm ci --only=production --legacy-peer-deps --no-audit --no-fund
-                      npm cache clean --force
-                      # npm run build
-
-                      # Start or reload the service
                       if pm2 describe "$FRONTEND_NAME" >/dev/null 2>&1; then
                         pm2 reload "$FRONTEND_NAME"
                       else
-                        # running the command node server.js in app folder
-                        pm2 start "npm run serve" --name "$FRONTEND_NAME"
+                        pm2 start "bun run start:web" --name "$FRONTEND_NAME"
                       fi
 
                       pm2 save

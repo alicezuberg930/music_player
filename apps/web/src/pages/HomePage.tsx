@@ -1,20 +1,25 @@
 import NewReleaseListSection from "@/sections/home/NewReleaseListSection"
 import PlaylistSection from "@/sections/home/PlaylistSection"
-import { useSongList, usePlaylistList, useArtistList } from "@/hooks/useApi"
+import { useApi } from "@/hooks/useApi"
 import ArtistSection from "@/sections/home/ArtistSection"
-
+import BannerSliderSection from "@/sections/home/BannerSliderSection"
 
 const HomePage: React.FC = () => {
+    const { useSongList, usePlaylistList, useArtistList, useBannerList } = useApi()
     const { data: songsData } = useSongList()
     const { data: playlistsData } = usePlaylistList()
     const { data: artistsData } = useArtistList()
+    const { data: bannersData } = useBannerList()
 
-    const songs = songsData?.data || []
-    const playlists = playlistsData?.data || []
-    const artists = artistsData?.data || []
+    const songs = songsData?.data ?? []
+    const playlists = playlistsData?.data ?? []
+    const artists = artistsData?.data ?? []
+    const banners = bannersData?.data ?? []
 
     return (
         <>
+            <BannerSliderSection banners={banners} />
+
             <NewReleaseListSection songs={songs} />
 
             <PlaylistSection playlists={playlists} />

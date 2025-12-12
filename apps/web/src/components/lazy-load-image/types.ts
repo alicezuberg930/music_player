@@ -3,5 +3,8 @@ export type LazyLoadImageProps = React.ImgHTMLAttributes<HTMLImageElement> & {
     effect?: 'blur' | 'opacity' | 'black-and-white'
     wrapperClassName?: string
     responsiveSizes?: string
-    widths?: number[]
+    widths?: {
+        screenWidth: number
+        imageWidth: number
+    }[]
 }

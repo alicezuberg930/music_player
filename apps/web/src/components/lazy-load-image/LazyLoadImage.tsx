@@ -11,7 +11,7 @@ export default function LazyLoadImage({ placeholderSrc, effect, wrapperClassName
     const handleLoad = () => setIsLoaded(true)
 
     // Generate srcset from widths array if provided
-    const generateSrcSet = (src: string | undefined, widths: number[] | undefined) => {
+    const generateSrcSet = (src: string | undefined, widths: { screenWidth: number, imageWidth: number }[] | undefined) => {
         if (!src || !widths || widths.length === 0) return undefined
         const isCloudinary = src.includes('cloudinary.com')
         if (isCloudinary) {
@@ -21,17 +21,15 @@ export default function LazyLoadImage({ placeholderSrc, effect, wrapperClassName
             const imagePath = urlParts[1]
             // Generate srcset with Cloudinary transformations
             return widths
-                .map(width => `${baseUrl}/w_${width},f_auto,q_auto,dpr_1.0/${imagePath} ${width}w`)
+                .map(width => `${baseUrl}/w_${width.imageWidth},f_auto,q_auto,dpr_1.0/${imagePath} ${width.screenWidth}w`)
                 .join(', ')
         } else {
             // For non-Cloudinary URLs just return nothing or a basic srcset
-            return widths
-                .map(width => `${src} ${width}w`)
-                .join(', ')
+            return undefined
         }
     }
 
-    const srcSet = generateSrcSet(props.src, widths ?? [640, 750, 850, 1080, 1920])
+    const srcSet = widths ? generateSrcSet(props.src, widths) : undefined
     const sizes = responsiveSizes || props.sizes || "100vw"
 
     return (

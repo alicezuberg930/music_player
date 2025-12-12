@@ -1,17 +1,19 @@
 import { Request, Response } from "express"
-import { db, eq, like } from "@yukikaze/db"
+import { db, eq } from "@yukikaze/db"
 import { Artist } from "./artist.model"
 import { artists } from "@yukikaze/db/schemas"
 import { BadRequestException, HttpException, NotFoundException } from "../../lib/exceptions"
-import { deleteFile, extractPublicId, uploadFile } from "../../lib/helpers/cloudinary.file"
+import { extractPublicId, uploadFile } from "../../lib/helpers/cloudinary.file"
 import { CreateArtistDto } from "./dto/create-artist.dto"
 import { UpdateArtistDto } from "./dto/update-artist.dto"
 import { createId } from "@yukikaze/lib/create-cuid"
+import { resizeImageToBuffer } from "@yukikaze/lib/image-resize"
+import fs from "node:fs"
 
 export class ArtistService {
     public async getArtists(request: Request, response: Response) {
         try {
-            const { } = request.query
+            // const {  } = request.query
             const data: Artist[] = await db.query.artists.findMany({
                 with: {
                     songs: {
@@ -39,6 +41,16 @@ export class ArtistService {
             const files = request.files as { [fieldname: string]: Express.Multer.File[] }
             const thumbnailFile: Express.Multer.File | null = files['thumbnail']?.[0] ?? null
             if (thumbnailFile) {
+                // Read file into buffer first to release file handle
+                const originalBuffer = fs.readFileSync(thumbnailFile.path)
+                // Resize image from buffer
+                const resizedBuffer = await resizeImageToBuffer(originalBuffer, {
+                    height: 240, width: 240,
+                    aspectRatio: '1:1',
+                    fit: 'cover',
+                    quality: 100
+                })
+                fs.writeFileSync(thumbnailFile.path, resizedBuffer)
                 thumbnailUrl = (await uploadFile(thumbnailFile, '/avatar', createId())) as string
             }
             const artist = {
@@ -63,6 +75,16 @@ export class ArtistService {
             const files = request.files as { [fieldname: string]: Express.Multer.File[] }
             const thumbnailFile: Express.Multer.File | null = files['thumbnail']?.[0] ?? null
             if (thumbnailFile) {
+                // Read file into buffer first to release file handle
+                const originalBuffer = fs.readFileSync(thumbnailFile.path)
+                // Resize image from buffer
+                const resizedBuffer = await resizeImageToBuffer(originalBuffer, {
+                    height: 240, width: 240,
+                    aspectRatio: '1:1',
+                    fit: 'cover',
+                    quality: 100
+                })
+                fs.writeFileSync(thumbnailFile.path, resizedBuffer)
                 if (findArtist.thumbnail!.includes('/assets/')) {
                     thumbnailUrl = (await uploadFile(thumbnailFile, '/avatar', createId())) as string
                 } else {

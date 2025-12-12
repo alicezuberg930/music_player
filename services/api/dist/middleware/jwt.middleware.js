@@ -13,14 +13,21 @@ const JWTMiddleware = async (request, _, next) => {
         throw new exceptions_1.UnauthorizedException("Invalid credentials, please log in");
     }
     // Verify token signature annd expiration automatically
-    const jwt = (0, jsonwebtoken_1.verify)(token, create_env_1.env.JWT_SECRET);
-    if (!jwt || !jwt.id) {
-        throw new exceptions_1.UnauthorizedException("Invalid or expired access token");
+    try {
+        const jwt = (0, jsonwebtoken_1.verify)(token, create_env_1.env.JWT_SECRET);
+        if (!jwt || !jwt.id) {
+            throw new exceptions_1.UnauthorizedException("Invalid or expired access token");
+        }
+        request.userId = jwt.id;
     }
-    if (jwt.exp && Date.now() >= jwt.exp * 1000) {
-        throw new exceptions_1.UnauthorizedException("Access token has expired, please log in again");
+    catch (error) {
+        if (error instanceof jsonwebtoken_1.JsonWebTokenError) {
+            throw new exceptions_1.UnauthorizedException("JWT is expired");
+        }
+        else {
+            throw new exceptions_1.InternalServerErrorException();
+        }
     }
-    request.userId = jwt.id;
     next();
 };
 exports.JWTMiddleware = JWTMiddleware;

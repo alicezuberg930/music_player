@@ -1,4 +1,7 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PlaylistService = void 0;
 const db_1 = require("@yukikaze/db");
@@ -6,6 +9,8 @@ const schemas_1 = require("@yukikaze/db/schemas");
 const exceptions_1 = require("../../lib/exceptions");
 const cloudinary_file_1 = require("../../lib/helpers/cloudinary.file");
 const create_cuid_1 = require("@yukikaze/lib/create-cuid");
+const image_resize_1 = require("@yukikaze/lib/image-resize");
+const node_fs_1 = __importDefault(require("node:fs"));
 class PlaylistService {
     async getPlaylists(request, response) {
         try {
@@ -57,6 +62,15 @@ class PlaylistService {
             const files = request.files;
             const thumbnailFile = files['thumbnail']?.[0] ?? null;
             if (thumbnailFile) {
+                // Read file into buffer first to release file handle
+                const originalBuffer = node_fs_1.default.readFileSync(thumbnailFile.path);
+                // Resize image from buffer
+                const resizedBuffer = await (0, image_resize_1.resizeImageToBuffer)(originalBuffer, {
+                    height: 600, width: 600,
+                    aspectRatio: '1:1',
+                    fit: 'cover',
+                });
+                node_fs_1.default.writeFileSync(thumbnailFile.path, resizedBuffer);
                 thumbnailUrl = (await (0, cloudinary_file_1.uploadFile)(thumbnailFile, '/playlist', (0, create_cuid_1.createId)()));
             }
             const playlist = {
@@ -89,6 +103,15 @@ class PlaylistService {
             const thumbnailFile = files['thumbnail']?.[0] ?? null;
             let thumbnail = null;
             if (thumbnailFile) {
+                // Read file into buffer first to release file handle
+                const originalBuffer = node_fs_1.default.readFileSync(thumbnailFile.path);
+                // Resize image from buffer
+                const resizedBuffer = await (0, image_resize_1.resizeImageToBuffer)(originalBuffer, {
+                    height: 600, width: 600,
+                    aspectRatio: '1:1',
+                    fit: 'cover',
+                });
+                node_fs_1.default.writeFileSync(thumbnailFile.path, resizedBuffer);
                 if (myPlaylist.thumbnail.includes('/assets/')) {
                     thumbnail = (await (0, cloudinary_file_1.uploadFile)(thumbnailFile, '/playlist', (0, create_cuid_1.createId)()));
                 }

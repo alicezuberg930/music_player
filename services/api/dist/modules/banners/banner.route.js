@@ -16,7 +16,7 @@ exports.bannerRouter = bannerRouter;
 const uploadOptions = {
     allowedFields: ["thumbnail"],
     allowed: {
-        thumbnail: { mimes: ["image/jpeg", "image/png"], exts: ["jpg", "jpeg", "png"] }
+        thumbnail: { mimes: ["image/jpeg", "image/png"], exts: ["jpg", "jpeg", "png"], maxSize: 2 * 1024 * 1024 }
     }
 };
 const upload = (0, multer_1.default)((0, multer_options_1.multerOptions)(uploadOptions));

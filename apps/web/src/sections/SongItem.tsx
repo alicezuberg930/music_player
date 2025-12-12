@@ -8,7 +8,7 @@ import { HeartIcon, MoreHorizontalIcon } from '@yukikaze/ui/icons'
 import { addSongsToPlaylist } from '@/lib/httpClient'
 import { useSnackbar } from '@/components/snackbar'
 import SongOptionDropdown from './SongOptionDropdown'
-import { useAddFavoriteSong, useRemoveFavoriteSong } from '@/hooks/useApi'
+import { useApi } from '@/hooks/useApi'
 import LazyLoadImage from '@/components/lazy-load-image/LazyLoadImage'
 
 dayjs.extend(relativeTime)
@@ -25,6 +25,7 @@ type Props = {
 const SongItem: React.FC<Props> = ({ song, order, percent, imgSize, style, showTime }) => {
     const dispatch = useDispatch()
     const { enqueueSnackbar } = useSnackbar()
+    const { useAddFavoriteSong, useRemoveFavoriteSong } = useApi()
     const removeFavoriteSongMutation = useRemoveFavoriteSong()
     const addFavoriteSongMutation = useAddFavoriteSong()
     const imageSizeCss = () => {
@@ -73,6 +74,10 @@ const SongItem: React.FC<Props> = ({ song, order, percent, imgSize, style, showT
                     </span>
                 )}
                 <LazyLoadImage
+                    widths={[
+                        { screenWidth: 1024, imageWidth: 60 },  // Tablet & Phone
+                        { screenWidth: 1920, imageWidth: 100 },  // Desktop and larger
+                    ]}
                     className={`${imageSizeCss()} object-cover rounded-md`}
                     alt={song.id}
                     src={song.thumbnail}

@@ -1,4 +1,7 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ArtistService = void 0;
 const db_1 = require("@yukikaze/db");
@@ -6,10 +9,12 @@ const schemas_1 = require("@yukikaze/db/schemas");
 const exceptions_1 = require("../../lib/exceptions");
 const cloudinary_file_1 = require("../../lib/helpers/cloudinary.file");
 const create_cuid_1 = require("@yukikaze/lib/create-cuid");
+const image_resize_1 = require("@yukikaze/lib/image-resize");
+const node_fs_1 = __importDefault(require("node:fs"));
 class ArtistService {
     async getArtists(request, response) {
         try {
-            const {} = request.query;
+            // const {  } = request.query
             const data = await db_1.db.query.artists.findMany({
                 with: {
                     songs: {
@@ -38,6 +43,16 @@ class ArtistService {
             const files = request.files;
             const thumbnailFile = files['thumbnail']?.[0] ?? null;
             if (thumbnailFile) {
+                // Read file into buffer first to release file handle
+                const originalBuffer = node_fs_1.default.readFileSync(thumbnailFile.path);
+                // Resize image from buffer
+                const resizedBuffer = await (0, image_resize_1.resizeImageToBuffer)(originalBuffer, {
+                    height: 240, width: 240,
+                    aspectRatio: '1:1',
+                    fit: 'cover',
+                    quality: 100
+                });
+                node_fs_1.default.writeFileSync(thumbnailFile.path, resizedBuffer);
                 thumbnailUrl = (await (0, cloudinary_file_1.uploadFile)(thumbnailFile, '/avatar', (0, create_cuid_1.createId)()));
             }
             const artist = {
@@ -64,6 +79,16 @@ class ArtistService {
             const files = request.files;
             const thumbnailFile = files['thumbnail']?.[0] ?? null;
             if (thumbnailFile) {
+                // Read file into buffer first to release file handle
+                const originalBuffer = node_fs_1.default.readFileSync(thumbnailFile.path);
+                // Resize image from buffer
+                const resizedBuffer = await (0, image_resize_1.resizeImageToBuffer)(originalBuffer, {
+                    height: 240, width: 240,
+                    aspectRatio: '1:1',
+                    fit: 'cover',
+                    quality: 100
+                });
+                node_fs_1.default.writeFileSync(thumbnailFile.path, resizedBuffer);
                 if (findArtist.thumbnail.includes('/assets/')) {
                     thumbnailUrl = (await (0, cloudinary_file_1.uploadFile)(thumbnailFile, '/avatar', (0, create_cuid_1.createId)()));
                 }

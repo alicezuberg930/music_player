@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express"
-import { UnauthorizedException } from "../lib/exceptions"
-import { JwtPayload, verify } from "jsonwebtoken"
+import { InternalServerErrorException, UnauthorizedException } from "../lib/exceptions"
+import { JsonWebTokenError, JwtPayload, verify } from "jsonwebtoken"
 import { env } from "@yukikaze/lib/create-env"
 
 export const JWTMiddleware = async (request: Request, _: Response, next: NextFunction) => {
@@ -12,14 +12,19 @@ export const JWTMiddleware = async (request: Request, _: Response, next: NextFun
         throw new UnauthorizedException("Invalid credentials, please log in")
     }
     // Verify token signature annd expiration automatically
-    const jwt = verify(token, env.JWT_SECRET!) as JwtPayload & { id: string }
-    if (!jwt || !jwt.id) {
-        throw new UnauthorizedException("Invalid or expired access token")
+    try {
+        const jwt = verify(token, env.JWT_SECRET!) as JwtPayload & { id: string }
+        if (!jwt || !jwt.id) {
+            throw new UnauthorizedException("Invalid or expired access token")
+        }
+        request.userId = jwt.id
+    } catch (error) {
+        if (error instanceof JsonWebTokenError) {
+            throw new UnauthorizedException("JWT is expired")
+        } else {
+            throw new InternalServerErrorException()
+        }
     }
-    if (jwt.exp && Date.now() >= jwt.exp * 1000) {
-        throw new UnauthorizedException("Access token has expired, please log in again")
-    }
-    request.userId = jwt.id
     next()
 }
 

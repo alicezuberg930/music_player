@@ -12,6 +12,27 @@
   "bugs": {
     "url": "https://github.com/alicezuberg930/music_player/issues"
   },
+  "catalog": {
+    "@tanstack/react-query": "^5.90.11",
+    "typescript": "5.9.2",
+    "tsdown": "^0.17.2"
+  },
+  "catalogs": {
+    "express": {
+      "express": "^5.1.0",
+      "@types/express": "^5.0.4"
+    },
+    "tailwind": {
+      "@tailwindcss/vite": "^4.1.15",
+      "tailwindcss": "^4.1.15"
+    },
+    "react": {
+      "react": "^19.1.1",
+      "react-dom": "^19.1.1",
+      "@types/react": "^19.1.16",
+      "@types/react-dom": "^19.1.9"
+    }
+  },
   "engines": {
     "node": ">=18"
   },
@@ -40,25 +61,5 @@
     "apps/*",
     "packages/*",
     "services/*"
-  ],
-  "catalog": {
-    "@tanstack/react-query": "^5.90.11",
-    "typescript": "5.9.2",
-    "tsdown": "^0.17.2"
-  },
-  "catalogs": {
-    "express": {
-      "@types/express": "^5.0.4"
-    },
-    "tailwind": {
-      "@tailwindcss/vite": "^4.1.15",
-      "tailwindcss": "^4.1.15"
-    },
-    "react": {
-      "react": "^19.1.1",
-      "react-dom": "^19.1.1",
-      "@types/react": "^19.1.16",
-      "@types/react-dom": "^19.1.9"
-    }
-  }
+  ]
 }

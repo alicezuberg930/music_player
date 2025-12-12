@@ -2,7 +2,7 @@ import * as Yup from 'yup'
 import { RotatingLines } from 'react-loader-spinner'
 // form
 import { useForm } from 'react-hook-form'
-import { useCreatePlaylist } from '@/hooks/useApi'
+import { useApi } from '@/hooks/useApi'
 import { yupResolver } from '@hookform/resolvers/yup'
 // components
 import { FormProvider, RHFTextField } from '@/components/hook-form'
@@ -33,7 +33,7 @@ const CreateNewPlaylistDialog: React.FC<Props> = ({ onOpenChange }) => {
     const { enqueueSnackbar } = useSnackbar()
     const { translate } = useLocales()
 
-    const createPlaylistMutation = useCreatePlaylist({
+    const createPlaylistMutation = useApi().useCreatePlaylist({
         onSuccess: (response) => {
             onOpenChange?.(false)
             reset()

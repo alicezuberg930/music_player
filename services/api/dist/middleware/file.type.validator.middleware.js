@@ -1,65 +1,65 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.fileMimeAndSizeOptions = void 0;
-const fs_1 = require("fs");
+const node_fs_1 = require("node:fs");
 const exceptions_1 = require("../lib/exceptions");
 const esm_module_1 = require("../lib/helpers/esm.module");
+const validateFileSize = async (file, maxSize, fieldName) => {
+    if (file.size > maxSize) {
+        await node_fs_1.promises.unlink(file.path).catch(() => { });
+        throw new exceptions_1.BadRequestException(`File for field "${fieldName}" exceeds the size limit of ${(maxSize / (1024 * 1024)).toFixed(1)} MB`);
+    }
+};
+const readFileBuffer = async (filePath) => {
+    const fd = await node_fs_1.promises.open(filePath, "r");
+    try {
+        const buffer = Buffer.alloc(4100);
+        const { bytesRead } = await fd.read(buffer, 0, buffer.length, 0);
+        return buffer.subarray(0, bytesRead);
+    }
+    finally {
+        await fd.close();
+    }
+};
+const validateMimeType = async (file, allowedMimes, isTextOnlyField, fieldName, rule) => {
+    const slice = await readFileBuffer(file.path);
+    const detected = await (0, esm_module_1.esmFileType)().then(m => m.fileTypeFromBuffer(slice));
+    let isValid = false;
+    if (detected) {
+        const realMime = detected.mime.toLowerCase();
+        isValid = allowedMimes.length === 0 || allowedMimes.includes(realMime);
+        if (isValid) {
+            file.mimetype = realMime;
+        }
+    }
+    else {
+        isValid = isTextOnlyField;
+    }
+    if (!isValid) {
+        await node_fs_1.promises.unlink(file.path).catch(() => { });
+        throw new exceptions_1.BadRequestException(`Only files of types: ${rule.exts.join(", ")} are allowed for field ${fieldName}.`);
+    }
+};
+const validateFile = async (file, rule, fieldName) => {
+    const allowedMimes = (rule.mimes ?? []).map((m) => m.toLowerCase());
+    const isTextOnlyField = allowedMimes.length > 0 && allowedMimes.every((m) => m.startsWith("text/"));
+    const maxSize = rule.maxSize ?? 1 * 1024 * 1024;
+    await validateFileSize(file, maxSize, fieldName);
+    await validateMimeType(file, allowedMimes, isTextOnlyField, fieldName, rule);
+};
 const fileMimeAndSizeOptions = (options) => {
     const perFieldRules = options.allowed ?? {};
     const fileMimeAndSizeMiddleware = async (request, _response, next) => {
         const filesMap = request.files;
         if (!filesMap)
-            next();
+            return next();
         try {
             for (const [fieldName, files] of Object.entries(filesMap)) {
                 const rule = perFieldRules[fieldName];
-                // If no specific rule for this field, let multer's fileFilter handle it earlier
                 if (!rule)
                     continue;
-                const allowedMimes = (rule.mimes ?? []).map((m) => m.toLowerCase());
-                const isTextOnlyField = allowedMimes.length > 0 && allowedMimes.every((m) => m.startsWith("text/"));
-                const maxSize = rule.maxSize ?? 1 * 1024 * 1024;
                 for (const file of files) {
-                    // check file limit
-                    if (file.size > maxSize) {
-                        await fs_1.promises.unlink(file.path).catch(() => { });
-                        throw new exceptions_1.BadRequestException(`File for field "${fieldName}" exceeds the size limit of ${(maxSize / (1024 * 1024)).toFixed(1)} MB`);
-                    }
-                    // Read only first ~4KB, enough for magic bytes
-                    const fd = await fs_1.promises.open(file.path, "r");
-                    try {
-                        const buffer = Buffer.alloc(4100);
-                        const { bytesRead } = await fd.read(buffer, 0, buffer.length, 0);
-                        const slice = buffer.subarray(0, bytesRead);
-                        const detected = await (0, esm_module_1.esmFileType)().then(m => m.fileTypeFromBuffer(slice));
-                        let isValid = false;
-                        if (detected) {
-                            // file-type recognized the file (images, audio, etc.)
-                            const realMime = detected.mime.toLowerCase();
-                            isValid = allowedMimes.length === 0 || allowedMimes.includes(realMime);
-                            if (isValid) {
-                                // normalize mimetype to detected one for later logic
-                                file.mimetype = realMime;
-                            }
-                        }
-                        else {
-                            // file-type can not detect text/plain
-                            // For lyrics/text fields, accept if they are configured as text/*
-                            if (isTextOnlyField) {
-                                isValid = true;
-                            }
-                            else {
-                                isValid = false;
-                            }
-                        }
-                        if (!isValid) {
-                            await fs_1.promises.unlink(file.path).catch(() => { });
-                            throw new exceptions_1.BadRequestException(`Only files of types: ${rule.exts.join(", ")} are allowed for field ${fieldName}.`);
-                        }
-                    }
-                    finally {
-                        await fd.close();
-                    }
+                    await validateFile(file, rule, fieldName);
                 }
             }
             next();

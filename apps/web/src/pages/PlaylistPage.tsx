@@ -64,7 +64,7 @@ const PlaylistPage: React.FC = () => {
             <div className="flex flex-col md:flex-row gap-6">
                 {playlist && (
                     <>
-                        <div className="w-full md:w-1/4 h-fit space-y-3 relative md:sticky top-0 self-start shrink-0">
+                        <div className="w-full md:w-1/4 h-fit space-y-3 relative md:sticky top-10 self-start shrink-0">
                             <div className="relative">
                                 <LazyLoadImage
                                     src={playlist.thumbnail} alt="thumbnail" effect="blur"
@@ -90,7 +90,7 @@ const PlaylistPage: React.FC = () => {
                                 <span>{roundPeopleAmount(playlist.likes)} người yêu thích</span>
                             </div>
                         </div>
-                        <div className="flex-1">
+                        <div className="flex-1 mt-10">
                             <div className="text-sm">
                                 <span className="text-gray-700">Lời tựa: </span>
                                 <span>{playlist.description}</span>

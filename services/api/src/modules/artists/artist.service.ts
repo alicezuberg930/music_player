@@ -51,7 +51,7 @@ export class ArtistService {
                     quality: 100
                 })
                 fs.writeFileSync(thumbnailFile.path, resizedBuffer)
-                thumbnailUrl = (await uploadFile(thumbnailFile, '/avatar', createId())) as string
+                thumbnailUrl = (await uploadFile({ files: thumbnailFile, subFolder: '/avatar', publicId: createId() })) as string
             }
             const artist = {
                 name,
@@ -86,9 +86,9 @@ export class ArtistService {
                 })
                 fs.writeFileSync(thumbnailFile.path, resizedBuffer)
                 if (findArtist.thumbnail!.includes('/assets/')) {
-                    thumbnailUrl = (await uploadFile(thumbnailFile, '/avatar', createId())) as string
+                    thumbnailUrl = (await uploadFile({ files: thumbnailFile, subFolder: '/avatar', publicId: createId() })) as string
                 } else {
-                    await uploadFile(thumbnailFile, '/avatar', extractPublicId(findArtist.thumbnail!))
+                    await uploadFile({ files: thumbnailFile, publicId: extractPublicId(findArtist.thumbnail!) })
                 }
             }
             const artist = {

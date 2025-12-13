@@ -1,12 +1,15 @@
 import { useFormContext, Controller } from 'react-hook-form'
 import { Field, FieldError, FieldLabel } from '@yukikaze/ui/field'
 import { DayPicker, type DateRange, type DayPickerProps } from 'react-day-picker'
-import { format, parse } from 'date-fns'
+import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { useState } from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from '@yukikaze/ui/popover'
 import { Button } from '@yukikaze/ui/button'
 import { CalendarIcon } from '@yukikaze/ui/icons'
 import 'react-day-picker/style.css'
+
+dayjs.extend(customParseFormat)
 
 type RHFDatePickerProps = Omit<DayPickerProps, 'mode'> & {
     name: string
@@ -52,10 +55,10 @@ export function RHFSingleDatePicker({
                                 startMonth={new Date(1900, 0)}
                                 endMonth={new Date(new Date().getFullYear(), 0)}
                                 mode='single'
-                                selected={field.value ? parse(field.value, 'yyyy-MM-dd', new Date()) : undefined}
+                                selected={field.value ? dayjs(field.value, 'YYYY-MM-DD').toDate() : undefined}
                                 onSelect={(day) => {
                                     if (day) {
-                                        field.onChange(format(day, 'yyyy-MM-dd'))
+                                        field.onChange(dayjs(day).format('YYYY-MM-DD'))
                                         setOpen(false)
                                     }
                                 }}
@@ -80,8 +83,8 @@ export function RHFRangeDatePicker({
     const [open, setOpen] = useState(false)
 
     const displayValueStr = (start?: string, end?: string) => {
-        if (start && !end) return `${format(start, 'yyyy-MM-dd')} - ...`
-        return start && end ? `${format(start, 'yyyy-MM-dd')} - ${format(end, 'yyyy-MM-dd')} ` : ''
+        if (start && !end) return `${dayjs(start).format('YYYY-MM-DD')} - ...`
+        return start && end ? `${dayjs(start).format('YYYY-MM-DD')} - ${dayjs(end).format('YYYY-MM-DD')} ` : ''
     }
 
     return (
@@ -92,8 +95,8 @@ export function RHFRangeDatePicker({
                 const [start, end] = field.value || [undefined, undefined]
                 const displayValue = displayValueStr(start, end)
                 const selected: DateRange = {
-                    from: start ? parse(start, 'yyyy-MM-dd', new Date()) : undefined,
-                    to: end ? parse(end, 'yyyy-MM-dd', new Date()) : undefined
+                    from: start ? dayjs(start, 'YYYY-MM-DD').toDate() : undefined,
+                    to: end ? dayjs(end, 'YYYY-MM-DD').toDate() : undefined
                 }
                 return (
                     <Field data-invalid={invalid}>
@@ -120,7 +123,7 @@ export function RHFRangeDatePicker({
                                     selected={selected}
                                     onSelect={(range) => {
                                         if (range?.from && range.to) {
-                                            const arr = [format(range.from, 'yyyy-MM-dd'), format(range.to, 'yyyy-MM-dd')]
+                                            const arr = [dayjs(range.from).format('YYYY-MM-DD'), dayjs(range.to).format('YYYY-MM-DD')]
                                             field.onChange(arr)
                                         }
                                     }}

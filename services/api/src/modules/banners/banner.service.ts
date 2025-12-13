@@ -39,7 +39,7 @@ export class BannerService {
                 fit: 'cover',
             })
             fs.writeFileSync(thumbnailFile.path, resizedBuffer)
-            thumbnailUrl = (await uploadFile(thumbnailFile, '/banner', createId())) as string
+            thumbnailUrl = (await uploadFile({ files: thumbnailFile, subFolder: '/banner', publicId: createId() })) as string
             const banner = {
                 name: name ?? null,
                 thumbnail: thumbnailUrl
@@ -74,13 +74,13 @@ export class BannerService {
                     quality: 100
                 })
                 fs.writeFileSync(thumbnailFile.path, resizedBuffer)
-                thumbnail = (await uploadFile(thumbnailFile, '/banner', extractPublicId(banner.thumbnail))) as string
+                await uploadFile({ files: thumbnailFile, publicId: extractPublicId(banner.thumbnail) })
             }
             const updateData = {
-                ...name !== undefined && { name },
-                ...thumbnail !== undefined && { thumbnail }
+                ...name && { name },
             } as Banner
-            await db.update(banners).set(updateData).where(eq(banners.id, id))
+            if (Object.entries(updateData).length > 0)
+                await db.update(banners).set(updateData).where(eq(banners.id, id))
             return response.json({ message: 'Banner updated successfully' })
         } catch (error) {
             if (error instanceof HttpException) throw error

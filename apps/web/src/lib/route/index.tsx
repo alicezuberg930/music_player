@@ -12,11 +12,13 @@ import {
     WeeklyZingChartPage,
     ZingChartPage,
     UploadMusicPage,
-    MyMusicPage
-} from '@/pages'
-import { HomePage, PublicPage, PlaylistPage } from './element'
-import VerifyPage from '@/pages/VerifyPage'
-import AddArtistPage from '@/pages/AddArtistPage'
+    MyMusicPage,
+    HomePage,
+    PublicPage,
+    PlaylistPage,
+    VerifyPage,
+    AddArtistPage
+} from './element'
 
 export default function Router() {
     return useRoutes([

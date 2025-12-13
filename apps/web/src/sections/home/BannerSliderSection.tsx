@@ -95,7 +95,7 @@ const BannerSliderSection: React.FC<Props> = ({ banners }) => {
                         >
                             <LazyLoadImage
                                 widths={[
-                                    { screenWidth: 1024, imageWidth: 350 },  // Tablet & Phone
+                                    { screenWidth: 1024, imageWidth: 120 },  // Tablet & Phone
                                     { screenWidth: 1920, imageWidth: 700 },  // Desktop and larger
                                 ]}
                                 wrapperClassName="aspect-video w-full"

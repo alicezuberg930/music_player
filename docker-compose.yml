@@ -14,8 +14,10 @@ services:
   music_player_app_dev:
     profiles: ["dev"]
     build:
-      context: ./app
-      dockerfile: Dockerfile.development
+      context: .
+      dockerfile: apps/web/Dockerfile.development
+    restart: unless-stopped
+    env_file: .env
     container_name: music_player_app
     ports:
       - "5174:5173"
@@ -35,40 +37,52 @@ services:
   music_player_app_prod:
     profiles: ["prod"]
     build: 
-      context: ./app
-      dockerfile: Dockerfile.production
+      context: .
+      dockerfile: apps/web/Dockerfile.production
+      args:
+        TURBO_TEAM: ${TURBO_TEAM}
+        TURBO_TOKEN: ${TURBO_TOKEN}
+        NEXT_PUBLIC_APP_NAME: ${NEXT_PUBLIC_APP_NAME}
+        NEXT_PUBLIC_APP_URL: yukinu.tiesen.id.vn
+        NEXT_PUBLIC_TRPC_USE_STREAMING: false
     container_name: music_player_app
     ports:
       - "5174:5173"
+    restart: unless-stopped
+    env_file: .env
     # depends_on:
     #   - music_player_db
 
   music_player_api_dev:
     profiles: ["dev"]
     build:
-      context: ./api
-      dockerfile: Dockerfile.development
+      context: .
+      dockerfile: services/api/Dockerfile.development
     container_name: music_player_api
     ports:
       - "5001:5000"
+    restart: unless-stopped
+    env_file: .env
     develop:
       watch:
-        - path: ./api
+        - path: ./services/api
           action: sync
-          target: /api
+          target: /services/api
           ignore:
             - node_modules
             - dist
         - action: rebuild
-          path: ./api/package.json
+          path: ./services/api/package.json
     # depends_on:
     #   - music_player_db
 
   music_player_api_prod:
     profiles: ["prod"]
     build:
-      context: ./api
-      dockerfile: Dockerfile.production
+      context: .
+      dockerfile: services/api/Dockerfile.production
+    restart: unless-stopped
+    env_file: .env
     container_name: music_player_api
     ports:
       - "5001:5000"
@@ -90,3 +104,6 @@ services:
 # docker compose --profile dev up --build --watch
 # For production:
 # docker compose --profile prod up --build
+
+# clean cache
+# docker system prune -a --volumes

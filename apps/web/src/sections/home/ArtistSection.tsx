@@ -1,6 +1,5 @@
 import type { Artist } from "@/@types/artist"
 import ArtistCard from "../ArtistCard"
-import { Link } from "react-router-dom"
 import { useIsMobile } from "@/hooks/useMobile"
 
 export const favoriteArtistsHC = {
@@ -123,7 +122,7 @@ const ArtistSection: React.FC<Props> = ({ artists }) => {
                     <h3 className="text-xl font-bold">Nhạc sĩ nổi bật</h3>
                     <span className="text-xs uppercase">Tất cả</span>
                 </div>
-                <div className="flex gap-3">
+                {/* <div className="flex gap-3">
                     {favoriteArtistsHC.items?.slice(0, isMobile ? 2 : 5)?.map(singer => (
                         <Link to={'/'} key={singer?.encodeId} className="flex-1 relative h-80" aria-label={`View ${singer?.encodeId || 'artist'} profile`}>
                             <img src={singer?.thumbnail} alt={singer?.encodeId} className="w-full h-full object-cover rounded-md" />
@@ -134,7 +133,7 @@ const ArtistSection: React.FC<Props> = ({ artists }) => {
                             </div>
                         </Link>
                     ))}
-                </div>
+                </div> */}
             </div>
             <div className="flex items-center mt-12 gap-4">
                 {artists.slice(0, isMobile ? 2 : 5)?.map(artist => (

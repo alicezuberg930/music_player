@@ -1,18 +1,23 @@
-FROM node:22-alpine
+FROM oven/bun:1-alpine
 
 # Set working directory
-WORKDIR /api
+WORKDIR /build
 
-COPY package*.json ./
+# Copy workspace files
+COPY package.json bun.lockb turbo.json ./
+COPY packages ./packages
+COPY services/api ./services/api
 
 # Install dependencies
-RUN npm install --legacy-peer-deps
+RUN bun install --frozen-lockfile
 
-# Copy the rest of the application code
-COPY . .
+# Build packages
+RUN bun run build:packages
+
+WORKDIR /build/services/api
 
 # Expose the port the app runs on
 EXPOSE 5000
 
 # Start the development server
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+CMD ["bun", "run", "dev", "--", "--host", "0.0.0.0"]

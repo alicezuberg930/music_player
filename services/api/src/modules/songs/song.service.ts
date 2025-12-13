@@ -79,7 +79,7 @@ export class SongService {
             // extract metadata from audio file
             let metadata = await esmMusicMetadata().then(m => m.parseFile(audioFile.path))
             if (lyricsFile) {
-                lyricsUrl = (await uploadFile(lyricsFile, '/lyrics', createId())) as string
+                lyricsUrl = (await uploadFile({ files: lyricsFile, subFolder: '/lyrics', publicId: createId() })) as string
             }
             if (thumbnailFile) {
                 // if the user uploaded a thumbnail file, embed it into the audio file's metadata
@@ -106,7 +106,7 @@ export class SongService {
                     fit: 'cover',
                 })
                 fs.writeFileSync(thumbnailFile.path, resizedBuffer)
-                thumbnailUrl = (await uploadFile(thumbnailFile, '/cover', createId())) as string
+                thumbnailUrl = (await uploadFile({ files: thumbnailFile, subFolder: '/cover', publicId: createId() })) as string
             } else {
                 const picture = metadata.common.picture?.[0]
                 if (picture) {
@@ -126,11 +126,12 @@ export class SongService {
                         mimetype: picture.format,
                         originalname: `cover.${picture.format.split('/')[1]}`
                     } as Express.Multer.File
-                    thumbnailUrl = (await uploadFile(coverFile, '/cover', createId())) as string
+                    thumbnailUrl = (await uploadFile({ files: coverFile, subFolder: '/cover', publicId: createId() })) as string
                 }
             }
+            console.log(thumbnailUrl)
             // upload audio file to cloud storage and get the url
-            const audioUrl = await uploadFile(audioFile, '/audio', createId())
+            const audioUrl = await uploadFile({ files: audioFile, subFolder: '/audio', publicId: createId() })
             const song = {
                 title, releaseDate,
                 userId: request.userId!,
@@ -157,17 +158,20 @@ export class SongService {
     public async updateSong(request: Request<{ id: string }, {}, UpdateSongDto>, response: Response) {
         try {
             const { id } = request.params
-            const findSong = await db.query.songs.findFirst({ where: eq(songs.id, id), columns: { thumbnail: true, stream: true, lyricsFile: true } })
+            const findSong = await db.query.songs.findFirst({
+                where: eq(songs.id, id),
+                columns: { thumbnail: true, stream: true, lyricsFile: true }
+            })
             if (!findSong) throw new NotFoundException('Song not found')
             const { releaseDate, title, artistIds } = request.body
             const files = request.files as { [fieldname: string]: Express.Multer.File[] }
-            const audioFile: Express.Multer.File | null = files['audio']?.[0] ?? null
+            // const audioFile: Express.Multer.File | null = files['audio']?.[0] ?? null
             const lyricsFile: Express.Multer.File | null = files['lyrics']?.[0] ?? null
             const thumbnailFile: Express.Multer.File | null = files['thumbnail']?.[0] ?? null
             let thumbnail: string | null = null
             let lyrics: string | null = null
             let findArtists: { name: string }[] = []
-            // filter artistIds to add and remove 
+            // filter artistIds to add and remove
             if (artistIds && artistIds.length > 0) {
                 findArtists = await db.query.artists.findMany({ columns: { name: true }, where: inArray(artists.id, artistIds) })
                 const existingArtistSongs = await db.query.artistsSongs.findMany({
@@ -190,13 +194,11 @@ export class SongService {
                     ))
                 }
             }
-            // extract metadata from audio file
-            let metadata = audioFile ? await esmMusicMetadata().then(m => m.parseFile(audioFile.path)) : null
             if (lyricsFile) {
                 if (findSong.lyricsFile) {
-                    await uploadFile(lyricsFile, '/lyrics', extractPublicId(findSong.lyricsFile))
+                    await uploadFile({ files: lyricsFile, publicId: extractPublicId(findSong.lyricsFile) })
                 } else {
-                    lyrics = (await uploadFile(lyricsFile, '/lyrics', createId())) as string
+                    lyrics = (await uploadFile({ files: lyricsFile, subFolder: '/lyrics', publicId: createId() })) as string
                 }
             }
             if (thumbnailFile) {
@@ -210,26 +212,10 @@ export class SongService {
                 })
                 fs.writeFileSync(thumbnailFile.path, resizedBuffer)
                 if (findSong.thumbnail.includes('/assets/')) {
-                    thumbnail = (await uploadFile(thumbnailFile, '/cover', createId())) as string
+                    thumbnail = (await uploadFile({ files: thumbnailFile, subFolder: '/cover', publicId: createId() })) as string
                 } else {
-                    await uploadFile(thumbnailFile, '/cover', extractPublicId(findSong.thumbnail))
+                    await uploadFile({ files: thumbnailFile, publicId: extractPublicId(findSong.thumbnail) })
                 }
-            } else {
-                const picture = metadata?.common.picture?.[0]
-                if (picture) {
-                    const coverPath = `uploads/${Date.now() + '-' + Math.round(Math.random() * 1e9)}.${picture.format.split('/')[1]}`
-                    fs.writeFileSync(coverPath, Buffer.from(picture.data))
-                    const coverFile = {
-                        path: coverPath,
-                        mimetype: picture.format,
-                        originalname: `cover.${picture.format.split('/')[1]}`
-                    } as Express.Multer.File
-                    await uploadFile(coverFile, '/cover', extractPublicId(findSong.thumbnail))
-                }
-            }
-            // upload audio file to cloud storage and get the url
-            if (audioFile && findSong.stream) {
-                await uploadFile(audioFile, '/audio', extractPublicId(findSong.stream))
             }
             const song = {
                 ...findArtists.length > 0 && { artistNames: findArtists.map(a => a.name).join(", ") },
@@ -288,9 +274,10 @@ export class SongService {
             })
             if (!findSong) throw new NotFoundException('Song not found')
             const deleteUrls = [
-                extractPublicId(findSong.stream!),
-                ...(findSong.lyricsFile ? [extractPublicId(findSong.lyricsFile)] : []),
-                ...(findSong.thumbnail && !findSong.thumbnail.includes('/assets/') ? [extractPublicId(findSong.thumbnail)] : [])]
+                findSong.stream!,
+                ...(findSong.lyricsFile ? [findSong.lyricsFile] : []),
+                ...(findSong.thumbnail && !findSong.thumbnail.includes('/assets/') ? [findSong.thumbnail] : [])
+            ]
             await deleteFile(deleteUrls)
             await db.delete(songs).where(eq(songs.id, request.params.id))
             return response.json({ message: 'Song deleted successfully' })

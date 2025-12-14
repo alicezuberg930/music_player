@@ -71,7 +71,7 @@ class PlaylistService {
                     fit: 'cover',
                 });
                 node_fs_1.default.writeFileSync(thumbnailFile.path, resizedBuffer);
-                thumbnailUrl = (await (0, cloudinary_file_1.uploadFile)(thumbnailFile, '/playlist', (0, create_cuid_1.createId)()));
+                thumbnailUrl = (await (0, cloudinary_file_1.uploadFile)({ files: thumbnailFile, subFolder: '/playlist', publicId: (0, create_cuid_1.createId)() }));
             }
             const playlist = {
                 releaseDate, title, description,
@@ -113,13 +113,13 @@ class PlaylistService {
                 });
                 node_fs_1.default.writeFileSync(thumbnailFile.path, resizedBuffer);
                 if (myPlaylist.thumbnail.includes('/assets/')) {
-                    thumbnail = (await (0, cloudinary_file_1.uploadFile)(thumbnailFile, '/playlist', (0, create_cuid_1.createId)()));
+                    thumbnail = (await (0, cloudinary_file_1.uploadFile)({ files: thumbnailFile, subFolder: '/playlist', publicId: (0, create_cuid_1.createId)() }));
                 }
                 else {
-                    await (0, cloudinary_file_1.uploadFile)(thumbnailFile, '/playlist', (0, cloudinary_file_1.extractPublicId)(myPlaylist.thumbnail));
+                    await (0, cloudinary_file_1.uploadFile)({ files: thumbnailFile, publicId: (0, cloudinary_file_1.extractPublicId)(myPlaylist.thumbnail) });
                 }
             }
-            const currentPlaylistSongIds = myPlaylist.songs.map(ps => ps.songId);
+            // const currentPlaylistSongIds = myPlaylist.songs.map(ps => ps.songId)
             // let totalDuration = myPlaylist.totalDuration!
             // // the user can remove any song in the playlist or add new songs
             // const songsToAdd = songIds.filter(songId => !currentPlaylistSongIds.includes(songId))

@@ -77,7 +77,7 @@ class SongService {
             // extract metadata from audio file
             let metadata = await (0, esm_module_1.esmMusicMetadata)().then(m => m.parseFile(audioFile.path));
             if (lyricsFile) {
-                lyricsUrl = (await (0, cloudinary_file_1.uploadFile)(lyricsFile, '/lyrics', (0, create_cuid_1.createId)()));
+                lyricsUrl = (await (0, cloudinary_file_1.uploadFile)({ files: lyricsFile, subFolder: '/lyrics', publicId: (0, create_cuid_1.createId)() }));
             }
             if (thumbnailFile) {
                 // if the user uploaded a thumbnail file, embed it into the audio file's metadata
@@ -104,7 +104,7 @@ class SongService {
                     fit: 'cover',
                 });
                 node_fs_1.default.writeFileSync(thumbnailFile.path, resizedBuffer);
-                thumbnailUrl = (await (0, cloudinary_file_1.uploadFile)(thumbnailFile, '/cover', (0, create_cuid_1.createId)()));
+                thumbnailUrl = (await (0, cloudinary_file_1.uploadFile)({ files: thumbnailFile, subFolder: '/cover', publicId: (0, create_cuid_1.createId)() }));
             }
             else {
                 const picture = metadata.common.picture?.[0];
@@ -125,11 +125,12 @@ class SongService {
                         mimetype: picture.format,
                         originalname: `cover.${picture.format.split('/')[1]}`
                     };
-                    thumbnailUrl = (await (0, cloudinary_file_1.uploadFile)(coverFile, '/cover', (0, create_cuid_1.createId)()));
+                    thumbnailUrl = (await (0, cloudinary_file_1.uploadFile)({ files: coverFile, subFolder: '/cover', publicId: (0, create_cuid_1.createId)() }));
                 }
             }
+            console.log(thumbnailUrl);
             // upload audio file to cloud storage and get the url
-            const audioUrl = await (0, cloudinary_file_1.uploadFile)(audioFile, '/audio', (0, create_cuid_1.createId)());
+            const audioUrl = await (0, cloudinary_file_1.uploadFile)({ files: audioFile, subFolder: '/audio', publicId: (0, create_cuid_1.createId)() });
             const song = {
                 title, releaseDate,
                 userId: request.userId,
@@ -157,18 +158,21 @@ class SongService {
     async updateSong(request, response) {
         try {
             const { id } = request.params;
-            const findSong = await db_1.db.query.songs.findFirst({ where: (0, db_1.eq)(schemas_1.songs.id, id), columns: { thumbnail: true, stream: true, lyricsFile: true } });
+            const findSong = await db_1.db.query.songs.findFirst({
+                where: (0, db_1.eq)(schemas_1.songs.id, id),
+                columns: { thumbnail: true, stream: true, lyricsFile: true }
+            });
             if (!findSong)
                 throw new exceptions_1.NotFoundException('Song not found');
             const { releaseDate, title, artistIds } = request.body;
             const files = request.files;
-            const audioFile = files['audio']?.[0] ?? null;
+            // const audioFile: Express.Multer.File | null = files['audio']?.[0] ?? null
             const lyricsFile = files['lyrics']?.[0] ?? null;
             const thumbnailFile = files['thumbnail']?.[0] ?? null;
             let thumbnail = null;
             let lyrics = null;
             let findArtists = [];
-            // filter artistIds to add and remove 
+            // filter artistIds to add and remove
             if (artistIds && artistIds.length > 0) {
                 findArtists = await db_1.db.query.artists.findMany({ columns: { name: true }, where: (0, db_1.inArray)(schemas_1.artists.id, artistIds) });
                 const existingArtistSongs = await db_1.db.query.artistsSongs.findMany({
@@ -188,14 +192,12 @@ class SongService {
                     await db_1.db.delete(schemas_1.artistsSongs).where((0, db_1.and)((0, db_1.eq)(schemas_1.artistsSongs.songId, id), (0, db_1.inArray)(schemas_1.artistsSongs.artistId, artistIdsToRemove)));
                 }
             }
-            // extract metadata from audio file
-            let metadata = audioFile ? await (0, esm_module_1.esmMusicMetadata)().then(m => m.parseFile(audioFile.path)) : null;
             if (lyricsFile) {
                 if (findSong.lyricsFile) {
-                    await (0, cloudinary_file_1.uploadFile)(lyricsFile, '/lyrics', (0, cloudinary_file_1.extractPublicId)(findSong.lyricsFile));
+                    await (0, cloudinary_file_1.uploadFile)({ files: lyricsFile, publicId: (0, cloudinary_file_1.extractPublicId)(findSong.lyricsFile) });
                 }
                 else {
-                    lyrics = (await (0, cloudinary_file_1.uploadFile)(lyricsFile, '/lyrics', (0, create_cuid_1.createId)()));
+                    lyrics = (await (0, cloudinary_file_1.uploadFile)({ files: lyricsFile, subFolder: '/lyrics', publicId: (0, create_cuid_1.createId)() }));
                 }
             }
             if (thumbnailFile) {
@@ -209,28 +211,11 @@ class SongService {
                 });
                 node_fs_1.default.writeFileSync(thumbnailFile.path, resizedBuffer);
                 if (findSong.thumbnail.includes('/assets/')) {
-                    thumbnail = (await (0, cloudinary_file_1.uploadFile)(thumbnailFile, '/cover', (0, create_cuid_1.createId)()));
+                    thumbnail = (await (0, cloudinary_file_1.uploadFile)({ files: thumbnailFile, subFolder: '/cover', publicId: (0, create_cuid_1.createId)() }));
                 }
                 else {
-                    await (0, cloudinary_file_1.uploadFile)(thumbnailFile, '/cover', (0, cloudinary_file_1.extractPublicId)(findSong.thumbnail));
+                    await (0, cloudinary_file_1.uploadFile)({ files: thumbnailFile, publicId: (0, cloudinary_file_1.extractPublicId)(findSong.thumbnail) });
                 }
-            }
-            else {
-                const picture = metadata?.common.picture?.[0];
-                if (picture) {
-                    const coverPath = `uploads/${Date.now() + '-' + Math.round(Math.random() * 1e9)}.${picture.format.split('/')[1]}`;
-                    node_fs_1.default.writeFileSync(coverPath, Buffer.from(picture.data));
-                    const coverFile = {
-                        path: coverPath,
-                        mimetype: picture.format,
-                        originalname: `cover.${picture.format.split('/')[1]}`
-                    };
-                    await (0, cloudinary_file_1.uploadFile)(coverFile, '/cover', (0, cloudinary_file_1.extractPublicId)(findSong.thumbnail));
-                }
-            }
-            // upload audio file to cloud storage and get the url
-            if (audioFile && findSong.stream) {
-                await (0, cloudinary_file_1.uploadFile)(audioFile, '/audio', (0, cloudinary_file_1.extractPublicId)(findSong.stream));
             }
             const song = {
                 ...findArtists.length > 0 && { artistNames: findArtists.map(a => a.name).join(", ") },
@@ -294,9 +279,9 @@ class SongService {
             if (!findSong)
                 throw new exceptions_1.NotFoundException('Song not found');
             const deleteUrls = [
-                (0, cloudinary_file_1.extractPublicId)(findSong.stream),
-                ...(findSong.lyricsFile ? [(0, cloudinary_file_1.extractPublicId)(findSong.lyricsFile)] : []),
-                ...(findSong.thumbnail && !findSong.thumbnail.includes('/assets/') ? [(0, cloudinary_file_1.extractPublicId)(findSong.thumbnail)] : [])
+                findSong.stream,
+                ...(findSong.lyricsFile ? [findSong.lyricsFile] : []),
+                ...(findSong.thumbnail && !findSong.thumbnail.includes('/assets/') ? [findSong.thumbnail] : [])
             ];
             await (0, cloudinary_file_1.deleteFile)(deleteUrls);
             await db_1.db.delete(schemas_1.songs).where((0, db_1.eq)(schemas_1.songs.id, request.params.id));

@@ -20,11 +20,11 @@ const cleanupLocalFiles = (files) => {
             console.error(`Error deleting file ${file.filename}: ${err.message}`);
     }));
 };
-const uploadFile = async (files, subFolder, publicId) => {
+const uploadFile = async ({ files, subFolder, publicId }) => {
     const tempFiles = Array.isArray(files) ? files : [files];
     try {
         const uploadPromises = tempFiles.map((file) => cloudinary_1.v2.uploader.upload(file.path, {
-            folder: `lili-music${subFolder}`,
+            ...subFolder && { folder: `lili-music${subFolder}` },
             public_id: publicId ?? (0, create_cuid_1.createId)(),
             resource_type: 'auto',
             overwrite: true,
@@ -47,12 +47,22 @@ const uploadFile = async (files, subFolder, publicId) => {
 exports.uploadFile = uploadFile;
 const extractPublicId = (url) => url.split('/').slice(-3).join('/').replace(/\.[^/.]+$/, '');
 exports.extractPublicId = extractPublicId;
+const getResourceType = (url) => {
+    const extension = url.split('.').pop()?.toLowerCase();
+    if (['mp3', 'wav', 'ogg', 'flac', 'm4a', 'aac'].includes(extension || ''))
+        return 'video';
+    if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp'].includes(extension || ''))
+        return 'image';
+    return 'raw';
+};
 const deleteFile = async (fileUrls) => {
     try {
         const tempURLs = Array.isArray(fileUrls) ? fileUrls : [fileUrls];
-        console.log((0, exports.extractPublicId)(tempURLs[0]));
-        await Promise.all(tempURLs.map(url => cloudinary_1.v2.uploader.destroy((0, exports.extractPublicId)(url))));
-        console.log('Files deleted from Cloudinary:', tempURLs);
+        console.log(tempURLs.map(url => (0, exports.extractPublicId)(url)));
+        await Promise.all(tempURLs.map(url => cloudinary_1.v2.uploader.destroy((0, exports.extractPublicId)(url), {
+            resource_type: getResourceType(url)
+        })));
+        // console.log('Files deleted from Cloudinary:', tempURLs)
     }
     catch (error) {
         throw new exceptions_1.BadRequestException(error instanceof Error ? error.message : undefined);

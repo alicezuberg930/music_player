@@ -1,0 +1,109 @@
+# services:
+#   # music_player_db:
+#   #   image: mysql:9
+#   #   container_name: music_player_db
+#   #   environment:
+#   #     MYSQL_USER: music_user
+#   #     MYSQL_PASSWORD: music_password
+#   #     MYSQL_DB: music_db
+#   #   ports:
+#   #     - "3306:3306"
+#   #   volumes:
+#   #     - music_player_db_data:/var/lib/mysql/data
+
+#   music_player_app_dev:
+#     profiles: ["dev"]
+#     build:
+#       context: .
+#       dockerfile: apps/web/Dockerfile.development
+#     restart: unless-stopped
+#     env_file: .env
+#     container_name: music_player_app
+#     ports:
+#       - "5174:5173"
+#     develop:
+#       watch:
+#         - path: ./app
+#           action: sync
+#           target: /app
+#           ignore:
+#             - node_modules
+#             - dist
+#         - action: rebuild
+#           path: ./app/package.json 
+#     # depends_on:
+#     #   - music_player_db
+
+#   music_player_app_prod:
+#     profiles: ["prod"]
+#     build: 
+#       context: .
+#       dockerfile: apps/web/Dockerfile.production
+#       args:
+#         TURBO_TEAM: ${TURBO_TEAM}
+#         TURBO_TOKEN: ${TURBO_TOKEN}
+#         NEXT_PUBLIC_APP_NAME: ${NEXT_PUBLIC_APP_NAME}
+#         NEXT_PUBLIC_APP_URL: yukinu.tiesen.id.vn
+#         NEXT_PUBLIC_TRPC_USE_STREAMING: false
+#     container_name: music_player_app
+#     ports:
+#       - "5174:5173"
+#     restart: unless-stopped
+#     env_file: .env
+#     # depends_on:
+#     #   - music_player_db
+
+#   music_player_api_dev:
+#     profiles: ["dev"]
+#     build:
+#       context: .
+#       dockerfile: services/api/Dockerfile.development
+#     container_name: music_player_api
+#     ports:
+#       - "5001:5000"
+#     restart: unless-stopped
+#     env_file: .env
+#     develop:
+#       watch:
+#         - path: ./services/api
+#           action: sync
+#           target: /services/api
+#           ignore:
+#             - node_modules
+#             - dist
+#         - action: rebuild
+#           path: ./services/api/package.json
+#     # depends_on:
+#     #   - music_player_db
+
+#   music_player_api_prod:
+#     profiles: ["prod"]
+#     build:
+#       context: .
+#       dockerfile: services/api/Dockerfile.production
+#     restart: unless-stopped
+#     env_file: .env
+#     container_name: music_player_api
+#     ports:
+#       - "5001:5000"
+#     # depends_on:
+#     #   - music_player_db
+
+#   rabbitmq:
+#     image: rabbitmq:3-management
+#     container_name: music_player_rabbitmq
+#     ports:
+#       - "5672:5672"
+#       - "15672:15672"
+
+# # volumes:
+# #   music_player_db_data:
+# #     driver: local
+
+# # For development with watch mode:
+# # docker compose --profile dev up --build --watch
+# # For production:
+# # docker compose up --build
+
+# # clean cache
+# # docker system prune -a --volumes

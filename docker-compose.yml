@@ -1,109 +1,77 @@
 services:
-  # music_player_db:
+  # yukikaze_player_db:
   #   image: mysql:9
-  #   container_name: music_player_db
+  #   container_name: yukikaze_player_db
   #   environment:
-  #     MYSQL_USER: music_user
-  #     MYSQL_PASSWORD: music_password
-  #     MYSQL_DB: music_db
+  #     MYSQL_DATABASE:
+  #     MYSQL_HOST:
+  #     MYSQL_PASSWORD:
+  #     MYSQL_PORT:
+  #     MYSQL_SSL_MODE:
+  #     MYSQL_USER:
+  #   env_file: .env
   #   ports:
   #     - "3306:3306"
   #   volumes:
-  #     - music_player_db_data:/var/lib/mysql/data
+  #     - yukikaze_player_db_data:/var/lib/mysql/data
 
-  music_player_app_dev:
-    profiles: ["dev"]
-    build:
-      context: .
-      dockerfile: apps/web/Dockerfile.development
-    restart: unless-stopped
-    env_file: .env
-    container_name: music_player_app
-    ports:
-      - "5174:5173"
-    develop:
-      watch:
-        - path: ./app
-          action: sync
-          target: /app
-          ignore:
-            - node_modules
-            - dist
-        - action: rebuild
-          path: ./app/package.json 
-    # depends_on:
-    #   - music_player_db
-
-  music_player_app_prod:
-    profiles: ["prod"]
+  yukikaze_player_app_prod:
     build: 
       context: .
       dockerfile: apps/web/Dockerfile.production
       args:
-        TURBO_TEAM: ${TURBO_TEAM}
-        TURBO_TOKEN: ${TURBO_TOKEN}
-        NEXT_PUBLIC_APP_NAME: ${NEXT_PUBLIC_APP_NAME}
-        NEXT_PUBLIC_APP_URL: yukinu.tiesen.id.vn
-        NEXT_PUBLIC_TRPC_USE_STREAMING: false
-    container_name: music_player_app
+        VITE_API_URL: ${VITE_API_URL}
+        VITE_BASE_URL: ${VITE_BASE_URL}
+        WEB_PORT: ${WEB_PORT}
+    container_name: yukikaze_player_app
     ports:
-      - "5174:5173"
+      - "5173:5173"
     restart: unless-stopped
     env_file: .env
-    # depends_on:
-    #   - music_player_db
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5173/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    depends_on:
+      yukikaze_player_api_prod:
+        condition: service_healthy
+      # yukikaze_player_db:
+      #   condition: service_healthy
 
-  music_player_api_dev:
-    profiles: ["dev"]
-    build:
-      context: .
-      dockerfile: services/api/Dockerfile.development
-    container_name: music_player_api
-    ports:
-      - "5001:5000"
-    restart: unless-stopped
-    env_file: .env
-    develop:
-      watch:
-        - path: ./services/api
-          action: sync
-          target: /services/api
-          ignore:
-            - node_modules
-            - dist
-        - action: rebuild
-          path: ./services/api/package.json
-    # depends_on:
-    #   - music_player_db
-
-  music_player_api_prod:
-    profiles: ["prod"]
+  yukikaze_player_api_prod:
     build:
       context: .
       dockerfile: services/api/Dockerfile.production
     restart: unless-stopped
     env_file: .env
-    container_name: music_player_api
+    container_name: yukikaze_player_api
     ports:
-      - "5001:5000"
+      - "5000:5000"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5000/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
     # depends_on:
-    #   - music_player_db
+    #   yukikaze_player_db:
+    #     condition: service_healthy
 
   rabbitmq:
     image: rabbitmq:3-management
-    container_name: music_player_rabbitmq
+    container_name: yukikaze_player_rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
 
 # volumes:
-#   music_player_db_data:
+#   yukikaze_player_db_data:
 #     driver: local
 
-# For development with watch mode:
-# docker compose --profile dev up --build --watch
 # For production:
-# docker compose --profile prod up --build
+# docker compose up --build
 
 # clean cache
 # docker system prune -a --volumes

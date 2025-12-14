@@ -1,67 +1,55 @@
-FROM oven/bun:1-alpine AS installer
-# Set working directory
+FROM oven/bun:1-alpine AS base
+
+# Stage 1: prune application dependencies
+FROM base AS prepare
+WORKDIR /prune
+
+RUN bun install -g turbo
+
+COPY . .
+RUN turbo prune @yukikaze/web --docker
+
+# Stage 2: Build application
+FROM base AS builder
+
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
+ARG VITE_BASE_URL
+ENV VITE_BASE_URL=$VITE_BASE_URL
+
+ARG WEB_PORT
+ENV WEB_PORT=$WEB_PORT
+
 WORKDIR /build
-
-# Copy workspace files
-COPY package.json turbo.json ./
-COPY packages ./packages
-COPY apps/web/package.json ./apps/web/
-
-# Install dependencies from root (production only)
-RUN bun install --frozen-lockfile --production
-
-FROM oven/bun:1-alpine AS builder
-WORKDIR /build
-
-ARG TURBO_TEAM
-ENV TURBO_TEAM=$TURBO_TEAM
-
-ARG TURBO_TOKEN
-ENV TURBO_TOKEN=$TURBO_TOKEN
-
-ARG NEXT_PUBLIC_APP_NAME
-ENV NEXT_PUBLIC_APP_NAME=$NEXT_PUBLIC_APP_NAME
-
-ARG NEXT_PUBLIC_APP_URL
-ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
-
-ARG NEXT_PUBLIC_TRPC_USE_STREAMING
-ENV NEXT_PUBLIC_TRPC_USE_STREAMING=$NEXT_PUBLIC_TRPC_USE_STREAMING
-
-ENV NEXT_BUILD_OUTPUT=standalone
-ENV SKIP_ENV_VALIDATION=true
-
-# Copy workspace files
-COPY package.json turbo.json ./
-COPY packages ./packages
-COPY apps/web ./apps/web
-
-# Install all dependencies from root
+COPY --from=prepare /prune/out/json .
 RUN bun install
+COPY --from=prepare /prune/out/full .
 
-# Build packages first
-RUN bun run build:packages
-
-# Build the web app
-WORKDIR /build/apps/web
+# Build packages and web app
 RUN bun run build
 
-FROM oven/bun:1-alpine
+# Install only production dependencies for final image
+RUN rm -rf node_modules && bun install --production
+
+# Stage 3: Production image
+FROM base AS runner
 WORKDIR /app
 
-# Copy workspace node_modules
-COPY --from=installer /build/node_modules ./node_modules
-COPY --from=installer /build/packages ./packages
+# Run as non-root user for security
+RUN addgroup --system --gid 1001 yukikaze && \
+    adduser --system --uid 1001 web
 
-# Copy built web app
-COPY --from=builder /build/apps/web/dist ./dist
-COPY --from=builder /build/apps/web/server.js ./
+# Copy workspace dependencies and built packages
+COPY --from=builder --chown=web:yukikaze /build/node_modules ./node_modules
+COPY --from=builder --chown=web:yukikaze /build/packages ./packages
+COPY --from=builder --chown=web:yukikaze /build/apps/web/dist ./dist
+COPY --from=builder --chown=web:yukikaze /build/apps/web/server.js ./
+
+USER web
 
 # Expose the port the app runs on
 EXPOSE 5173
-
-# Run as non-root user for security
-USER bun
 
 # Start the application
 CMD ["bun", "server.js"]

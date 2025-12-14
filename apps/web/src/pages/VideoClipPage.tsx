@@ -1,19 +1,19 @@
 import { useEffect, useRef, useState } from "react"
 import { fetchVideo } from "@/lib/httpClient"
 import { Link, NavLink, useParams } from "react-router-dom"
-import Hls from "hls.js"
+// import Hls from "hls.js"
 import { formatDuration } from "@/lib/utils"
 import type { Video } from "@/@types/video"
 // import { useIsMobile } from "@/hooks/useMobile"
 
-var hls: Hls | null = null
+// var hls: Hls | null = null
 
 const VideoClipPage = () => {
     const { id } = useParams()
     // local states
     const [video, setVideo] = useState<Video | null>(null)
     const [isPlaying, setIsPlaying] = useState(false)
-    const [isTheater, setTheater] = useState(false)
+    const [isTheater, setIsTheater] = useState(false)
     const [isFullscreen, setIsFullscreen] = useState(false)
     const [volume, setVolume] = useState(50)
     const [currentTime, setCurrentTime] = useState(0)
@@ -29,11 +29,12 @@ const VideoClipPage = () => {
     const videoPlayer = useRef<HTMLVideoElement | null>(null)
 
     const initializeVideoPlayer = (url: string) => {
-        if (Hls.isSupported() && videoContainer.current && videoPlayer.current) {
-            if (!hls) hls = new Hls()
-            hls.loadSource(url)
-            hls.attachMedia(videoPlayer.current)
-        }
+        console.log(url)
+        // if (Hls.isSupported() && videoContainer.current && videoPlayer.current) {
+        //     if (!hls) hls = new Hls()
+        //     hls.loadSource(url)
+        //     hls.attachMedia(videoPlayer.current)
+        // }
     }
 
     const getVideo = async () => {
@@ -57,7 +58,7 @@ const VideoClipPage = () => {
     useEffect(() => {
         getVideo()
         return () => {
-            if (hls) hls.destroy()
+            // if (hls) hls.destroy()
         }
     }, [videoContainer])
 
@@ -83,7 +84,7 @@ const VideoClipPage = () => {
         if (!videoContainer.current || !videoPlayer.current) return
         videoContainer.current.classList.toggle('theater')
         videoPlayer.current.classList.toggle('h-[90vh]')
-        setTheater(prev => !prev)
+        setIsTheater(prev => !prev)
     }
 
     const toggleFullScreen = () => {

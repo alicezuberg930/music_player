@@ -41,7 +41,7 @@ class BannerService {
                 fit: 'cover',
             });
             node_fs_1.default.writeFileSync(thumbnailFile.path, resizedBuffer);
-            thumbnailUrl = (await (0, cloudinary_file_1.uploadFile)(thumbnailFile, '/banner', (0, create_cuid_1.createId)()));
+            thumbnailUrl = (await (0, cloudinary_file_1.uploadFile)({ files: thumbnailFile, subFolder: '/banner', publicId: (0, create_cuid_1.createId)() }));
             const banner = {
                 name: name ?? null,
                 thumbnail: thumbnailUrl
@@ -78,13 +78,13 @@ class BannerService {
                     quality: 100
                 });
                 node_fs_1.default.writeFileSync(thumbnailFile.path, resizedBuffer);
-                thumbnail = (await (0, cloudinary_file_1.uploadFile)(thumbnailFile, '/banner', (0, cloudinary_file_1.extractPublicId)(banner.thumbnail)));
+                await (0, cloudinary_file_1.uploadFile)({ files: thumbnailFile, publicId: (0, cloudinary_file_1.extractPublicId)(banner.thumbnail) });
             }
             const updateData = {
-                ...name !== undefined && { name },
-                ...thumbnail !== undefined && { thumbnail }
+                ...name && { name },
             };
-            await db_1.db.update(schemas_1.banners).set(updateData).where((0, db_1.eq)(schemas_1.banners.id, id));
+            if (Object.entries(updateData).length > 0)
+                await db_1.db.update(schemas_1.banners).set(updateData).where((0, db_1.eq)(schemas_1.banners.id, id));
             return response.json({ message: 'Banner updated successfully' });
         }
         catch (error) {

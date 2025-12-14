@@ -16,7 +16,7 @@ const app = (0, express_1.default)();
 app.use(middleware_1.responseInterceptor);
 // setup cors
 app.use((0, cors_1.default)({
-    origin: ['http://localhost:5173', 'http://localhost:5174', 'https://aismartlite.cloud', 'https://api.aismartlite.cloud', 'https://tien-music-player.site', 'https://www.tien-music-player.site'],
+    origin: ['http://localhost:5173', 'https://tien-music-player.site', 'https://www.tien-music-player.site'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
 }));

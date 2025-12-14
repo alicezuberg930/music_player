@@ -74,7 +74,7 @@ export class PlaylistService {
                     fit: 'cover',
                 })
                 fs.writeFileSync(thumbnailFile.path, resizedBuffer)
-                thumbnailUrl = (await uploadFile(thumbnailFile, '/playlist', createId())) as string
+                thumbnailUrl = (await uploadFile({ files: thumbnailFile, subFolder: '/playlist', publicId: createId() })) as string
             }
             const playlist = {
                 releaseDate, title, description,
@@ -114,12 +114,12 @@ export class PlaylistService {
                 })
                 fs.writeFileSync(thumbnailFile.path, resizedBuffer)
                 if (myPlaylist.thumbnail.includes('/assets/')) {
-                    thumbnail = (await uploadFile(thumbnailFile, '/playlist', createId())) as string
+                    thumbnail = (await uploadFile({ files: thumbnailFile, subFolder: '/playlist', publicId: createId() })) as string
                 } else {
-                    await uploadFile(thumbnailFile, '/playlist', extractPublicId(myPlaylist.thumbnail))
+                    await uploadFile({ files: thumbnailFile, publicId: extractPublicId(myPlaylist.thumbnail) })
                 }
             }
-            const currentPlaylistSongIds = myPlaylist.songs.map(ps => ps.songId)
+            // const currentPlaylistSongIds = myPlaylist.songs.map(ps => ps.songId)
             // let totalDuration = myPlaylist.totalDuration!
             // // the user can remove any song in the playlist or add new songs
             // const songsToAdd = songIds.filter(songId => !currentPlaylistSongIds.includes(songId))

@@ -53,7 +53,7 @@ class ArtistService {
                     quality: 100
                 });
                 node_fs_1.default.writeFileSync(thumbnailFile.path, resizedBuffer);
-                thumbnailUrl = (await (0, cloudinary_file_1.uploadFile)(thumbnailFile, '/avatar', (0, create_cuid_1.createId)()));
+                thumbnailUrl = (await (0, cloudinary_file_1.uploadFile)({ files: thumbnailFile, subFolder: '/avatar', publicId: (0, create_cuid_1.createId)() }));
             }
             const artist = {
                 name,
@@ -90,10 +90,10 @@ class ArtistService {
                 });
                 node_fs_1.default.writeFileSync(thumbnailFile.path, resizedBuffer);
                 if (findArtist.thumbnail.includes('/assets/')) {
-                    thumbnailUrl = (await (0, cloudinary_file_1.uploadFile)(thumbnailFile, '/avatar', (0, create_cuid_1.createId)()));
+                    thumbnailUrl = (await (0, cloudinary_file_1.uploadFile)({ files: thumbnailFile, subFolder: '/avatar', publicId: (0, create_cuid_1.createId)() }));
                 }
                 else {
-                    await (0, cloudinary_file_1.uploadFile)(thumbnailFile, '/avatar', (0, cloudinary_file_1.extractPublicId)(findArtist.thumbnail));
+                    await (0, cloudinary_file_1.uploadFile)({ files: thumbnailFile, publicId: (0, cloudinary_file_1.extractPublicId)(findArtist.thumbnail) });
                 }
             }
             const artist = {

@@ -1,4 +1,3 @@
-"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,18 +7,18 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdatePlaylistDto = void 0;
-const class_validator_1 = require("class-validator");
-const mapped_types_1 = require("../../../lib/helpers/mapped.types");
-const create_playlist_dto_1 = require("./create-playlist.dto");
-const class_transformer_1 = require("class-transformer");
-class UpdatePlaylistDto extends (0, mapped_types_1.PartialType)(create_playlist_dto_1.CreatePlaylistDto) {
+import { IsString } from "class-validator";
+import { PartialType } from "../../../lib/helpers/mapped.types";
+import { CreatePlaylistDto } from "./create-playlist.dto";
+import { Transform } from "class-transformer";
+export class UpdatePlaylistDto extends PartialType(CreatePlaylistDto) {
+    // @IsArray({ message: 'Songs must be an array' })
+    // @ArrayNotEmpty({ message: 'Songs cannot be empty' })
+    songIds;
 }
-exports.UpdatePlaylistDto = UpdatePlaylistDto;
 __decorate([
-    (0, class_validator_1.IsString)({ each: true, message: 'Each song id must be a string' }),
-    (0, class_transformer_1.Transform)(({ value }) => {
+    IsString({ each: true, message: 'Each song id must be a string' }),
+    Transform(({ value }) => {
         // Accept already-parsed arrays, JSON strings like "['a','b']", or comma-separated "a,b,b"
         if (Array.isArray(value))
             return value.map((v) => String(v)).filter((n) => n.length > 0);

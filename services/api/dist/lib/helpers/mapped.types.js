@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.PartialType = PartialType;
-function PartialType(Base) {
+export function PartialType(Base) {
     class PartialDto extends Base {
     }
     Object.defineProperty(PartialDto, "name", { value: `Partial${Base.name}` });

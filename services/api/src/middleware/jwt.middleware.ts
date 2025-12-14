@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express"
-import { InternalServerErrorException, UnauthorizedException } from "../lib/exceptions"
+import { InternalServerErrorException, UnauthorizedException } from '@yukikaze/lib/exception'
 import { JsonWebTokenError, JwtPayload, verify } from "jsonwebtoken"
 import { env } from "@yukikaze/lib/create-env"
 

@@ -29,8 +29,8 @@
     "drizzle-kit": "^0.31.6",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@types/node": "^22.15.3",
-    "eslint": "^9.39.1",
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
     "typescript": "catalog:",
     "tsdown": "catalog:"
   }

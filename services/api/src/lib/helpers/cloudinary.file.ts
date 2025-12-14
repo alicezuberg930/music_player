@@ -1,7 +1,7 @@
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary'
 import { env } from '@yukikaze/lib/create-env'
 import fs from 'node:fs'
-import { BadRequestException } from '../exceptions'
+import { BadRequestException } from '@yukikaze/lib/exception'
 import { createId } from "@yukikaze/lib/create-cuid"
 
 cloudinary.config({

@@ -1,7 +1,7 @@
 import { promises as fs } from "node:fs"
 import type { Request, Response, NextFunction } from "express"
 import { Options, PerFieldRule } from "../lib/helpers/multer.options"
-import { BadRequestException } from "../lib/exceptions"
+import { BadRequestException } from '@yukikaze/lib/exception'
 import { esmFileType } from "../lib/helpers/esm.module"
 
 const validateFileSize = async (file: Express.Multer.File, maxSize: number, fieldName: string) => {

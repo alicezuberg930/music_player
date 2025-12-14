@@ -1,9 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const song_service_1 = require("./song.service");
+import { SongService } from "./song.service";
 class SongController {
+    songService;
     constructor() {
-        this.songService = new song_service_1.SongService();
+        this.songService = new SongService();
     }
     async getSongs(request, response) {
         return await this.songService.getSongs(request, response);
@@ -21,4 +20,4 @@ class SongController {
         return await this.songService.deleteSong(request, response);
     }
 }
-exports.default = new SongController();
+export default new SongController();

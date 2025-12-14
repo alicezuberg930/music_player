@@ -6,12 +6,15 @@
   "exports": {
     "./create-cuid": "./dist/create-cuid.mjs",
     "./create-env": "./dist/create-env.mjs",
+    "./crypto": "./dist/crypto.mjs",
+    "./exception": "./dist/exception.mjs",
     "./image-resize": "./dist/image-resize.mjs",
+    "./jwt": "./dist/jwt.mjs",
     "./package.json": "./package.json"
   },
   "scripts": {
     "build": "tsdown",
-    "~dev": "tsdown --watch ./src",
+    "dev": "tsdown --watch ./src",
     "lint": "eslint . --max-warnings 0",
     "check-types": "tsc --noEmit"
   },
@@ -22,8 +25,8 @@
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@types/node": "^22.15.3",
-    "eslint": "^9.39.1",
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
     "typescript": "catalog:",
     "tsdown": "catalog:"
   }

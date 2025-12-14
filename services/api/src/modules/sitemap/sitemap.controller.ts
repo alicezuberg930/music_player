@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { SitemapService } from "./sitemap.service"
-import { BadRequestException } from "../../lib/exceptions"
+import { BadRequestException } from "@yukikaze/lib/exception"
 
 export class SitemapController {
     private readonly sitemapService: SitemapService

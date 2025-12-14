@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { db, eq } from "@yukikaze/db"
 import { banners } from "@yukikaze/db/schemas"
-import { BadRequestException, HttpException, NotFoundException } from "../../lib/exceptions"
+import { BadRequestException, HttpException, NotFoundException } from "@yukikaze/lib/exception"
 import { CreateBannerDto } from "./dto/create-banner.dto"
 import { deleteFile, extractPublicId, uploadFile } from "../../lib/helpers/cloudinary.file"
 import { UpdateBannerDto } from "./dto/update-banner.dto"

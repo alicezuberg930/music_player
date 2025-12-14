@@ -1,6 +1,6 @@
 import multer from 'multer'
 import { extname } from 'path'
-import { BadRequestException } from '../exceptions'
+import { BadRequestException } from '@yukikaze/lib/exception'
 
 export type PerFieldRule = {
     mimes: string[]

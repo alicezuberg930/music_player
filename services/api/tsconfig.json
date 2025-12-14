@@ -1,19 +1,21 @@
 {
+  "extends": "@repo/typescript-config/base.json",
   "compilerOptions": {
-    "target": "es2020",
-    "module": "node20",
-    "rootDir": "./src",
     "outDir": "./dist",
-    "esModuleInterop": true,
-    "strict": true,
-    "skipLibCheck": true,
+    "rootDir": "./src",
+    "noEmit": false,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "jsx": "react-jsx",
+    "verbatimModuleSyntax": false,
+    "strict": false,
   },
   "include": [
-    "src",
-    "src/drizzle.config.ts"
+    "src"
   ],
   "exclude": [
     "node_modules"

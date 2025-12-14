@@ -15,7 +15,9 @@
   "catalog": {
     "@tanstack/react-query": "^5.90.11",
     "typescript": "5.9.2",
-    "tsdown": "^0.17.2"
+    "tsdown": "^0.17.2",
+    "@types/node": "^24.9.1",
+    "eslint": "^9.36.0"
   },
   "catalogs": {
     "express": {

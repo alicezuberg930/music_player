@@ -2,7 +2,7 @@ import express, { Request, Response } from "express"
 import artistController from "./artist.controller"
 import multer from "multer"
 import { multerOptions, Options } from "../../lib/helpers/multer.options"
-import { validateDtoHanlder, fileMimeAndSizeOptions, JWTMiddleware } from "../../middleware"
+import { validateDtoHanlder, fileMimeAndSizeOptions } from "../../middleware"
 import { CreateArtistDto } from "./dto/create-artist.dto"
 import { UpdateArtistDto } from "./dto/update-artist.dto"
 

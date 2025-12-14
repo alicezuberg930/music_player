@@ -2,7 +2,7 @@ import path from 'node:path'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig, type UserConfig, loadEnv } from 'vite'
-import ViteSitemap from 'vite-plugin-sitemap';
+import ViteSitemap from 'vite-plugin-sitemap'
 
 // https://vite.dev/config/
 export default defineConfig(async ({ mode }): Promise<UserConfig> => {

@@ -8,7 +8,7 @@ import { db, eq, inArray, and } from '@yukikaze/db'
 import { CreateSong, Song } from './song.model'
 import { artists, songs, artistsSongs, userFavoriteSongs } from '@yukikaze/db/schemas'
 // utils
-import { HttpException, BadRequestException, NotFoundException } from '../../lib/exceptions'
+import { HttpException, BadRequestException, NotFoundException } from '@yukikaze/lib/exception'
 import slugify from '../../lib/helpers/slugify'
 import { deleteFile, extractPublicId, uploadFile } from "../../lib/helpers/cloudinary.file"
 import { createId } from "@yukikaze/lib/create-cuid"

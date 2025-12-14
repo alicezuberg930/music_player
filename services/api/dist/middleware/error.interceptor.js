@@ -1,17 +1,14 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.errorInterceptor = errorInterceptor;
-const HttpException_1 = require("../lib/exceptions/HttpException");
-const multer_1 = require("multer");
-const create_env_1 = require("@yukikaze/lib/create-env");
-function errorInterceptor(err, req, res, _next) {
+import { HttpException } from "@yukikaze/lib/exception";
+import { MulterError } from "multer";
+import { env } from "@yukikaze/lib/create-env";
+export function errorInterceptor(err, req, res, _next) {
     let status = 500;
     let message = "Internal Server Error";
-    if (err instanceof HttpException_1.HttpException) {
+    if (err instanceof HttpException) {
         status = err.status;
         message = err.message;
     }
-    if (err instanceof multer_1.MulterError) {
+    if (err instanceof MulterError) {
         status = 400;
         message = err.message;
     }
@@ -21,7 +18,7 @@ function errorInterceptor(err, req, res, _next) {
         path: req.originalUrl,
         method: req.method,
         timestamp: new Date().toISOString(),
-        ...create_env_1.env.NODE_ENV !== 'production' && { stack: err.stack }
+        ...env.NODE_ENV !== 'production' && { stack: err.stack }
     };
     res.status(status).json(errorResponse);
 }

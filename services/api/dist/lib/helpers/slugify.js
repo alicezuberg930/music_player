@@ -1,6 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = slugify;
 const DEFAULTS = {
     replacement: '-',
     lower: true,
@@ -39,7 +36,7 @@ function mergeLocaleMap(base, custom) {
  * @param input any string (will be coerced)
  * @param opts options
  */
-function slugify(input, opts = {}) {
+export default function slugify(input, opts = {}) {
     const options = { ...DEFAULTS, ...opts };
     let str = String(input ?? '');
     // apply custom remove regex early (user can strip things before other processing)

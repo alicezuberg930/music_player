@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.responseInterceptor = responseInterceptor;
-function responseInterceptor(req, res, next) {
+export function responseInterceptor(req, res, next) {
     const originalJson = res.json.bind(res);
     res.json = function (body) {
         // Add field to response body if not already present

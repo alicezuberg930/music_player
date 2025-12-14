@@ -1,7 +1,7 @@
 import { Resend } from 'resend'
 import * as Templates from './templates'
 import { env } from '@yukikaze/lib/create-env'
-// import { BadRequestException } from '../exceptions'
+import { BadRequestException } from '@yukikaze/lib/exception'
 
 const resend = new Resend(env.RESEND_API_KEY)
 
@@ -20,7 +20,7 @@ const sendEmail = async <T extends keyof typeof Templates>(opts: SendEmailOption
         react: Templates[opts.template](opts.data as never),
     })
 
-    // if (error) throw new BadRequestException(error.message)
+    if (error) throw new BadRequestException(error.message)
     return data
 }
 

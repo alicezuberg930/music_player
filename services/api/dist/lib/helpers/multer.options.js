@@ -1,19 +1,13 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.multerOptions = void 0;
-const multer_1 = __importDefault(require("multer"));
-const path_1 = require("path");
-const exceptions_1 = require("../exceptions");
-const multerOptions = (options) => {
+import multer from 'multer';
+import { extname } from 'path';
+import { BadRequestException } from '@yukikaze/lib/exception';
+export const multerOptions = (options) => {
     return {
-        storage: multer_1.default.diskStorage({
+        storage: multer.diskStorage({
             destination: 'uploads/',
             filename: (_, file, callback) => {
                 const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-                const ext = (0, path_1.extname)(file.originalname);
+                const ext = extname(file.originalname);
                 const filename = `${file.fieldname}-${uniqueSuffix}${ext}`;
                 callback(null, filename);
             },
@@ -25,7 +19,7 @@ const multerOptions = (options) => {
             const allowedExts = (fieldRule?.exts ?? options.allowedExts ?? []).map(e => e.toLowerCase());
             // If no rules configured, reject by default 
             if (allowedMimes.length === 0 && allowedExts.length === 0) {
-                return callback(new exceptions_1.BadRequestException(`No upload rules configured for field: ${file.fieldname}`));
+                return callback(new BadRequestException(`No upload rules configured for field: ${file.fieldname}`));
             }
             // const ext = extname(file.originalname).replace(/^\./, '').toLowerCase()
             // const validMimetype = allowedMimes.length === 0 || allowedMimes.includes(file.mimetype.toLowerCase())
@@ -36,10 +30,9 @@ const multerOptions = (options) => {
             // }
             // validate field name
             if (options.allowedFields.length > 0 && !options.allowedFields.includes(file.fieldname)) {
-                return callback(new exceptions_1.BadRequestException(`Invalid field name: ${file.fieldname}`));
+                return callback(new BadRequestException(`Invalid field name: ${file.fieldname}`));
             }
             callback(null, true);
         }
     };
 };
-exports.multerOptions = multerOptions;

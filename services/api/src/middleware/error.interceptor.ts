@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express"
-import { HttpException } from "../lib/exceptions/HttpException"
+import { HttpException } from "@yukikaze/lib/exception"
 import { MulterError } from "multer"
 import { env } from "@yukikaze/lib/create-env"
 

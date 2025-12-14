@@ -1,9 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const user_service_1 = require("./user.service");
+import { UserService } from "./user.service";
 class UserController {
+    userService;
     constructor() {
-        this.userService = new user_service_1.UserService();
+        this.userService = new UserService();
     }
     async getUsers(request, response) {
         return await this.userService.getUsers(request, response);
@@ -48,4 +47,4 @@ class UserController {
         return await this.userService.removeFavoritePlaylist(request, response);
     }
 }
-exports.default = new UserController();
+export default new UserController();

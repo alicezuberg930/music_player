@@ -1,21 +1,15 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ArtistService = void 0;
-const db_1 = require("@yukikaze/db");
-const schemas_1 = require("@yukikaze/db/schemas");
-const exceptions_1 = require("../../lib/exceptions");
-const cloudinary_file_1 = require("../../lib/helpers/cloudinary.file");
-const create_cuid_1 = require("@yukikaze/lib/create-cuid");
-const image_resize_1 = require("@yukikaze/lib/image-resize");
-const node_fs_1 = __importDefault(require("node:fs"));
-class ArtistService {
+import { db, eq } from "@yukikaze/db";
+import { artists } from "@yukikaze/db/schemas";
+import { BadRequestException, HttpException, NotFoundException } from "@yukikaze/lib/exception";
+import { extractPublicId, uploadFile } from "../../lib/helpers/cloudinary.file";
+import { createId } from "@yukikaze/lib/create-cuid";
+import { resizeImageToBuffer } from "@yukikaze/lib/image-resize";
+import fs from "node:fs";
+export class ArtistService {
     async getArtists(request, response) {
         try {
             // const {  } = request.query
-            const data = await db_1.db.query.artists.findMany({
+            const data = await db.query.artists.findMany({
                 with: {
                     songs: {
                         columns: { id: false, artistId: false, songId: false },
@@ -29,9 +23,9 @@ class ArtistService {
             return response.json({ message: 'Artists fetched successfully', data });
         }
         catch (error) {
-            if (error instanceof exceptions_1.HttpException)
+            if (error instanceof HttpException)
                 throw error;
-            throw new exceptions_1.BadRequestException(error instanceof Error ? error.message : undefined);
+            throw new BadRequestException(error instanceof Error ? error.message : undefined);
         }
     }
     async createArtist(request, response) {
@@ -44,56 +38,56 @@ class ArtistService {
             const thumbnailFile = files['thumbnail']?.[0] ?? null;
             if (thumbnailFile) {
                 // Read file into buffer first to release file handle
-                const originalBuffer = node_fs_1.default.readFileSync(thumbnailFile.path);
+                const originalBuffer = fs.readFileSync(thumbnailFile.path);
                 // Resize image from buffer
-                const resizedBuffer = await (0, image_resize_1.resizeImageToBuffer)(originalBuffer, {
+                const resizedBuffer = await resizeImageToBuffer(originalBuffer, {
                     height: 240, width: 240,
                     aspectRatio: '1:1',
                     fit: 'cover',
                     quality: 100
                 });
-                node_fs_1.default.writeFileSync(thumbnailFile.path, resizedBuffer);
-                thumbnailUrl = (await (0, cloudinary_file_1.uploadFile)({ files: thumbnailFile, subFolder: '/avatar', publicId: (0, create_cuid_1.createId)() }));
+                fs.writeFileSync(thumbnailFile.path, resizedBuffer);
+                thumbnailUrl = (await uploadFile({ files: thumbnailFile, subFolder: '/avatar', publicId: createId() }));
             }
             const artist = {
                 name,
                 thumbnail: thumbnailUrl ?? '/assets/default/default-artist-avatar.png'
             };
-            await db_1.db.insert(schemas_1.artists).values(artist);
+            await db.insert(artists).values(artist);
             return response.status(201).json({ message: 'Artist created successfully', data: artist });
         }
         catch (error) {
-            if (error instanceof exceptions_1.HttpException)
+            if (error instanceof HttpException)
                 throw error;
-            throw new exceptions_1.BadRequestException(error instanceof Error ? error.message : undefined);
+            throw new BadRequestException(error instanceof Error ? error.message : undefined);
         }
     }
     async updateArtist(request, response) {
         try {
             const { id } = request.params;
-            const findArtist = await db_1.db.query.artists.findFirst({ where: (0, db_1.eq)(schemas_1.artists.id, id), columns: { thumbnail: true } });
+            const findArtist = await db.query.artists.findFirst({ where: eq(artists.id, id), columns: { thumbnail: true } });
             if (!findArtist)
-                throw new exceptions_1.NotFoundException('Artist not found');
+                throw new NotFoundException('Artist not found');
             const { name } = request.body;
             let thumbnailUrl = null;
             const files = request.files;
             const thumbnailFile = files['thumbnail']?.[0] ?? null;
             if (thumbnailFile) {
                 // Read file into buffer first to release file handle
-                const originalBuffer = node_fs_1.default.readFileSync(thumbnailFile.path);
+                const originalBuffer = fs.readFileSync(thumbnailFile.path);
                 // Resize image from buffer
-                const resizedBuffer = await (0, image_resize_1.resizeImageToBuffer)(originalBuffer, {
+                const resizedBuffer = await resizeImageToBuffer(originalBuffer, {
                     height: 240, width: 240,
                     aspectRatio: '1:1',
                     fit: 'cover',
                     quality: 100
                 });
-                node_fs_1.default.writeFileSync(thumbnailFile.path, resizedBuffer);
+                fs.writeFileSync(thumbnailFile.path, resizedBuffer);
                 if (findArtist.thumbnail.includes('/assets/')) {
-                    thumbnailUrl = (await (0, cloudinary_file_1.uploadFile)({ files: thumbnailFile, subFolder: '/avatar', publicId: (0, create_cuid_1.createId)() }));
+                    thumbnailUrl = (await uploadFile({ files: thumbnailFile, subFolder: '/avatar', publicId: createId() }));
                 }
                 else {
-                    await (0, cloudinary_file_1.uploadFile)({ files: thumbnailFile, publicId: (0, cloudinary_file_1.extractPublicId)(findArtist.thumbnail) });
+                    await uploadFile({ files: thumbnailFile, publicId: extractPublicId(findArtist.thumbnail) });
                 }
             }
             const artist = {
@@ -101,20 +95,20 @@ class ArtistService {
                 ...thumbnailUrl && { thumbnail: thumbnailUrl }
             };
             if (Object.entries(artist).length > 0)
-                await db_1.db.update(schemas_1.artists).set(artist).where((0, db_1.eq)(schemas_1.artists.id, id));
+                await db.update(artists).set(artist).where(eq(artists.id, id));
             return response.json({ message: 'Artist updated successfully' });
         }
         catch (error) {
-            if (error instanceof exceptions_1.HttpException)
+            if (error instanceof HttpException)
                 throw error;
-            throw new exceptions_1.BadRequestException(error instanceof Error ? error.message : undefined);
+            throw new BadRequestException(error instanceof Error ? error.message : undefined);
         }
     }
     async findArtist(request, response) {
         try {
             const { id } = request.params;
-            const data = await db_1.db.query.artists.findFirst({
-                where: (0, db_1.eq)(schemas_1.artists.id, id),
+            const data = await db.query.artists.findFirst({
+                where: eq(artists.id, id),
                 with: {
                     songs: {
                         columns: { id: false, artistId: false, songId: false },
@@ -131,14 +125,13 @@ class ArtistService {
                 playlists: artist.playlists.map(p => p.playlist)
             }) : undefined);
             if (!data)
-                throw new exceptions_1.NotFoundException('Artist not found');
+                throw new NotFoundException('Artist not found');
             return response.json({ message: 'Artist details fetched successfully', data });
         }
         catch (error) {
-            if (error instanceof exceptions_1.HttpException)
+            if (error instanceof HttpException)
                 throw error;
-            throw new exceptions_1.BadRequestException(error instanceof Error ? error.message : undefined);
+            throw new BadRequestException(error instanceof Error ? error.message : undefined);
         }
     }
 }
-exports.ArtistService = ArtistService;

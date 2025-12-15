@@ -1,21 +1,28 @@
-import { esmMusicMetadata } from '../../lib/helpers/esm.module';
-import fs from 'node:fs';
-import NodeID3 from 'node-id3';
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SongService = void 0;
+const esm_module_1 = require("../../lib/helpers/esm.module");
+const node_fs_1 = __importDefault(require("node:fs"));
+const node_id3_1 = __importDefault(require("node-id3"));
 // database
-import { db, eq, inArray, and } from '@yukikaze/db';
-import { artists, songs, artistsSongs, userFavoriteSongs } from '@yukikaze/db/schemas';
+const db_1 = require("@yukikaze/db");
+const schemas_1 = require("@yukikaze/db/schemas");
 // utils
-import { HttpException, BadRequestException, NotFoundException } from '@yukikaze/lib/exception';
-import slugify from '../../lib/helpers/slugify';
-import { deleteFile, extractPublicId, uploadFile } from "../../lib/helpers/cloudinary.file";
-import { createId } from "@yukikaze/lib/create-cuid";
-import { resizeImageToBuffer } from '@yukikaze/lib/image-resize';
-export class SongService {
+const exception_1 = require("@yukikaze/lib/exception");
+const slugify_1 = __importDefault(require("@yukikaze/lib/slugify"));
+const cloudinary_1 = require("@yukikaze/lib/cloudinary");
+const create_cuid_1 = require("@yukikaze/lib/create-cuid");
+const image_resize_1 = require("@yukikaze/lib/image-resize");
+class SongService {
     async getSongs(request, response) {
         try {
             const {} = request.query;
             const userId = request.userId; // Get user ID from JWT middleware (undefined if not logged in)
-            const data = await db.query.songs.findMany({
+            console.log(request.userId);
+            const data = await db_1.db.query.songs.findMany({
                 with: {
                     user: { columns: { password: false, email: false } },
                     genres: {
@@ -36,8 +43,8 @@ export class SongService {
             let likedSongIds = new Set();
             if (userId) {
                 const songIds = data.map(song => song.id);
-                const likedSongs = await db.query.userFavoriteSongs.findMany({
-                    where: and(eq(userFavoriteSongs.userId, userId), inArray(userFavoriteSongs.songId, songIds)),
+                const likedSongs = await db_1.db.query.userFavoriteSongs.findMany({
+                    where: (0, db_1.and)((0, db_1.eq)(schemas_1.userFavoriteSongs.userId, userId), (0, db_1.inArray)(schemas_1.userFavoriteSongs.songId, songIds)),
                     columns: { songId: true }
                 });
                 likedSongIds = new Set(likedSongs.map(ls => ls.songId));
@@ -49,9 +56,9 @@ export class SongService {
             return response.json({ message: 'Song list fetched successfully', data: songsWithLikedStatus });
         }
         catch (error) {
-            if (error instanceof HttpException)
+            if (error instanceof exception_1.HttpException)
                 throw error;
-            throw new BadRequestException(error instanceof Error ? error.message : undefined);
+            throw new exception_1.BadRequestException(error instanceof Error ? error.message : undefined);
         }
     }
     async createSong(request, response) {
@@ -60,22 +67,22 @@ export class SongService {
             const files = request.files;
             const audioFile = files['audio']?.[0] ?? null;
             if (!audioFile)
-                throw new BadRequestException('Audio file is required');
+                throw new exception_1.BadRequestException('Audio file is required');
             const lyricsFile = files['lyrics']?.[0] ?? null;
             const thumbnailFile = files['thumbnail']?.[0] ?? null;
             // initialize urls
             let lyricsUrl = null;
             let thumbnailUrl = null;
             // find artist names from artistIds
-            const findArtists = await db.query.artists.findMany({ columns: { name: true }, where: inArray(artists.id, artistIds) });
+            const findArtists = await db_1.db.query.artists.findMany({ columns: { name: true }, where: (0, db_1.inArray)(schemas_1.artists.id, artistIds) });
             // extract metadata from audio file
-            let metadata = await esmMusicMetadata().then(m => m.parseFile(audioFile.path));
+            let metadata = await (0, esm_module_1.esmMusicMetadata)().then(m => m.parseFile(audioFile.path));
             if (lyricsFile) {
-                lyricsUrl = (await uploadFile({ files: lyricsFile, subFolder: '/lyrics', publicId: createId() }));
+                lyricsUrl = (await (0, cloudinary_1.uploadFile)({ files: lyricsFile, subFolder: '/lyrics', publicId: (0, create_cuid_1.createId)() }));
             }
             if (thumbnailFile) {
                 // if the user uploaded a thumbnail file, embed it into the audio file's metadata
-                NodeID3.update({
+                node_id3_1.default.update({
                     title,
                     releaseTime: releaseDate,
                     artist: findArtists.map(a => a.name).join("/"),
@@ -86,50 +93,50 @@ export class SongService {
                         mime: thumbnailFile.mimetype,
                         type: { id: 3, name: 'Album cover' },
                         description: 'Cover Art',
-                        imageBuffer: fs.readFileSync(thumbnailFile.path)
+                        imageBuffer: node_fs_1.default.readFileSync(thumbnailFile.path)
                     }
                 }, audioFile.path);
                 // Read file into buffer first to release file handle
-                const originalBuffer = fs.readFileSync(thumbnailFile.path);
+                const originalBuffer = node_fs_1.default.readFileSync(thumbnailFile.path);
                 // Resize image from buffer
-                const resizedBuffer = await resizeImageToBuffer(originalBuffer, {
+                const resizedBuffer = await (0, image_resize_1.resizeImageToBuffer)(originalBuffer, {
                     height: 100, width: 100,
                     aspectRatio: '1:1',
                     fit: 'cover',
                 });
-                fs.writeFileSync(thumbnailFile.path, resizedBuffer);
-                thumbnailUrl = (await uploadFile({ files: thumbnailFile, subFolder: '/cover', publicId: createId() }));
+                node_fs_1.default.writeFileSync(thumbnailFile.path, resizedBuffer);
+                thumbnailUrl = (await (0, cloudinary_1.uploadFile)({ files: thumbnailFile, subFolder: '/cover', publicId: (0, create_cuid_1.createId)() }));
             }
             else {
                 const picture = metadata.common.picture?.[0];
                 if (picture) {
                     const coverPath = `uploads/${Date.now() + '-' + Math.round(Math.random() * 1e9)}.${picture.format.split('/')[1]}`;
-                    fs.writeFileSync(coverPath, Buffer.from(picture.data));
+                    node_fs_1.default.writeFileSync(coverPath, Buffer.from(picture.data));
                     // Read file into buffer first to release file handle
-                    const originalBuffer = fs.readFileSync(coverPath);
+                    const originalBuffer = node_fs_1.default.readFileSync(coverPath);
                     // Resize image from buffer
-                    const resizedBuffer = await resizeImageToBuffer(originalBuffer, {
+                    const resizedBuffer = await (0, image_resize_1.resizeImageToBuffer)(originalBuffer, {
                         height: 100, width: 100,
                         aspectRatio: '1:1',
                         fit: 'cover',
                     });
-                    fs.writeFileSync(coverPath, resizedBuffer);
+                    node_fs_1.default.writeFileSync(coverPath, resizedBuffer);
                     const coverFile = {
                         path: coverPath,
                         mimetype: picture.format,
                         originalname: `cover.${picture.format.split('/')[1]}`
                     };
-                    thumbnailUrl = (await uploadFile({ files: coverFile, subFolder: '/cover', publicId: createId() }));
+                    thumbnailUrl = (await (0, cloudinary_1.uploadFile)({ files: coverFile, subFolder: '/cover', publicId: (0, create_cuid_1.createId)() }));
                 }
             }
             console.log(thumbnailUrl);
             // upload audio file to cloud storage and get the url
-            const audioUrl = await uploadFile({ files: audioFile, subFolder: '/audio', publicId: createId() });
+            const audioUrl = await (0, cloudinary_1.uploadFile)({ files: audioFile, subFolder: '/audio', publicId: (0, create_cuid_1.createId)() });
             const song = {
                 title, releaseDate,
                 userId: request.userId,
                 size: audioFile.size,
-                alias: slugify(title),
+                alias: (0, slugify_1.default)(title),
                 duration: Math.floor(metadata.format.duration ?? 0),
                 artistNames: findArtists.map(a => a.name).join(", "),
                 hasLyrics: !!lyricsFile,
@@ -137,27 +144,27 @@ export class SongService {
                 lyricsFile: lyricsUrl,
                 thumbnail: thumbnailUrl ?? '/assets/default/default-song-thumbnail.png'
             };
-            const insertSong = await db.insert(songs).values(song).$returningId();
-            await db.insert(artistsSongs).values(artistIds.map(artistId => ({
+            const insertSong = await db_1.db.insert(schemas_1.songs).values(song).$returningId();
+            await db_1.db.insert(schemas_1.artistsSongs).values(artistIds.map(artistId => ({
                 songId: insertSong[0].id, artistId
             })));
             return response.status(201).json({ message: 'Song created successfully' });
         }
         catch (error) {
-            if (error instanceof HttpException)
+            if (error instanceof exception_1.HttpException)
                 throw error;
-            throw new BadRequestException(error instanceof Error ? error.message : undefined);
+            throw new exception_1.BadRequestException(error instanceof Error ? error.message : undefined);
         }
     }
     async updateSong(request, response) {
         try {
             const { id } = request.params;
-            const findSong = await db.query.songs.findFirst({
-                where: eq(songs.id, id),
+            const findSong = await db_1.db.query.songs.findFirst({
+                where: (0, db_1.eq)(schemas_1.songs.id, id),
                 columns: { thumbnail: true, stream: true, lyricsFile: true }
             });
             if (!findSong)
-                throw new NotFoundException('Song not found');
+                throw new exception_1.NotFoundException('Song not found');
             const { releaseDate, title, artistIds } = request.body;
             const files = request.files;
             // const audioFile: Express.Multer.File | null = files['audio']?.[0] ?? null
@@ -168,47 +175,47 @@ export class SongService {
             let findArtists = [];
             // filter artistIds to add and remove
             if (artistIds && artistIds.length > 0) {
-                findArtists = await db.query.artists.findMany({ columns: { name: true }, where: inArray(artists.id, artistIds) });
-                const existingArtistSongs = await db.query.artistsSongs.findMany({
-                    where: eq(artistsSongs.songId, id),
+                findArtists = await db_1.db.query.artists.findMany({ columns: { name: true }, where: (0, db_1.inArray)(schemas_1.artists.id, artistIds) });
+                const existingArtistSongs = await db_1.db.query.artistsSongs.findMany({
+                    where: (0, db_1.eq)(schemas_1.artistsSongs.songId, id),
                     columns: { artistId: true }
                 });
                 const existingArtistIds = existingArtistSongs.map(a => a.artistId);
                 const artistIdsToAdd = artistIds.filter(aid => !existingArtistIds.includes(aid));
                 const artistIdsToRemove = existingArtistIds.filter(aid => !artistIds.includes(aid));
                 if (artistIdsToAdd.length > 0) {
-                    await db.insert(artistsSongs).values(artistIdsToAdd.map(artistId => ({
+                    await db_1.db.insert(schemas_1.artistsSongs).values(artistIdsToAdd.map(artistId => ({
                         songId: id, artistId
                     })));
                 }
                 // remove old artist-song relations
                 if (artistIdsToRemove.length > 0) {
-                    await db.delete(artistsSongs).where(and(eq(artistsSongs.songId, id), inArray(artistsSongs.artistId, artistIdsToRemove)));
+                    await db_1.db.delete(schemas_1.artistsSongs).where((0, db_1.and)((0, db_1.eq)(schemas_1.artistsSongs.songId, id), (0, db_1.inArray)(schemas_1.artistsSongs.artistId, artistIdsToRemove)));
                 }
             }
             if (lyricsFile) {
                 if (findSong.lyricsFile) {
-                    await uploadFile({ files: lyricsFile, publicId: extractPublicId(findSong.lyricsFile) });
+                    await (0, cloudinary_1.uploadFile)({ files: lyricsFile, publicId: (0, cloudinary_1.extractPublicId)(findSong.lyricsFile) });
                 }
                 else {
-                    lyrics = (await uploadFile({ files: lyricsFile, subFolder: '/lyrics', publicId: createId() }));
+                    lyrics = (await (0, cloudinary_1.uploadFile)({ files: lyricsFile, subFolder: '/lyrics', publicId: (0, create_cuid_1.createId)() }));
                 }
             }
             if (thumbnailFile) {
                 // Read file into buffer first to release file handle
-                const originalBuffer = fs.readFileSync(thumbnailFile.path);
+                const originalBuffer = node_fs_1.default.readFileSync(thumbnailFile.path);
                 // Resize image from buffer
-                const resizedBuffer = await resizeImageToBuffer(originalBuffer, {
+                const resizedBuffer = await (0, image_resize_1.resizeImageToBuffer)(originalBuffer, {
                     height: 100, width: 100,
                     aspectRatio: '1:1',
                     fit: 'cover',
                 });
-                fs.writeFileSync(thumbnailFile.path, resizedBuffer);
+                node_fs_1.default.writeFileSync(thumbnailFile.path, resizedBuffer);
                 if (findSong.thumbnail.includes('/assets/')) {
-                    thumbnail = (await uploadFile({ files: thumbnailFile, subFolder: '/cover', publicId: createId() }));
+                    thumbnail = (await (0, cloudinary_1.uploadFile)({ files: thumbnailFile, subFolder: '/cover', publicId: (0, create_cuid_1.createId)() }));
                 }
                 else {
-                    await uploadFile({ files: thumbnailFile, publicId: extractPublicId(findSong.thumbnail) });
+                    await (0, cloudinary_1.uploadFile)({ files: thumbnailFile, publicId: (0, cloudinary_1.extractPublicId)(findSong.thumbnail) });
                 }
             }
             const song = {
@@ -222,20 +229,20 @@ export class SongService {
                 },
             };
             if (Object.entries(song).length > 0)
-                await db.update(songs).set(song).where(eq(songs.id, id));
+                await db_1.db.update(schemas_1.songs).set(song).where((0, db_1.eq)(schemas_1.songs.id, id));
             return response.json({ message: 'Song updated successfully' });
         }
         catch (error) {
-            if (error instanceof HttpException)
+            if (error instanceof exception_1.HttpException)
                 throw error;
-            throw new BadRequestException(error instanceof Error ? error.message : undefined);
+            throw new exception_1.BadRequestException(error instanceof Error ? error.message : undefined);
         }
     }
     async findSong(request, response) {
         try {
             const { id } = request.params;
-            const data = await db.query.songs.findFirst({
-                where: eq(songs.id, id),
+            const data = await db_1.db.query.songs.findFirst({
+                where: (0, db_1.eq)(schemas_1.songs.id, id),
                 with: {
                     user: {
                         columns: { password: false, email: false }
@@ -255,36 +262,37 @@ export class SongService {
                 genres: song.genres.map(g => g.genre)
             }) : undefined);
             if (!data)
-                throw new NotFoundException('Song not found');
+                throw new exception_1.NotFoundException('Song not found');
             return response.json({ message: 'Song fetched successfully', data });
         }
         catch (error) {
-            if (error instanceof HttpException)
+            if (error instanceof exception_1.HttpException)
                 throw error;
-            throw new BadRequestException(error instanceof Error ? error.message : undefined);
+            throw new exception_1.BadRequestException(error instanceof Error ? error.message : undefined);
         }
     }
     async deleteSong(request, response) {
         try {
-            const findSong = await db.query.songs.findFirst({
-                where: eq(songs.id, request.params.id),
+            const findSong = await db_1.db.query.songs.findFirst({
+                where: (0, db_1.eq)(schemas_1.songs.id, request.params.id),
                 columns: { stream: true, lyricsFile: true, thumbnail: true }
             });
             if (!findSong)
-                throw new NotFoundException('Song not found');
+                throw new exception_1.NotFoundException('Song not found');
             const deleteUrls = [
                 findSong.stream,
                 ...(findSong.lyricsFile ? [findSong.lyricsFile] : []),
                 ...(findSong.thumbnail && !findSong.thumbnail.includes('/assets/') ? [findSong.thumbnail] : [])
             ];
-            await deleteFile(deleteUrls);
-            await db.delete(songs).where(eq(songs.id, request.params.id));
+            await (0, cloudinary_1.deleteFile)(deleteUrls);
+            await db_1.db.delete(schemas_1.songs).where((0, db_1.eq)(schemas_1.songs.id, request.params.id));
             return response.json({ message: 'Song deleted successfully' });
         }
         catch (error) {
-            if (error instanceof HttpException)
+            if (error instanceof exception_1.HttpException)
                 throw error;
-            throw new BadRequestException(error instanceof Error ? error.message : undefined);
+            throw new exception_1.BadRequestException(error instanceof Error ? error.message : undefined);
         }
     }
 }
+exports.SongService = SongService;

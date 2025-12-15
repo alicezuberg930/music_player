@@ -1,8 +1,9 @@
-import { BannerService } from "./banner.service";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const banner_service_1 = require("./banner.service");
 class BannerController {
-    bannerService;
     constructor() {
-        this.bannerService = new BannerService();
+        this.bannerService = new banner_service_1.BannerService();
     }
     async getBanners(request, response) {
         return await this.bannerService.getBanners(request, response);
@@ -20,4 +21,4 @@ class BannerController {
         return await this.bannerService.deleteBanner(request, response);
     }
 }
-export default new BannerController();
+exports.default = new BannerController();

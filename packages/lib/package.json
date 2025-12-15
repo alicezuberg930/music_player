@@ -4,23 +4,28 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./cloudinary": "./dist/cloudinary.mjs",
     "./create-cuid": "./dist/create-cuid.mjs",
     "./create-env": "./dist/create-env.mjs",
     "./crypto": "./dist/crypto.mjs",
     "./exception": "./dist/exception.mjs",
     "./image-resize": "./dist/image-resize.mjs",
     "./jwt": "./dist/jwt.mjs",
+    "./password": "./dist/password.mjs",
+    "./slugify": "./dist/slugify.mjs",
     "./package.json": "./package.json"
   },
   "scripts": {
     "build": "tsdown",
-    "dev": "tsdown --watch ./src",
+    "~dev": "tsdown --watch ./src",
     "lint": "eslint . --max-warnings 0",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "dotenv": "^17.2.3",
-    "sharp": "^0.34.5"
+    "sharp": "^0.34.5",
+    "cloudinary": "^2.8.0",
+    "multer": "^2.0.2"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
@@ -28,6 +33,7 @@
     "@types/node": "catalog:",
     "eslint": "catalog:",
     "typescript": "catalog:",
-    "tsdown": "catalog:"
+    "tsdown": "catalog:",
+    "@types/multer": "^2.0.0"
   }
 }

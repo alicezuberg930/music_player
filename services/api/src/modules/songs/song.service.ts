@@ -9,8 +9,8 @@ import { CreateSong, Song } from './song.model'
 import { artists, songs, artistsSongs, userFavoriteSongs } from '@yukikaze/db/schemas'
 // utils
 import { HttpException, BadRequestException, NotFoundException } from '@yukikaze/lib/exception'
-import slugify from '../../lib/helpers/slugify'
-import { deleteFile, extractPublicId, uploadFile } from "../../lib/helpers/cloudinary.file"
+import slugify from '@yukikaze/lib/slugify'
+import { deleteFile, extractPublicId, uploadFile } from "@yukikaze/lib/cloudinary"
 import { createId } from "@yukikaze/lib/create-cuid"
 // dto
 import { CreateSongDto } from './dto/create-song.dto'
@@ -22,6 +22,7 @@ export class SongService {
         try {
             const { } = request.query
             const userId = request.userId // Get user ID from JWT middleware (undefined if not logged in)
+            console.log(request.userId)
             const data: Song[] = await db.query.songs.findMany({
                 with: {
                     user: { columns: { password: false, email: false } },
@@ -146,7 +147,7 @@ export class SongService {
             } as CreateSong
             const insertSong = await db.insert(songs).values(song).$returningId()
             await db.insert(artistsSongs).values(artistIds.map(artistId => ({
-                songId: insertSong[0].id, artistId
+                songId: insertSong[0]!.id, artistId
             })))
             return response.status(201).json({ message: 'Song created successfully' })
         } catch (error) {

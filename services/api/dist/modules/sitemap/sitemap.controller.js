@@ -1,9 +1,11 @@
-import { SitemapService } from "./sitemap.service";
-import { BadRequestException } from "@yukikaze/lib/exception";
-export class SitemapController {
-    sitemapService;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SitemapController = void 0;
+const sitemap_service_1 = require("./sitemap.service");
+const exception_1 = require("@yukikaze/lib/exception");
+class SitemapController {
     constructor() {
-        this.sitemapService = new SitemapService();
+        this.sitemapService = new sitemap_service_1.SitemapService();
     }
     async generateSitemapXML(_, response) {
         try {
@@ -14,7 +16,7 @@ export class SitemapController {
         }
         catch (error) {
             console.error('Error generating sitemap:', error);
-            throw new BadRequestException('Error generating sitemap');
+            throw new exception_1.BadRequestException('Error generating sitemap');
         }
     }
     async generateSitemapURLS(_, response) {
@@ -25,7 +27,8 @@ export class SitemapController {
         }
         catch (error) {
             console.error('Error generating sitemap URLs:', error);
-            throw new BadRequestException('Error generating sitemap URLs');
+            throw new exception_1.BadRequestException('Error generating sitemap URLs');
         }
     }
 }
+exports.SitemapController = SitemapController;

@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,11 +8,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { IsNotEmpty } from "class-validator";
-export class CreateArtistDto {
-    name;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CreateArtistDto = void 0;
+const class_validator_1 = require("class-validator");
+class CreateArtistDto {
 }
+exports.CreateArtistDto = CreateArtistDto;
 __decorate([
-    IsNotEmpty({ message: 'Name cannot be empty' }),
+    (0, class_validator_1.IsNotEmpty)({ message: 'Name cannot be empty' }),
     __metadata("design:type", String)
 ], CreateArtistDto.prototype, "name", void 0);

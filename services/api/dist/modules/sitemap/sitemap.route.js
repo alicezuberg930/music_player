@@ -1,7 +1,10 @@
-import { Router } from "express";
-import { SitemapController } from "./sitemap.controller";
-const sitemapRouter = Router();
-const sitemapController = new SitemapController();
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.sitemapRouter = void 0;
+const express_1 = require("express");
+const sitemap_controller_1 = require("./sitemap.controller");
+const sitemapRouter = (0, express_1.Router)();
+exports.sitemapRouter = sitemapRouter;
+const sitemapController = new sitemap_controller_1.SitemapController();
 sitemapRouter.get('/sitemap.xml', (request, response) => sitemapController.generateSitemapXML(request, response));
 sitemapRouter.get('/sitemap-urls', (request, response) => sitemapController.generateSitemapURLS(request, response));
-export { sitemapRouter };

@@ -7,7 +7,7 @@ type Props = {
   children: React.ReactNode
 }
 
-export default function SnackbarProvider({ children }: Props) {
+export default function SnackbarProvider({ children }: Readonly<Props>) {
   const notistackRef = useRef<NotistackProvider | null>(null)
 
   const onClose = (key: SnackbarKey) => () => {
@@ -15,29 +15,27 @@ export default function SnackbarProvider({ children }: Props) {
   }
 
   return (
-    <>
-      <NotistackProvider
-        ref={notistackRef}
-        dense
-        maxSnack={5}
-        preventDuplicate={false}
-        autoHideDuration={3000}
-        variant="success"
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        style={{ backgroundColor: 'white', color: 'black' }}
-        iconVariant={{
-          info: <SnackbarIcon icon={<Info />} color="info" />,
-          success: <SnackbarIcon icon={<Check />} color="success" />,
-          warning: <SnackbarIcon icon={<OctagonAlert />} color="warning" />,
-          error: <SnackbarIcon icon={<OctagonAlert />} color="error" />,
-        }}
-        action={(key) => (
-          <X onClick={onClose(key)} size={24} />
-        )}
-      >
-        {children}
-      </NotistackProvider>
-    </>
+    <NotistackProvider
+      ref={notistackRef}
+      dense
+      maxSnack={5}
+      preventDuplicate={false}
+      autoHideDuration={3000}
+      variant="success"
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      style={{ backgroundColor: 'white', color: 'black' }}
+      iconVariant={{
+        info: <SnackbarIcon icon={<Info />} color="info" />,
+        success: <SnackbarIcon icon={<Check />} color="success" />,
+        warning: <SnackbarIcon icon={<OctagonAlert />} color="warning" />,
+        error: <SnackbarIcon icon={<OctagonAlert />} color="error" />,
+      }}
+      action={(key) => (
+        <X onClick={onClose(key)} size={24} />
+      )}
+    >
+      {children}
+    </NotistackProvider>
   )
 }
 
@@ -46,7 +44,7 @@ type SnackbarIconProps = {
   color: 'info' | 'success' | 'warning' | 'error'
 }
 
-function SnackbarIcon({ icon, color }: SnackbarIconProps) {
+function SnackbarIcon({ icon, color }: Readonly<SnackbarIconProps>) {
   return (
     <div
       className={cn('mr-3 w-10 h-10 flex rounded-xl items-center justify-center',

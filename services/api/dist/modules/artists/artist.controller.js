@@ -1,8 +1,9 @@
-import { ArtistService } from "./artist.service";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const artist_service_1 = require("./artist.service");
 class ArtistController {
-    artistService;
     constructor() {
-        this.artistService = new ArtistService();
+        this.artistService = new artist_service_1.ArtistService();
     }
     async getArtists(request, response) {
         return await this.artistService.getArtists(request, response);
@@ -17,4 +18,4 @@ class ArtistController {
         return await this.artistService.findArtist(request, response);
     }
 }
-export default new ArtistController();
+exports.default = new ArtistController();

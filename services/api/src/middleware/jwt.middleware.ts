@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express"
-import { InternalServerErrorException, UnauthorizedException } from '@yukikaze/lib/exception'
-import { JsonWebTokenError, JwtPayload, verify } from "jsonwebtoken"
+import { HttpException, UnauthorizedException } from '@yukikaze/lib/exception'
 import { env } from "@yukikaze/lib/create-env"
+import { JWT, JWTHeader } from "@yukikaze/lib/jwt"
 
 export const JWTMiddleware = async (request: Request, _: Response, next: NextFunction) => {
     let token: string | undefined = request.cookies?.["accessToken"]
@@ -11,19 +11,15 @@ export const JWTMiddleware = async (request: Request, _: Response, next: NextFun
     if (!token) {
         throw new UnauthorizedException("Invalid credentials, please log in")
     }
-    // Verify token signature annd expiration automatically
+    // Verify token signature annd expiration 
     try {
-        const jwt = verify(token, env.JWT_SECRET!) as JwtPayload & { id: string }
+        const jwt = await new JWT(env.JWT_SECRET).verify(token) as { id: string } & JWTHeader
         if (!jwt || !jwt.id) {
             throw new UnauthorizedException("Invalid or expired access token")
         }
         request.userId = jwt.id
     } catch (error) {
-        if (error instanceof JsonWebTokenError) {
-            throw new UnauthorizedException("JWT is expired")
-        } else {
-            throw new InternalServerErrorException()
-        }
+        if (error instanceof HttpException) throw error
     }
     next()
 }
@@ -35,10 +31,11 @@ export const OptionalJWTMiddleware = async (request: Request, _: Response, next:
         token = request.headers.authorization.split(" ")[1]
     }
     if (token) {
-        // Verify token signature
-        const jwt = verify(token, env.JWT_SECRET!) as JwtPayload & { id: string }
-        if (jwt && jwt.id) {
-            request.userId = jwt.id
+        try {
+            const jwt = await new JWT(env.JWT_SECRET).verify(token) as { id: string } & JWTHeader
+            if (jwt && jwt.id) request.userId = jwt.id
+        } catch (error) {
+            console.log(error)
         }
     }
     next()
@@ -47,7 +44,7 @@ export const OptionalJWTMiddleware = async (request: Request, _: Response, next:
 // export const SocketMiddleware = async (socket, next) => {
 //     try {
 //         let token = null
-
+ 
 //         if (socket.handshake.headers.cookie) {
 //             const cookies = Object.fromEntries(
 //                 socket.handshake.headers.cookie.split(" ").map(c => c.split("="))

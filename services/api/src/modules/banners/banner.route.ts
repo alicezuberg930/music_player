@@ -22,9 +22,9 @@ bannerRouter.get("/banners",
 )
 
 bannerRouter.post("/banners",
-    JWTMiddleware,
-    upload.fields([{ name: "thumbnail", maxCount: 1 }]),
-    fileValidator,
+    // JWTMiddleware,
+    // upload.fields([{ name: "thumbnail", maxCount: 1 }]),
+    // fileValidator,
     validateDtoHanlder(CreateBannerDto),
     (request: Request<{}, {}, CreateBannerDto>, response: Response) => bannerController.createBanner(request, response)
 )

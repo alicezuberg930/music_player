@@ -1,14 +1,17 @@
-import { promises as fs } from "node:fs";
-import { BadRequestException } from '@yukikaze/lib/exception';
-import { esmFileType } from "../lib/helpers/esm.module";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.fileMimeAndSizeOptions = void 0;
+const node_fs_1 = require("node:fs");
+const exception_1 = require("@yukikaze/lib/exception");
+const esm_module_1 = require("../lib/helpers/esm.module");
 const validateFileSize = async (file, maxSize, fieldName) => {
     if (file.size > maxSize) {
-        await fs.unlink(file.path).catch(() => { });
-        throw new BadRequestException(`File for field "${fieldName}" exceeds the size limit of ${(maxSize / (1024 * 1024)).toFixed(1)} MB`);
+        await node_fs_1.promises.unlink(file.path).catch(() => { });
+        throw new exception_1.BadRequestException(`File for field "${fieldName}" exceeds the size limit of ${(maxSize / (1024 * 1024)).toFixed(1)} MB`);
     }
 };
 const readFileBuffer = async (filePath) => {
-    const fd = await fs.open(filePath, "r");
+    const fd = await node_fs_1.promises.open(filePath, "r");
     try {
         const buffer = Buffer.alloc(4100);
         const { bytesRead } = await fd.read(buffer, 0, buffer.length, 0);
@@ -20,7 +23,7 @@ const readFileBuffer = async (filePath) => {
 };
 const validateMimeType = async (file, allowedMimes, isTextOnlyField, fieldName, rule) => {
     const slice = await readFileBuffer(file.path);
-    const detected = await esmFileType().then(m => m.fileTypeFromBuffer(slice));
+    const detected = await (0, esm_module_1.esmFileType)().then(m => m.fileTypeFromBuffer(slice));
     let isValid = false;
     if (detected) {
         const realMime = detected.mime.toLowerCase();
@@ -33,8 +36,8 @@ const validateMimeType = async (file, allowedMimes, isTextOnlyField, fieldName, 
         isValid = isTextOnlyField;
     }
     if (!isValid) {
-        await fs.unlink(file.path).catch(() => { });
-        throw new BadRequestException(`Only files of types: ${rule.exts.join(", ")} are allowed for field ${fieldName}.`);
+        await node_fs_1.promises.unlink(file.path).catch(() => { });
+        throw new exception_1.BadRequestException(`Only files of types: ${rule.exts.join(", ")} are allowed for field ${fieldName}.`);
     }
 };
 const validateFile = async (file, rule, fieldName) => {
@@ -44,7 +47,7 @@ const validateFile = async (file, rule, fieldName) => {
     await validateFileSize(file, maxSize, fieldName);
     await validateMimeType(file, allowedMimes, isTextOnlyField, fieldName, rule);
 };
-export const fileMimeAndSizeOptions = (options) => {
+const fileMimeAndSizeOptions = (options) => {
     const perFieldRules = options.allowed ?? {};
     const fileMimeAndSizeMiddleware = async (request, _response, next) => {
         const filesMap = request.files;
@@ -62,8 +65,9 @@ export const fileMimeAndSizeOptions = (options) => {
             next();
         }
         catch (err) {
-            throw new BadRequestException(err instanceof Error ? err.message : 'Invalid file upload');
+            throw new exception_1.BadRequestException(err instanceof Error ? err.message : 'Invalid file upload');
         }
     };
     return fileMimeAndSizeMiddleware;
 };
+exports.fileMimeAndSizeOptions = fileMimeAndSizeOptions;

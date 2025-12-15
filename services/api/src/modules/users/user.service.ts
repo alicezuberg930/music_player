@@ -4,7 +4,7 @@ import { playlists, songs, userFavoritePlaylists, userFavoriteSongs, users } fro
 import { User } from "./user.model"
 import { BadRequestException, HttpException, NotFoundException } from "@yukikaze/lib/exception"
 import { CreateUserDto } from "./dto/create-user.dto"
-import { Password } from "../../lib/bcrypt/password"
+import { Password } from "@yukikaze/lib/password"
 import { LoginUserDto } from "./dto/login-user.dto"
 import { env } from "@yukikaze/lib/create-env"
 import { UpdateUserDto } from "./dto/update-user.dto"
@@ -40,7 +40,7 @@ export class UserService {
                 secure: env.NODE_ENV === "production", // Required for HTTPS
                 sameSite: env.NODE_ENV === "production" ? 'lax' : 'strict', // Required for cross-domain cookies
                 domain: env.NODE_ENV === "production" ? '.tien-music-player.site' : undefined, // Share cookie across subdomains
-                maxAge: env.JWT_EXPIRES_IN // 1 day
+                maxAge: env.JWT_EXPIRES_IN * 1000 // 1 day
             });
             return response.json({
                 message: 'User logged in successfully',
@@ -61,7 +61,7 @@ export class UserService {
             const verifyToken = await new Password().hash(createId())
             const verifyTokenExpires = new Date(Date.now() + 1 * 60 * 60 * 1000) // 1 hour from now
             const user = await db.insert(users).values({ fullname, email, password: hashedPassword, verifyToken, verifyTokenExpires }).$returningId()
-            const verifyLink = `${env.NODE_ENV === "production" ? 'https://tien-music-player.site' : 'http://localhost:5173'}/verify/${user[0].id}?token=${verifyToken}`
+            const verifyLink = `${env.NODE_ENV === "production" ? 'https://tien-music-player.site' : 'http://localhost:5173'}/verify/${user[0]!.id}?token=${verifyToken}`
             sendEmail({
                 to: email,
                 subject: 'Verify Your Email - Yukikaze Music Player',
@@ -70,14 +70,13 @@ export class UserService {
             })
                 .then(_ => console.log('Verification email sent successfully'))
                 .catch(err => console.error('Failed to send verification email:', err))
-            const token = await new JWT(env.JWT_SECRET).sign({ id: user[0].id }, { expiresIn: env.JWT_EXPIRES_IN })
-            response.set('Cache-Control', 'private, must-revalidate, max-age=3600')
+            const token = await new JWT(env.JWT_SECRET).sign({ id: user[0]!.id }, { expiresIn: env.JWT_EXPIRES_IN })
             response.cookie('accessToken', token, {
                 httpOnly: true,
                 secure: env.NODE_ENV === "production", // Required for HTTPS
                 sameSite: env.NODE_ENV === "production" ? 'lax' : 'strict', // Required for cross-domain cookies
                 domain: env.NODE_ENV === "production" ? '.tien-music-player.site' : undefined, // Share cookie across subdomains
-                maxAge: env.JWT_EXPIRES_IN // 1 day
+                maxAge: env.JWT_EXPIRES_IN * 1000 // 1 day
             });
             return response.status(201).json({ message: 'User registered successfully' })
         } catch (error) {

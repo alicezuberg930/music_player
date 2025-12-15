@@ -1,47 +1,51 @@
-import { InternalServerErrorException, UnauthorizedException } from '@yukikaze/lib/exception';
-import { JsonWebTokenError, verify } from "jsonwebtoken";
-import { env } from "@yukikaze/lib/create-env";
-export const JWTMiddleware = async (request, _, next) => {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.OptionalJWTMiddleware = exports.JWTMiddleware = void 0;
+const exception_1 = require("@yukikaze/lib/exception");
+const create_env_1 = require("@yukikaze/lib/create-env");
+const jwt_1 = require("@yukikaze/lib/jwt");
+const JWTMiddleware = async (request, _, next) => {
     let token = request.cookies?.["accessToken"];
     if (!token && request.headers.authorization?.startsWith("Bearer")) {
         token = request.headers.authorization.split(" ")[1];
     }
     if (!token) {
-        throw new UnauthorizedException("Invalid credentials, please log in");
+        throw new exception_1.UnauthorizedException("Invalid credentials, please log in");
     }
-    // Verify token signature annd expiration automatically
+    // Verify token signature annd expiration 
     try {
-        const jwt = verify(token, env.JWT_SECRET);
+        const jwt = await new jwt_1.JWT(create_env_1.env.JWT_SECRET).verify(token);
         if (!jwt || !jwt.id) {
-            throw new UnauthorizedException("Invalid or expired access token");
+            throw new exception_1.UnauthorizedException("Invalid or expired access token");
         }
         request.userId = jwt.id;
     }
     catch (error) {
-        if (error instanceof JsonWebTokenError) {
-            throw new UnauthorizedException("JWT is expired");
-        }
-        else {
-            throw new InternalServerErrorException();
-        }
+        if (error instanceof exception_1.HttpException)
+            throw error;
     }
     next();
 };
+exports.JWTMiddleware = JWTMiddleware;
 // Optional JWT middleware - extracts user ID if token exists, but doesn't require authentication
-export const OptionalJWTMiddleware = async (request, _, next) => {
+const OptionalJWTMiddleware = async (request, _, next) => {
     let token = request.cookies?.["accessToken"];
     if (!token && request.headers.authorization?.startsWith("Bearer")) {
         token = request.headers.authorization.split(" ")[1];
     }
     if (token) {
-        // Verify token signature
-        const jwt = verify(token, env.JWT_SECRET);
-        if (jwt && jwt.id) {
-            request.userId = jwt.id;
+        try {
+            const jwt = await new jwt_1.JWT(create_env_1.env.JWT_SECRET).verify(token);
+            if (jwt && jwt.id)
+                request.userId = jwt.id;
+        }
+        catch (error) {
+            console.log(error);
         }
     }
     next();
 };
+exports.OptionalJWTMiddleware = OptionalJWTMiddleware;
 // export const SocketMiddleware = async (socket, next) => {
 //     try {
 //         let token = null

@@ -45,19 +45,21 @@
     "build": "turbo run build",
     "build:web": "turbo run build --filter=@yukikaze/web",
     "build:packages": "turbo run build --filter=@yukikaze/lib --filter=@yukikaze/ui --filter=@yukikaze/db --filter=@yukikaze/email",
-    "build:api": "turbo run build --filter=@yukikaze/services",
+    "build:api": "turbo run build --filter=@yukikaze/services --filter=@yukikaze/gateway-service",
     "clean:workspaces": "turbo run clean",
     "db:generate": "turbo run db:generate -F @yukikaze/db",
     "db:migrate": "turbo run db:migrate -F @yukikaze/db",
     "db:studio": "turbo run db:studio -F @yukikaze/db",
     "deps:bump": "bunx npm-check-updates --deep -u && bun install",
     "dev": "turbo run dev",
+    "dev:web": "turbo run dev --filter=@yukikaze/web",
+    "dev:api": "turbo run dev --filter=@yukikaze/services --filter=@yukikaze/gateway-service",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
     "start": "turbo run start --filter=@yukikaze/web --filter=@yukikaze/services --parallel",
     "start:web": "turbo run start --filter=@yukikaze/web",
-    "start:api": "turbo run start --filter=@yukikaze/services"
+    "start:api": "turbo run start --filter=@yukikaze/services --filter=@yukikaze/gateway-service"
   },
   "workspaces": [
     "apps/*",

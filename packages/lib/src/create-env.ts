@@ -27,4 +27,5 @@ export const env = {
     JWT_SECRET: process.env.JWT_SECRET,
     JWT_EXPIRES_IN: Number.parseInt(process.env.JWT_EXPIRES_IN ?? '86400'),
     RESEND_API_KEY: process.env.RESEND_API_KEY,
+    GATEWAY_PORT: process.env.GATEWAY_PORT,
 }

@@ -22,7 +22,7 @@ services:
       args:
         VITE_API_URL: ${VITE_API_URL}
         WEB_PORT: ${WEB_PORT}
-    container_name: yukikaze_player_app
+    container_name: yukikaze_player_app_prod
     ports:
       - "5173:5173"
     restart: unless-stopped
@@ -45,7 +45,26 @@ services:
       dockerfile: services/api/Dockerfile.production
     restart: unless-stopped
     env_file: .env
-    container_name: yukikaze_player_api
+    container_name: yukikaze_player_api_prod
+    ports:
+      - "5001:5001"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5001/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    # depends_on:
+    #   yukikaze_player_db:
+    #     condition: service_healthy
+
+  yukikaze_player_gateway_prod:
+    build:
+      context: .
+      dockerfile: services/gateway-service/Dockerfile.production
+    restart: unless-stopped
+    env_file: .env
+    container_name: yukikaze_player_gateway_prod
     ports:
       - "5000:5000"
     healthcheck:
@@ -54,9 +73,6 @@ services:
       timeout: 10s
       retries: 5
       start_period: 10s
-    # depends_on:
-    #   yukikaze_player_db:
-    #     condition: service_healthy
 
   rabbitmq:
     image: rabbitmq:3-management

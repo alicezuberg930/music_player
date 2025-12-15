@@ -1,20 +1,26 @@
-import { db, eq } from "@yukikaze/db";
-import { banners } from "@yukikaze/db/schemas";
-import { BadRequestException, HttpException, NotFoundException } from "@yukikaze/lib/exception";
-import { deleteFile, extractPublicId, uploadFile } from "../../lib/helpers/cloudinary.file";
-import { createId } from "@yukikaze/lib/create-cuid";
-import { resizeImageToBuffer } from "@yukikaze/lib/image-resize";
-import fs from "node:fs";
-export class BannerService {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BannerService = void 0;
+const db_1 = require("@yukikaze/db");
+const schemas_1 = require("@yukikaze/db/schemas");
+const exception_1 = require("@yukikaze/lib/exception");
+const cloudinary_1 = require("@yukikaze/lib/cloudinary");
+const create_cuid_1 = require("@yukikaze/lib/create-cuid");
+const image_resize_1 = require("@yukikaze/lib/image-resize");
+const node_fs_1 = __importDefault(require("node:fs"));
+class BannerService {
     async getBanners(_, response) {
         try {
-            const data = await db.query.banners.findMany();
+            const data = await db_1.db.query.banners.findMany();
             return response.json({ message: 'Banners fetched successfully', data });
         }
         catch (error) {
-            if (error instanceof HttpException)
+            if (error instanceof exception_1.HttpException)
                 throw error;
-            throw new BadRequestException(error instanceof Error ? error.message : undefined);
+            throw new exception_1.BadRequestException(error instanceof Error ? error.message : undefined);
         }
     }
     async createBanner(request, response) {
@@ -24,100 +30,101 @@ export class BannerService {
             const files = request.files;
             const thumbnailFile = files['thumbnail']?.[0] ?? null;
             if (!thumbnailFile) {
-                throw new BadRequestException('Thumbnail is required');
+                throw new exception_1.BadRequestException('Thumbnail is required');
             }
             // Read file into buffer first to release file handle
-            const originalBuffer = fs.readFileSync(thumbnailFile.path);
+            const originalBuffer = node_fs_1.default.readFileSync(thumbnailFile.path);
             // Resize image from buffer
-            const resizedBuffer = await resizeImageToBuffer(originalBuffer, {
+            const resizedBuffer = await (0, image_resize_1.resizeImageToBuffer)(originalBuffer, {
                 height: 400,
                 aspectRatio: '16:9',
                 fit: 'cover',
             });
-            fs.writeFileSync(thumbnailFile.path, resizedBuffer);
-            thumbnailUrl = (await uploadFile({ files: thumbnailFile, subFolder: '/banner', publicId: createId() }));
+            node_fs_1.default.writeFileSync(thumbnailFile.path, resizedBuffer);
+            thumbnailUrl = (await (0, cloudinary_1.uploadFile)({ files: thumbnailFile, subFolder: '/banner', publicId: (0, create_cuid_1.createId)() }));
             const banner = {
                 name: name ?? null,
                 thumbnail: thumbnailUrl
             };
-            await db.insert(banners).values(banner);
+            await db_1.db.insert(schemas_1.banners).values(banner);
             return response.status(201).json({ message: "Banner created successfully" });
         }
         catch (error) {
-            if (error instanceof HttpException)
+            if (error instanceof exception_1.HttpException)
                 throw error;
-            throw new BadRequestException(error instanceof Error ? error.message : undefined);
+            throw new exception_1.BadRequestException(error instanceof Error ? error.message : undefined);
         }
     }
     async updateBanner(request, response) {
         try {
             const { id } = request.params;
-            const banner = await db.query.banners.findFirst({
-                where: eq(banners.id, id)
+            const banner = await db_1.db.query.banners.findFirst({
+                where: (0, db_1.eq)(schemas_1.banners.id, id)
             });
             if (!banner)
-                throw new NotFoundException('Banner not found');
+                throw new exception_1.NotFoundException('Banner not found');
             const { name } = request.body;
             const files = request.files;
             const thumbnailFile = files['thumbnail']?.[0] ?? null;
             let thumbnail = undefined;
             if (thumbnailFile) {
                 // Read file into buffer first to release file handle
-                const originalBuffer = fs.readFileSync(thumbnailFile.path);
+                const originalBuffer = node_fs_1.default.readFileSync(thumbnailFile.path);
                 // Resize image from buffer
-                const resizedBuffer = await resizeImageToBuffer(originalBuffer, {
+                const resizedBuffer = await (0, image_resize_1.resizeImageToBuffer)(originalBuffer, {
                     height: 400,
                     aspectRatio: '16:9',
                     fit: 'cover',
                     quality: 100
                 });
-                fs.writeFileSync(thumbnailFile.path, resizedBuffer);
-                await uploadFile({ files: thumbnailFile, publicId: extractPublicId(banner.thumbnail) });
+                node_fs_1.default.writeFileSync(thumbnailFile.path, resizedBuffer);
+                await (0, cloudinary_1.uploadFile)({ files: thumbnailFile, publicId: (0, cloudinary_1.extractPublicId)(banner.thumbnail) });
             }
             const updateData = {
                 ...name && { name },
             };
             if (Object.entries(updateData).length > 0)
-                await db.update(banners).set(updateData).where(eq(banners.id, id));
+                await db_1.db.update(schemas_1.banners).set(updateData).where((0, db_1.eq)(schemas_1.banners.id, id));
             return response.json({ message: 'Banner updated successfully' });
         }
         catch (error) {
-            if (error instanceof HttpException)
+            if (error instanceof exception_1.HttpException)
                 throw error;
-            throw new BadRequestException(error instanceof Error ? error.message : undefined);
+            throw new exception_1.BadRequestException(error instanceof Error ? error.message : undefined);
         }
     }
     async findBanner(request, response) {
         try {
             const { id } = request.params;
-            const banner = await db.query.banners.findFirst({ where: eq(banners.id, id) });
+            const banner = await db_1.db.query.banners.findFirst({ where: (0, db_1.eq)(schemas_1.banners.id, id) });
             if (!banner)
-                throw new NotFoundException('Banner not found');
+                throw new exception_1.NotFoundException('Banner not found');
             return response.json({ message: 'Banner fetched successfully', data: banner });
         }
         catch (error) {
-            if (error instanceof HttpException)
+            if (error instanceof exception_1.HttpException)
                 throw error;
-            throw new BadRequestException(error instanceof Error ? error.message : undefined);
+            throw new exception_1.BadRequestException(error instanceof Error ? error.message : undefined);
         }
     }
     async deleteBanner(request, response) {
         try {
             const { id } = request.params;
-            const banner = await db.query.banners.findFirst({ where: eq(banners.id, id) });
+            const banner = await db_1.db.query.banners.findFirst({ where: (0, db_1.eq)(schemas_1.banners.id, id) });
             if (!banner)
-                throw new NotFoundException('Banner not found');
+                throw new exception_1.NotFoundException('Banner not found');
             // Delete thumbnail from cloudinary if it exists and is not a default asset
             if (banner.thumbnail) {
-                await deleteFile(extractPublicId(banner.thumbnail));
+                await (0, cloudinary_1.deleteFile)((0, cloudinary_1.extractPublicId)(banner.thumbnail));
             }
-            await db.delete(banners).where(eq(banners.id, id));
+            await db_1.db.delete(schemas_1.banners).where((0, db_1.eq)(schemas_1.banners.id, id));
             return response.json({ message: 'Banner deleted successfully' });
         }
         catch (error) {
-            if (error instanceof HttpException)
+            if (error instanceof exception_1.HttpException)
                 throw error;
-            throw new BadRequestException(error instanceof Error ? error.message : undefined);
+            throw new exception_1.BadRequestException(error instanceof Error ? error.message : undefined);
         }
     }
 }
+exports.BannerService = BannerService;

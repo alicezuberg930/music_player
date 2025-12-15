@@ -1,109 +1,133 @@
-# services:
-#   # music_player_db:
-#   #   image: mysql:9
-#   #   container_name: music_player_db
-#   #   environment:
-#   #     MYSQL_USER: music_user
-#   #     MYSQL_PASSWORD: music_password
-#   #     MYSQL_DB: music_db
-#   #   ports:
-#   #     - "3306:3306"
-#   #   volumes:
-#   #     - music_player_db_data:/var/lib/mysql/data
+services:
+  # yukikaze_player_db:
+  #   image: mysql:9
+  #   container_name: yukikaze_player_db
+  #   environment:
+  #     MYSQL_DATABASE:
+  #     MYSQL_HOST:
+  #     MYSQL_PASSWORD:
+  #     MYSQL_PORT:
+  #     MYSQL_SSL_MODE:
+  #     MYSQL_USER:
+  #   env_file: .env
+  #   ports:
+  #     - "3306:3306"
+  #   volumes:
+  #     - yukikaze_player_db_data:/var/lib/mysql/data
 
-#   music_player_app_dev:
-#     profiles: ["dev"]
-#     build:
-#       context: .
-#       dockerfile: apps/web/Dockerfile.development
-#     restart: unless-stopped
-#     env_file: .env
-#     container_name: music_player_app
-#     ports:
-#       - "5174:5173"
-#     develop:
-#       watch:
-#         - path: ./app
-#           action: sync
-#           target: /app
-#           ignore:
-#             - node_modules
-#             - dist
-#         - action: rebuild
-#           path: ./app/package.json 
-#     # depends_on:
-#     #   - music_player_db
+  yukikaze_player_app_prod:
+    build: 
+      context: .
+      dockerfile: apps/web/Dockerfile.development
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+        WEB_PORT: ${WEB_PORT}
+    container_name: yukikaze_player_app
+    ports:
+      - "5173:5173"
+    restart: unless-stopped
+    env_file: .env
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5173/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    depends_on:
+      yukikaze_player_api_prod:
+        condition: service_healthy
+      # yukikaze_player_db:
+      #   condition: service_healthy
+    develop:
+      watch:
+        - action: sync
+          path: ./apps/web/src
+          target: /app/apps/web/src
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./apps/web/package.json
+        - action: sync
+          path: ./packages
+          target: /app/packages
+          ignore:
+            - node_modules/
 
-#   music_player_app_prod:
-#     profiles: ["prod"]
-#     build: 
-#       context: .
-#       dockerfile: apps/web/Dockerfile.production
-#       args:
-#         TURBO_TEAM: ${TURBO_TEAM}
-#         TURBO_TOKEN: ${TURBO_TOKEN}
-#         NEXT_PUBLIC_APP_NAME: ${NEXT_PUBLIC_APP_NAME}
-#         NEXT_PUBLIC_APP_URL: yukinu.tiesen.id.vn
-#         NEXT_PUBLIC_TRPC_USE_STREAMING: false
-#     container_name: music_player_app
-#     ports:
-#       - "5174:5173"
-#     restart: unless-stopped
-#     env_file: .env
-#     # depends_on:
-#     #   - music_player_db
+  yukikaze_player_api_prod:
+    build:
+      context: .
+      dockerfile: services/api/Dockerfile.development
+    restart: unless-stopped
+    env_file: .env
+    container_name: yukikaze_player_api
+    ports:
+      - "5000:5000"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5000/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    # depends_on:
+    #   yukikaze_player_db:
+    #     condition: service_healthy
+    develop:
+      watch:
+        - action: sync
+          path: ./services/api/src
+          target: /app/services/api/src
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./services/api/package.json
+        - action: sync
+          path: ./packages
+          target: /app/packages
+          ignore:
+            - node_modules/
 
-#   music_player_api_dev:
-#     profiles: ["dev"]
-#     build:
-#       context: .
-#       dockerfile: services/api/Dockerfile.development
-#     container_name: music_player_api
-#     ports:
-#       - "5001:5000"
-#     restart: unless-stopped
-#     env_file: .env
-#     develop:
-#       watch:
-#         - path: ./services/api
-#           action: sync
-#           target: /services/api
-#           ignore:
-#             - node_modules
-#             - dist
-#         - action: rebuild
-#           path: ./services/api/package.json
-#     # depends_on:
-#     #   - music_player_db
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: yukikaze_player_rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 
-#   music_player_api_prod:
-#     profiles: ["prod"]
-#     build:
-#       context: .
-#       dockerfile: services/api/Dockerfile.production
-#     restart: unless-stopped
-#     env_file: .env
-#     container_name: music_player_api
-#     ports:
-#       - "5001:5000"
-#     # depends_on:
-#     #   - music_player_db
+# volumes:
+#   yukikaze_player_db_data:
+#     driver: local
 
-#   rabbitmq:
-#     image: rabbitmq:3-management
-#     container_name: music_player_rabbitmq
-#     ports:
-#       - "5672:5672"
-#       - "15672:15672"
+# clean cache
+# docker system prune -a --volumes
 
-# # volumes:
-# #   music_player_db_data:
-# #     driver: local
+# Basic commands
+# docker compose up                    # Start services in foreground
+# docker compose up -d                 # Start services in detached mode (background)
+# docker compose up --build            # Rebuild images before starting
+# docker compose up -d --build         # Rebuild and start in background
 
-# # For development with watch mode:
-# # docker compose --profile dev up --build --watch
-# # For production:
-# # docker compose up --build
+# Scaling and selection
+# docker compose up --scale SERVICE=NUM   # Scale a service to NUM instances
+# docker compose up SERVICE1 SERVICE2     # Start specific services only
+# docker compose up --profile PROFILE     # Start services with specific profile
 
-# # clean cache
-# # docker system prune -a --volumes
+# Build options
+# docker compose up --no-build         # Don't build images, use existing
+# docker compose up --force-recreate   # Recreate containers even if config unchanged
+# docker compose up --no-recreate      # Don't recreate existing containers
+# docker compose up --build --no-cache # Rebuild without using cache
+
+# Output and logging
+# docker compose up --quiet-pull       # Pull without printing progress
+# docker compose up --no-log-prefix    # Don't print container name in logs
+# docker compose up --timestamps       # Show timestamps in logs
+
+# Resource management
+# docker compose up --remove-orphans   # Remove containers for services not in compose file
+# docker compose up --no-deps          # Don't start linked services
+# docker compose up --abort-on-container-exit  # Stop all if any container stops
+
+# Other useful combinations
+# docker compose up -d --build --remove-orphans    # Full rebuild, background, cleanup
+# docker compose up --build --force-recreate       # Force complete rebuild
+# docker compose up --profile prod --build -d      # Production profile, build, detached

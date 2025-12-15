@@ -47,10 +47,10 @@ function mergeLocaleMap(base: Record<string, string>, custom?: Record<string, st
  * @param input any string (will be coerced)
  * @param opts options
  */
-export default function slugify(input: unknown, opts: SlugifyOptions = {}): string {
+export default function slugify(input: string, opts: SlugifyOptions = {}): string {
     const options = { ...DEFAULTS, ...opts } as Required<SlugifyOptions & typeof DEFAULTS>
 
-    let str = String(input ?? '')
+    let str = String(input)
 
     // apply custom remove regex early (user can strip things before other processing)
     if (options.remove instanceof RegExp) {
@@ -70,20 +70,20 @@ export default function slugify(input: unknown, opts: SlugifyOptions = {}): stri
 
     // Normalize and remove diacritics (NFKD => remove combining marks)
     // NFKD decomposes letters+accents remove \p{M} (marks)
-    str = str.normalize('NFKD').replace(/\p{M}/gu, '')
+    str = str.normalize('NFKD').replaceAll(/\p{M}/gu, '')
 
     // Convert whitespace and separators to the chosen replacement
     const sep = options.replacement
     // Replace any run of whitespace or punctuation-like separators with sep.
     // We'll keep letters/numbers and we'll handle strict later.
     // Use Unicode property escapes to match separator and punctuation.
-    str = str.replace(/[\p{Separator}\p{Punctuation}\p{Symbol}]+/gu, sep)
+    str = str.replaceAll(/[\p{Separator}\p{Punctuation}\p{Symbol}]+/gu, sep)
 
     // Optionally make strict: remove anything that's not letter, number, or sep
     if (options.strict) {
         // allow ascii letters and numbers and the sep
         // We'll allow any Unicode letters/numbers too (use \p{L}\p{N}), but strip other stuff.
-        const allowed = `\\p{L}\\p{N}${escapeRegExp(sep)}`
+        const allowed = String.raw`\p{L}\p{N}${escapeRegExp(sep)}`
         const strictRe = new RegExp(`[^${allowed}]+`, 'gu')
         str = str.replace(strictRe, '')
     }
@@ -107,5 +107,5 @@ export default function slugify(input: unknown, opts: SlugifyOptions = {}): stri
 
 // small helper to escape regexp chars
 function escapeRegExp(s: string): string {
-    return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    return s.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`)
 }

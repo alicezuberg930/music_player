@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,27 +8,27 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { IsArray, ArrayNotEmpty, IsNotEmpty, Length, IsString } from "class-validator";
-import { Transform } from "class-transformer";
-export class CreateSongDto {
-    releaseDate;
-    title;
-    artistIds;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CreateSongDto = void 0;
+const class_validator_1 = require("class-validator");
+const class_transformer_1 = require("class-transformer");
+class CreateSongDto {
 }
+exports.CreateSongDto = CreateSongDto;
 __decorate([
-    IsNotEmpty({ message: 'Release date cannot be empty' }),
+    (0, class_validator_1.IsNotEmpty)({ message: 'Release date cannot be empty' }),
     __metadata("design:type", String)
 ], CreateSongDto.prototype, "releaseDate", void 0);
 __decorate([
-    IsNotEmpty({ message: 'Title cannot be empty' }),
-    Length(3, 50, { message: 'Title must be between 3 and 50 characters' }),
+    (0, class_validator_1.IsNotEmpty)({ message: 'Title cannot be empty' }),
+    (0, class_validator_1.Length)(3, 50, { message: 'Title must be between 3 and 50 characters' }),
     __metadata("design:type", String)
 ], CreateSongDto.prototype, "title", void 0);
 __decorate([
-    IsArray({ message: 'Artists must be an array' }),
-    ArrayNotEmpty({ message: 'Artists cannot be empty' }),
-    IsString({ each: true, message: 'Each artist id must be a string' }),
-    Transform(({ value }) => {
+    (0, class_validator_1.IsArray)({ message: 'Artists must be an array' }),
+    (0, class_validator_1.ArrayNotEmpty)({ message: 'Artists cannot be empty' }),
+    (0, class_validator_1.IsString)({ each: true, message: 'Each artist id must be a string' }),
+    (0, class_transformer_1.Transform)(({ value }) => {
         // Accept already-parsed arrays, JSON strings like "['a','b']", or comma-separated "a,b,c"
         if (Array.isArray(value))
             return value.map((v) => String(v)).filter((n) => n.length > 0);

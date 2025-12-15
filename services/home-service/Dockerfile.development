@@ -1,0 +1,23 @@
+FROM oven/bun:1-alpine
+
+# Set working directory
+WORKDIR /build
+
+# Copy workspace files
+COPY package.json bun.lockb turbo.json ./
+COPY packages ./packages
+COPY services/api ./services/api
+
+# Install dependencies
+RUN bun install --frozen-lockfile
+
+# Build packages
+RUN bun run build:packages
+
+WORKDIR /build/services/api
+
+# Expose the port the app runs on
+EXPOSE 5000
+
+# Start the development server
+CMD ["bun", "run", "dev", "--", "--host", "0.0.0.0"]

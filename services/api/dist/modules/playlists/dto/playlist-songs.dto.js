@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,16 +8,18 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Transform } from "class-transformer";
-import { ArrayNotEmpty, IsArray, IsString } from "class-validator";
-export class PlaylistSongDto {
-    songIds;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PlaylistSongDto = void 0;
+const class_transformer_1 = require("class-transformer");
+const class_validator_1 = require("class-validator");
+class PlaylistSongDto {
 }
+exports.PlaylistSongDto = PlaylistSongDto;
 __decorate([
-    IsArray({ message: 'Songs must be an array' }),
-    ArrayNotEmpty({ message: 'Songs cannot be empty' }),
-    IsString({ each: true, message: 'Each song id must be a string' }),
-    Transform(({ value }) => {
+    (0, class_validator_1.IsArray)({ message: 'Songs must be an array' }),
+    (0, class_validator_1.ArrayNotEmpty)({ message: 'Songs cannot be empty' }),
+    (0, class_validator_1.IsString)({ each: true, message: 'Each song id must be a string' }),
+    (0, class_transformer_1.Transform)(({ value }) => {
         // Accept already-parsed arrays, JSON strings like "['a','b']", or comma-separated "a,b,b"
         if (Array.isArray(value))
             return value.map((v) => String(v)).filter((n) => n.length > 0);

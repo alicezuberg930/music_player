@@ -1,8 +1,8 @@
-import { v2 as cloudinary, UploadApiResponse } from 'cloudinary'
-import { env } from '@yukikaze/lib/create-env'
+import { v2 as cloudinary, type UploadApiResponse } from 'cloudinary'
+import { env } from './create-env'
 import fs from 'node:fs'
-import { BadRequestException } from '@yukikaze/lib/exception'
-import { createId } from "@yukikaze/lib/create-cuid"
+import { BadRequestException } from './exception'
+import { createId } from "./create-cuid"
 
 cloudinary.config({
     cloud_name: env.CLOUDINARY_CLOUD_NAME,
@@ -43,7 +43,7 @@ export const uploadFile = async ({ files, subFolder, publicId }: UploadOptions):
         const fileUrls = uploadResults.map((result) => result.secure_url)
         cleanupLocalFiles(tempFiles)
         console.log('Files uploaded to Cloudinary:', fileUrls)
-        return fileUrls.length > 1 ? fileUrls : fileUrls[0]
+        return fileUrls.length > 1 ? fileUrls : fileUrls[0]!
     } catch (error) {
         cleanupLocalFiles(tempFiles)
         throw new BadRequestException(JSON.stringify(error))

@@ -1,16 +1,22 @@
-import { and, db, eq, inArray } from "@yukikaze/db";
-import { playlistArtists, playlists, playlistSongs, songs, userFavoritePlaylists } from "@yukikaze/db/schemas";
-import { BadRequestException, HttpException, NotFoundException } from "@yukikaze/lib/exception";
-import { deleteFile, extractPublicId, uploadFile } from "../../lib/helpers/cloudinary.file";
-import { createId } from "@yukikaze/lib/create-cuid";
-import { resizeImageToBuffer } from "@yukikaze/lib/image-resize";
-import fs from "node:fs";
-export class PlaylistService {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PlaylistService = void 0;
+const db_1 = require("@yukikaze/db");
+const schemas_1 = require("@yukikaze/db/schemas");
+const exception_1 = require("@yukikaze/lib/exception");
+const cloudinary_1 = require("@yukikaze/lib/cloudinary");
+const create_cuid_1 = require("@yukikaze/lib/create-cuid");
+const image_resize_1 = require("@yukikaze/lib/image-resize");
+const node_fs_1 = __importDefault(require("node:fs"));
+class PlaylistService {
     async getPlaylists(request, response) {
         try {
             // const { artistName, songTitle, title, releaseDate } = request.query
             const userId = request.userId; // Get user ID from JWT middleware (undefined if not logged in)
-            const data = await db.query.playlists.findMany({
+            const data = await db_1.db.query.playlists.findMany({
                 with: {
                     user: { columns: { password: false, email: false } },
                     // artists: {
@@ -31,8 +37,8 @@ export class PlaylistService {
             let likedPlaylistIds = new Set();
             if (userId) {
                 const playlistIds = data.map(playlist => playlist.id);
-                const likedPlaylists = await db.query.userFavoritePlaylists.findMany({
-                    where: and(eq(userFavoritePlaylists.userId, userId), inArray(userFavoritePlaylists.playlistId, playlistIds)),
+                const likedPlaylists = await db_1.db.query.userFavoritePlaylists.findMany({
+                    where: (0, db_1.and)((0, db_1.eq)(schemas_1.userFavoritePlaylists.userId, userId), (0, db_1.inArray)(schemas_1.userFavoritePlaylists.playlistId, playlistIds)),
                     columns: { playlistId: true }
                 });
                 likedPlaylistIds = new Set(likedPlaylists.map(lp => lp.playlistId));
@@ -44,9 +50,9 @@ export class PlaylistService {
             return response.json({ message: 'Playlists fetched successfully', data: playlistsWithLikedStatus });
         }
         catch (error) {
-            if (error instanceof HttpException)
+            if (error instanceof exception_1.HttpException)
                 throw error;
-            throw new BadRequestException(error instanceof Error ? error.message : undefined);
+            throw new exception_1.BadRequestException(error instanceof Error ? error.message : undefined);
         }
     }
     async createPlaylist(request, response) {
@@ -57,15 +63,15 @@ export class PlaylistService {
             const thumbnailFile = files['thumbnail']?.[0] ?? null;
             if (thumbnailFile) {
                 // Read file into buffer first to release file handle
-                const originalBuffer = fs.readFileSync(thumbnailFile.path);
+                const originalBuffer = node_fs_1.default.readFileSync(thumbnailFile.path);
                 // Resize image from buffer
-                const resizedBuffer = await resizeImageToBuffer(originalBuffer, {
+                const resizedBuffer = await (0, image_resize_1.resizeImageToBuffer)(originalBuffer, {
                     height: 600, width: 600,
                     aspectRatio: '1:1',
                     fit: 'cover',
                 });
-                fs.writeFileSync(thumbnailFile.path, resizedBuffer);
-                thumbnailUrl = (await uploadFile({ files: thumbnailFile, subFolder: '/playlist', publicId: createId() }));
+                node_fs_1.default.writeFileSync(thumbnailFile.path, resizedBuffer);
+                thumbnailUrl = (await (0, cloudinary_1.uploadFile)({ files: thumbnailFile, subFolder: '/playlist', publicId: (0, create_cuid_1.createId)() }));
             }
             const playlist = {
                 releaseDate, title, description,
@@ -73,44 +79,44 @@ export class PlaylistService {
                 thumbnail: thumbnailUrl ?? '/assets/default/default-playlist-thumbnail.png',
                 artistNames: ''
             };
-            await db.insert(playlists).values(playlist);
+            await db_1.db.insert(schemas_1.playlists).values(playlist);
             return response.status(201).json({ message: 'Playlists created successfully' });
         }
         catch (error) {
-            if (error instanceof HttpException)
+            if (error instanceof exception_1.HttpException)
                 throw error;
-            throw new BadRequestException(error instanceof Error ? error.message : undefined);
+            throw new exception_1.BadRequestException(error instanceof Error ? error.message : undefined);
         }
     }
     async updatePlaylist(request, response) {
         try {
             const { id } = request.params;
-            const myPlaylist = await db.query.playlists.findFirst({
+            const myPlaylist = await db_1.db.query.playlists.findFirst({
                 columns: { totalDuration: true, thumbnail: true },
-                where: eq(playlists.id, id),
+                where: (0, db_1.eq)(schemas_1.playlists.id, id),
                 with: { artists: true, songs: true }
             });
             if (!myPlaylist)
-                throw new BadRequestException('Playlist not found');
+                throw new exception_1.BadRequestException('Playlist not found');
             const { releaseDate, title, songIds, description } = request.body;
             const files = request.files;
             const thumbnailFile = files['thumbnail']?.[0] ?? null;
             let thumbnail = null;
             if (thumbnailFile) {
                 // Read file into buffer first to release file handle
-                const originalBuffer = fs.readFileSync(thumbnailFile.path);
+                const originalBuffer = node_fs_1.default.readFileSync(thumbnailFile.path);
                 // Resize image from buffer
-                const resizedBuffer = await resizeImageToBuffer(originalBuffer, {
+                const resizedBuffer = await (0, image_resize_1.resizeImageToBuffer)(originalBuffer, {
                     height: 600, width: 600,
                     aspectRatio: '1:1',
                     fit: 'cover',
                 });
-                fs.writeFileSync(thumbnailFile.path, resizedBuffer);
+                node_fs_1.default.writeFileSync(thumbnailFile.path, resizedBuffer);
                 if (myPlaylist.thumbnail.includes('/assets/')) {
-                    thumbnail = (await uploadFile({ files: thumbnailFile, subFolder: '/playlist', publicId: createId() }));
+                    thumbnail = (await (0, cloudinary_1.uploadFile)({ files: thumbnailFile, subFolder: '/playlist', publicId: (0, create_cuid_1.createId)() }));
                 }
                 else {
-                    await uploadFile({ files: thumbnailFile, publicId: extractPublicId(myPlaylist.thumbnail) });
+                    await (0, cloudinary_1.uploadFile)({ files: thumbnailFile, publicId: (0, cloudinary_1.extractPublicId)(myPlaylist.thumbnail) });
                 }
             }
             // const currentPlaylistSongIds = myPlaylist.songs.map(ps => ps.songId)
@@ -140,20 +146,20 @@ export class PlaylistService {
                 userId: request.userId,
                 ...thumbnail && { thumbnail }
             };
-            await db.update(playlists).set(playlist).where(eq(playlists.id, id));
+            await db_1.db.update(schemas_1.playlists).set(playlist).where((0, db_1.eq)(schemas_1.playlists.id, id));
             return response.json({ message: 'Playlists updated successfully' });
         }
         catch (error) {
-            if (error instanceof HttpException)
+            if (error instanceof exception_1.HttpException)
                 throw error;
-            throw new BadRequestException(error instanceof Error ? error.message : undefined);
+            throw new exception_1.BadRequestException(error instanceof Error ? error.message : undefined);
         }
     }
     async findPlaylist(request, response) {
         try {
             const { id } = request.params;
-            const data = await db.query.playlists.findFirst({
-                where: eq(playlists.id, id),
+            const data = await db_1.db.query.playlists.findFirst({
+                where: (0, db_1.eq)(schemas_1.playlists.id, id),
                 with: {
                     user: { columns: { password: false, email: false } },
                     songs: {
@@ -171,45 +177,45 @@ export class PlaylistService {
                 artists: playlist.artists.map(a => a.artist)
             }) : undefined);
             if (!data)
-                throw new NotFoundException('Playlist not found');
+                throw new exception_1.NotFoundException('Playlist not found');
             return response.json({ message: 'Playlist details fetched successfully', data });
         }
         catch (error) {
-            if (error instanceof HttpException)
+            if (error instanceof exception_1.HttpException)
                 throw error;
-            throw new BadRequestException(error instanceof Error ? error.message : undefined);
+            throw new exception_1.BadRequestException(error instanceof Error ? error.message : undefined);
         }
     }
     async deletePlaylist(request, response) {
         try {
             const { id } = request.params;
-            const myPlaylist = await db.query.playlists.findFirst({
+            const myPlaylist = await db_1.db.query.playlists.findFirst({
                 columns: { thumbnail: true },
-                where: eq(playlists.id, id)
+                where: (0, db_1.eq)(schemas_1.playlists.id, id)
             });
             if (!myPlaylist)
-                throw new BadRequestException('Playlist not found');
+                throw new exception_1.BadRequestException('Playlist not found');
             if (!myPlaylist.thumbnail.includes('/assets/')) {
-                await deleteFile(extractPublicId(myPlaylist.thumbnail));
+                await (0, cloudinary_1.deleteFile)((0, cloudinary_1.extractPublicId)(myPlaylist.thumbnail));
             }
-            await db.delete(playlists).where(eq(playlists.id, id));
+            await db_1.db.delete(schemas_1.playlists).where((0, db_1.eq)(schemas_1.playlists.id, id));
             return response.json({ message: 'Playlist deleted successfully' });
         }
         catch (error) {
-            if (error instanceof HttpException)
+            if (error instanceof exception_1.HttpException)
                 throw error;
-            throw new BadRequestException(error instanceof Error ? error.message : undefined);
+            throw new exception_1.BadRequestException(error instanceof Error ? error.message : undefined);
         }
     }
     async addSongs(request, response) {
         const { id } = request.params;
-        const myPlaylist = await db.query.playlists.findFirst({
+        const myPlaylist = await db_1.db.query.playlists.findFirst({
             columns: { totalDuration: true, thumbnail: true },
             with: { songs: true },
-            where: eq(playlists.id, id)
+            where: (0, db_1.eq)(schemas_1.playlists.id, id)
         });
         if (!myPlaylist)
-            throw new BadRequestException('Playlist not found');
+            throw new exception_1.BadRequestException('Playlist not found');
         const { songIds } = request.body;
         // get existing song ids in the playlist
         const existingSongIds = new Set(myPlaylist.songs.map(ps => ps.songId));
@@ -217,12 +223,12 @@ export class PlaylistService {
         const newSongIds = songIds.filter(songId => !existingSongIds.has(songId));
         // if no new songs to add, return early
         if (newSongIds.length === 0) {
-            throw new BadRequestException('All songs already exist in the playlist');
+            throw new exception_1.BadRequestException('All songs already exist in the playlist');
         }
         // get all the songs by their ids
-        const songsToAdd = await db.query.songs.findMany({
+        const songsToAdd = await db_1.db.query.songs.findMany({
             columns: { id: true, duration: true },
-            where: inArray(songs.id, newSongIds),
+            where: (0, db_1.inArray)(schemas_1.songs.id, newSongIds),
             with: {
                 artists: {
                     columns: { id: false, songId: false, artistId: false },
@@ -237,31 +243,31 @@ export class PlaylistService {
         // get unique artist ids from chosen songs 
         const artistIds = Array.from(new Set(songsToAdd.flatMap(song => song.artists.map(a => a?.id))));
         // get existing artist ids in the playlist
-        const existingArtistIds = await db.query.playlistArtists.findMany({
+        const existingArtistIds = await db_1.db.query.playlistArtists.findMany({
             columns: { artistId: true },
-            where: eq(playlistArtists.playlistId, id)
+            where: (0, db_1.eq)(schemas_1.playlistArtists.playlistId, id)
         }).then(results => new Set(results.map(pa => pa.artistId)));
         // filter out artists that already exist in the playlist
         const newArtistIds = artistIds.filter(artistId => !existingArtistIds.has(artistId));
         const playlist = {
             totalDuration,
         };
-        await db.update(playlists).set(playlist).where(eq(playlists.id, id));
-        await db.insert(playlistSongs).values(songsToAdd.map(song => ({ songId: song.id, playlistId: id })));
+        await db_1.db.update(schemas_1.playlists).set(playlist).where((0, db_1.eq)(schemas_1.playlists.id, id));
+        await db_1.db.insert(schemas_1.playlistSongs).values(songsToAdd.map(song => ({ songId: song.id, playlistId: id })));
         if (newArtistIds.length > 0) {
-            await db.insert(playlistArtists).values(newArtistIds.map(artistId => ({ artistId, playlistId: id })));
+            await db_1.db.insert(schemas_1.playlistArtists).values(newArtistIds.map(artistId => ({ artistId, playlistId: id })));
         }
         return response.json({ message: 'Song added successfully' });
     }
     async removeSongs(request, response) {
         const { id } = request.params;
-        const myPlaylist = await db.query.playlists.findFirst({
+        const myPlaylist = await db_1.db.query.playlists.findFirst({
             columns: { totalDuration: true },
             with: { songs: true },
-            where: eq(playlists.id, id)
+            where: (0, db_1.eq)(schemas_1.playlists.id, id)
         });
         if (!myPlaylist)
-            throw new BadRequestException('Playlist not found');
+            throw new exception_1.BadRequestException('Playlist not found');
         const { songIds } = request.body;
         // get existing song ids in the playlist
         const existingSongIds = new Set(myPlaylist.songs.map(ps => ps.songId));
@@ -269,12 +275,12 @@ export class PlaylistService {
         const songsToRemove = songIds.filter(songId => existingSongIds.has(songId));
         // if no songs to remove, return early
         if (songsToRemove.length === 0) {
-            throw new BadRequestException('No songs to remove from the playlist');
+            throw new exception_1.BadRequestException('No songs to remove from the playlist');
         }
         // get all the songs by their ids to calculate duration
-        const removedSongs = await db.query.songs.findMany({
+        const removedSongs = await db_1.db.query.songs.findMany({
             columns: { id: true, duration: true },
-            where: inArray(songs.id, songsToRemove),
+            where: (0, db_1.inArray)(schemas_1.songs.id, songsToRemove),
             with: {
                 artists: {
                     columns: { id: false, songId: false, artistId: false },
@@ -289,8 +295,8 @@ export class PlaylistService {
         // get unique artist ids from removed songs
         const removedArtistIds = Array.from(new Set(removedSongs.flatMap(song => song.artists.map(a => a?.id))));
         // get remaining songs in playlist after removal
-        const remainingSongs = await db.query.playlistSongs.findMany({
-            where: and(eq(playlistSongs.playlistId, id), inArray(playlistSongs.songId, Array.from(existingSongIds).filter(sid => !songsToRemove.includes(sid)))),
+        const remainingSongs = await db_1.db.query.playlistSongs.findMany({
+            where: (0, db_1.and)((0, db_1.eq)(schemas_1.playlistSongs.playlistId, id), (0, db_1.inArray)(schemas_1.playlistSongs.songId, Array.from(existingSongIds).filter(sid => !songsToRemove.includes(sid)))),
             with: {
                 song: {
                     with: {
@@ -306,15 +312,16 @@ export class PlaylistService {
         // find artists to remove (artists that were in removed songs but not in remaining songs)
         const artistsToRemove = removedArtistIds.filter(artistId => !remainingArtistIds.has(artistId));
         // delete songs from playlist
-        await db.delete(playlistSongs).where(and(eq(playlistSongs.playlistId, id), inArray(playlistSongs.songId, songsToRemove)));
+        await db_1.db.delete(schemas_1.playlistSongs).where((0, db_1.and)((0, db_1.eq)(schemas_1.playlistSongs.playlistId, id), (0, db_1.inArray)(schemas_1.playlistSongs.songId, songsToRemove)));
         // delete artists that no longer have songs in the playlist
         if (artistsToRemove.length > 0) {
-            await db.delete(playlistArtists).where(and(eq(playlistArtists.playlistId, id), inArray(playlistArtists.artistId, artistsToRemove)));
+            await db_1.db.delete(schemas_1.playlistArtists).where((0, db_1.and)((0, db_1.eq)(schemas_1.playlistArtists.playlistId, id), (0, db_1.inArray)(schemas_1.playlistArtists.artistId, artistsToRemove)));
         }
         const playlist = {
             totalDuration,
         };
-        await db.update(playlists).set(playlist).where(eq(playlists.id, id));
+        await db_1.db.update(schemas_1.playlists).set(playlist).where((0, db_1.eq)(schemas_1.playlists.id, id));
         return response.json({ message: 'Songs removed successfully' });
     }
 }
+exports.PlaylistService = PlaylistService;

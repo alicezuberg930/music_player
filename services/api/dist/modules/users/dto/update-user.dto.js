@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,13 +8,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { IsOptional } from "class-validator";
-import { PartialType } from "../../../lib/helpers/mapped.types";
-import { CreateUserDto } from "./create-user.dto";
-export class UpdateUserDto extends PartialType(CreateUserDto) {
-    birthday;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UpdateUserDto = void 0;
+const class_validator_1 = require("class-validator");
+const mapped_types_1 = require("../../../lib/helpers/mapped.types");
+const create_user_dto_1 = require("./create-user.dto");
+class UpdateUserDto extends (0, mapped_types_1.PartialType)(create_user_dto_1.CreateUserDto) {
 }
+exports.UpdateUserDto = UpdateUserDto;
 __decorate([
-    IsOptional(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateUserDto.prototype, "birthday", void 0);

@@ -32,38 +32,43 @@ app.get('/', (_: Request, res: Response) => {
     res.json({ message: 'Welcome to Tiếns MP3 Express Gateway!' })
 })
 
-const paths: Record<string, string> = {
-    // '/api/v1/auth': `http://localhost:${env.AUTH_SERVICE_PORT || 5001}`,
-    // '/api/v1/users': `http://localhost:${env.USER_SERVICE_PORT || 5002}`,
-    // '/api/v1/artists': `http://localhost:${env.ARTIST_SERVICE_PORT || 5003}`,
-    // '/api/v1/songs': `http://localhost:${env.SONG_SERVICE_PORT || 5004}`,
-    // '/api/v1/albums': `http://localhost:${env.ALBUM_SERVICE_PORT || 5005}`,
-    // '/api/v1/playlists': `http://localhost:${env.PLAYLIST_SERVICE_PORT || 5006}`,
-}
+const routes: Map<string, string> = new Map([
+    ['/api/v1/app', `http://localhost:${env.PORT}`],
+    ['/api/v1/home', `http://localhost:${env.HOME_SERVICE_PORT}`],
+    // ['/api/v1/artists', `http://localhost:${env.ARTIST_SERVICE_PORT || 5003}`],
+    // ['/api/v1/songs', `http://localhost:${env.SONG_SERVICE_PORT || 5004}`],
+    // ['/api/v1/albums', `http://localhost:${env.ALBUM_SERVICE_PORT || 5005}`],
+    // ['/api/v1/playlists', `http://localhost:${env.PLAYLIST_SERVICE_PORT || 5006}`],
+    // ['/api/v1/users', `http://localhost:${env.USER_SERVICE_PORT || 5006}`],
+])
 
-const proxies = [
-
-]
-
-const proxy = createProxyMiddleware({
-    target: `http://localhost:5001`,
-    pathRewrite: { '^/api/v1': '' },
-    secure: env.NODE_ENV === 'production',
-    changeOrigin: true,
-    on: {
-        error: (error, _req, _res, _target) => {
-            console.error(error);
-        },
-        proxyReq: (proxyReq, req, res) => {
-
-        },
-        proxyRes: (proxyRes, req, res) => {
-
+routes.forEach((target, path) => {
+    console.log(`Proxy setup: ${path} -> ${target}`);
+    app.use(path, createProxyMiddleware({
+        target,
+        pathRewrite: { [`^${path}`]: '' },
+        secure: env.NODE_ENV === 'production',
+        changeOrigin: true,
+        on: {
+            error: (error, req, res) => {
+                console.error(`Proxy error for ${path}:`, error.message);
+            },
+            proxyReq: (proxyReq, req, res) => {
+                // Forward cookies and headers
+                if (req.headers.cookie) {
+                    proxyReq.setHeader('cookie', req.headers.cookie);
+                }
+                if (req.headers.authorization) {
+                    proxyReq.setHeader('authorization', req.headers.authorization);
+                }
+                console.info(`[${path}] Proxying ${req.method} ${req.url} -> ${target}${req.url}`);
+            },
+            proxyRes: (proxyRes, req, res) => {
+                console.info(`[${path}] Response status: ${proxyRes.statusCode}`);
+            }
         }
-    }
+    }))
 })
-
-app.use(proxy)
 
 app.listen(port, () => {
     console.log(`The server is running at http://localhost:${port}`)

@@ -3,28 +3,32 @@ import PlaylistSection from "@/sections/home/PlaylistSection"
 import { useApi } from "@/hooks/useApi"
 import ArtistSection from "@/sections/home/ArtistSection"
 import BannerSliderSection from "@/sections/home/BannerSliderSection"
+import HomeLoadingShimmer from "@/components/loading-placeholder/HomeLoadingShimmer"
 
 const HomePage: React.FC = () => {
-    const { useSongList, usePlaylistList, useArtistList, useBannerList } = useApi()
-    const { data: songsData } = useSongList()
-    const { data: playlistsData } = usePlaylistList()
-    const { data: artistsData } = useArtistList()
-    const { data: bannersData } = useBannerList()
+    const { useHomeData } = useApi()
+    const { data: home, isLoading } = useHomeData()
 
-    const songs = songsData?.data ?? []
-    const playlists = playlistsData?.data ?? []
-    const artists = artistsData?.data ?? []
-    const banners = bannersData?.data ?? []
+    const songs = home?.data?.newReleaseSongs ?? []
+    const playlists = home?.data?.newPlaylists ?? []
+    const artists = home?.data?.weeklyTopArtists ?? []
+    const banners = home?.data?.banners ?? []
 
     return (
         <>
-            <BannerSliderSection banners={banners} />
+            {isLoading ? (
+                <HomeLoadingShimmer />
+            ) : home && (
+                <>
+                    <BannerSliderSection banners={banners} />
 
-            <NewReleaseListSection songs={songs} />
+                    <NewReleaseListSection songs={songs} />
 
-            <PlaylistSection playlists={playlists} />
+                    <PlaylistSection playlists={playlists} />
 
-            <ArtistSection artists={artists} />
+                    <ArtistSection artists={artists} />
+                </>
+            )}
 
             {/* <div>
                 <HomeBannerSlider />

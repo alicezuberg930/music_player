@@ -9,6 +9,7 @@ import * as api from '@/lib/httpClient'
 import { useLocales } from '@/lib/locales'
 import { useSnackbar } from 'notistack'
 import type { Banner } from '@/@types/banner'
+import type { HomeData } from '@/@types/home'
 
 export const useApi = () => {
     const queryClient = useQueryClient()
@@ -17,6 +18,7 @@ export const useApi = () => {
 
     // Query Keys
     const queryKeys = {
+        home: ['home'],
         songs: ['songs'],
         song: (id: string) => ['songs', id],
         video: (id: string) => ['videos', id],
@@ -32,6 +34,14 @@ export const useApi = () => {
     } as const
 
     // Query Hooks 
+    const useHomeData = (options?: UseQueryOptions<Response<HomeData>>) => {
+        return useQuery({
+            queryKey: queryKeys.home,
+            queryFn: api.fetchHomeData,
+            ...options,
+        })
+    }
+
     const useSongList = (options?: UseQueryOptions<Response<Song[]>>) => {
         return useQuery({
             queryKey: queryKeys.songs,
@@ -406,6 +416,7 @@ export const useApi = () => {
 
     return {
         // Query Hooks
+        useHomeData,
         useSongList,
         useSong,
         useVideo,

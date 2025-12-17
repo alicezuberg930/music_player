@@ -1,34 +1,21 @@
-import { useEffect, useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@yukikaze/ui/tabs"
 import SongList from "@/sections/SongList"
-import { fetchUserSongList } from "@/lib/httpClient"
-import type { Song } from "@/@types/song"
 import { useLocales } from "@/lib/locales"
+import SongListShimmer from "@/components/loading-placeholder/SongListShimmer"
+import { useApi } from "@/hooks/useApi"
+import PlaylistCard from "@/sections/PlaylistCard"
+import { useIsMobile } from "@/hooks/useMobile"
 
 const MyMusicPage: React.FC = () => {
-    const [songs, setSongs] = useState<Song[]>([])
-    const [loading, setLoading] = useState(true)
     const { translate } = useLocales()
-
-    useEffect(() => {
-        const loadUserSongs = async () => {
-            try {
-                const response = await fetchUserSongList()
-                console.log(response)
-                setSongs(response.data ?? [])
-            } catch (error) {
-                console.error('Failed to fetch user songs:', error)
-            } finally {
-                setLoading(false)
-            }
-        }
-        loadUserSongs()
-    }, [])
+    const { data: songData, isLoading: isSongLoading } = useApi().useUserSongList()
+    const { data: playlistData, isLoading: isPlaylistLoading } = useApi().useUserPlaylistList()
+    const isMobile = useIsMobile()
 
     return (
-        <div className="p-0">
-            <h1 className="text-2xl font-bold mb-6">{translate('my_music')}</h1>
-            <Tabs defaultValue="song">
+        <div className="">
+            <h1 className="text-2xl font-bold mt-12">{translate('my_music')}</h1>
+            <Tabs defaultValue="song" className="mt-4">
                 <TabsList className="w-full md:w-1/2">
                     <TabsTrigger value="song">{translate('song')}</TabsTrigger>
                     <TabsTrigger value="playlist">{translate('playlist')}</TabsTrigger>
@@ -36,14 +23,22 @@ const MyMusicPage: React.FC = () => {
                     <TabsTrigger value="artist">{translate('artist')}</TabsTrigger>
                 </TabsList>
                 <TabsContent value="song" className="mt-4">
-                    {loading ? (
-                        <div>Loading...</div>
-                    ) : (
-                        <SongList songs={songs} showHeader={true} />
+                    {isSongLoading ? (
+                        <SongListShimmer showHeader={true} count={10} />
+                    ) : songData?.data && (
+                        <SongList songs={songData?.data} showHeader={true} />
                     )}
                 </TabsContent>
                 <TabsContent value="playlist" className="mt-4">
-                    <div>Playlist content coming soon...</div>
+                    {isPlaylistLoading ? (
+                        <div>Loading playlists...</div>
+                    ) : playlistData?.data && (
+                        <div className="flex flex-wrap -mx-3">
+                            {playlistData?.data.map(playlist => (
+                                <PlaylistCard playlist={playlist} visibleSlides={isMobile ? 2 : 5} key={playlist?.id} />
+                            ))}
+                        </div>
+                    )}
                 </TabsContent>
                 <TabsContent value="album" className="mt-4">
                     <div>Album content coming soon...</div>

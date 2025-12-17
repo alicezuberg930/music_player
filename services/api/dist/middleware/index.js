@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.responseInterceptor = exports.fileMimeAndSizeOptions = exports.OptionalJWTMiddleware = exports.JWTMiddleware = exports.validateDtoHanlder = exports.errorInterceptor = exports.notFoundHandlerMiddleware = void 0;
+exports.rateLimiter = exports.responseInterceptor = exports.fileMimeAndSizeOptions = exports.OptionalJWTMiddleware = exports.JWTMiddleware = exports.validateDtoHanlder = exports.errorInterceptor = exports.notFoundHandlerMiddleware = void 0;
 var notfound_middleware_1 = require("./notfound.middleware");
 Object.defineProperty(exports, "notFoundHandlerMiddleware", { enumerable: true, get: function () { return notfound_middleware_1.notFoundHandlerMiddleware; } });
 var error_interceptor_1 = require("./error.interceptor");
@@ -14,3 +14,5 @@ var file_type_validator_middleware_1 = require("./file.type.validator.middleware
 Object.defineProperty(exports, "fileMimeAndSizeOptions", { enumerable: true, get: function () { return file_type_validator_middleware_1.fileMimeAndSizeOptions; } });
 var response_interceptor_1 = require("./response.interceptor");
 Object.defineProperty(exports, "responseInterceptor", { enumerable: true, get: function () { return response_interceptor_1.responseInterceptor; } });
+var rate_limiter_1 = require("./rate.limiter");
+Object.defineProperty(exports, "rateLimiter", { enumerable: true, get: function () { return rate_limiter_1.rateLimiter; } });

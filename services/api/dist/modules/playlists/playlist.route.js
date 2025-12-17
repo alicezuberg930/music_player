@@ -7,8 +7,7 @@ exports.playlistRouter = void 0;
 const express_1 = __importDefault(require("express"));
 const playlist_controller_1 = __importDefault(require("./playlist.controller"));
 const multer_1 = __importDefault(require("multer"));
-const multer_options_1 = require("../../lib/helpers/multer.options");
-const middleware_1 = require("../../middleware");
+const middleware_1 = require("@yukikaze/middleware");
 const create_playlist_dto_1 = require("./dto/create-playlist.dto");
 const update_playlist_dto_1 = require("./dto/update-playlist.dto");
 const playlist_songs_dto_1 = require("./dto/playlist-songs.dto");
@@ -20,7 +19,7 @@ const uploadOptions = {
         thumbnail: { mimes: ["image/jpeg", "image/png"], exts: ["jpg", "jpeg", "png"] }
     }
 };
-const upload = (0, multer_1.default)((0, multer_options_1.multerOptions)(uploadOptions));
+const upload = (0, multer_1.default)((0, middleware_1.multerOptions)(uploadOptions));
 const fileValidator = (0, middleware_1.fileMimeAndSizeOptions)(uploadOptions);
 playlistRouter.get("/playlists", middleware_1.OptionalJWTMiddleware, (request, response) => playlist_controller_1.default.getPlaylists(request, response));
 playlistRouter.post("/playlists", middleware_1.JWTMiddleware, upload.fields([{ name: "thumbnail", maxCount: 1 }]), fileValidator, (0, middleware_1.validateDtoHanlder)(create_playlist_dto_1.CreatePlaylistDto), (request, response) => playlist_controller_1.default.createPlaylist(request, response));

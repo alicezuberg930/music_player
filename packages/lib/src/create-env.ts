@@ -10,7 +10,6 @@ config({ path: resolve(__dirname, '../../../', '.env') })
 export const env = {
     PORT: process.env.PORT,
     NODE_ENV: process.env.NODE_ENV,
-    DATABASE_URL: process.env.DATABASE_URL,
     MYSQL_SSL_MODE: process.env.MYSQL_SSL_MODE,
     MYSQL_DATABASE: process.env.MYSQL_DATABASE,
     MYSQL_PASSWORD: process.env.MYSQL_PASSWORD,
@@ -29,4 +28,5 @@ export const env = {
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     GATEWAY_PORT: process.env.GATEWAY_PORT,
     HOME_SERVICE_PORT: process.env.HOME_SERVICE_PORT,
+    AUTH_SERVICE_PORT: process.env.AUTH_SERVICE_PORT,
 }

@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SongService = void 0;
-const esm_module_1 = require("../../lib/helpers/esm.module");
+const music_metadata_1 = __importDefault(require("music-metadata"));
 const node_fs_1 = __importDefault(require("node:fs"));
 const node_id3_1 = __importDefault(require("node-id3"));
 // database
@@ -76,7 +76,8 @@ class SongService {
             // find artist names from artistIds
             const findArtists = await db_1.db.query.artists.findMany({ columns: { name: true }, where: (0, db_1.inArray)(schemas_1.artists.id, artistIds) });
             // extract metadata from audio file
-            let metadata = await (0, esm_module_1.esmMusicMetadata)().then(m => m.parseFile(audioFile.path));
+            const metadata = await music_metadata_1.default.parseFile(audioFile.path);
+            // let metadata = await esmMusicMetadata().then(m => m.parseFile(audioFile.path))
             if (lyricsFile) {
                 lyricsUrl = (await (0, cloudinary_1.uploadFile)({ files: lyricsFile, subFolder: '/lyrics', publicId: (0, create_cuid_1.createId)() }));
             }

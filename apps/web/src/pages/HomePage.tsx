@@ -31,12 +31,6 @@ const HomePage: React.FC = () => {
             )}
 
             {/* <div>
-                <HomeBannerSlider />
-                {
-                    playlistsList?.map((playlists, i) => {
-                        return (<PlaylistSection key={i} playlists={playlists} />)
-                    })
-                }
                 <ChartSection />
                 <div className="flex items-center w-full mt-12 gap-7">
                     {
@@ -49,9 +43,6 @@ const HomePage: React.FC = () => {
                         })
                     }
                 </div>
-            </div> :
-            <div className="w-full h-full flex items-center justify-center">
-                <Triangle height={80} width={80} />
             </div> */}
         </>
     )

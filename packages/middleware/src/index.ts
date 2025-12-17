@@ -5,3 +5,5 @@ export { JWTMiddleware, OptionalJWTMiddleware } from './jwt.middleware'
 export { fileMimeAndSizeOptions } from './file.type.validator.middleware'
 export { responseInterceptor } from './response.interceptor'
 export { rateLimiter } from './rate.limiter'
+
+export { type Options, type PerFieldRule, multerOptions } from '@/helpers/multer.options'

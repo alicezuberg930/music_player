@@ -157,9 +157,13 @@ export const useApi = () => {
     const useCreateArtist = (options?: UseMutationOptions<Response, Error, FormData>) => {
         return useMutation({
             mutationFn: api.createArtist,
-            onSuccess: () => {
+            onSuccess: (response) => {
                 queryClient.invalidateQueries({ queryKey: queryKeys.artists })
                 queryClient.invalidateQueries({ queryKey: queryKeys.userArtists })
+                enqueueSnackbar(translate(response.message), { variant: 'success' })
+            },
+            onError: (error) => {
+                enqueueSnackbar(translate(error.message ?? 'unknown_error'), { variant: 'error' })
             },
             ...options,
         })

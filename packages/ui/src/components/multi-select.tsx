@@ -1,12 +1,6 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-import {
-    CheckIcon,
-    XCircle,
-    ChevronDown,
-    XIcon,
-    WandSparkles,
-} from "lucide-react"
+import { CheckIcon, XCircle, ChevronDown, XIcon, WandSparkles } from "lucide-react"
 import { cn } from "@/utils"
 import { Separator } from "./separator"
 import { Button } from "./button"
@@ -96,12 +90,7 @@ interface MultiSelectGroup {
 /**
  * Props for MultiSelect component
  */
-interface MultiSelectProps
-    extends Omit<
-        React.ButtonHTMLAttributes<HTMLButtonElement>,
-        "animationConfig"
-    >,
-    VariantProps<typeof multiSelectVariants> {
+interface MultiSelectProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "animationConfig">, VariantProps<typeof multiSelectVariants> {
     /**
      * An array of option objects or groups to be displayed in the multi-select component.
      */
@@ -351,8 +340,8 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(({
 
     const arraysEqual = React.useCallback((a: string[], b: string[]): boolean => {
         if (a.length !== b.length) return false
-        const sortedA = [...a].sort()
-        const sortedB = [...b].sort()
+        const sortedA = [...a].sort((a, b) => a.localeCompare(b))
+        const sortedB = [...b].sort((a, b) => a.localeCompare(b))
         return sortedA.every((val, index) => val === sortedB[index])
     }, [])
 
@@ -603,10 +592,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(({
 
     const clearExtraOptions = () => {
         if (disabled) return
-        const newSelectedValues = selectedValues.slice(
-            0,
-            responsiveSettings.maxCount
-        )
+        const newSelectedValues = selectedValues.slice(0, responsiveSettings.maxCount)
         setSelectedValues(newSelectedValues)
         onValueChange(newSelectedValues)
     }
@@ -621,7 +607,6 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(({
             setSelectedValues(allValues)
             onValueChange(allValues)
         }
-
         if (closeOnSelect) {
             setIsPopoverOpen(false)
         }
@@ -652,9 +637,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(({
     const widthConstraints = getWidthConstraints()
 
     React.useEffect(() => {
-        if (!isPopoverOpen) {
-            setSearchValue("")
-        }
+        if (!isPopoverOpen) setSearchValue("")
     }, [isPopoverOpen])
 
     React.useEffect(() => {
@@ -665,25 +648,14 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(({
             const diff = selectedCount - prevSelectedCount.current
             if (diff > 0) {
                 const addedItems = selectedValues.slice(-diff)
-                const addedLabels = addedItems
-                    .map(
-                        (value) => allOptions.find((opt) => opt.value === value)?.label
-                    )
-                    .filter(Boolean)
-
+                const addedLabels = addedItems.map((value) => allOptions.find((opt) => opt.value === value)?.label).filter(Boolean)
                 if (addedLabels.length === 1) {
-                    announce(
-                        `${addedLabels[0]} selected. ${selectedCount} of ${totalOptions} options selected.`
-                    )
+                    announce(`${addedLabels[0]} selected. ${selectedCount} of ${totalOptions} options selected.`)
                 } else {
-                    announce(
-                        `${addedLabels.length} options selected. ${selectedCount} of ${totalOptions} total selected.`
-                    )
+                    announce(`${addedLabels.length} options selected. ${selectedCount} of ${totalOptions} total selected.`)
                 }
             } else if (diff < 0) {
-                announce(
-                    `Option removed. ${selectedCount} of ${totalOptions} options selected.`
-                )
+                announce(`Option removed. ${selectedCount} of ${totalOptions} options selected.`)
             }
             prevSelectedCount.current = selectedCount
         }
@@ -838,7 +810,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(({
                                                         )}>
                                                         {option.label}
                                                     </span>
-                                                    <div
+                                                    <Button
                                                         role="button"
                                                         tabIndex={0}
                                                         onClick={(event) => {
@@ -856,7 +828,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(({
                                                         className="ml-2 cursor-pointer hover:bg-white/20 rounded-sm p-0.5 -m-0.5 focus:outline-none focus:ring-1 focus:ring-white/50"
                                                     >
                                                         <XCircle className={cn("h-2 w-2", responsiveSettings.compactMode && "h-2.5 w-2.5")} />
-                                                    </div>
+                                                    </Button>
                                                 </Badge>
                                             )
                                         })
@@ -873,12 +845,10 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(({
                                                 "[&>svg]:pointer-events-auto"
                                             )}
                                             style={{
-                                                animationDuration: `${animationConfig?.duration || animation
-                                                    }s`,
+                                                animationDuration: `${animationConfig?.duration || animation}s`,
                                                 animationDelay: `${animationConfig?.delay || 0}s`,
                                             }}>
-                                            {`+ ${selectedValues.length - responsiveSettings.maxCount
-                                                } more`}
+                                            {`+ ${selectedValues.length - responsiveSettings.maxCount} more`}
                                             <XCircle
                                                 className={cn(
                                                     "ml-2 h-4 w-4 cursor-pointer",

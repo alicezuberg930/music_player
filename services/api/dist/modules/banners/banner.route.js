@@ -7,8 +7,7 @@ exports.bannerRouter = void 0;
 const express_1 = __importDefault(require("express"));
 const banner_controller_1 = __importDefault(require("./banner.controller"));
 const multer_1 = __importDefault(require("multer"));
-const multer_options_1 = require("../../lib/helpers/multer.options");
-const middleware_1 = require("../../middleware");
+const middleware_1 = require("@yukikaze/middleware");
 const create_banner_dto_1 = require("./dto/create-banner.dto");
 const update_banner_dto_1 = require("./dto/update-banner.dto");
 const bannerRouter = express_1.default.Router();
@@ -19,7 +18,7 @@ const uploadOptions = {
         thumbnail: { mimes: ["image/jpeg", "image/png"], exts: ["jpg", "jpeg", "png"], maxSize: 2 * 1024 * 1024 }
     }
 };
-const upload = (0, multer_1.default)((0, multer_options_1.multerOptions)(uploadOptions));
+const upload = (0, multer_1.default)((0, middleware_1.multerOptions)(uploadOptions));
 const fileValidator = (0, middleware_1.fileMimeAndSizeOptions)(uploadOptions);
 bannerRouter.get("/banners", (request, response) => banner_controller_1.default.getBanners(request, response));
 bannerRouter.post("/banners", 

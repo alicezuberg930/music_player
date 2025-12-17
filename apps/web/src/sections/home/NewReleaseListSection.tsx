@@ -38,19 +38,15 @@ const NewReleaseListSection: React.FC<Props> = ({ songs }) => {
                 </Button>
             </div>
             <div className="mt-5">
-                {memoizedSongs.length > 0 ? (
-                    <div className="flex flex-wrap">
-                        {[0, 1, 2].map((col) => (
-                            <div key={col} className="w-full md:w-1/2 xl:w-1/3">
-                                {memoizedSongs.slice(col * 3, (col + 1) * 3).map(item => (
-                                    <SongItem key={item.id} song={item} imgSize="lg" showTime={true} />
-                                ))}
-                            </div>
-                        ))}
-                    </div>
-                ) : (
-                    <>loading</>
-                )}
+                <div className="flex flex-wrap">
+                    {[0, 1, 2].map((col) => (
+                        <div key={col} className="w-full md:w-1/2 xl:w-1/3">
+                            {memoizedSongs.slice(col * 3, (col + 1) * 3).map(item => (
+                                <SongItem key={item.id} song={item} imgSize="lg" showTime={true} />
+                            ))}
+                        </div>
+                    ))}
+                </div>
             </div>
         </section >
     )

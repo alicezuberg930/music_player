@@ -1,6 +1,6 @@
 // lib
 import { Request, Response } from 'express'
-import { esmMusicMetadata } from '../../lib/helpers/esm.module'
+import musicMetadata from 'music-metadata'
 import fs from 'node:fs'
 import NodeID3 from 'node-id3'
 // database
@@ -78,7 +78,8 @@ export class SongService {
             // find artist names from artistIds
             const findArtists = await db.query.artists.findMany({ columns: { name: true }, where: inArray(artists.id, artistIds) })
             // extract metadata from audio file
-            let metadata = await esmMusicMetadata().then(m => m.parseFile(audioFile.path))
+            const metadata = await musicMetadata.parseFile(audioFile.path)
+            // let metadata = await esmMusicMetadata().then(m => m.parseFile(audioFile.path))
             if (lyricsFile) {
                 lyricsUrl = (await uploadFile({ files: lyricsFile, subFolder: '/lyrics', publicId: createId() })) as string
             }

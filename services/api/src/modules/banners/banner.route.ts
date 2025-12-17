@@ -1,8 +1,7 @@
 import express, { Request, Response } from "express"
 import bannerController from "./banner.controller"
 import multer from "multer"
-import { multerOptions, Options } from "../../lib/helpers/multer.options"
-import { validateDtoHanlder, JWTMiddleware, fileMimeAndSizeOptions } from "../../middleware"
+import { validateDtoHanlder, JWTMiddleware, fileMimeAndSizeOptions, multerOptions, Options } from "@yukikaze/middleware"
 import { CreateBannerDto } from "./dto/create-banner.dto"
 import { UpdateBannerDto } from "./dto/update-banner.dto"
 

@@ -33,16 +33,7 @@ const CreateNewPlaylistDialog: React.FC<Props> = ({ onOpenChange }) => {
     const { enqueueSnackbar } = useSnackbar()
     const { translate } = useLocales()
 
-    const createPlaylistMutation = useApi().useCreatePlaylist({
-        onSuccess: (response) => {
-            onOpenChange?.(false)
-            reset()
-            enqueueSnackbar(response.message, { variant: 'success' })
-        },
-        onError: (error) => {
-            enqueueSnackbar(translate(error.message ?? 'unknown_error'), { variant: 'error' })
-        }
-    })
+    const createPlaylistMutation = useApi().useCreatePlaylist()
 
     const PlaylistSchema: Yup.ObjectSchema<FormValuesProps> = Yup.object().shape({
         isPrivate: Yup.boolean().required(translate('privacy_setting_required')),
@@ -70,7 +61,16 @@ const CreateNewPlaylistDialog: React.FC<Props> = ({ onOpenChange }) => {
         for (const [key, value] of Object.entries(data)) {
             if (value !== undefined) formData.append(key, value as string)
         }
-        createPlaylistMutation.mutate(formData)
+        createPlaylistMutation.mutate(formData, {
+            onSuccess: (response) => {
+                onOpenChange?.(false)
+                reset()
+                enqueueSnackbar(response.message, { variant: 'success' })
+            },
+            onError: (error) => {
+                enqueueSnackbar(translate(error.message ?? 'unknown_error'), { variant: 'error' })
+            }
+        })
     }
 
     return (

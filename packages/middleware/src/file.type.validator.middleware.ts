@@ -1,8 +1,8 @@
 import { promises as fs } from "node:fs"
 import type { Request, Response, NextFunction } from "express"
-import { Options, PerFieldRule } from "@yukikaze/middleware"
+import type { Options, PerFieldRule } from "./helpers/multer.options"
 import { BadRequestException } from '@yukikaze/lib/exception'
-const fileType = async () => await import('file-type')
+import { fileTypeFromBuffer } from 'file-type'
 
 const validateFileSize = async (file: Express.Multer.File, maxSize: number, fieldName: string) => {
     if (file.size > maxSize) {
@@ -24,7 +24,7 @@ const readFileBuffer = async (filePath: string) => {
 
 const validateMimeType = async (file: Express.Multer.File, allowedMimes: string[], isTextOnlyField: boolean, fieldName: string, rule: PerFieldRule) => {
     const slice = await readFileBuffer(file.path)
-    const detected = await fileType().then(m => m.fileTypeFromBuffer(slice))
+    const detected = await fileTypeFromBuffer(slice)
 
     let isValid = false
 

@@ -2,9 +2,8 @@ import express, { Request, Response } from "express"
 import songController from "./song.controller"
 import { CreateSongDto } from "./dto/create-song.dto"
 import multer from "multer"
-import { multerOptions, Options } from "../../lib/helpers/multer.options"
 import { UpdateSongDto } from "./dto/update-song.dto"
-import { fileMimeAndSizeOptions, validateDtoHanlder, JWTMiddleware, OptionalJWTMiddleware } from "../../middleware"
+import { fileMimeAndSizeOptions, validateDtoHanlder, JWTMiddleware, OptionalJWTMiddleware, multerOptions, Options } from "@yukikaze/middleware"
 
 const songRouter = express.Router()
 

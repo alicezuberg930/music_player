@@ -1,20 +1,15 @@
 {
-  "name": "@yukikaze/lib",
+  "name": "@yukikaze/middleware",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "exports": {
-    "./cloudinary": "./dist/cloudinary.mjs",
-    "./create-cuid": "./dist/create-cuid.mjs",
-    "./create-env": "./dist/create-env.mjs",
-    "./crypto": "./dist/crypto.mjs",
-    "./exception": "./dist/exception.mjs",
-    "./image-resize": "./dist/image-resize.mjs",
-    "./jwt": "./dist/jwt.mjs",
-    "./password": "./dist/password.mjs",
-    "./slugify": "./dist/slugify.mjs",
+    ".": "./dist/index.mjs",
     "./package.json": "./package.json"
   },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "scripts": {
     "build": "tsdown",
     "~dev": "tsdown --watch ./src",
@@ -22,9 +17,12 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "dotenv": "^17.2.3",
-    "sharp": "^0.34.5",
-    "cloudinary": "^2.8.0",
+    "@yukikaze/lib": "workspace:*",
+    "express": "catalog:express",
+    "express-rate-limit": "catalog:express",
+    "class-validator": "^0.14.2",
+    "class-transformer": "^0.5.1",
+    "file-type": "^21.0.0",
     "multer": "catalog:multer"
   },
   "devDependencies": {
@@ -34,6 +32,7 @@
     "eslint": "catalog:",
     "typescript": "catalog:",
     "tsdown": "catalog:",
+    "@types/express": "catalog:express",
     "@types/multer": "catalog:multer"
   }
 }

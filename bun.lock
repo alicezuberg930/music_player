@@ -124,13 +124,36 @@
       "dependencies": {
         "cloudinary": "^2.8.0",
         "dotenv": "^17.2.3",
-        "multer": "^2.0.2",
+        "multer": "catalog:multer",
         "sharp": "^0.34.5",
       },
       "devDependencies": {
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
-        "@types/multer": "^2.0.0",
+        "@types/multer": "catalog:multer",
+        "@types/node": "catalog:",
+        "eslint": "catalog:",
+        "tsdown": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
+    "packages/middleware": {
+      "name": "@yukikaze/middleware",
+      "version": "0.0.0",
+      "dependencies": {
+        "@yukikaze/lib": "workspace:*",
+        "class-transformer": "^0.5.1",
+        "class-validator": "^0.14.2",
+        "express": "catalog:express",
+        "express-rate-limit": "catalog:express",
+        "file-type": "^21.0.0",
+        "multer": "catalog:multer",
+      },
+      "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*",
+        "@types/express": "catalog:express",
+        "@types/multer": "catalog:multer",
         "@types/node": "catalog:",
         "eslint": "catalog:",
         "tsdown": "catalog:",
@@ -187,13 +210,11 @@
         "@yukikaze/db": "workspace:*",
         "@yukikaze/email": "workspace:*",
         "@yukikaze/lib": "workspace:*",
-        "class-transformer": "^0.5.1",
-        "class-validator": "^0.14.2",
+        "@yukikaze/middleware": "workspace:*",
         "cookie-parser": "^1.4.7",
         "cors": "^2.8.5",
         "express": "catalog:express",
         "express-rate-limit": "^7.0.0",
-        "file-type": "^21.0.0",
         "music-metadata": "^11.9.0",
         "node-id3": "^0.2.9",
         "reflect-metadata": "^0.2.2",
@@ -235,11 +256,8 @@
       "dependencies": {
         "@yukikaze/db": "workspace:*",
         "@yukikaze/lib": "workspace:*",
-        "class-transformer": "^0.5.1",
-        "class-validator": "^0.14.2",
         "cookie-parser": "^1.4.7",
         "express": "catalog:express",
-        "reflect-metadata": "^0.2.2",
       },
       "devDependencies": {
         "@repo/eslint-config": "workspace:*",
@@ -262,6 +280,11 @@
     "express": {
       "@types/express": "^5.0.4",
       "express": "^5.1.0",
+      "express-rate-limit": "^7.0.0",
+    },
+    "multer": {
+      "@types/multer": "^2.0.0",
+      "multer": "^2.0.2",
     },
     "react": {
       "@types/react": "^19.1.16",
@@ -836,6 +859,8 @@
     "@yukikaze/home-service": ["@yukikaze/home-service@workspace:services/home-service"],
 
     "@yukikaze/lib": ["@yukikaze/lib@workspace:packages/lib"],
+
+    "@yukikaze/middleware": ["@yukikaze/middleware@workspace:packages/middleware"],
 
     "@yukikaze/services": ["@yukikaze/services@workspace:services/api"],
 

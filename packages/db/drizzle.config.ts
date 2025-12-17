@@ -7,6 +7,10 @@ export default defineConfig({
     schema: './src/schemas',
     dialect: 'mysql',
     dbCredentials: {
-        url: env.DATABASE_URL!,
+        host: env.MYSQL_HOST!,
+        port: env.MYSQL_PORT,
+        user: env.MYSQL_USER!,
+        password: env.MYSQL_PASSWORD!,
+        database: env.MYSQL_DATABASE!,
     },
 });

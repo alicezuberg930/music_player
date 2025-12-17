@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.fileMimeAndSizeOptions = void 0;
 const node_fs_1 = require("node:fs");
 const exception_1 = require("@yukikaze/lib/exception");
-const esm_module_1 = require("../lib/helpers/esm.module");
+const fileType = async () => await import('file-type');
 const validateFileSize = async (file, maxSize, fieldName) => {
     if (file.size > maxSize) {
         await node_fs_1.promises.unlink(file.path).catch(() => { });
@@ -23,7 +23,7 @@ const readFileBuffer = async (filePath) => {
 };
 const validateMimeType = async (file, allowedMimes, isTextOnlyField, fieldName, rule) => {
     const slice = await readFileBuffer(file.path);
-    const detected = await (0, esm_module_1.esmFileType)().then(m => m.fileTypeFromBuffer(slice));
+    const detected = await fileType().then(m => m.fileTypeFromBuffer(slice));
     let isValid = false;
     if (detected) {
         const realMime = detected.mime.toLowerCase();

@@ -1,5 +1,5 @@
 import multer from 'multer'
-import { extname } from 'path'
+import { extname } from 'node:path'
 import { BadRequestException } from '@yukikaze/lib/exception'
 
 export type PerFieldRule = {

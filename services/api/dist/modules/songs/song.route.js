@@ -8,9 +8,8 @@ const express_1 = __importDefault(require("express"));
 const song_controller_1 = __importDefault(require("./song.controller"));
 const create_song_dto_1 = require("./dto/create-song.dto");
 const multer_1 = __importDefault(require("multer"));
-const multer_options_1 = require("../../lib/helpers/multer.options");
 const update_song_dto_1 = require("./dto/update-song.dto");
-const middleware_1 = require("../../middleware");
+const middleware_1 = require("@yukikaze/middleware");
 const songRouter = express_1.default.Router();
 exports.songRouter = songRouter;
 const uploadOptions = {
@@ -21,7 +20,7 @@ const uploadOptions = {
         thumbnail: { mimes: ["image/jpeg", "image/png"], exts: ["jpg", "jpeg", "png"], maxSize: 4 * 1024 * 1024 },
     },
 };
-const upload = (0, multer_1.default)((0, multer_options_1.multerOptions)(uploadOptions));
+const upload = (0, multer_1.default)((0, middleware_1.multerOptions)(uploadOptions));
 const fileValidator = (0, middleware_1.fileMimeAndSizeOptions)(uploadOptions);
 songRouter.get("/songs", middleware_1.OptionalJWTMiddleware, (request, response) => song_controller_1.default.getSongs(request, response));
 songRouter.post("/songs", middleware_1.JWTMiddleware, upload.fields([

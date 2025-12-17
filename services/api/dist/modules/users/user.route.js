@@ -6,9 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userRouter = void 0;
 const express_1 = __importDefault(require("express"));
 const user_controller_1 = __importDefault(require("./user.controller"));
-const multer_options_1 = require("../../lib/helpers/multer.options");
 const multer_1 = __importDefault(require("multer"));
-const middleware_1 = require("../../middleware");
+const middleware_1 = require("@yukikaze/middleware");
 const create_user_dto_1 = require("./dto/create-user.dto");
 const login_user_dto_1 = require("./dto/login-user.dto");
 const userRouter = express_1.default.Router();
@@ -19,7 +18,7 @@ const uploadOptions = {
         avatar: { mimes: ["image/jpeg", "image/png"], exts: ["jpg", "jpeg", "png"] }
     }
 };
-const upload = (0, multer_1.default)((0, multer_options_1.multerOptions)(uploadOptions));
+const upload = (0, multer_1.default)((0, middleware_1.multerOptions)(uploadOptions));
 const fileValidator = (0, middleware_1.fileMimeAndSizeOptions)(uploadOptions);
 userRouter.get("/users", (request, response) => user_controller_1.default.getUsers(request, response));
 // user profile public access (wont see playlist if it's private and uploaded songs)

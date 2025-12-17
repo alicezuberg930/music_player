@@ -22,7 +22,8 @@
   "catalogs": {
     "express": {
       "express": "^5.1.0",
-      "@types/express": "^5.0.4"
+      "@types/express": "^5.0.4",
+      "express-rate-limit": "^7.0.0"
     },
     "tailwind": {
       "@tailwindcss/vite": "^4.1.15",
@@ -33,6 +34,10 @@
       "react-dom": "^19.1.1",
       "@types/react": "^19.1.16",
       "@types/react-dom": "^19.1.9"
+    },
+    "multer": {
+      "multer": "^2.0.2",
+      "@types/multer": "^2.0.0"
     }
   },
   "engines": {
@@ -44,8 +49,8 @@
   "scripts": {
     "build": "turbo run build",
     "build:web": "turbo run build --filter=@yukikaze/web",
-    "build:packages": "turbo run build --filter=@yukikaze/lib --filter=@yukikaze/ui --filter=@yukikaze/db --filter=@yukikaze/email",
-    "build:api": "turbo run build --filter=@yukikaze/services --filter=@yukikaze/gateway-service",
+    "build:packages": "turbo run build --filter=@yukikaze/lib --filter=@yukikaze/ui --filter=@yukikaze/db --filter=@yukikaze/email --filter=@yukikaze/middleware",
+    "build:api": "turbo run build --filter=@yukikaze/services --filter=@yukikaze/gateway-service --filter=@yukikaze/home-service",
     "clean:workspaces": "turbo run clean",
     "db:generate": "turbo run db:generate -F @yukikaze/db",
     "db:migrate": "turbo run db:migrate -F @yukikaze/db",
@@ -54,13 +59,13 @@
     "dev": "turbo run dev",
     "dev:web": "turbo run dev --filter=@yukikaze/web",
     "dev:api": "turbo run dev --filter=@yukikaze/services --filter=@yukikaze/gateway-service --filter=@yukikaze/home-service",
-    "dev:packages": "turbo run dev --filter=@yukikaze/lib --filter=@yukikaze/ui --filter=@yukikaze/db --filter=@yukikaze/email",
+    "dev:packages": "turbo run dev --filter=@yukikaze/lib --filter=@yukikaze/ui --filter=@yukikaze/db --filter=@yukikaze/email --filter=@yukikaze/middleware",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
     "start": "turbo run start --filter=@yukikaze/web --filter=@yukikaze/services --parallel",
     "start:web": "turbo run start --filter=@yukikaze/web",
-    "start:api": "turbo run start --filter=@yukikaze/services --filter=@yukikaze/gateway-service"
+    "start:api": "turbo run start --filter=@yukikaze/services --filter=@yukikaze/gateway-service --filter=@yukikaze/home-service"
   },
   "workspaces": [
     "apps/*",

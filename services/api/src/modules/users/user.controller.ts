@@ -43,11 +43,11 @@ class UserController {
         return await this.userService.verifyEmail(request, response)
     }
 
-    public async userSongs(request: Request, response: Response) {
+    public async userSongs(request: Request<{}, {}, {}, { type: 'upload' | 'favorite' }>, response: Response) {
         return await this.userService.userSongs(request, response)
     }
 
-    public async userPlaylists(request: Request, response: Response) {
+    public async userPlaylists(request: Request<{}, {}, {}, { type: 'upload' | 'favorite' }>, response: Response) {
         return await this.userService.userPlaylists(request, response)
     }
 

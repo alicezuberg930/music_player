@@ -29,4 +29,11 @@ export const env = {
     GATEWAY_PORT: process.env.GATEWAY_PORT,
     HOME_SERVICE_PORT: process.env.HOME_SERVICE_PORT,
     AUTH_SERVICE_PORT: process.env.AUTH_SERVICE_PORT,
+    SONG_SERVICE_PORT: process.env.SONG_SERVICE_PORT,
+    REDIS_URL: process.env.REDIS_URL,
+    REDIS_HOST: process.env.REDIS_HOST || 'localhost',
+    REDIS_PORT: Number.parseInt(process.env.REDIS_PORT || '6379'),
+    REDIS_MAX_CONNECTION_RETRY: Number.parseInt(process.env.REDIS_MAX_CONNECTION_RETRY || '10'),
+    REDIS_MIN_CONNECTION_DELAY_IN_MS: Number.parseInt(process.env.REDIS_MIN_CONNECTION_DELAY_IN_MS || '1000'),
+    REDIS_MAX_CONNECTION_DELAY_IN_MS: Number.parseInt(process.env.REDIS_MAX_CONNECTION_DELAY_IN_MS || '30000'),
 }

@@ -1,6 +1,6 @@
-import { useMutation, useQuery, useQueryClient, type UseMutationOptions, type UseQueryOptions } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient, type UseMutationOptions, type UseQueryOptions, type QueryKey } from '@tanstack/react-query'
 import type { Response } from '@/@types/response'
-import type { Song } from '@/@types/song'
+import type { QuerySong, Song } from '@/@types/song'
 import type { Video } from '@/@types/video'
 import type { Artist } from '@/@types/artist'
 import type { Playlist } from '@/@types/playlist'
@@ -19,7 +19,7 @@ export const useApi = () => {
     // Query Keys
     const queryKeys = {
         home: ['home'],
-        songs: ['songs'],
+        songs: (query: QuerySong) => ['songs', query],
         song: (id: string) => ['songs', id],
         video: (id: string) => ['videos', id],
         artists: ['artists'],
@@ -42,10 +42,10 @@ export const useApi = () => {
         })
     }
 
-    const useSongList = (options?: UseQueryOptions<Response<Song[]>>) => {
+    const useSongList = (query: QuerySong = {}, options?: UseQueryOptions<Response<Song[]>>) => {
         return useQuery({
-            queryKey: queryKeys.songs,
-            queryFn: api.fetchSongList,
+            queryKey: queryKeys.songs(query),
+            queryFn: () => api.fetchSongList(query),
             ...options,
         })
     }
@@ -147,7 +147,7 @@ export const useApi = () => {
         return useMutation({
             mutationFn: api.createSong,
             onSuccess: () => {
-                queryClient.invalidateQueries({ queryKey: queryKeys.songs })
+                // queryClient.invalidateQueries({ queryKey: queryKeys.songs })
                 queryClient.invalidateQueries({ queryKey: queryKeys.userSongs })
             },
             ...options,
@@ -224,15 +224,17 @@ export const useApi = () => {
         })
     }
 
-    const useAddFavoriteSong = (options?: UseMutationOptions<Response, Error, string>) => {
+    const useAddFavoriteSong = (key?: QueryKey, options?: UseMutationOptions<Response, Error, string>) => {
         return useMutation({
             mutationFn: (songId: string) => api.addFavoriteSong(songId),
             onMutate: async (songId) => {
+                if (!key) return
+
                 // Cancel outgoing refetches
-                await queryClient.cancelQueries({ queryKey: queryKeys.songs })
+                await queryClient.cancelQueries({ queryKey: key })
                 await queryClient.cancelQueries({ queryKey: queryKeys.userSongs })
                 // Optimistically update song list
-                queryClient.setQueryData<Response<Song[]>>(queryKeys.songs, (old) => {
+                queryClient.setQueryData<Response<Song[]>>(key, (old) => {
                     if (!old?.data) return old
                     return {
                         ...old,
@@ -250,7 +252,7 @@ export const useApi = () => {
                         }
                     }
                     // If song not in user songs, we need to fetch it from the songs cache
-                    const allSongs = queryClient.getQueryData<Response<Song[]>>(queryKeys.songs)
+                    const allSongs = queryClient.getQueryData<Response<Song[]>>(key)
                     const songToAdd = allSongs?.data?.find(s => s.id === songId)
                     if (songToAdd) {
                         return {
@@ -262,27 +264,33 @@ export const useApi = () => {
                 })
             },
             onSuccess: (response) => {
+                if (key) {
+                    queryClient.invalidateQueries({ queryKey: key })
+                    queryClient.invalidateQueries({ queryKey: queryKeys.userSongs })
+                }
                 enqueueSnackbar(translate(response.message), { variant: 'success' })
             },
             onError: (error) => {
-                // Revert optimistic update on error
-                queryClient.invalidateQueries({ queryKey: queryKeys.songs })
-                queryClient.invalidateQueries({ queryKey: queryKeys.userSongs })
+                if (key) {
+                    // Revert optimistic update on error
+                    queryClient.invalidateQueries({ queryKey: key })
+                    queryClient.invalidateQueries({ queryKey: queryKeys.userSongs })
+                }
                 enqueueSnackbar(translate(error.message ?? 'unknown_error'), { variant: 'error' })
             },
             ...options,
         })
     }
 
-    const useRemoveFavoriteSong = (options?: UseMutationOptions<Response, Error, string>) => {
+    const useRemoveFavoriteSong = (key?: QueryKey, options?: UseMutationOptions<Response, Error, string>) => {
         return useMutation({
             mutationFn: (songId: string) => api.removeFavoriteSong(songId),
             onMutate: async (songId) => {
+                if (!key) return
                 // Cancel outgoing refetches
-                await queryClient.cancelQueries({ queryKey: queryKeys.songs })
-                await queryClient.cancelQueries({ queryKey: queryKeys.userSongs })
+                await queryClient.cancelQueries({ queryKey: key })
                 // Optimistically update song list
-                queryClient.setQueryData<Response<Song[]>>(queryKeys.songs, (old) => {
+                queryClient.setQueryData<Response<Song[]>>(key, (old) => {
                     if (!old?.data) return old
                     return {
                         ...old,
@@ -299,12 +307,16 @@ export const useApi = () => {
                 })
             },
             onSuccess: (response) => {
+                if (key) {
+                    queryClient.invalidateQueries({ queryKey: key })
+                }
                 enqueueSnackbar(translate(response.message), { variant: 'success' })
             },
             onError: (error) => {
-                // Revert optimistic update on error
-                queryClient.invalidateQueries({ queryKey: queryKeys.songs })
-                queryClient.invalidateQueries({ queryKey: queryKeys.userSongs })
+                if (key) {
+                    // Revert optimistic update on error
+                    queryClient.invalidateQueries({ queryKey: key })
+                }
                 enqueueSnackbar(translate(error.message ?? 'unknown_error'), { variant: 'error' })
             },
             ...options,
@@ -445,5 +457,7 @@ export const useApi = () => {
         useRemoveFavoriteSong,
         useAddFavoritePlaylist,
         useRemoveFavoritePlaylist,
+
+        queryKeys
     }
 }

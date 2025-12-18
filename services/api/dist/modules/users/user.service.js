@@ -181,8 +181,10 @@ class UserService {
     }
     async userSongs(request, response) {
         try {
-            // const { type, page, count } = request.body
-            const data = await db_1.db.query.songs.findMany({ where: (0, db_1.eq)(schemas_1.songs.userId, request.userId) });
+            let { type } = request.query;
+            if (!type)
+                type = 'upload';
+            const data = type === 'upload' ? await db_1.db.query.songs.findMany({ where: (0, db_1.eq)(schemas_1.songs.userId, request.userId) }) : [];
             return response.json({ message: 'User songs fetched successfully', data });
         }
         catch (error) {
@@ -193,7 +195,10 @@ class UserService {
     }
     async userPlaylists(request, response) {
         try {
-            const data = await db_1.db.query.playlists.findMany({ where: (0, db_1.eq)(schemas_1.playlists.userId, request.userId) });
+            let { type } = request.query;
+            if (!type)
+                type = 'upload';
+            const data = type === 'upload' ? await db_1.db.query.playlists.findMany({ where: (0, db_1.eq)(schemas_1.playlists.userId, request.userId) }) : [];
             return response.json({ message: 'User playlists fetched successfully', data });
         }
         catch (error) {

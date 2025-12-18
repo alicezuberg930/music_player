@@ -35,3 +35,9 @@ export type IMusicState = {
     currentSong: Song | null
     currentPlaylistName: string | null
 }
+
+export type QuerySong = {
+    search?: string
+    page?: number
+    limit?: number
+}

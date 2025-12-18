@@ -25,8 +25,8 @@ type Props = {
 const SongItem: React.FC<Props> = ({ song, order, percent, imgSize, style, showTime }) => {
     const dispatch = useDispatch()
     const { enqueueSnackbar } = useSnackbar()
-    const { useAddFavoriteSong, useRemoveFavoriteSong } = useApi()
-    const removeFavoriteSongMutation = useRemoveFavoriteSong()
+    const { useAddFavoriteSong, useRemoveFavoriteSong, queryKeys } = useApi()
+    const removeFavoriteSongMutation = useRemoveFavoriteSong(queryKeys.songs({}))
     const addFavoriteSongMutation = useAddFavoriteSong()
     const imageSizeCss = () => {
         if (imgSize === 'xl') return 'w-20 h-20'

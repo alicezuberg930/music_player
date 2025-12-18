@@ -1,23 +1,17 @@
-import { useDispatch } from 'react-redux'
 import SongList from '../sections/SongList'
 import { useSearchParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import type { Song } from '@/@types/song'
+import { useApi } from '@/hooks/useApi'
+import { SongListShimmer } from '@/components/loading-placeholder'
 
 const SearchSongPage = () => {
-    const dispatch = useDispatch()
     const [searchParams] = useSearchParams()
     const q = searchParams.get('q')
-    const [songs, setSongs] = useState<Song[]>([])
-
-    useEffect(() => {
-        setSongs([])
-    }, [q, dispatch])
-
+    const { data: songData, isLoading } = useApi().useSongList({ search: q || '', page: 1, limit: 10 })
+    console.log('search song render')
     return (
         <div className='w-full'>
             <h3 className='text-xl font-bold mb-4'>Bài hát</h3>
-            <SongList songs={songs} showHeader={false} />
+            {isLoading ? <SongListShimmer /> : songData?.data && <SongList songs={songData.data} showHeader={false} />}
         </div>
     )
 }

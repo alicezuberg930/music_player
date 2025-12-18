@@ -163,10 +163,11 @@ export class UserService {
         }
     }
 
-    public async userSongs(request: Request<{}, {}, { type?: 'upload' | 'favorite', page?: number, count?: number }>, response: Response) {
+    public async userSongs(request: Request<{}, {}, {}, { type: 'upload' | 'favorite' }>, response: Response) {
         try {
-            // const { type, page, count } = request.body
-            const data = await db.query.songs.findMany({ where: eq(songs.userId, request.userId!) })
+            let { type } = request.query
+            if (!type) type = 'upload'
+            const data = type === 'upload' ? await db.query.songs.findMany({ where: eq(songs.userId, request.userId!) }) : []
             return response.json({ message: 'User songs fetched successfully', data })
         } catch (error) {
             if (error instanceof HttpException) throw error
@@ -174,9 +175,11 @@ export class UserService {
         }
     }
 
-    public async userPlaylists(request: Request, response: Response) {
+    public async userPlaylists(request: Request<{}, {}, {}, { type: 'upload' | 'favorite' }>, response: Response) {
         try {
-            const data = await db.query.playlists.findMany({ where: eq(playlists.userId, request.userId!) })
+            let { type } = request.query
+            if (!type) type = 'upload'
+            const data = type === 'upload' ? await db.query.playlists.findMany({ where: eq(playlists.userId, request.userId!) }) : []
             return response.json({ message: 'User playlists fetched successfully', data })
         } catch (error) {
             if (error instanceof HttpException) throw error

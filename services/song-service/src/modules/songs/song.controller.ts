@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import { SongService } from "./song.service"
 import { CreateSongDto } from "./dto/create-song.dto"
 import { UpdateSongDto } from "./dto/update-song.dto"
+import { QueryParams } from "./dto/query.param"
 
 class SongController {
     private readonly songService: SongService
@@ -10,7 +11,7 @@ class SongController {
         this.songService = new SongService()
     }
 
-    public async getSongs(request: Request, response: Response) {
+    public async getSongs(request: Request<{}, {}, {}, QueryParams>, response: Response) {
         return await this.songService.getSongs(request, response)
     }
 

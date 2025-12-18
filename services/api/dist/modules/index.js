@@ -1,8 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.bannerRouter = exports.sitemapRouter = exports.userRouter = exports.playlistRouter = exports.artistRouter = exports.songRouter = void 0;
-var song_route_1 = require("./songs/song.route");
-Object.defineProperty(exports, "songRouter", { enumerable: true, get: function () { return song_route_1.songRouter; } });
+exports.bannerRouter = exports.sitemapRouter = exports.userRouter = exports.playlistRouter = exports.artistRouter = void 0;
 var artist_route_1 = require("./artists/artist.route");
 Object.defineProperty(exports, "artistRouter", { enumerable: true, get: function () { return artist_route_1.artistRouter; } });
 var playlist_route_1 = require("./playlists/playlist.route");

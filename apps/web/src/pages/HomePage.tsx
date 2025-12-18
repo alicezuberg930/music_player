@@ -3,7 +3,7 @@ import PlaylistSection from "@/sections/home/PlaylistSection"
 import { useApi } from "@/hooks/useApi"
 import ArtistSection from "@/sections/home/ArtistSection"
 import BannerSliderSection from "@/sections/home/BannerSliderSection"
-import HomeLoadingShimmer from "@/components/loading-placeholder/HomeLoadingShimmer"
+import { HomeShimmer } from "@/components/loading-placeholder"
 
 const HomePage: React.FC = () => {
     const { useHomeData } = useApi()
@@ -17,7 +17,7 @@ const HomePage: React.FC = () => {
     return (
         <>
             {isLoading ? (
-                <HomeLoadingShimmer />
+                <HomeShimmer />
             ) : home && (
                 <>
                     <BannerSliderSection banners={banners} />

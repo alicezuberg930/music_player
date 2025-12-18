@@ -55,12 +55,12 @@ userRouter.get("/users/verify-email/:id",
 
 userRouter.get("/users/song/list",
     JWTMiddleware,
-    (request: Request, response: Response) => userController.userSongs(request, response)
+    (request: Request<{}, {}, {}, { type: 'upload' | 'favorite' }>, response: Response) => userController.userSongs(request, response)
 )
 
 userRouter.get("/users/playlist/list",
     JWTMiddleware,
-    (request: Request, response: Response) => userController.userPlaylists(request, response)
+    (request: Request<{}, {}, {}, { type: 'upload' | 'favorite' }>, response: Response) => userController.userPlaylists(request, response)
 )
 
 // following artist list

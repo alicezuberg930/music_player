@@ -1,7 +1,7 @@
 import { axios } from './axiosConfig'
 // types
 import type { Response } from '@/@types/response'
-import type { Song } from '@/@types/song'
+import type { QuerySong, Song } from '@/@types/song'
 import type { Video } from '@/@types/video'
 import type { Artist } from '@/@types/artist'
 import type { Playlist } from '@/@types/playlist'
@@ -19,9 +19,9 @@ export const fetchHomeData = async (): Promise<Response<HomeData>> => {
     }
 }
 
-export const fetchSongList = async (): Promise<Response<Song[]>> => {
+export const fetchSongList = async (query: QuerySong): Promise<Response<Song[]>> => {
     try {
-        const response = await axios.get<Response<Song[]>>(`/app/songs`)
+        const response = await axios.get<Response<Song[]>>(`/songs`, { params: query })
         return response.data
     } catch (error) {
         console.error(error)
@@ -31,7 +31,7 @@ export const fetchSongList = async (): Promise<Response<Song[]>> => {
 
 export const createSong = async (formData: FormData): Promise<Response> => {
     try {
-        const response = await axios.post<Response>(`/app/songs`, formData)
+        const response = await axios.post<Response>(`/songs`, formData)
         return response.data
     } catch (error) {
         console.error(error)
@@ -41,7 +41,7 @@ export const createSong = async (formData: FormData): Promise<Response> => {
 
 export const fetchSong = async (songId: string): Promise<Response<Song>> => {
     try {
-        const response = await axios.get<Response<Song>>(`/app/songs/${songId}`)
+        const response = await axios.get<Response<Song>>(`/songs/${songId}`)
         return response.data
     } catch (error) {
         console.error(error)

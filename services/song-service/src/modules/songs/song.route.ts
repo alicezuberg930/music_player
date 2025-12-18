@@ -4,6 +4,7 @@ import { CreateSongDto } from "./dto/create-song.dto"
 import multer from "multer"
 import { UpdateSongDto } from "./dto/update-song.dto"
 import { fileMimeAndSizeOptions, validateDtoHanlder, JWTMiddleware, OptionalJWTMiddleware, multerOptions, Options } from "@yukikaze/middleware"
+import { QueryParams } from "./dto/query.param"
 
 const songRouter = express.Router()
 
@@ -18,12 +19,12 @@ const uploadOptions: Options = {
 const upload = multer(multerOptions(uploadOptions))
 const fileValidator = fileMimeAndSizeOptions(uploadOptions)
 
-songRouter.get("/songs",
+songRouter.get("/",
     OptionalJWTMiddleware,
-    (request: Request, response: Response) => songController.getSongs(request, response)
+    (request: Request<{}, {}, {}, QueryParams>, response: Response) => songController.getSongs(request, response)
 )
 
-songRouter.post("/songs",
+songRouter.post("/",
     JWTMiddleware,
     upload.fields([
         { name: "audio", maxCount: 1 },
@@ -35,7 +36,7 @@ songRouter.post("/songs",
     (request: Request<{}, {}, CreateSongDto>, response: Response) => songController.createSong(request, response)
 )
 
-songRouter.put("/songs/:id",
+songRouter.put("/:id",
     JWTMiddleware,
     upload.fields([
         { name: "audio", maxCount: 1 },
@@ -47,12 +48,12 @@ songRouter.put("/songs/:id",
     (request: Request<{ id: string }, {}, UpdateSongDto>, response: Response) => songController.updateSong(request, response)
 )
 
-songRouter.get("/songs/:id",
+songRouter.get("/:id",
     OptionalJWTMiddleware,
     (request: Request<{ id: string }>, response: Response) => songController.findSong(request, response)
 )
 
-songRouter.delete("/songs/:id",
+songRouter.delete("/:id",
     JWTMiddleware,
     (request: Request<{ id: string }, {}>, response: Response) => songController.deleteSong(request, response)
 )

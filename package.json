@@ -49,8 +49,8 @@
   "scripts": {
     "build": "turbo run build",
     "build:web": "turbo run build --filter=@yukikaze/web",
-    "build:packages": "turbo run build --filter=@yukikaze/lib --filter=@yukikaze/ui --filter=@yukikaze/db --filter=@yukikaze/email --filter=@yukikaze/middleware",
-    "build:api": "turbo run build --filter=@yukikaze/services --filter=@yukikaze/gateway-service --filter=@yukikaze/home-service",
+    "build:packages": "turbo run build --filter=@yukikaze/lib --filter=@yukikaze/ui --filter=@yukikaze/db --filter=@yukikaze/email --filter=@yukikaze/middleware --filter=@yukikaze/redis",
+    "build:api": "turbo run build --filter=@yukikaze/services --filter=@yukikaze/gateway-service --filter=@yukikaze/home-service --filter=@yukikaze/song-service",
     "clean:workspaces": "turbo run clean",
     "db:generate": "turbo run db:generate -F @yukikaze/db",
     "db:migrate": "turbo run db:migrate -F @yukikaze/db",
@@ -58,14 +58,14 @@
     "deps:bump": "bunx npm-check-updates --deep -u && bun install",
     "dev": "turbo run dev",
     "dev:web": "turbo run dev --filter=@yukikaze/web",
-    "dev:api": "turbo run dev --filter=@yukikaze/services --filter=@yukikaze/gateway-service --filter=@yukikaze/home-service",
+    "dev:api": "turbo run dev --filter=@yukikaze/services --filter=@yukikaze/gateway-service --filter=@yukikaze/home-service --filter=@yukikaze/song-service",
     "dev:packages": "turbo run dev --filter=@yukikaze/lib --filter=@yukikaze/ui --filter=@yukikaze/db --filter=@yukikaze/email --filter=@yukikaze/middleware",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
     "start": "turbo run start --filter=@yukikaze/web --filter=@yukikaze/services --parallel",
     "start:web": "turbo run start --filter=@yukikaze/web",
-    "start:api": "turbo run start --filter=@yukikaze/services --filter=@yukikaze/gateway-service --filter=@yukikaze/home-service"
+    "start:api": "turbo run start --filter=@yukikaze/services --filter=@yukikaze/gateway-service --filter=@yukikaze/home-service --filter=@yukikaze/song-service"
   },
   "workspaces": [
     "apps/*",

@@ -1,6 +1,6 @@
 import { useIsMobile } from "@/hooks/useMobile"
 
-const HomeLoadingShimmer: React.FC = () => {
+const HomeShimmer: React.FC = () => {
     const isMobile = useIsMobile()
     const bannerCount = isMobile ? 2 : 3
     const playlistCount = isMobile ? 2 : 5
@@ -83,4 +83,4 @@ const HomeLoadingShimmer: React.FC = () => {
     )
 }
 
-export default HomeLoadingShimmer
+export default HomeShimmer

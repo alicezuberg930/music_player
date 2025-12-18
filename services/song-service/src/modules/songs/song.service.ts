@@ -4,7 +4,7 @@ import musicMetadata from 'music-metadata'
 import fs from 'node:fs'
 import NodeID3 from 'node-id3'
 // database
-import { db, eq, inArray, and } from '@yukikaze/db'
+import { db, eq, inArray, and, like, or } from '@yukikaze/db'
 import { CreateSong, Song } from './song.model'
 import { artists, songs, artistsSongs, userFavoriteSongs } from '@yukikaze/db/schemas'
 // utils
@@ -12,34 +12,39 @@ import { HttpException, BadRequestException, NotFoundException } from '@yukikaze
 import slugify from '@yukikaze/lib/slugify'
 import { deleteFile, extractPublicId, uploadFile } from "@yukikaze/lib/cloudinary"
 import { createId } from "@yukikaze/lib/create-cuid"
+import { resizeImageToBuffer } from '@yukikaze/lib/image-resize'
 // dto
 import { CreateSongDto } from './dto/create-song.dto'
 import { UpdateSongDto } from './dto/update-song.dto'
-import { resizeImageToBuffer } from '@yukikaze/lib/image-resize'
+import { QueryParams } from './dto/query.param'
 
 export class SongService {
-    public async getSongs(request: Request, response: Response) {
+    public async getSongs(request: Request<{}, {}, {}, QueryParams>, response: Response) {
         try {
-            const { } = request.query
+            const { page, limit, search } = request.query
             const userId = request.userId // Get user ID from JWT middleware (undefined if not logged in)
-            console.log(request.userId)
+            console.log(request.query)
             const data: Song[] = await db.query.songs.findMany({
-                with: {
-                    user: { columns: { password: false, email: false } },
-                    genres: {
-                        columns: { id: false, genreId: false, songId: false },
-                        with: { genre: true }
-                    },
-                    artists: {
-                        columns: { id: false, artistId: false, songId: false },
-                        with: { artist: true }
-                    }
-                }
-            }).then(result => result.map(song => ({
-                ...song,
-                artists: song.artists.map(a => a.artist),
-                genres: song.genres.map(g => g.genre)
-            })))
+                where: search ? or(like(songs.title, `%${search}%`), like(songs.artistNames, `%${search}%`)) : undefined,
+                limit: limit ? Number(limit) : 10,
+                offset: page && limit ? (Number(page) - 1) * Number(limit) : undefined,
+                // with: {
+                //     user: { columns: { password: false, email: false } },
+                //     genres: {
+                //         columns: { id: false, genreId: false, songId: false },
+                //         with: { genre: true }
+                //     },
+                //     artists: {
+                //         columns: { id: false, artistId: false, songId: false },
+                //         with: { artist: true }
+                //     }
+                // }
+            })
+            // .then(result => result.map(song => ({
+            // ...song,
+            // artists: song.artists.map(a => a.artist),
+            // genres: song.genres.map(g => g.genre)
+            // })))
             // If user is logged in, check which songs they've liked
             let likedSongIds: Set<string> = new Set()
             if (userId) {
@@ -57,7 +62,14 @@ export class SongService {
                 ...song,
                 liked: likedSongIds.has(song.id)
             }))
-            return response.json({ message: 'Song list fetched successfully', data: songsWithLikedStatus })
+            return response.json({
+                message: 'Song list fetched successfully',
+                data: songsWithLikedStatus,
+                paginate: {
+                    limit: limit ? Number(limit) : 10,
+                    currentPage: page ? Number(page) : 1
+                }
+            })
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)

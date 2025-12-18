@@ -50,7 +50,7 @@ const routes: Map<string, string> = new Map([
     ['/api/v1/app', `http://localhost:${env.PORT}`],
     ['/api/v1/home', `http://localhost:${env.HOME_SERVICE_PORT}`],
     // ['/api/v1/auth', `http://localhost:${env.AUTH_SERVICE_PORT}`],
-    // ['/api/v1/songs', `http://localhost:${env.SONG_SERVICE_PORT || 5004}`],
+    ['/api/v1/songs', `http://localhost:${env.SONG_SERVICE_PORT}`],
     // ['/api/v1/albums', `http://localhost:${env.ALBUM_SERVICE_PORT || 5005}`],
     // ['/api/v1/playlists', `http://localhost:${env.PLAYLIST_SERVICE_PORT || 5006}`],
     // ['/api/v1/users', `http://localhost:${env.USER_SERVICE_PORT}`],
@@ -124,7 +124,7 @@ routes.forEach((target, path) => {
 })
 
 app.listen(port, () => {
-    // routes.forEach((target, path) => {
-    //     console.info(`[${path.replaceAll('/api/v1/', '').toUpperCase()} Service]: Started on ${target}`)
-    // })
+    routes.forEach((target, path) => {
+        console.info(`[${path.replaceAll('/api/v1/', '').toUpperCase()} Service]: Started on ${target}`)
+    })
 })

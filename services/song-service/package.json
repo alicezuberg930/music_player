@@ -1,5 +1,5 @@
 {
-  "name": "@yukikaze/services",
+  "name": "@yukikaze/song-service",
   "scripts": {
     "dev": "npx tsx --watch src/index.ts",
     "build": "tsc",

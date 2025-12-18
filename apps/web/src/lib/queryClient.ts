@@ -26,7 +26,7 @@ export const createQueryClient = () => new QueryClient({
             // With SSR, we usually want to set some default staleTime
             // above 0 to avoid refetching immediately on the client
             staleTime: 60 * 60 * 1000, // 60 minutes
-            gcTime: 1000 * 60 * 60 * 6, // 6 hours (must be >= maxAge for persister)
+            gcTime: 1000 * 60 * 60 * 1, // 1 hours (must be >= maxAge for persister)
             retry: 2, // retry 2 times on failure
             retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
             refetchOnWindowFocus: false, // Disable refetch on window focus

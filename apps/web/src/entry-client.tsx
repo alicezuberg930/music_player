@@ -24,7 +24,7 @@ hydrateRoot(document.getElementById('root') as HTMLElement,
       client={getQueryClient()}
       persistOptions={{
         persister: createIDBPersister(),
-        maxAge: 1000 * 60 * 60 * 6, // 6 hours
+        maxAge: 1000 * 60 * 60 * 1, // 1 hours
       }}
     >
       <SnackbarProvider>

@@ -4,7 +4,7 @@ import musicMetadata from 'music-metadata'
 import fs from 'node:fs'
 import NodeID3 from 'node-id3'
 // database
-import { db, eq, inArray, and, like, or } from '@yukikaze/db'
+import { db, eq, inArray, and, like, or, count } from '@yukikaze/db'
 import { CreateSong, Song } from './song.model'
 import { artists, songs, artistsSongs, userFavoriteSongs } from '@yukikaze/db/schemas'
 // utils
@@ -21,13 +21,22 @@ import { QueryParams } from './dto/query.param'
 export class SongService {
     public async getSongs(request: Request<{}, {}, {}, QueryParams>, response: Response) {
         try {
-            const { page, limit, search } = request.query
-            const userId = request.userId // Get user ID from JWT middleware (undefined if not logged in)
-            console.log(request.query)
+            let { page, limit, search } = request.query
+            let currentPage = 1
+            let currentLimit = 15
+            if (page) currentPage = Number(page)
+            if (limit) currentLimit = Number(limit)
+            const userId = request.userId
+            // Get total count with same search filter
+            const condition = search ? or(like(songs.title, `%${search}%`), like(songs.artistNames, `%${search}%`)) : undefined
+            const total = await db.$count(songs, condition)
+            // select({ total: count() }).from(songs).where(condition)
+            const totalPages = Math.ceil(total / currentLimit)
+
             const data: Song[] = await db.query.songs.findMany({
-                where: search ? or(like(songs.title, `%${search}%`), like(songs.artistNames, `%${search}%`)) : undefined,
-                limit: limit ? Number(limit) : 10,
-                offset: page && limit ? (Number(page) - 1) * Number(limit) : undefined,
+                where: condition,
+                limit: currentLimit,
+                offset: (currentPage - 1) * currentLimit,
                 // with: {
                 //     user: { columns: { password: false, email: false } },
                 //     genres: {
@@ -40,6 +49,7 @@ export class SongService {
                 //     }
                 // }
             })
+
             // .then(result => result.map(song => ({
             // ...song,
             // artists: song.artists.map(a => a.artist),
@@ -62,12 +72,14 @@ export class SongService {
                 ...song,
                 liked: likedSongIds.has(song.id)
             }))
+
             return response.json({
                 message: 'Song list fetched successfully',
                 data: songsWithLikedStatus,
                 paginate: {
-                    limit: limit ? Number(limit) : 10,
-                    currentPage: page ? Number(page) : 1
+                    limit: currentLimit,
+                    currentPage,
+                    totalPages,
                 }
             })
         } catch (error) {

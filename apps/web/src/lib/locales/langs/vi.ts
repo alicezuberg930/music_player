@@ -1,4 +1,7 @@
 const vi = {
+  'followed': 'Đã quan tâm',
+  'follow': 'Quan tâm',
+  'spotlight_artist': ' Nghệ sĩ nổi bật',
   'artist': ' Nghệ sĩ',
   'album': ' Album',
   'song': ' Bài hát',

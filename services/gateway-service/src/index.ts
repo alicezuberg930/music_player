@@ -5,7 +5,7 @@ import { env } from '@yukikaze/lib/create-env'
 import { rateLimiter } from './middleware/rate.limiter'
 import { createProxyMiddleware } from 'http-proxy-middleware'
 import { InternalServerErrorException, UnauthorizedException } from '@yukikaze/lib/exception'
-import { ClientRequest, IncomingMessage, ServerResponse } from 'node:http'
+import http, { ClientRequest, IncomingMessage, ServerResponse } from 'node:http'
 import { Socket } from 'node:net'
 import { db } from "@yukikaze/db"
 import { logs } from '@yukikaze/db/schemas'
@@ -110,20 +110,22 @@ routes.forEach((target, path) => {
             proxyRes: (proxyRes, req, res) => {
                 const origin = req.headers.origin
                 // Set CORS headers on the response from the target service
-                if (origin && allowedOrigins.has(origin)) {
-                    if (!proxyRes.headers['access-control-allow-origin']) {
-                        proxyRes.headers['access-control-allow-origin'] = origin
-                    }
-                    if (!proxyRes.headers['access-control-allow-credentials']) {
-                        proxyRes.headers['access-control-allow-credentials'] = 'true'
-                    }
-                }
+                // if (origin && allowedOrigins.has(origin)) {
+                //     if (!proxyRes.headers['access-control-allow-origin']) {
+                //         proxyRes.headers['access-control-allow-origin'] = origin
+                //     }
+                //     if (!proxyRes.headers['access-control-allow-credentials']) {
+                //         proxyRes.headers['access-control-allow-credentials'] = 'true'
+                //     }
+                // }
             }
         }
     }))
 })
 
-app.listen(port, () => {
+const server = http.createServer(app)
+
+server.listen(port, () => {
     routes.forEach((target, path) => {
         console.info(`[${path.replaceAll('/api/v1/', '').toUpperCase()} Service]: Started on ${target}`)
     })

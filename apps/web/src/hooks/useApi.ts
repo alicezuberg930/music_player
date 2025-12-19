@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient, type UseMutationOptions, type UseQueryOptions, type QueryKey } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient, type UseMutationOptions, type UseQueryOptions, type QueryKey, useInfiniteQuery } from '@tanstack/react-query'
 import type { Response } from '@/@types/response'
 import type { QuerySong, Song } from '@/@types/song'
 import type { Video } from '@/@types/video'
@@ -42,11 +42,14 @@ export const useApi = () => {
         })
     }
 
-    const useSongList = (query: QuerySong = {}, options?: UseQueryOptions<Response<Song[]>>) => {
-        return useQuery({
-            queryKey: queryKeys.songs(query),
-            queryFn: () => api.fetchSongList(query),
-            ...options,
+    const useSongList = (query?: QuerySong) => {
+        return useInfiniteQuery({
+            queryKey: queryKeys.songs(query ?? {}),
+            queryFn: ({ pageParam }) => api.fetchSongList({ search: query?.search ?? '', page: pageParam + 1, limit: 15 }),
+            initialPageParam: 0,
+            getNextPageParam: (lastPage, _allPages, lastPageParam) => {
+                return lastPage.paginate.totalPages > lastPageParam + 1 ? lastPageParam + 1 : undefined
+            }
         })
     }
 

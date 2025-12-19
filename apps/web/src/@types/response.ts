@@ -11,4 +11,9 @@ export type Response<T = Artist[] | Song[] | Playlist[] | Playlist | Artist | So
     path?: string
     method?: string
     timestamp?: string
+    paginate: {
+        limit: number
+        currentPage: number
+        totalPages: number
+    }
 }

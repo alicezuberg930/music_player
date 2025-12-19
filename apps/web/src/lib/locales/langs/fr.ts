@@ -1,4 +1,7 @@
 const fr = {
+  'followed': 'Suivi',
+  'follow': 'Suivre',
+  'spotlight_artist': 'Artiste en vedette',
   'artist': 'Artiste',
   'album': 'Album',
   'song': 'Chanson',

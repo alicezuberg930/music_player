@@ -1,5 +1,5 @@
 export type QueryParams = {
-    page?: number
-    limit?: number
+    page?: string
+    limit?: string
     search?: string
 }

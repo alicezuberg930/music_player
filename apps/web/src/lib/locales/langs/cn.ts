@@ -1,4 +1,7 @@
 const cn = {
+  'followed': '已关注',
+  'follow': '关注',
+  'spotlight_artist': '精选艺术家',
   'artist': '艺术家',
   'album': '专辑',
   'song': '歌曲',

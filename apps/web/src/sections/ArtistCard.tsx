@@ -5,6 +5,7 @@ import type { Artist } from "@/@types/artist"
 import { UserRoundPlus } from '@yukikaze/ui/icons'
 import { Button } from "@yukikaze/ui/button"
 import LazyLoadImage from "@/components/lazy-load-image/LazyLoadImage"
+import { useLocales } from "@/lib/locales"
 
 type Props = {
     artist: Omit<Artist, 'recommendedArtists' | 'songs' | 'topAlbum' | 'playlists' | 'videos'>
@@ -12,6 +13,8 @@ type Props = {
 }
 
 const ArtistCard = ({ artist, visibleSlides = 5 }: Props) => {
+    const { translate } = useLocales()
+
     return (
         <div className="space-x-3 text-center flex flex-col items-center gap-3 px-2" style={{ width: `${100 / visibleSlides}%` }}>
             <Link className="w-full h-full relative aspect-square rounded-full overflow-hidden group" to={`/artist/${artist.id}`} aria-label={`View ${artist.name} profile`}>
@@ -28,11 +31,11 @@ const ArtistCard = ({ artist, visibleSlides = 5 }: Props) => {
             </Link>
             <div className="flex flex-col items-center">
                 <span className="text-sm font-medium hover:underline hover:text-main-500">{artist.name}</span>
-                <span className="text-xs text-gray-600">{roundPeopleAmount(artist.totalFollow)} quan tâm</span>
+                <span className="text-xs text-gray-600">{roundPeopleAmount(artist.totalFollow)} {translate('following')}</span>
             </div>
             <Button className="rounded-full">
                 <UserRoundPlus size={14} />
-                <span className="text-xs">QUAN TÂM</span>
+                <span className="text-xs">{translate('follow')}</span>
             </Button>
         </div>
     )

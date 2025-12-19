@@ -19,7 +19,8 @@ export const fetchHomeData = async (): Promise<Response<HomeData>> => {
     }
 }
 
-export const fetchSongList = async (query: QuerySong): Promise<Response<Song[]>> => {
+export const fetchSongList = async (query?: QuerySong): Promise<Response<Song[]>> => {
+    console.log(query)
     try {
         const response = await axios.get<Response<Song[]>>(`/songs`, { params: query })
         return response.data

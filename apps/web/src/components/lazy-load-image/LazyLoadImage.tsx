@@ -1,12 +1,12 @@
 import React from "react"
 import type { LazyLoadImageProps } from "./types"
 import { cn } from "@yukikaze/ui"
-import { useIsInView } from "@/hooks/useIsInView"
+import { useInView } from "@/hooks/useInView"
 
 export default function LazyLoadImage({ placeholderSrc, effect, wrapperClassName, responsiveSizes, widths, ...props }: LazyLoadImageProps) {
     const [isLoaded, setIsLoaded] = React.useState(false)
     const containerRef = React.useRef<HTMLDivElement>(null)
-    const isInView = useIsInView(containerRef)
+    const isInView = useInView(containerRef, { margin: '50px' })
 
     const handleLoad = () => setIsLoaded(true)
 

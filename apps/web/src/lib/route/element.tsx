@@ -1,9 +1,9 @@
 import { Suspense, lazy, type ElementType } from 'react'
 
 const Loadable = (Component: ElementType) => (props: any) => (
-    // <Suspense fallback={<>Suspended</>}>
-    <Component {...props} />
-    // </Suspense>
+    <Suspense>
+        <Component {...props} />
+    </Suspense>
 )
 
 export const PublicPage = Loadable(lazy(() => import('@/pages/PublicPage')));

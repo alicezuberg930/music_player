@@ -1,6 +1,8 @@
 import type { Artist } from "@/@types/artist"
 import ArtistCard from "../ArtistCard"
 import { useIsMobile } from "@/hooks/useMobile"
+import { Typography } from "@yukikaze/ui/typography"
+import { useLocales } from "@/lib/locales"
 
 export const favoriteArtistsHC = {
     "title": "Nghệ sĩ yêu thích",
@@ -114,13 +116,14 @@ type Props = {
 
 const ArtistSection: React.FC<Props> = ({ artists }) => {
     const isMobile = useIsMobile()
+    const { translate } = useLocales()
 
     return (
         <section className="mt-12">
             <div className="flex flex-col gap-5">
                 <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-bold">Nhạc sĩ nổi bật</h3>
-                    <span className="text-xs uppercase">Tất cả</span>
+                    <Typography variant={'h5'}>{translate('spotlight_artist')}</Typography>
+                    <span className="text-xs uppercase">{translate('all')}</span>
                 </div>
                 {/* <div className="flex gap-3">
                     {favoriteArtistsHC.items?.slice(0, isMobile ? 2 : 5)?.map(singer => (

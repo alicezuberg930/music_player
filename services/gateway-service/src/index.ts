@@ -95,7 +95,15 @@ const onError = (err: Error, req: IncomingMessage, res: ServerResponse<IncomingM
         console.error('Failed to log error to database:', error)
     })
     console.error(message)
-    throw new InternalServerErrorException(message)
+    // send HTTP error response
+    if (res instanceof ServerResponse && !res.headersSent) {
+        res.writeHead(503, { 'Content-Type': 'application/json' })
+        res.end(JSON.stringify({
+            error: 'Service Unavailable',
+            message: 'The requested service is currently unavailable. Please try again later.',
+            details: env.NODE_ENV === 'development' ? err.message : undefined
+        }))
+    }
 }
 
 routes.forEach((target, path) => {

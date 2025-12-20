@@ -68,7 +68,7 @@ const UploadMusicPage: React.FC<{ editSong?: Song, id?: string }> = ({ editSong,
         thumbnail: editSong?.thumbnail || undefined,
         title: editSong?.title || '',
         releaseDate: editSong?.releaseDate || '',
-        artistIds: editSong?.artists.map(artist => artist.id) || []
+        artistIds: editSong?.artists?.map(artist => artist.id) || []
     }
 
     const methods = useForm<FormValuesProps>({

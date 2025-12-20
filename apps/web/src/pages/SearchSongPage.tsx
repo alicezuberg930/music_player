@@ -4,6 +4,8 @@ import { useApi } from '@/hooks/useApi'
 import { SongListShimmer } from '@/components/loading-placeholder'
 import { useEffect, useRef } from 'react'
 import { useInView } from '@/hooks/useInView'
+import { Typography } from '@yukikaze/ui/typography'
+import { useLocales } from '@/lib/locales'
 
 const SearchSongPage = () => {
     const [searchParams] = useSearchParams()
@@ -11,6 +13,7 @@ const SearchSongPage = () => {
     const ref = useRef<HTMLDivElement>(null)
     const isInView = useInView(ref, { once: false, margin: '10px' })
     const { data: songData, status, fetchNextPage, isFetchingNextPage, hasNextPage } = useApi().useSongList({ search: q ?? '', limit: 15 })
+    const { translate } = useLocales()
 
     useEffect(() => {
         if (isInView) fetchNextPage()
@@ -18,7 +21,7 @@ const SearchSongPage = () => {
 
     return (
         <div className='w-full'>
-            <h3 className='text-xl font-bold mb-4'>Bài hát</h3>
+            <Typography variant={'h5'}>{translate('song')}</Typography>
             {status === 'pending' && (<SongListShimmer />)}
             {status === 'error' && (<div>Error loading songs</div>)}
             {status === 'success' && (

@@ -89,17 +89,21 @@ const SongItem: React.FC<Props> = ({ song, order, percent, imgSize, style, showT
                     {showTime && <span className='text-xs text-gray-600'>{dayjs(song.createdAt).fromNow()}</span>}
                 </div>
                 {percent && <span className='pr-1 font-bold'>{percent}%</span>}
-                <HeartIcon
-                    className={`group-hover:opacity-100 opacity-0 ${song.liked && 'fill-main-500'}`}
-                    onClick={handleFavorite}
-                    aria-label='like/unlike song'
-                />
-                <button onClick={(e) => e.stopPropagation()} className='group-hover:opacity-100 opacity-0' aria-label="More song options">
-                    <SongOptionDropdown
-                        triggerElement={<MoreHorizontalIcon aria-label='More song options' />}
-                        addToPlaylist={(playlistId) => addToPlaylist(playlistId)}
-                    />
-                </button>
+                {!percent && (
+                    <>
+                        <HeartIcon
+                            className={`group-hover:opacity-100 opacity-0 ${song.liked && 'fill-main-500'}`}
+                            onClick={handleFavorite}
+                            aria-label='like/unlike song'
+                        />
+                        <button onClick={(e) => e.stopPropagation()} className='group-hover:opacity-100 opacity-0' aria-label="More song options">
+                            <SongOptionDropdown
+                                triggerElement={<MoreHorizontalIcon aria-label='More song options' />}
+                                addToPlaylist={(playlistId) => addToPlaylist(playlistId)}
+                            />
+                        </button>
+                    </>
+                )}
             </div>
         </div>
     )

@@ -1,9 +1,6 @@
-import NewReleaseListSection from "@/sections/home/NewReleaseListSection"
-import PlaylistSection from "@/sections/home/PlaylistSection"
 import { useApi } from "@/hooks/useApi"
-import ArtistSection from "@/sections/home/ArtistSection"
-import BannerSliderSection from "@/sections/home/BannerSliderSection"
 import { HomeShimmer } from "@/components/loading-placeholder"
+import { ArtistSection, BannerSliderSection, ChartSection, NewReleaseListSection, PlaylistSection } from "@/sections/home"
 
 const HomePage: React.FC = () => {
     const { useHomeData } = useApi()
@@ -27,23 +24,10 @@ const HomePage: React.FC = () => {
                     <PlaylistSection playlists={playlists} />
 
                     <ArtistSection artists={artists} />
+
+                    <ChartSection />
                 </>
             )}
-
-            {/* <div>
-                <ChartSection />
-                <div className="flex items-center w-full mt-12 gap-7">
-                    {
-                        weekCharts?.map(chart => {
-                            return (
-                                <Link to={chart?.link?.split('.')[0]} key={chart?.link} className="flex-1" aria-label={`View ${chart?.country || 'chart'}`}>
-                                    <img src={chart?.cover} alt="cover" className="w-full object-cover rounded-md" />
-                                </Link>
-                            )
-                        })
-                    }
-                </div>
-            </div> */}
         </>
     )
 }

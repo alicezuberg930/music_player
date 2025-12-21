@@ -13,7 +13,7 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
   // Fetch dynamic routes from API sitemap
   let dynamicRoutes: string[] = []
   try {
-    const response = await fetch('https://api.tien-music-player.site/sitemap-urls')
+    const response = await fetch('https://api.tien-music-player.site/api/v1/home/sitemap-urls')
     const data = await response.json() as { data: string[] }
     for (const url of data.data) {
       dynamicRoutes.push(url)

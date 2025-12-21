@@ -19,8 +19,6 @@ const PublicPage: React.FC = () => {
         }
     }
 
-    console.log(scrollTop)
-
     return (
         <div className={`w-full bg-main-300 ${currentSong ? 'h-[calc(100vh-96px)]' : 'h-screen'}`}>
             <div className="w-full h-full flex">

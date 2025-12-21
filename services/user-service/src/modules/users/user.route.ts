@@ -17,78 +17,73 @@ const uploadOptions: Options = {
 const upload = multer(multerOptions(uploadOptions))
 const fileValidator = fileMimeAndSizeOptions(uploadOptions)
 
-userRouter.get("/users", (request: Request, response: Response) => userController.getUsers(request, response))
+userRouter.post("/sign-up",
+    validateDtoHanlder(CreateUserDto),
+    (request: Request<{}, {}, CreateUserDto>, response: Response) => userController.signUp(request, response)
+)
 
-// user profile public access (wont see playlist if it's private and uploaded songs)
-userRouter.get("/users/:id", (request: Request<{ id: string }>, response: Response) => userController.findUser(request, response))
+userRouter.post("/sign-in",
+    validateDtoHanlder(LoginUserDto),
+    (request: Request<{}, {}, LoginUserDto>, response: Response) => userController.signIn(request, response)
+)
 
-// user profile only accessible when login (can see all playlist including private and uploaded songs)
+userRouter.post("/sign-out",
+    JWTMiddleware,
+    (request: Request, response: Response) => userController.signOut(request, response)
+)
+
+// auth above
+
+userRouter.get("/", (request: Request, response: Response) => userController.getUsers(request, response))
+
+// user public profile, anyone can see (cannot see private playlists/songs & followed artists)
+userRouter.get("/:id", (request: Request<{ id: string }>, response: Response) => userController.findUser(request, response))
+
+// user private profile, only accessible when login
 userRouter.get("/me/profile",
     JWTMiddleware,
     (request: Request, response: Response) => userController.myProfile(request, response)
 )
 
-userRouter.post("/users/sign-up",
-    validateDtoHanlder(CreateUserDto),
-    (request: Request<{}, {}, CreateUserDto>, response: Response) => userController.signUp(request, response)
-)
-
-userRouter.post("/users/sign-in",
-    validateDtoHanlder(LoginUserDto),
-    (request: Request<{}, {}, LoginUserDto>, response: Response) => userController.signIn(request, response)
-)
-
-userRouter.post("/users/sign-out",
-    JWTMiddleware,
-    (request: Request, response: Response) => userController.signOut(request, response)
-)
-
-userRouter.put("/users/:id",
+// update user profile
+userRouter.put("/:id",
     upload.fields([{ name: "avatar", maxCount: 1 }]),
     fileValidator,
     (request: Request<{ id: string }, {}, UpdateUserDto>, response: Response) => userController.updateUser(request, response)
 )
 
-userRouter.get("/users/verify-email/:id",
+userRouter.get("/verify-email/:id",
     (request: Request<{ id: string }, {}, {}, { token: string }>, response: Response) => userController.verifyEmail(request, response)
 )
 
-userRouter.get("/users/song/list",
+userRouter.get("/song/list",
     JWTMiddleware,
     (request: Request<{}, {}, {}, { type: 'upload' | 'favorite' }>, response: Response) => userController.userSongs(request, response)
 )
 
-userRouter.get("/users/playlist/list",
+userRouter.get("/playlist/list",
     JWTMiddleware,
     (request: Request<{}, {}, {}, { type: 'upload' | 'favorite' }>, response: Response) => userController.userPlaylists(request, response)
 )
 
-// following artist list
-// userRouter.get("/users/artist/follow",
-//     JWTMiddleware,
-//     (request: Request, response: Response) => userController.followingArtistList(request, response)
-// )
+userRouter.get("/artist/list",
+    JWTMiddleware,
+    (request: Request, response: Response) => userController.userArtists(request, response)
+)
 
-// follow artist
-// userRouter.put("/users/artist/follow/:id",
-//     JWTMiddleware,
-//     (request: Request, response: Response) => userController.followArtist(request, response)
-// )
-
-// unfollow artist
-// userRouter.delete("/users/artist/follow/:id",
-//     JWTMiddleware,
-//     (request: Request, response: Response) => userController.unfollowArtist(request, response)
-// )
-
-userRouter.put('/users/favorite/song/:id',
+userRouter.put('/favorite/song/:id',
     JWTMiddleware,
     (request: Request<{ id: string }>, response: Response) => userController.toggleFavoriteSong(request, response)
 )
 
-userRouter.put('/users/favorite/playlist/:id',
+userRouter.put('/favorite/playlist/:id',
     JWTMiddleware,
     (request: Request<{ id: string }>, response: Response) => userController.toggleFavoritePlaylist(request, response)
+)
+
+userRouter.put("/follow/artist/:id",
+    JWTMiddleware,
+    (request: Request<{ id: string }>, response: Response) => userController.toggleFollowArtist(request, response)
 )
 
 export { userRouter }

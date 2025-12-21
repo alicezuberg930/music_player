@@ -1,10 +1,11 @@
+import 'reflect-metadata'
 import express, { Request, Response } from 'express'
 import cors from "cors"
 import cookieParser from "cookie-parser"
 import { env } from '@yukikaze/lib/create-env'
-import { homeRouter, sitemapRouter } from './modules';
 import { errorInterceptor, notFoundHandlerMiddleware, responseInterceptor, rateLimiter } from '@yukikaze/middleware'
-import { UnauthorizedException } from '@yukikaze/lib/exception';
+import { userRouter } from './modules'
+import { UnauthorizedException } from '@yukikaze/lib/exception'
 const app = express()
 
 app.set('trust proxy', 1);
@@ -41,7 +42,7 @@ app.use(cookieParser())
 app.use(express.urlencoded({ extended: true, limit: '21mb' }))
 app.use(express.json({ limit: '21mb' }))
 
-const port = env.HOME_SERVICE_PORT
+const port = env.USER_SERVICE_PORT
 
 // global rate limiter
 app.use(rateLimiter)
@@ -51,7 +52,7 @@ app.get('/check', (_: Request, res: Response) => {
 })
 
 // map routers to express server
-app.use('/', [homeRouter, sitemapRouter])
+app.use('/', [userRouter])
 
 // assign global middlewares to express server
 app.use([notFoundHandlerMiddleware, errorInterceptor])

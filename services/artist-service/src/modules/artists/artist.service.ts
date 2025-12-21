@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
-import { and, db, eq } from "@yukikaze/db"
+import { db, eq } from "@yukikaze/db"
 import { Artist } from "./artist.model"
-import { artistFollowers, artists } from "@yukikaze/db/schemas"
+import { artists } from "@yukikaze/db/schemas"
 import { BadRequestException, HttpException, NotFoundException } from "@yukikaze/lib/exception"
 import { extractPublicId, uploadFile } from "@yukikaze/lib/cloudinary"
 import { CreateArtistDto } from "./dto/create-artist.dto"
@@ -139,40 +139,6 @@ export class ArtistService {
             if (!findArtist) throw new NotFoundException('Artist not found')
             await db.delete(artists).where(eq(artists.id, id))
             return response.json({ message: 'Artist deleted successfully' })
-        } catch (error) {
-            if (error instanceof HttpException) throw error
-            throw new BadRequestException(error instanceof Error ? error.message : undefined)
-        }
-    }
-
-    public async toggleFollowArtist(request: Request<{ id: string }>, response: Response) {
-        try {
-            const { id } = request.params
-            const userId = request.userId
-            const findArtist = await db.query.artists.findFirst({ where: eq(artists.id, id), columns: { id: true, totalFollow: true } })
-            if (!findArtist) throw new NotFoundException('Artist not found')
-            // Toggle follow/unfollow
-            const isFollowing = await db.query.artistFollowers.findFirst({
-                where: (eb) => and(
-                    eq(eb.artistId, id),
-                    eq(eb.userId, userId!)
-                )
-            })
-            if (isFollowing) {
-                await db.update(artists).set({ totalFollow: findArtist.totalFollow! - 1 }).where(eq(artists.id, id))
-                await db.delete(artistFollowers).where(and(
-                    eq(artistFollowers.artistId, id),
-                    eq(artistFollowers.userId, userId!)
-                ))
-                return response.json({ message: 'Artist unfollowed successfully' })
-            } else {
-                await db.update(artists).set({ totalFollow: findArtist.totalFollow! + 1 }).where(eq(artists.id, id))
-                await db.insert(artistFollowers).values({
-                    artistId: id,
-                    userId: userId!
-                })
-                return response.json({ message: 'Artist followed successfully' })
-            }
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)

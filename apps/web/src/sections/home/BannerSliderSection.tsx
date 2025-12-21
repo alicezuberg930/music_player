@@ -53,7 +53,6 @@ const BannerSliderSection: React.FC<Props> = ({ banners }) => {
     }, [handlePrevious])
 
     useEffect(() => {
-        console.log(isAuto)
         if (isAuto && totalBanners > displayCount) {
             interval = setInterval(() => {
                 handleNext()

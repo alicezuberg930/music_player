@@ -4,7 +4,7 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 import { env } from '@yukikaze/lib/create-env'
 import { errorInterceptor, notFoundHandlerMiddleware, responseInterceptor, rateLimiter } from '@yukikaze/middleware'
-import { playlistRouter, userRouter, sitemapRouter } from './modules'
+import { playlistRouter } from './modules'
 import { UnauthorizedException } from '@yukikaze/lib/exception'
 const app = express()
 
@@ -52,7 +52,7 @@ app.get('/check', (_: Request, res: Response) => {
 })
 
 // map routers to express server
-app.use('/', [userRouter, playlistRouter, sitemapRouter])
+app.use('/', [playlistRouter])
 
 // assign global middlewares to express server
 app.use([notFoundHandlerMiddleware, errorInterceptor])

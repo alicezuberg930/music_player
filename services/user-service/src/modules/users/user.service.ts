@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { and, db, eq } from "@yukikaze/db"
-import { playlists, songs, userFavoritePlaylists, userFavoriteSongs, users } from "@yukikaze/db/schemas"
+import { artistFollowers, artists, playlists, songs, userFavoritePlaylists, userFavoriteSongs, users } from "@yukikaze/db/schemas"
 import { User } from "./user.model"
 import { BadRequestException, HttpException, NotFoundException } from "@yukikaze/lib/exception"
 import { CreateUserDto } from "./dto/create-user.dto"
@@ -181,6 +181,53 @@ export class UserService {
             if (!type) type = 'upload'
             const data = type === 'upload' ? await db.query.playlists.findMany({ where: eq(playlists.userId, request.userId!) }) : []
             return response.json({ message: 'User playlists fetched successfully', data })
+        } catch (error) {
+            if (error instanceof HttpException) throw error
+            throw new BadRequestException(error instanceof Error ? error.message : undefined)
+        }
+    }
+
+    public async userArtists(request: Request, response: Response) {
+        try {
+            const data = await db.query.artistFollowers.findMany({
+                where: eq(artistFollowers.userId, request.userId!),
+                with: { artist: true }
+            }).then(followers => followers.map(f => f.artist))
+            return response.json({ message: 'User followed artists fetched successfully', data })
+        } catch (error) {
+            if (error instanceof HttpException) throw error
+            throw new BadRequestException(error instanceof Error ? error.message : undefined)
+        }
+    }
+
+    public async toggleFollowArtist(request: Request<{ id: string }>, response: Response) {
+        try {
+            const { id } = request.params
+            const userId = request.userId
+            const findArtist = await db.query.artists.findFirst({ where: eq(artists.id, id), columns: { id: true, totalFollow: true } })
+            if (!findArtist) throw new NotFoundException('Artist not found')
+            // Toggle follow/unfollow
+            const isFollowing = await db.query.artistFollowers.findFirst({
+                where: (eb) => and(
+                    eq(eb.artistId, id),
+                    eq(eb.userId, userId!)
+                )
+            })
+            if (isFollowing) {
+                await db.update(artists).set({ totalFollow: findArtist.totalFollow! - 1 }).where(eq(artists.id, id))
+                await db.delete(artistFollowers).where(and(
+                    eq(artistFollowers.artistId, id),
+                    eq(artistFollowers.userId, userId!)
+                ))
+                return response.json({ message: 'Artist unfollowed successfully' })
+            } else {
+                await db.update(artists).set({ totalFollow: findArtist.totalFollow! + 1 }).where(eq(artists.id, id))
+                await db.insert(artistFollowers).values({
+                    artistId: id,
+                    userId: userId!
+                })
+                return response.json({ message: 'Artist followed successfully' })
+            }
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)

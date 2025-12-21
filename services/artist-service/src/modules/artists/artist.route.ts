@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express"
 import artistController from "./artist.controller"
 import multer from "multer"
-import { validateDtoHanlder, fileMimeAndSizeOptions, multerOptions, Options, JWTMiddleware } from "@yukikaze/middleware"
+import { validateDtoHanlder, fileMimeAndSizeOptions, multerOptions, Options } from "@yukikaze/middleware"
 import { CreateArtistDto } from "./dto/create-artist.dto"
 import { UpdateArtistDto } from "./dto/update-artist.dto"
 
@@ -35,10 +35,5 @@ artistRouter.put("/:id",
 )
 
 artistRouter.delete("/:id", (request: Request<{ id: string }>, response: Response) => artistController.deleteArtist(request, response))
-
-artistRouter.put("/follow/:id",
-    JWTMiddleware,
-    (request: Request<{ id: string }>, response: Response) => artistController.toggleFollowArtist(request, response)
-)
 
 export { artistRouter }

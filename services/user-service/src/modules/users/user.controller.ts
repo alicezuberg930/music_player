@@ -51,12 +51,20 @@ class UserController {
         return await this.userService.userPlaylists(request, response)
     }
 
+    public async userArtists(request: Request, response: Response) {
+        return await this.userService.userArtists(request, response)
+    }
+
     public async toggleFavoriteSong(request: Request<{ id: string }>, response: Response) {
         return await this.userService.toggleFavoriteSong(request, response)
     }
 
     public async toggleFavoritePlaylist(request: Request<{ id: string }>, response: Response) {
         return await this.userService.toggleFavoritePlaylist(request, response)
+    }
+
+    public async toggleFollowArtist(request: Request<{ id: string }>, response: Response) {
+        return await this.userService.toggleFollowArtist(request, response)
     }
 }
 

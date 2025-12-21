@@ -7,7 +7,7 @@ WORKDIR /prune
 RUN bun install -g turbo
 
 COPY . .
-RUN turbo prune @yukikaze/banner-service --docker
+RUN turbo prune @yukikaze/user-service --docker
 
 # Stage 2: Build application
 FROM base AS builder
@@ -34,7 +34,7 @@ RUN addgroup --system --gid 1001 yukikaze && \
 # Copy workspace dependencies and built packages
 COPY --from=builder --chown=web:yukikaze /build/node_modules ./node_modules
 COPY --from=builder --chown=web:yukikaze /build/packages ./packages
-COPY --from=builder --chown=web:yukikaze /build/services/banner-service/dist ./dist
+COPY --from=builder --chown=web:yukikaze /build/services/user-service/dist ./dist
 
 # Create uploads directory with correct permissions
 RUN mkdir -p uploads && chown -R web:yukikaze uploads

@@ -49,11 +49,12 @@ app.get('/check', (_: Request, res: Response) => {
 const routes: Map<string, string> = new Map([
     ['/api/v1/app', `http://localhost:${env.PORT}`],
     ['/api/v1/home', `http://localhost:${env.HOME_SERVICE_PORT}`],
-    // ['/api/v1/auth', `http://localhost:${env.AUTH_SERVICE_PORT}`],
+    ['/api/v1/auth', `http://localhost:${env.AUTH_SERVICE_PORT}`],
     ['/api/v1/songs', `http://localhost:${env.SONG_SERVICE_PORT}`],
+    ['/api/v1/banners', `http://localhost:${env.BANNER_SERVICE_PORT}`],
     ['/api/v1/artists', `http://localhost:${env.ARTIST_SERVICE_PORT}`],
-    // ['/api/v1/playlists', `http://localhost:${env.PLAYLIST_SERVICE_PORT || 5006}`],
-    // ['/api/v1/users', `http://localhost:${env.USER_SERVICE_PORT}`],
+    ['/api/v1/playlists', `http://localhost:${env.PLAYLIST_SERVICE_PORT}`],
+    ['/api/v1/users', `http://localhost:${env.USER_SERVICE_PORT}`],
 ])
 
 const onProxyRequest = (proxyReq: ClientRequest, req: IncomingMessage, target: string) => {

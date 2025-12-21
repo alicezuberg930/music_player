@@ -16,23 +16,23 @@ const uploadOptions: Options = {
 const upload = multer(multerOptions(uploadOptions))
 const fileValidator = fileMimeAndSizeOptions(uploadOptions)
 
-bannerRouter.get("/banners",
+bannerRouter.get("/",
     (request: Request, response: Response) => bannerController.getBanners(request, response)
 )
 
-bannerRouter.post("/banners",
-    // JWTMiddleware,
-    // upload.fields([{ name: "thumbnail", maxCount: 1 }]),
-    // fileValidator,
+bannerRouter.post("/",
+    JWTMiddleware,
+    upload.fields([{ name: "thumbnail", maxCount: 1 }]),
+    fileValidator,
     validateDtoHanlder(CreateBannerDto),
     (request: Request<{}, {}, CreateBannerDto>, response: Response) => bannerController.createBanner(request, response)
 )
 
-bannerRouter.get("/banners/:id",
+bannerRouter.get("/:id",
     (request: Request<{ id: string }>, response: Response) => bannerController.findBanner(request, response)
 )
 
-bannerRouter.put("/banners/:id",
+bannerRouter.put("/:id",
     JWTMiddleware,
     upload.fields([{ name: "thumbnail", maxCount: 1 }]),
     fileValidator,
@@ -40,7 +40,7 @@ bannerRouter.put("/banners/:id",
     (request: Request<{ id: string }, {}, UpdateBannerDto>, response: Response) => bannerController.updateBanner(request, response)
 )
 
-bannerRouter.delete("/banners/:id",
+bannerRouter.delete("/:id",
     JWTMiddleware,
     (request: Request<{ id: string }>, response: Response) => bannerController.deleteBanner(request, response)
 )

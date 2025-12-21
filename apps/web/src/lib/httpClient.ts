@@ -263,7 +263,7 @@ export const toggleFavoritePlaylist = async (playlistId: string): Promise<Respon
 
 export const fetchBannerList = async (): Promise<Response<Banner[]>> => {
     try {
-        const response = await axios.get<Response<Banner[]>>(`/app/banners`)
+        const response = await axios.get<Response<Banner[]>>(`/banners`)
         return response.data
     } catch (error) {
         console.error(error)

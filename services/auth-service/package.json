@@ -1,5 +1,5 @@
 {
-  "name": "@yukikaze/user-service",
+  "name": "@yukikaze/auth-service",
   "scripts": {
     "dev": "npx tsx --watch src/index.ts",
     "build": "tsc",
@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "@yukikaze/middleware": "workspace:*",
+    "@yukikaze/email": "workspace:*",
     "@yukikaze/lib": "workspace:*",
     "@yukikaze/db": "workspace:*",
     "cookie-parser": "^1.4.7",

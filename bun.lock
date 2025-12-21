@@ -219,8 +219,8 @@
         "typescript": "catalog:",
       },
     },
-    "services/api": {
-      "name": "@yukikaze/services",
+    "services/artist-service": {
+      "name": "@yukikaze/artist-service",
       "dependencies": {
         "@yukikaze/db": "workspace:*",
         "@yukikaze/lib": "workspace:*",
@@ -230,6 +230,7 @@
         "cookie-parser": "^1.4.7",
         "cors": "^2.8.5",
         "express": "catalog:express",
+        "express-rate-limit": "^7.0.0",
         "multer": "catalog:multer",
         "reflect-metadata": "^0.2.2",
       },
@@ -245,10 +246,11 @@
         "typescript": "catalog:",
       },
     },
-    "services/artist-service": {
-      "name": "@yukikaze/artist-service",
+    "services/auth-service": {
+      "name": "@yukikaze/auth-service",
       "dependencies": {
         "@yukikaze/db": "workspace:*",
+        "@yukikaze/email": "workspace:*",
         "@yukikaze/lib": "workspace:*",
         "@yukikaze/middleware": "workspace:*",
         "class-transformer": "^0.5.1",
@@ -342,6 +344,32 @@
         "typescript": "catalog:",
       },
     },
+    "services/playlist-service": {
+      "name": "@yukikaze/playlist-service",
+      "dependencies": {
+        "@yukikaze/db": "workspace:*",
+        "@yukikaze/lib": "workspace:*",
+        "@yukikaze/middleware": "workspace:*",
+        "class-transformer": "^0.5.1",
+        "class-validator": "^0.14.2",
+        "cookie-parser": "^1.4.7",
+        "cors": "^2.8.5",
+        "express": "catalog:express",
+        "multer": "catalog:multer",
+        "reflect-metadata": "^0.2.2",
+      },
+      "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*",
+        "@types/cookie-parser": "^1.4.10",
+        "@types/cors": "^2.8.19",
+        "@types/express": "catalog:express",
+        "@types/multer": "catalog:multer",
+        "@types/node": "catalog:",
+        "eslint": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
     "services/song-service": {
       "name": "@yukikaze/song-service",
       "dependencies": {
@@ -376,7 +404,6 @@
       "name": "@yukikaze/user-service",
       "dependencies": {
         "@yukikaze/db": "workspace:*",
-        "@yukikaze/email": "workspace:*",
         "@yukikaze/lib": "workspace:*",
         "@yukikaze/middleware": "workspace:*",
         "class-transformer": "^0.5.1",
@@ -1010,6 +1037,8 @@
 
     "@yukikaze/artist-service": ["@yukikaze/artist-service@workspace:services/artist-service"],
 
+    "@yukikaze/auth-service": ["@yukikaze/auth-service@workspace:services/auth-service"],
+
     "@yukikaze/banner-service": ["@yukikaze/banner-service@workspace:services/banner-service"],
 
     "@yukikaze/db": ["@yukikaze/db@workspace:packages/db"],
@@ -1024,9 +1053,9 @@
 
     "@yukikaze/middleware": ["@yukikaze/middleware@workspace:packages/middleware"],
 
-    "@yukikaze/redis": ["@yukikaze/redis@workspace:packages/redis"],
+    "@yukikaze/playlist-service": ["@yukikaze/playlist-service@workspace:services/playlist-service"],
 
-    "@yukikaze/services": ["@yukikaze/services@workspace:services/api"],
+    "@yukikaze/redis": ["@yukikaze/redis@workspace:packages/redis"],
 
     "@yukikaze/song-service": ["@yukikaze/song-service@workspace:services/song-service"],
 

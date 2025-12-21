@@ -1,0 +1,48 @@
+FROM oven/bun:1-alpine AS base
+
+# Stage 1: prune application dependencies
+FROM base AS prepare
+WORKDIR /prune
+
+RUN bun install -g turbo
+
+COPY . .
+RUN turbo prune @yukikaze/auth-service --docker
+
+# Stage 2: Build application
+FROM base AS builder
+
+WORKDIR /build
+COPY --from=prepare /prune/out/json .
+RUN bun install
+COPY --from=prepare /prune/out/full .
+
+# Build packages and API
+RUN bun run build
+
+# Install only production dependencies for final image
+RUN rm -rf node_modules && bun install --production
+
+# Stage 3:Production image
+FROM base AS runner
+WORKDIR /app
+
+# Run as non-root user for security
+RUN addgroup --system --gid 1001 yukikaze && \
+    adduser --system --uid 1001 web
+
+# Copy workspace dependencies and built packages
+COPY --from=builder --chown=web:yukikaze /build/node_modules ./node_modules
+COPY --from=builder --chown=web:yukikaze /build/packages ./packages
+COPY --from=builder --chown=web:yukikaze /build/services/auth-service/dist ./dist
+
+# Create uploads directory with correct permissions
+RUN mkdir -p uploads && chown -R web:yukikaze uploads
+
+USER web
+
+# Expose the port the app runs on
+EXPOSE 5001
+
+# Start the application
+CMD ["bun", "dist/index.js"]

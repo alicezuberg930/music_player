@@ -1,9 +1,7 @@
 import express, { Request, Response } from "express"
 import userController from "./user.controller"
 import multer from "multer"
-import { validateDtoHanlder, fileMimeAndSizeOptions, JWTMiddleware, multerOptions, Options } from "@yukikaze/middleware"
-import { CreateUserDto } from "./dto/create-user.dto"
-import { LoginUserDto } from "./dto/login-user.dto"
+import { fileMimeAndSizeOptions, JWTMiddleware, multerOptions, Options } from "@yukikaze/middleware"
 import { UpdateUserDto } from "./dto/update-user.dto"
 
 const userRouter = express.Router()
@@ -16,23 +14,6 @@ const uploadOptions: Options = {
 }
 const upload = multer(multerOptions(uploadOptions))
 const fileValidator = fileMimeAndSizeOptions(uploadOptions)
-
-userRouter.post("/sign-up",
-    validateDtoHanlder(CreateUserDto),
-    (request: Request<{}, {}, CreateUserDto>, response: Response) => userController.signUp(request, response)
-)
-
-userRouter.post("/sign-in",
-    validateDtoHanlder(LoginUserDto),
-    (request: Request<{}, {}, LoginUserDto>, response: Response) => userController.signIn(request, response)
-)
-
-userRouter.post("/sign-out",
-    JWTMiddleware,
-    (request: Request, response: Response) => userController.signOut(request, response)
-)
-
-// auth above
 
 userRouter.get("/", (request: Request, response: Response) => userController.getUsers(request, response))
 

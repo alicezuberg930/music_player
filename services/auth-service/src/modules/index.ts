@@ -1,0 +1,1 @@
+export { localAuthRoute } from './local-auth/local-auth.route'

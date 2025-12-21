@@ -163,7 +163,7 @@ export const fetchPlaylistList = async (): Promise<Response<Playlist[]>> => {
 
 export const signIn = async (email: string, password: string): Promise<Response<{ user: User }>> => {
     try {
-        const response = await axios.post<Response<{ user: User }>>(`/users/sign-in`, { email, password })
+        const response = await axios.post<Response<{ user: User }>>(`/auth/sign-in`, { email, password })
         return response.data
     } catch (error) {
         console.error(error)
@@ -173,7 +173,7 @@ export const signIn = async (email: string, password: string): Promise<Response<
 
 export const signUp = async (fullname: string, email: string, password: string): Promise<Response> => {
     try {
-        const response = await axios.post<Response>(`/users/sign-up`, { fullname, email, password })
+        const response = await axios.post<Response>(`/auth/sign-up`, { fullname, email, password })
         return response.data
     } catch (error) {
         console.error(error)
@@ -183,7 +183,7 @@ export const signUp = async (fullname: string, email: string, password: string):
 
 export const signOut = async (): Promise<Response> => {
     try {
-        const response = await axios.post<Response>(`/users/sign-out`)
+        const response = await axios.post<Response>(`/auth/sign-out`)
         return response.data
     } catch (error) {
         console.error(error)

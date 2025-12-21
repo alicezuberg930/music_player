@@ -49,14 +49,16 @@ jobs:
 
             # Install deps, build, and run with PM2
             bun install
-            bun run build:web
             bun run build:packages
+
+            bun run build:web
+            bun run build:services
 
             # Start or reload the service
             if pm2 describe "$SERVER_NAME" >/dev/null 2>&1; then
               pm2 reload "$SERVER_NAME"
             else
-              pm2 start "bun run start:api" --name "$SERVER_NAME"
+              pm2 start "bun run start:services" --name "$SERVER_NAME"
             fi
             if pm2 describe "$FRONTEND_NAME" >/dev/null 2>&1; then
               pm2 reload "$FRONTEND_NAME"

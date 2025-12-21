@@ -103,7 +103,7 @@ export const followArtist = async (artistId: string): Promise<Response> => {
 
 export const createPlaylist = async (formData: FormData): Promise<Response> => {
     try {
-        const response = await axios.post<Response>(`/app/playlists`, formData)
+        const response = await axios.post<Response>(`/playlists`, formData)
         return response.data
     } catch (error) {
         console.error(error)
@@ -113,7 +113,7 @@ export const createPlaylist = async (formData: FormData): Promise<Response> => {
 
 export const updatePlaylist = async (id: string, formData: FormData): Promise<Response> => {
     try {
-        const response = await axios.put<Response>(`/app/playlists/${id}`, formData)
+        const response = await axios.put<Response>(`/playlists/${id}`, formData)
         return response.data
     } catch (error) {
         console.error(error)
@@ -123,7 +123,7 @@ export const updatePlaylist = async (id: string, formData: FormData): Promise<Re
 
 export const addSongsToPlaylist = async (playlistId: string, songIds: string[]): Promise<Response> => {
     try {
-        const response = await axios.put<Response>(`/app/playlists/add-songs/${playlistId}`, { songIds })
+        const response = await axios.put<Response>(`/playlists/add-songs/${playlistId}`, { songIds })
         return response.data
     } catch (error) {
         console.error(error)
@@ -133,7 +133,7 @@ export const addSongsToPlaylist = async (playlistId: string, songIds: string[]):
 
 export const removeSongsFromPlaylist = async (playlistId: string, songIds: string[]): Promise<Response> => {
     try {
-        const response = await axios.put<Response>(`/app/playlists/remove-songs/${playlistId}`, { songIds })
+        const response = await axios.put<Response>(`/playlists/remove-songs/${playlistId}`, { songIds })
         return response.data
     } catch (error) {
         console.error(error)
@@ -143,7 +143,7 @@ export const removeSongsFromPlaylist = async (playlistId: string, songIds: strin
 
 export const fetchPlaylist = async (playlistId: string): Promise<Response<Playlist>> => {
     try {
-        const response = await axios.get<Response<Playlist>>(`/app/playlists/${playlistId}`)
+        const response = await axios.get<Response<Playlist>>(`/playlists/${playlistId}`)
         return response.data
     } catch (error) {
         console.error(error)
@@ -153,7 +153,7 @@ export const fetchPlaylist = async (playlistId: string): Promise<Response<Playli
 
 export const fetchPlaylistList = async (): Promise<Response<Playlist[]>> => {
     try {
-        const response = await axios.get<Response<Playlist[]>>(`/app/playlists`)
+        const response = await axios.get<Response<Playlist[]>>(`/playlists`)
         return response.data
     } catch (error) {
         console.error(error)

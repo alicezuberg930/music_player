@@ -1,0 +1,1 @@
+export { playlistRouter } from './playlists/playlist.route'

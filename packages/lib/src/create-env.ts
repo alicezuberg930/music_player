@@ -8,7 +8,6 @@ const __dirname = dirname(__filename)
 config({ path: resolve(__dirname, '../../../', '.env') })
 
 export const env = {
-    PORT: process.env.PORT,
     NODE_ENV: process.env.NODE_ENV,
     MYSQL_SSL_MODE: process.env.MYSQL_SSL_MODE,
     MYSQL_DATABASE: process.env.MYSQL_DATABASE,

@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser"
 import { env } from '@yukikaze/lib/create-env'
 import { rateLimiter } from './middleware/rate.limiter'
 import { createProxyMiddleware } from 'http-proxy-middleware'
-import { InternalServerErrorException, UnauthorizedException } from '@yukikaze/lib/exception'
+import { UnauthorizedException } from '@yukikaze/lib/exception'
 import http, { ClientRequest, IncomingMessage, ServerResponse } from 'node:http'
 import { Socket } from 'node:net'
 import { db } from "@yukikaze/db"
@@ -47,7 +47,6 @@ app.get('/check', (_: Request, res: Response) => {
 })
 
 const routes: Map<string, string> = new Map([
-    ['/api/v1/app', `http://localhost:${env.PORT}`],
     ['/api/v1/home', `http://localhost:${env.HOME_SERVICE_PORT}`],
     ['/api/v1/auth', `http://localhost:${env.AUTH_SERVICE_PORT}`],
     ['/api/v1/songs', `http://localhost:${env.SONG_SERVICE_PORT}`],

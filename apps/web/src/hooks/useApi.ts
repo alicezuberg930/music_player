@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient, type UseMutationOptions, type UseQueryOptions, type QueryKey, useInfiniteQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient, type UseMutationOptions, type UseQueryOptions, useInfiniteQuery } from '@tanstack/react-query'
 import type { Response } from '@/@types/response'
 import type { QuerySong, Song } from '@/@types/song'
 import type { Video } from '@/@types/video'

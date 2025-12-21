@@ -1,1 +1,0 @@
-export { JWTMiddleware, OptionalJWTMiddleware } from './jwt.middleware';

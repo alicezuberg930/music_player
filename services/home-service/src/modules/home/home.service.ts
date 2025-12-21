@@ -3,7 +3,7 @@ import { Request, Response } from 'express'
 // database
 import { db, eq, inArray, and } from '@yukikaze/db'
 import { HomeData } from './home.model'
-import { userFavoriteSongs } from '@yukikaze/db/schemas'
+import { artistFollowers, userFavoriteSongs } from '@yukikaze/db/schemas'
 // utils
 import { HttpException, BadRequestException } from '@yukikaze/lib/exception'
 
@@ -48,11 +48,28 @@ export class HomeService {
                 orderBy: (artists, { desc }) => [desc(artists.totalFollow)],
                 limit: 5
             })
+            // If user is logged in, check which artists they've followed
+            let followedArtistIds: Set<string> = new Set()
+            if (userId) {
+                const artistIds = weeklyTopArtists.map(artist => artist.id)
+                const followedArtists = await db.query.artistFollowers.findMany({
+                    where: and(
+                        eq(artistFollowers.userId, userId),
+                        inArray(artistFollowers.artistId, artistIds)
+                    ),
+                    columns: { artistId: true }
+                })
+                followedArtistIds = new Set(followedArtists.map(fa => fa.artistId))
+            }
+            const artistsWithFollowStatus = weeklyTopArtists.map(artist => ({
+                ...artist,
+                followed: userId ? followedArtistIds.has(artist.id) : false
+            }))
 
             const data = {
                 banners,
                 newReleaseSongs: songsWithLikedStatus,
-                weeklyTopArtists,
+                weeklyTopArtists: artistsWithFollowStatus,
                 newPlaylists
             } as HomeData
 

@@ -58,4 +58,9 @@ songRouter.delete("/:id",
     (request: Request<{ id: string }, {}>, response: Response) => songController.deleteSong(request, response)
 )
 
+songRouter.put("/listens/add/:id",
+    JWTMiddleware,
+    (request: Request<{ id: string }, {}>, response: Response) => songController.addSongListen(request, response)
+)
+
 export { songRouter }

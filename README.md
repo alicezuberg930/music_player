@@ -26,71 +26,77 @@ A modern music streaming platform that enables users to discover, search, upload
 
 ```text
 (root)
-├── api/                          # Backend API (Express + TypeScript)
-│   ├── src/
-│   │   ├── db/                   # Database schemas & Drizzle ORM
+├── apps/                         # User-facing applications
+│   └── web/                      # Frontend web app (React + Vite + TypeScript)
+│       ├── public/
+│       │   └── assets/           # Static assets
+│       ├── src/
+│       │   ├── @types/           # TypeScript definitions
+│       │   ├── components/       # Reusable UI components
+│       │   │   ├── hook-form/    # React Hook Form wrappers
+│       │   │   ├── upload/       # File upload components
+│       │   │   └── snackbar/     # Toast notifications
+│       │   ├── hooks/            # Custom React hooks
+│       │   ├── lib/              # Frontend utilities
+│       │   │   ├── auth/         # Auth context & guards
+│       │   │   ├── locales/      # i18n (en/fr/vi/cn/ar)
+│       │   │   ├── route/        # Router config
+│       │   │   └── httpClient.ts # Axios API client
+│       │   ├── pages/            # Route pages
+│       │   ├── redux/            # Redux Toolkit store
+│       │   │   └── slices/       # State slices
+│       │   └── sections/         # Page sections
+│       └── server.js             # serve built file with compression
+│
+├── services/                     # Backend microservices
+│   ├── api/                      # Main API service (Express + TypeScript)
+│   │   ├── src/
+│   │   │   ├── modules/          # Feature modules
+│   │   │   │   ├── artists/      # Artist management
+│   │   │   │   ├── banners/      # Banner management
+│   │   │   │   ├── playlists/    # Playlist CRUD
+│   │   │   │   ├── songs/        # Song management
+│   │   │   │   ├── users/        # User auth & profile
+│   │   │   │   └── socket/       # WebSocket support
+│   │   │   └── index.ts          # API entry point
+│   │   ├── uploads/              # Uploaded files (lyrics, audio)
+│   │   └── package.json
+│   ├── gateway-service/          # API Gateway service
+│   ├── home-service/             # Home page service
+│   └── song-service/             # Song streaming service
+│
+├── packages/                     # Shared packages
+│   ├── db/                       # Database schemas & Drizzle ORM
+│   │   ├── drizzle/              # Migration files
+│   │   │   └── meta/             # Drizzle metadata
+│   │   ├── src/
 │   │   │   ├── schemas/          # Table definitions
 │   │   │   ├── responses/        # Response formatters
+│   │   │   ├── index.ts
+│   │   │   ├── types.ts
 │   │   │   └── utils.ts          # DB utilities
-│   │   ├── drizzle/              # Migration files
-│   │   ├── lib/                  # Backend utilities
-│   │   │   ├── @types/           # TypeScript types
-│   │   │   ├── bcrypt/           # Password hashing
-│   │   │   ├── email/            # Email templates (Resend)
-│   │   │   ├── exceptions/       # Error handlers
-│   │   │   └── helpers/          # Helper functions
-│   │   ├── middleware/           # Express middleware
-│   │   │   ├── dto.validator.middleware.ts
-│   │   │   ├── error.interceptor.ts
-│   │   │   ├── jwt.middleware.ts
-│   │   │   └── response.interceptor.ts
-│   │   ├── modules/              # Feature modules
-│   │   │   ├── artists/          # Artist management
-│   │   │   ├── banners/          # Banner management
-│   │   │   ├── playlists/        # Playlist CRUD
-│   │   │   ├── songs/            # Song management
-│   │   │   ├── users/            # User auth & profile
-│   │   │   └── socket/           # WebSocket support
-│   │   └── index.ts              # API entry point
-│   ├── uploads/                  # Uploaded files (lyrics, audio)
-│   ├── drizzle.config.ts         # Drizzle ORM config
-│   └── package.json
-│
-├── app/                          # Frontend (React + Vite + TypeScript)
-│   ├── public/
-│   │   └── assets/               # Static assets
-│   ├── src/
-│   │   ├── @types/               # TypeScript definitions
-│   │   ├── assets/               # Images, dummy data
-│   │   ├── components/           # Reusable UI components
-│   │   │   ├── ui/               # Shadcn UI components
-│   │   │   ├── hook-form/        # React Hook Form wrappers
-│   │   │   ├── upload/           # File upload components
-│   │   │   └── snackbar/         # Toast notifications
-│   │   ├── hooks/                # Custom React hooks
-│   │   ├── lib/                  # Frontend utilities
-│   │   │   ├── auth/             # Auth context & guards
-│   │   │   ├── locales/          # i18n (en/fr/vi/cn/ar)
-│   │   │   ├── route/            # Router config
-│   │   │   └── httpClient.ts     # Axios API client
-│   │   ├── pages/                # Route pages
-│   │   ├── redux/                # Redux Toolkit store
-│   │   │   └── slices/           # State slices
-│   │   └── sections/             # Page sections
-│   ├── vite.config.ts            # Vite build config
-│   └── package.json
+│   │   ├── drizzle.config.ts     # Drizzle ORM config
+│   │   └── package.json
+│   ├── email/                    # Email service & templates (Resend)
+│   ├── eslint-config/            # Shared ESLint configurations
+│   ├── lib/                      # Shared utilities & helpers
+│   ├── middleware/               # Shared Express middleware
+│   ├── redis/                    # Redis client & utilities
+│   ├── typescript-config/        # Shared TypeScript configurations
+│   └── ui/                       # Shadcn UI components library
 │
 ├── docs/                         # Documentation
-│   └── database.md               # Database schema docs
+│   ├── database.md               # Database schema docs
+│   └── monorepo.md               # Monorepo structure docs
 │
 ├── tools/
 │   └── nginx/                    # Nginx reverse proxy configs
 │       ├── music-player-app.conf
 │       └── music-player-api.conf
 │
-├── docker-compose.yml            # Docker orchestration
-├── LICENSE                       # MIT License
-└── README.md                     # This file
+├── docker-compose.yml            # Production Docker orchestration
+├── docker-compose.dev.yml        # Development Docker orchestration
+└── turbo.json                    # Turborepo configuration
 ```
 
 ## Deployment

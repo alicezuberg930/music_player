@@ -11,14 +11,16 @@ import { Ellipsis, Heart, MicVocal, MusicIcon, PauseCircle, PlayCircle, Repeat, 
 import { formatDuration } from '@/lib/utils'
 import { getAudioFromCache, isAudioCached, saveAudioToCache } from '@/lib/indexDB'
 // redux
-import { setCurrentSong, setIsPlaying, shufflePlaylist } from '@/redux/slices/music'
+import { setCurrentSong, setIsPlaying } from '@/redux/slices/music'
 import { setShowSidebarRight } from '@/redux/slices/app'
 import { useDispatch, useSelector } from '@/redux/store'
 // sections
 import LyricsDrawer from './LyricsDrawer'
+import { useApi } from '@/hooks/useApi'
 
 const Player: React.FC = () => {
     const dispatch = useDispatch()
+    const addSongListen = useApi().useAddSongListen()
     // redux states
     const { showSideBarRight } = useSelector(state => state.app)
     const { currentSong, isPlaying, currentPlaylistSongs } = useSelector(state => state.music)
@@ -130,7 +132,7 @@ const Player: React.FC = () => {
 
         const updateTime = () => {
             currentTimeRef.current!.innerText = formatDuration(Math.floor(audio.currentTime))
-            let percent = Math.round((audio.currentTime / currentSong!.duration) * 10000) / 100
+            const percent = Math.round((audio.currentTime / currentSong!.duration) * 10000) / 100
             thumbRef.current && (thumbRef.current.style.cssText = `right: ${100 - percent}%`)
             animationFrame = requestAnimationFrame(updateTime)
         }
@@ -171,13 +173,13 @@ const Player: React.FC = () => {
 
     const initializePlayer = async () => {
         dispatch(setIsPlaying(false))
-        currentTimeRef.current && (currentTimeRef.current.innerText = '00:00')
-        thumbRef.current && (thumbRef.current.style.cssText = `right: 100%`)
+        currentTimeRef.current!.innerText = '00:00'
+        thumbRef.current!.style.cssText = `right: 100%`
         if (currentSong?.stream) {
             setIsLoadingAudio(true)
             const isCached = await isAudioCached(currentSong.id)
             if (!isCached) await saveAudioToCache(currentSong.id, currentSong.stream)
-            let audioUrl = await getAudioFromCache(currentSong.id)
+            const audioUrl = await getAudioFromCache(currentSong.id)
             if (audioUrl) {
                 audioRef.current = new Audio(audioUrl)
                 audioRef.current.load()
@@ -193,6 +195,7 @@ const Player: React.FC = () => {
     // initialize player when current song changes and update player UI
     useEffect(() => {
         initializePlayer()
+        addSongListen.mutate(currentSong?.id!)
         // Cleanup function runs when song changes or component unmounts
         return () => {
             if (audioRef.current) {
@@ -241,8 +244,6 @@ const Player: React.FC = () => {
 
     // change shuffle mode during song playing
     useEffect(() => {
-        if (shuffle) dispatch(shufflePlaylist())
-        else dispatch(shufflePlaylist())
         shuffleRef.current = shuffle
     }, [shuffle])
 
@@ -367,10 +368,6 @@ const Player: React.FC = () => {
                             onMouseLeave={handleMouseUpProgressBar}
                             ref={trackRef}
                             aria-label="Seek audio"
-                        // role='slider'
-                        // aria-valuemin={0}
-                        // aria-valuemax={currentSong?.duration ?? 0}
-                        // aria-valuenow={audioRef.current?.currentTime ?? 0}
                         >
                             <div ref={thumbRef} className='absolute top-0 left-0 bottom-0 h-full bg-main-500 rounded-full'></div>
                         </button>

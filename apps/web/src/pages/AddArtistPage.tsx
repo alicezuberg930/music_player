@@ -12,7 +12,6 @@ import { FormProvider, RHFTextField } from '@/components/hook-form'
 import { RHFUpload } from '@/components/hook-form/RHFUpload'
 import { Button } from '@yukikaze/ui/button'
 import { Card, CardContent } from '@yukikaze/ui/card'
-import { useSnackbar } from '@/components/snackbar'
 import { useApi } from '@/hooks/useApi'
 
 type FormValuesProps = {
@@ -21,18 +20,9 @@ type FormValuesProps = {
 }
 
 const AddArtistPage: React.FC = () => {
-    const { enqueueSnackbar } = useSnackbar()
     const { translate } = useLocales()
 
-    const createArtistMutation = useApi().useCreateArtist({
-        onSuccess: (response) => {
-            reset()
-            enqueueSnackbar(translate(response.message), { variant: 'success' })
-        },
-        onError: (error) => {
-            enqueueSnackbar(translate(error.message ?? 'unknown_error'), { variant: 'error' })
-        }
-    })
+    const createArtistMutation = useApi().useCreateArtist()
 
     const ArtistSchema: Yup.ObjectSchema<FormValuesProps> = Yup.object().shape({
         thumbnail: Yup.mixed<CustomFile | string>().optional(),
@@ -61,7 +51,11 @@ const AddArtistPage: React.FC = () => {
         for (const [key, value] of Object.entries(data)) {
             if (value !== undefined) formData.append(key, value as string | Blob)
         }
-        createArtistMutation.mutate(formData)
+        createArtistMutation.mutate(formData, {
+            onSuccess: (_data) => {
+                reset()
+            }
+        })
     }
 
     const handleDropThumbnail = useCallback((acceptedFiles: File[]) => {
@@ -74,7 +68,7 @@ const AddArtistPage: React.FC = () => {
 
     return (
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <div className='flex flex-col md:flex-row gap-6'>
+            <div className='flex flex-col md:flex-row gap-6 mt-6'>
                 <div className='w-full md:w-2/3'>
                     <Card>
                         <CardContent className="space-y-4">

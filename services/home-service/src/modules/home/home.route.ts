@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express"
 import homeController from "./home.controller"
-import { OptionalJWTMiddleware } from "../../middleware"
+import { OptionalJWTMiddleware } from "@yukikaze/middleware"
 
 const homeRouter = express.Router()
 

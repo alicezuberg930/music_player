@@ -30,6 +30,7 @@ export const env = {
     HOME_SERVICE_PORT: process.env.HOME_SERVICE_PORT,
     AUTH_SERVICE_PORT: process.env.AUTH_SERVICE_PORT,
     SONG_SERVICE_PORT: process.env.SONG_SERVICE_PORT,
+    ARTIST_SERVICE_PORT: process.env.ARTIST_SERVICE_PORT,
     REDIS_URL: process.env.REDIS_URL,
     REDIS_HOST: process.env.REDIS_HOST || 'localhost',
     REDIS_PORT: Number.parseInt(process.env.REDIS_PORT || '6379'),

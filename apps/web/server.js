@@ -21,7 +21,7 @@ app.use(compression({
     }
 }))
 
-// Serve static files from client build
+// Serve static files from build directory
 app.use(express.static(path.join(__dirname, 'dist')))
 
 app.get('/*splat', async (req, res) => {

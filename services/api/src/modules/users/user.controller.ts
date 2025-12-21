@@ -51,20 +51,12 @@ class UserController {
         return await this.userService.userPlaylists(request, response)
     }
 
-    public async addFavoriteSong(request: Request<{ id: string }>, response: Response) {
-        return await this.userService.addFavoriteSong(request, response)
+    public async toggleFavoriteSong(request: Request<{ id: string }>, response: Response) {
+        return await this.userService.toggleFavoriteSong(request, response)
     }
 
-    public async removeFavoriteSong(request: Request<{ id: string }>, response: Response) {
-        return await this.userService.removeFavoriteSong(request, response)
-    }
-
-    public async addFavoritePlaylist(request: Request<{ id: string }>, response: Response) {
-        return await this.userService.addFavoritePlaylist(request, response)
-    }
-
-    public async removeFavoritePlaylist(request: Request<{ id: string }>, response: Response) {
-        return await this.userService.removeFavoritePlaylist(request, response)
+    public async toggleFavoritePlaylist(request: Request<{ id: string }>, response: Response) {
+        return await this.userService.toggleFavoritePlaylist(request, response)
     }
 }
 

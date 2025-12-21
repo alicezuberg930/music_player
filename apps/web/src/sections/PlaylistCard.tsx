@@ -13,18 +13,13 @@ type Props = {
 }
 
 const PlaylistCard: React.FC<Props> = ({ playlist, sectionId, isSearch, visibleSlides = 5 }) => {
-    const { useRemoveFavoritePlaylist, useAddFavoritePlaylist } = useApi()
-    const removeFavoritePlaylistMutation = useRemoveFavoritePlaylist()
-    const addFavoritePlaylistMutation = useAddFavoritePlaylist()
+    const { useToggleFavoritePlaylist } = useApi()
+    const toggleFavoritePlaylistMutation = useToggleFavoritePlaylist()
     const navigate = useNavigate()
 
     const handleFavorite = (e: React.MouseEvent<SVGSVGElement>) => {
         e.stopPropagation()
-        if (playlist.liked) {
-            removeFavoritePlaylistMutation.mutate(playlist.id)
-        } else {
-            addFavoritePlaylistMutation.mutate(playlist.id)
-        }
+        toggleFavoritePlaylistMutation.mutate(playlist.id)
     }
 
     return (

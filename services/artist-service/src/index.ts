@@ -4,7 +4,7 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 import { env } from '@yukikaze/lib/create-env'
 import { errorInterceptor, notFoundHandlerMiddleware, responseInterceptor, rateLimiter } from '@yukikaze/middleware'
-import { playlistRouter, userRouter, sitemapRouter, bannerRouter } from './modules'
+import { artistRouter } from './modules'
 import { UnauthorizedException } from '@yukikaze/lib/exception'
 const app = express()
 
@@ -42,7 +42,7 @@ app.use(cookieParser())
 app.use(express.urlencoded({ extended: true, limit: '21mb' }))
 app.use(express.json({ limit: '21mb' }))
 
-const port = env.PORT || 5001
+const port = env.ARTIST_SERVICE_PORT
 
 // global rate limiter
 app.use(rateLimiter)
@@ -52,7 +52,7 @@ app.get('/check', (_: Request, res: Response) => {
 })
 
 // map routers to express server
-app.use('/', [userRouter, playlistRouter, bannerRouter, sitemapRouter])
+app.use('/', [artistRouter])
 
 // assign global middlewares to express server
 app.use([notFoundHandlerMiddleware, errorInterceptor])

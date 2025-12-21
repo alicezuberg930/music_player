@@ -25,6 +25,14 @@ class ArtistController {
     public async findArtist(request: Request<{ id: string }>, response: Response) {
         return await this.artistService.findArtist(request, response)
     }
+
+    public async deleteArtist(request: Request<{ id: string }>, response: Response) {
+        return await this.artistService.deleteArtist(request, response)
+    }
+
+    public async toggleFollowArtist(request: Request<{ id: string }>, response: Response) {
+        return await this.artistService.toggleFollowArtist(request, response)
+    }
 }
 
 export default new ArtistController()

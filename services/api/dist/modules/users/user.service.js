@@ -207,20 +207,25 @@ class UserService {
             throw new exception_1.BadRequestException(error instanceof Error ? error.message : undefined);
         }
     }
-    async addFavoriteSong(request, response) {
+    async toggleFavoriteSong(request, response) {
         try {
             const { id } = request.params;
             const song = await db_1.db.query.songs.findFirst({ where: (0, db_1.eq)(schemas_1.songs.id, id) });
             if (!song)
                 throw new exception_1.NotFoundException('Song not found');
-            const checkExisting = await db_1.db.query.userFavoriteSongs.findFirst({
+            const isFavorite = await db_1.db.query.userFavoriteSongs.findFirst({
                 where: (0, db_1.and)((0, db_1.eq)(schemas_1.userFavoriteSongs.userId, request.userId), (0, db_1.eq)(schemas_1.userFavoriteSongs.songId, id))
             });
-            if (checkExisting)
-                throw new exception_1.BadRequestException('Song is already in favorites');
-            await db_1.db.insert(schemas_1.userFavoriteSongs).values({ userId: request.userId, songId: id });
-            await db_1.db.update(schemas_1.songs).set({ likes: song.likes + 1 }).where((0, db_1.eq)(schemas_1.songs.id, id));
-            return response.json({ message: 'Song added to favorites successfully' });
+            if (isFavorite) {
+                await db_1.db.delete(schemas_1.userFavoriteSongs).where((0, db_1.and)((0, db_1.eq)(schemas_1.userFavoriteSongs.userId, request.userId), (0, db_1.eq)(schemas_1.userFavoriteSongs.songId, id)));
+                await db_1.db.update(schemas_1.songs).set({ likes: song.likes - 1 }).where((0, db_1.eq)(schemas_1.songs.id, id));
+                return response.json({ message: 'Song removed from favorites successfully' });
+            }
+            else {
+                await db_1.db.insert(schemas_1.userFavoriteSongs).values({ userId: request.userId, songId: id });
+                await db_1.db.update(schemas_1.songs).set({ likes: song.likes + 1 }).where((0, db_1.eq)(schemas_1.songs.id, id));
+                return response.json({ message: 'Song added to favorites successfully' });
+            }
         }
         catch (error) {
             if (error instanceof exception_1.HttpException)
@@ -228,62 +233,26 @@ class UserService {
             throw new exception_1.BadRequestException(error instanceof Error ? error.message : undefined);
         }
     }
-    async removeFavoriteSong(request, response) {
-        try {
-            const { id } = request.params;
-            const song = await db_1.db.query.songs.findFirst({ where: (0, db_1.eq)(schemas_1.songs.id, id) });
-            if (!song)
-                throw new exception_1.NotFoundException('Song not found');
-            const checkExisting = await db_1.db.query.userFavoriteSongs.findFirst({
-                where: (0, db_1.and)((0, db_1.eq)(schemas_1.userFavoriteSongs.userId, request.userId), (0, db_1.eq)(schemas_1.userFavoriteSongs.songId, id))
-            });
-            if (!checkExisting)
-                throw new exception_1.BadRequestException('Song is not in favorites');
-            await db_1.db.delete(schemas_1.userFavoriteSongs).where((0, db_1.and)((0, db_1.eq)(schemas_1.userFavoriteSongs.userId, request.userId), (0, db_1.eq)(schemas_1.userFavoriteSongs.songId, id)));
-            await db_1.db.update(schemas_1.songs).set({ likes: song.likes - 1 }).where((0, db_1.eq)(schemas_1.songs.id, id));
-            return response.json({ message: 'Song removed from favorites successfully' });
-        }
-        catch (error) {
-            if (error instanceof exception_1.HttpException)
-                throw error;
-            throw new exception_1.BadRequestException(error instanceof Error ? error.message : undefined);
-        }
-    }
-    async addFavoritePlaylist(request, response) {
+    async toggleFavoritePlaylist(request, response) {
         try {
             const { id } = request.params;
             const playlist = await db_1.db.query.playlists.findFirst({ where: (0, db_1.eq)(schemas_1.playlists.id, id) });
             if (!playlist)
                 throw new exception_1.NotFoundException('Playlist not found');
-            const checkExisting = await db_1.db.query.userFavoritePlaylists.findFirst({
+            const isFavorite = await db_1.db.query.userFavoritePlaylists.findFirst({
                 where: (0, db_1.and)((0, db_1.eq)(schemas_1.userFavoritePlaylists.userId, request.userId), (0, db_1.eq)(schemas_1.userFavoritePlaylists.playlistId, id))
             });
-            if (checkExisting)
-                throw new exception_1.BadRequestException('Playlist is already in favorites');
-            await db_1.db.insert(schemas_1.userFavoritePlaylists).values({ userId: request.userId, playlistId: id });
-            await db_1.db.update(schemas_1.playlists).set({ likes: playlist.likes + 1 }).where((0, db_1.eq)(schemas_1.playlists.id, id));
-            return response.json({ message: 'Playlist added to favorites successfully' });
-        }
-        catch (error) {
-            if (error instanceof exception_1.HttpException)
-                throw error;
-            throw new exception_1.BadRequestException(error instanceof Error ? error.message : undefined);
-        }
-    }
-    async removeFavoritePlaylist(request, response) {
-        try {
-            const { id } = request.params;
-            const playlist = await db_1.db.query.playlists.findFirst({ where: (0, db_1.eq)(schemas_1.playlists.id, id) });
-            if (!playlist)
-                throw new exception_1.NotFoundException('Playlist not found');
-            const checkExisting = await db_1.db.query.userFavoritePlaylists.findFirst({
-                where: (0, db_1.and)((0, db_1.eq)(schemas_1.userFavoritePlaylists.userId, request.userId), (0, db_1.eq)(schemas_1.userFavoritePlaylists.playlistId, id))
-            });
-            if (!checkExisting)
-                throw new exception_1.BadRequestException('Playlist is not in favorites');
-            await db_1.db.delete(schemas_1.userFavoritePlaylists).where((0, db_1.and)((0, db_1.eq)(schemas_1.userFavoritePlaylists.userId, request.userId), (0, db_1.eq)(schemas_1.userFavoritePlaylists.playlistId, id)));
-            await db_1.db.update(schemas_1.playlists).set({ likes: playlist.likes - 1 }).where((0, db_1.eq)(schemas_1.playlists.id, id));
-            return response.json({ message: 'Playlist removed from favorites successfully' });
+            // toggle favorite
+            if (isFavorite) {
+                await db_1.db.delete(schemas_1.userFavoritePlaylists).where((0, db_1.and)((0, db_1.eq)(schemas_1.userFavoritePlaylists.userId, request.userId), (0, db_1.eq)(schemas_1.userFavoritePlaylists.playlistId, id)));
+                await db_1.db.update(schemas_1.playlists).set({ likes: playlist.likes - 1 }).where((0, db_1.eq)(schemas_1.playlists.id, id));
+                return response.json({ message: 'Playlist removed from favorites successfully' });
+            }
+            else {
+                await db_1.db.insert(schemas_1.userFavoritePlaylists).values({ userId: request.userId, playlistId: id });
+                await db_1.db.update(schemas_1.playlists).set({ likes: playlist.likes + 1 }).where((0, db_1.eq)(schemas_1.playlists.id, id));
+                return response.json({ message: 'Playlist added to favorites successfully' });
+            }
         }
         catch (error) {
             if (error instanceof exception_1.HttpException)

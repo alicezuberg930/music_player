@@ -62,7 +62,7 @@ export const fetchVideo = async (videoId: string): Promise<Response<Video>> => {
 
 export const fetchArtistList = async (): Promise<Response<Artist[]>> => {
     try {
-        const response = await axios.get<Response<Artist[]>>(`/app/artists`)
+        const response = await axios.get<Response<Artist[]>>(`/artists`)
         return response.data
     } catch (error) {
         console.error(error)
@@ -72,7 +72,7 @@ export const fetchArtistList = async (): Promise<Response<Artist[]>> => {
 
 export const fetchArtist = async (artistId: string): Promise<Response<Artist>> => {
     try {
-        const response = await axios.get<Response<Artist>>(`/app/artists/${artistId}`)
+        const response = await axios.get<Response<Artist>>(`/artists/${artistId}`)
         return response.data
     } catch (error) {
         console.error(error)
@@ -82,7 +82,18 @@ export const fetchArtist = async (artistId: string): Promise<Response<Artist>> =
 
 export const createArtist = async (formData: FormData): Promise<Response> => {
     try {
-        const response = await axios.post<Response>(`/app/artists`, formData)
+        const response = await axios.post<Response>(`/artists`, formData)
+        console.log(response)
+        return response.data
+    } catch (error) {
+        console.error(error)
+        throw error
+    }
+}
+
+export const followArtist = async (artistId: string): Promise<Response> => {
+    try {
+        const response = await axios.put<Response>(`/artists/follow/${artistId}`)
         return response.data
     } catch (error) {
         console.error(error)
@@ -230,7 +241,7 @@ export const fetchUserArtistList = async (): Promise<Response<Artist[]>> => {
     }
 }
 
-export const addFavoriteSong = async (songId: string): Promise<Response> => {
+export const toggleFavoriteSong = async (songId: string): Promise<Response> => {
     try {
         const response = await axios.put<Response>(`/app/users/favorite/song/${songId}`)
         return response.data
@@ -240,29 +251,9 @@ export const addFavoriteSong = async (songId: string): Promise<Response> => {
     }
 }
 
-export const removeFavoriteSong = async (songId: string): Promise<Response> => {
-    try {
-        const response = await axios.delete<Response>(`/app/users/favorite/song/${songId}`)
-        return response.data
-    } catch (error) {
-        console.error(error)
-        throw error
-    }
-}
-
-export const addFavoritePlaylist = async (playlistId: string): Promise<Response> => {
+export const toggleFavoritePlaylist = async (playlistId: string): Promise<Response> => {
     try {
         const response = await axios.put<Response>(`/app/users/favorite/playlist/${playlistId}`)
-        return response.data
-    } catch (error) {
-        console.error(error)
-        throw error
-    }
-}
-
-export const removeFavoritePlaylist = async (playlistId: string): Promise<Response> => {
-    try {
-        const response = await axios.delete<Response>(`/app/users/favorite/playlist/${playlistId}`)
         return response.data
     } catch (error) {
         console.error(error)
@@ -273,6 +264,16 @@ export const removeFavoritePlaylist = async (playlistId: string): Promise<Respon
 export const fetchBannerList = async (): Promise<Response<Banner[]>> => {
     try {
         const response = await axios.get<Response<Banner[]>>(`/app/banners`)
+        return response.data
+    } catch (error) {
+        console.error(error)
+        throw error
+    }
+}
+
+export const addSongListen = async (songId: string): Promise<Response> => {
+    try {
+        const response = await axios.put<Response>(`/songs/listens/add/${songId}`)
         return response.data
     } catch (error) {
         console.error(error)

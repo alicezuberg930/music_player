@@ -51,7 +51,7 @@ const routes: Map<string, string> = new Map([
     ['/api/v1/home', `http://localhost:${env.HOME_SERVICE_PORT}`],
     // ['/api/v1/auth', `http://localhost:${env.AUTH_SERVICE_PORT}`],
     ['/api/v1/songs', `http://localhost:${env.SONG_SERVICE_PORT}`],
-    // ['/api/v1/albums', `http://localhost:${env.ALBUM_SERVICE_PORT || 5005}`],
+    ['/api/v1/artists', `http://localhost:${env.ARTIST_SERVICE_PORT}`],
     // ['/api/v1/playlists', `http://localhost:${env.PLAYLIST_SERVICE_PORT || 5006}`],
     // ['/api/v1/users', `http://localhost:${env.USER_SERVICE_PORT}`],
 ])
@@ -99,7 +99,6 @@ const onError = (err: Error, req: IncomingMessage, res: ServerResponse<IncomingM
     if (res instanceof ServerResponse && !res.headersSent) {
         res.writeHead(503, { 'Content-Type': 'application/json' })
         res.end(JSON.stringify({
-            error: 'Service Unavailable',
             message: 'The requested service is currently unavailable. Please try again later.',
             details: env.NODE_ENV === 'development' ? err.message : undefined
         }))
@@ -116,7 +115,7 @@ routes.forEach((target, path) => {
             error: (err, req, res) => onError(err, req, res),
             proxyReq: (proxyReq, req) => onProxyRequest(proxyReq, req, target),
             proxyRes: (proxyRes, req, res) => {
-                const origin = req.headers.origin
+                // const origin = req.headers.origin
                 // Set CORS headers on the response from the target service
                 // if (origin && allowedOrigins.has(origin)) {
                 //     if (!proxyRes.headers['access-control-allow-origin']) {

@@ -312,4 +312,20 @@ export class SongService {
             throw new BadRequestException(error instanceof Error ? error.message : undefined)
         }
     }
+
+    public async addSongListen(request: Request<{ id: string }, {}>, response: Response) {
+        try {
+            const { id } = request.params
+            const findSong = await db.query.songs.findFirst({
+                where: eq(songs.id, id),
+                columns: { id: true, listens: true }
+            })
+            if (!findSong) throw new NotFoundException('Song not found')
+            await db.update(songs).set({ listens: (findSong.listens ?? 0) + 1 }).where(eq(songs.id, id))
+            return response.json({ message: 'Song view added successfully' })
+        } catch (error) {
+            if (error instanceof HttpException) throw error
+            throw new BadRequestException(error instanceof Error ? error.message : undefined)
+        }
+    }
 }

@@ -1,0 +1,1 @@
+export { artistRouter } from './artists/artist.route'

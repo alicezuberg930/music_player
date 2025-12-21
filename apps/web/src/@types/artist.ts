@@ -11,6 +11,7 @@ export type Artist = {
     likes: number
     totalFollow: number
     biography: string
+    followed: boolean
     topAlbum: Playlist
     songs: Song[]
     playlists: Playlist[]

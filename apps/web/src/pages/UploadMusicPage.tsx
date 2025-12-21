@@ -128,7 +128,7 @@ const UploadMusicPage: React.FC<{ editSong?: Song, id?: string }> = ({ editSong,
 
     return (
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <div className='flex flex-col md:flex-row gap-6'>
+            <div className='flex flex-col md:flex-row gap-6 mt-6'>
                 <div className='w-full md:w-2/3'>
                     <Card>
                         <CardContent className="space-y-4">

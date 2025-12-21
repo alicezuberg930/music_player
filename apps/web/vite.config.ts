@@ -58,6 +58,7 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
             'dayjs-chunk': ['dayjs'],
             'notistack-chunk': ['notistack'],
             // 'hls-chunk': ['hls.js'],
+            'chart': ['recharts'],
             'framer-motion-chunk': ['framer-motion'],
             'yukikaze-ui-chunk': ['@yukikaze/ui']
           },

@@ -249,6 +249,33 @@
         "typescript": "catalog:",
       },
     },
+    "services/artist-service": {
+      "name": "@yukikaze/artist-service",
+      "dependencies": {
+        "@yukikaze/db": "workspace:*",
+        "@yukikaze/lib": "workspace:*",
+        "@yukikaze/middleware": "workspace:*",
+        "class-transformer": "^0.5.1",
+        "class-validator": "^0.14.2",
+        "cookie-parser": "^1.4.7",
+        "cors": "^2.8.5",
+        "express": "catalog:express",
+        "express-rate-limit": "^7.0.0",
+        "multer": "catalog:multer",
+        "reflect-metadata": "^0.2.2",
+      },
+      "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*",
+        "@types/cookie-parser": "^1.4.10",
+        "@types/cors": "^2.8.19",
+        "@types/express": "catalog:express",
+        "@types/multer": "catalog:multer",
+        "@types/node": "catalog:",
+        "eslint": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
     "services/gateway-service": {
       "name": "@yukikaze/gateway-service",
       "dependencies": {
@@ -275,6 +302,7 @@
       "dependencies": {
         "@yukikaze/db": "workspace:*",
         "@yukikaze/lib": "workspace:*",
+        "@yukikaze/middleware": "workspace:*",
         "cookie-parser": "^1.4.7",
         "express": "catalog:express",
       },
@@ -924,6 +952,8 @@
     "@typescript-eslint/visitor-keys": ["@typescript-eslint/visitor-keys@8.49.0", "", { "dependencies": { "@typescript-eslint/types": "8.49.0", "eslint-visitor-keys": "^4.2.1" } }, "sha512-LlKaciDe3GmZFphXIc79THF/YYBugZ7FS1pO581E/edlVVNbZKDy93evqmrfQ9/Y4uN0vVhX4iuchq26mK/iiA=="],
 
     "@vitejs/plugin-react": ["@vitejs/plugin-react@5.1.2", "", { "dependencies": { "@babel/core": "^7.28.5", "@babel/plugin-transform-react-jsx-self": "^7.27.1", "@babel/plugin-transform-react-jsx-source": "^7.27.1", "@rolldown/pluginutils": "1.0.0-beta.53", "@types/babel__core": "^7.20.5", "react-refresh": "^0.18.0" }, "peerDependencies": { "vite": "^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0" } }, "sha512-EcA07pHJouywpzsoTUqNh5NwGayl2PPVEJKUSinGGSxFGYn+shYbqMGBg6FXDqgXum9Ou/ecb+411ssw8HImJQ=="],
+
+    "@yukikaze/artist-service": ["@yukikaze/artist-service@workspace:services/artist-service"],
 
     "@yukikaze/db": ["@yukikaze/db@workspace:packages/db"],
 

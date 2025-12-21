@@ -1,4 +1,5 @@
 const fr = {
+  'unfollow': 'Ne plus suivre',
   'followed': 'Suivi',
   'follow': 'Suivre',
   'spotlight_artist': 'Artiste en vedette',

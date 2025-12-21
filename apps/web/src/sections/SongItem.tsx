@@ -25,9 +25,8 @@ type Props = {
 const SongItem: React.FC<Props> = ({ song, order, percent, imgSize, style, showTime }) => {
     const dispatch = useDispatch()
     const { enqueueSnackbar } = useSnackbar()
-    const { useAddFavoriteSong, useRemoveFavoriteSong, queryKeys } = useApi()
-    const removeFavoriteSongMutation = useRemoveFavoriteSong(queryKeys.songs({}))
-    const addFavoriteSongMutation = useAddFavoriteSong()
+    const { useToggleFavoriteSong } = useApi()
+    const toggleFavoriteSongMutation = useToggleFavoriteSong()
     const imageSizeCss = () => {
         if (imgSize === 'xl') return 'w-20 h-20'
         if (imgSize == 'lg') return 'w-14 h-14'
@@ -58,11 +57,7 @@ const SongItem: React.FC<Props> = ({ song, order, percent, imgSize, style, showT
 
     const handleFavorite = (e: MouseEvent<SVGSVGElement>) => {
         e.stopPropagation()
-        if (song.liked) {
-            removeFavoriteSongMutation.mutate(song.id)
-        } else {
-            addFavoriteSongMutation.mutate(song.id)
-        }
+        toggleFavoriteSongMutation.mutate(song.id)
     }
 
     return (

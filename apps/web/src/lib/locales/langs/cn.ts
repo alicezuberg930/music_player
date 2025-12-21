@@ -1,4 +1,5 @@
 const cn = {
+  'unfollow': '取消关注',
   'followed': '已关注',
   'follow': '关注',
   'spotlight_artist': '精选艺术家',

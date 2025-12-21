@@ -83,22 +83,12 @@ userRouter.get("/users/playlist/list",
 
 userRouter.put('/users/favorite/song/:id',
     JWTMiddleware,
-    (request: Request<{ id: string }>, response: Response) => userController.addFavoriteSong(request, response)
-)
-
-userRouter.delete('/users/favorite/song/:id',
-    JWTMiddleware,
-    (request: Request<{ id: string }>, response: Response) => userController.removeFavoriteSong(request, response)
+    (request: Request<{ id: string }>, response: Response) => userController.toggleFavoriteSong(request, response)
 )
 
 userRouter.put('/users/favorite/playlist/:id',
     JWTMiddleware,
-    (request: Request<{ id: string }>, response: Response) => userController.addFavoritePlaylist(request, response)
-)
-
-userRouter.delete('/users/favorite/playlist/:id',
-    JWTMiddleware,
-    (request: Request<{ id: string }>, response: Response) => userController.removeFavoritePlaylist(request, response)
+    (request: Request<{ id: string }>, response: Response) => userController.toggleFavoritePlaylist(request, response)
 )
 
 export { userRouter }

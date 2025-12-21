@@ -9,7 +9,7 @@ const SearchPage = () => {
 
     return (
         <>
-            <div className='h-12 mb-6 text-sm border-b border-gray-400 mt-12             '>
+            <div className='h-12 mb-6 text-sm border-b border-gray-400 mt-12'>
                 <div className='flex items-center h-full'>
                     {searchMenu.map(menu => (
                         <NavLink

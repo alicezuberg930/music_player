@@ -47,7 +47,5 @@ userRouter.get("/users/playlist/list", middleware_1.JWTMiddleware, (request, res
 //     JWTMiddleware,
 //     (request: Request, response: Response) => userController.unfollowArtist(request, response)
 // )
-userRouter.put('/users/favorite/song/:id', middleware_1.JWTMiddleware, (request, response) => user_controller_1.default.addFavoriteSong(request, response));
-userRouter.delete('/users/favorite/song/:id', middleware_1.JWTMiddleware, (request, response) => user_controller_1.default.removeFavoriteSong(request, response));
-userRouter.put('/users/favorite/playlist/:id', middleware_1.JWTMiddleware, (request, response) => user_controller_1.default.addFavoritePlaylist(request, response));
-userRouter.delete('/users/favorite/playlist/:id', middleware_1.JWTMiddleware, (request, response) => user_controller_1.default.removeFavoritePlaylist(request, response));
+userRouter.put('/users/favorite/song/:id', middleware_1.JWTMiddleware, (request, response) => user_controller_1.default.toggleFavoriteSong(request, response));
+userRouter.put('/users/favorite/playlist/:id', middleware_1.JWTMiddleware, (request, response) => user_controller_1.default.toggleFavoritePlaylist(request, response));

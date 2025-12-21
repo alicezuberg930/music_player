@@ -485,11 +485,11 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(({
             allOptions = options
         }
         const valueSet = new Set<string>()
-        const duplicates: string[] = []
+        // const duplicates: string[] = []
         const uniqueOptions: MultiSelectOption[] = []
         allOptions.forEach((option) => {
             if (valueSet.has(option.value)) {
-                duplicates.push(option.value)
+                // duplicates.push(option.value)
                 if (!deduplicateOptions) {
                     uniqueOptions.push(option)
                 }
@@ -498,35 +498,13 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(({
                 uniqueOptions.push(option)
             }
         })
-        if (process.env.VITE_NODE_ENV === "development" && duplicates.length > 0) {
-            const action = deduplicateOptions
-                ? "automatically removed"
-                : "detected"
-            console.warn(
-                `MultiSelect: Duplicate option values ${action}: ${duplicates.join(
-                    ", "
-                )}. ` +
-                `${deduplicateOptions
-                    ? "Duplicates have been removed automatically."
-                    : "This may cause unexpected behavior. Consider setting 'deduplicateOptions={true}' or ensure all option values are unique."
-                }`
-            )
-        }
         return deduplicateOptions ? uniqueOptions : allOptions
     }, [options, deduplicateOptions, isGroupedOptions])
 
-    const getOptionByValue = React.useCallback(
-        (value: string): MultiSelectOption | undefined => {
-            const option = getAllOptions().find((option) => option.value === value)
-            if (!option && process.env.VITE_NODE_ENV === "development") {
-                console.warn(
-                    `MultiSelect: Option with value "${value}" not found in options list`
-                )
-            }
-            return option
-        },
-        [getAllOptions]
-    )
+    const getOptionByValue = React.useCallback((value: string): MultiSelectOption | undefined => {
+        const option = getAllOptions().find((option) => option.value === value)
+        return option
+    }, [getAllOptions])
 
     const filteredOptions = React.useMemo(() => {
         if (!searchable || !searchValue) return options

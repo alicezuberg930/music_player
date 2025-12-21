@@ -1,4 +1,5 @@
 const en = {
+    'unfollow': 'Unfollow',
     'followed': 'Followed',
     'follow': 'Follow',
     'spotlight_artist': 'Spotlight Artist',

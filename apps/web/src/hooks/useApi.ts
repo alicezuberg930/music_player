@@ -227,108 +227,49 @@ export const useApi = () => {
         })
     }
 
-    const useAddFavoriteSong = (key?: QueryKey, options?: UseMutationOptions<Response, Error, string>) => {
+    const useToggleFavoriteSong = (options?: UseMutationOptions<Response, Error, string>) => {
         return useMutation({
-            mutationFn: (songId: string) => api.addFavoriteSong(songId),
+            mutationFn: (songId: string) => api.toggleFavoriteSong(songId),
             onMutate: async (songId) => {
-                if (!key) return
-
                 // Cancel outgoing refetches
-                await queryClient.cancelQueries({ queryKey: key })
+                await queryClient.cancelQueries({ queryKey: queryKeys.home })
                 await queryClient.cancelQueries({ queryKey: queryKeys.userSongs })
-                // Optimistically update song list
-                queryClient.setQueryData<Response<Song[]>>(key, (old) => {
+                // Optimistically update home data
+                queryClient.setQueryData<Response<HomeData>>(queryKeys.home, (old) => {
                     if (!old?.data) return old
                     return {
                         ...old,
-                        data: old.data.map(song => song.id === songId ? { ...song, liked: true } : song)
+                        data: {
+                            ...old.data,
+                            newReleaseSongs: old.data.newReleaseSongs.map(song => song.id === songId ? { ...song, liked: !song.liked } : song),
+                        }
                     }
                 })
-                // Optimistically add to user songs
+                // Optimistically update user song list liked status
                 queryClient.setQueryData<Response<Song[]>>(queryKeys.userSongs, (old) => {
                     if (!old?.data) return old
-                    const songExists = old.data.some(song => song.id === songId)
-                    if (songExists) {
-                        return {
-                            ...old,
-                            data: old.data.map(song => song.id === songId ? { ...song, liked: true } : song)
-                        }
+                    return {
+                        ...old,
+                        data: old.data.map(song => song.id === songId ? { ...song, liked: !song.liked } : song)
                     }
-                    // If song not in user songs, we need to fetch it from the songs cache
-                    const allSongs = queryClient.getQueryData<Response<Song[]>>(key)
-                    const songToAdd = allSongs?.data?.find(s => s.id === songId)
-                    if (songToAdd) {
-                        return {
-                            ...old,
-                            data: [{ ...songToAdd, liked: true }, ...old.data]
-                        }
-                    }
-                    return old
                 })
             },
             onSuccess: (response) => {
-                if (key) {
-                    queryClient.invalidateQueries({ queryKey: key })
-                    queryClient.invalidateQueries({ queryKey: queryKeys.userSongs })
-                }
                 enqueueSnackbar(translate(response.message), { variant: 'success' })
             },
             onError: (error) => {
-                if (key) {
-                    // Revert optimistic update on error
-                    queryClient.invalidateQueries({ queryKey: key })
-                    queryClient.invalidateQueries({ queryKey: queryKeys.userSongs })
-                }
+                // Revert optimistic update on error
+                queryClient.invalidateQueries({ queryKey: queryKeys.home })
+                queryClient.invalidateQueries({ queryKey: queryKeys.userSongs })
                 enqueueSnackbar(translate(error.message ?? 'unknown_error'), { variant: 'error' })
             },
             ...options,
         })
     }
 
-    const useRemoveFavoriteSong = (key?: QueryKey, options?: UseMutationOptions<Response, Error, string>) => {
+    const useToggleFavoritePlaylist = (options?: UseMutationOptions<Response, Error, string>) => {
         return useMutation({
-            mutationFn: (songId: string) => api.removeFavoriteSong(songId),
-            onMutate: async (songId) => {
-                if (!key) return
-                // Cancel outgoing refetches
-                await queryClient.cancelQueries({ queryKey: key })
-                // Optimistically update song list
-                queryClient.setQueryData<Response<Song[]>>(key, (old) => {
-                    if (!old?.data) return old
-                    return {
-                        ...old,
-                        data: old.data.map(song => song.id === songId ? { ...song, liked: false } : song)
-                    }
-                })
-                // Optimistically remove from user songs
-                queryClient.setQueryData<Response<Song[]>>(queryKeys.userSongs, (old) => {
-                    if (!old?.data) return old
-                    return {
-                        ...old,
-                        data: old.data.filter(song => song.id !== songId)
-                    }
-                })
-            },
-            onSuccess: (response) => {
-                if (key) {
-                    queryClient.invalidateQueries({ queryKey: key })
-                }
-                enqueueSnackbar(translate(response.message), { variant: 'success' })
-            },
-            onError: (error) => {
-                if (key) {
-                    // Revert optimistic update on error
-                    queryClient.invalidateQueries({ queryKey: key })
-                }
-                enqueueSnackbar(translate(error.message ?? 'unknown_error'), { variant: 'error' })
-            },
-            ...options,
-        })
-    }
-
-    const useAddFavoritePlaylist = (options?: UseMutationOptions<Response, Error, string>) => {
-        return useMutation({
-            mutationFn: (playlistId: string) => api.addFavoritePlaylist(playlistId),
+            mutationFn: (playlistId: string) => api.toggleFavoritePlaylist(playlistId),
             onMutate: async (playlistId) => {
                 // Cancel outgoing refetches
                 await queryClient.cancelQueries({ queryKey: queryKeys.playlists })
@@ -385,49 +326,19 @@ export const useApi = () => {
         })
     }
 
-    const useRemoveFavoritePlaylist = (options?: UseMutationOptions<Response, Error, string>) => {
+    const useAddSongListen = (options?: UseMutationOptions<Response, Error, string>) => {
         return useMutation({
-            mutationFn: (playlistId: string) => api.removeFavoritePlaylist(playlistId),
-            onMutate: async (playlistId) => {
-                // Cancel outgoing refetches
-                await queryClient.cancelQueries({ queryKey: queryKeys.playlists })
-                await queryClient.cancelQueries({ queryKey: queryKeys.userPlaylists })
-                // Optimistically update playlist list
-                queryClient.setQueryData<Response<Playlist[]>>(queryKeys.playlists, (old) => {
-                    if (!old?.data) return old
-                    return {
-                        ...old,
-                        data: old.data.map(playlist =>
-                            playlist.id === playlistId ? { ...playlist, liked: false } : playlist
-                        )
-                    }
-                })
-                // Optimistically update individual playlist
-                queryClient.setQueryData<Response<Playlist>>(queryKeys.playlist(playlistId), (old) => {
-                    if (!old?.data) return old
-                    return {
-                        ...old,
-                        data: { ...old.data, liked: false }
-                    }
-                })
-                // Optimistically remove from user playlists
-                queryClient.setQueryData<Response<Playlist[]>>(queryKeys.userPlaylists, (old) => {
-                    if (!old?.data) return old
-                    return {
-                        ...old,
-                        data: old.data.filter(playlist => playlist.id !== playlistId)
-                    }
-                })
-            },
+            mutationFn: (songId: string) => api.addSongListen(songId),
+            ...options,
+        })
+    }
+
+    const useFollowArtist = (options?: UseMutationOptions<Response, Error, string>) => {
+        return useMutation({
+            mutationFn: (artistId: string) => api.followArtist(artistId),
             onSuccess: (response) => {
                 enqueueSnackbar(translate(response.message), { variant: 'success' })
-            },
-            onError: (error, playlistId) => {
-                // Revert optimistic update on error
-                queryClient.invalidateQueries({ queryKey: queryKeys.playlists })
-                queryClient.invalidateQueries({ queryKey: queryKeys.playlist(playlistId) })
-                queryClient.invalidateQueries({ queryKey: queryKeys.userPlaylists })
-                enqueueSnackbar(translate(error.message ?? 'unknown_error'), { variant: 'error' })
+                queryClient.invalidateQueries({ queryKey: queryKeys.home })
             },
             ...options,
         })
@@ -456,10 +367,10 @@ export const useApi = () => {
         useAddSongsToPlaylist,
         useRemoveSongsFromPlaylist,
         useVerifyEmail,
-        useAddFavoriteSong,
-        useRemoveFavoriteSong,
-        useAddFavoritePlaylist,
-        useRemoveFavoritePlaylist,
+        useToggleFavoriteSong,
+        useToggleFavoritePlaylist,
+        useAddSongListen,
+        useFollowArtist,
         // 
         queryKeys
     }

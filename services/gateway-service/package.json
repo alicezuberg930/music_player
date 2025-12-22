@@ -6,6 +6,7 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
+    "@yukikaze/db": "workspace:*",
     "@yukikaze/lib": "workspace:*",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",

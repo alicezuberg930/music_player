@@ -1,5 +1,5 @@
 {
-  "name": "@yukikaze/email",
+  "name": "@yukikaze/validator",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -7,6 +7,9 @@
     ".": "./dist/index.mjs",
     "./package.json": "./package.json"
   },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "scripts": {
     "build": "tsdown",
     "~dev": "tsdown --watch ./src",
@@ -15,8 +18,12 @@
   },
   "dependencies": {
     "@yukikaze/lib": "workspace:*",
-    "resend": "^4.8.0",
-    "@react-email/components": "^1.0.1"
+    "express": "catalog:express",
+    "express-rate-limit": "catalog:express",
+    "class-validator": "^0.14.2",
+    "class-transformer": "^0.5.1",
+    "file-type": "^21.0.0",
+    "multer": "catalog:multer"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
@@ -25,10 +32,7 @@
     "eslint": "catalog:",
     "typescript": "catalog:",
     "tsdown": "catalog:",
-    "@types/react": "catalog:react",
-    "react": "catalog:react"
-  },
-  "main": "./dist/index.mjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.mts"
+    "@types/express": "catalog:express",
+    "@types/multer": "catalog:multer"
+  }
 }

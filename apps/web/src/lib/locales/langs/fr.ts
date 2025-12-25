@@ -1,4 +1,7 @@
 const fr = {
+  'created': 'Créé',
+  'uploaded': 'Téléchargé',
+  'favorite': 'Favori',
   'unfollow': 'Ne plus suivre',
   'followed': 'Suivi',
   'follow': 'Suivre',

@@ -1,8 +1,12 @@
 import { playlists, songs, users } from "@yukikaze/db/schemas"
 
+export type Song = typeof songs.$inferSelect
+
+export type Playlist = typeof playlists.$inferSelect
+
 export type User = typeof users.$inferSelect & {
-    songs?: typeof songs.$inferSelect[]
-    playlists?: typeof playlists.$inferSelect[]
-    userFavoriteSongs?: typeof songs.$inferSelect[]
-    userFavoritePlaylists?: typeof playlists.$inferSelect[]
+    songs?: Song[]
+    playlists?: Playlist[]
+    userFavoriteSongs?: Song[]
+    userFavoritePlaylists?: Playlist[]
 }

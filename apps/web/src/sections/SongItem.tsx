@@ -25,8 +25,7 @@ type Props = {
 const SongItem: React.FC<Props> = ({ song, order, percent, imgSize, style, showTime }) => {
     const dispatch = useDispatch()
     const { enqueueSnackbar } = useSnackbar()
-    const { useToggleFavoriteSong } = useApi()
-    const toggleFavoriteSongMutation = useToggleFavoriteSong()
+    const toggleFavoriteSongMutation = useApi().useToggleFavoriteSong()
     const imageSizeCss = () => {
         if (imgSize === 'xl') return 'w-20 h-20'
         if (imgSize == 'lg') return 'w-14 h-14'
@@ -87,7 +86,7 @@ const SongItem: React.FC<Props> = ({ song, order, percent, imgSize, style, showT
                 {!percent && (
                     <>
                         <HeartIcon
-                            className={`group-hover:opacity-100 opacity-0 ${song.liked && 'fill-main-500'}`}
+                            className={`group-hover:opacity-100 opacity-0 stroke-main-500 ${song.liked && 'fill-main-500'}`}
                             onClick={handleFavorite}
                             aria-label='like/unlike song'
                         />

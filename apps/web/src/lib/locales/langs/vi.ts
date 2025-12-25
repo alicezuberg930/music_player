@@ -1,4 +1,7 @@
 const vi = {
+  'created': 'Đã tạo',
+  'uploaded': 'Đã tải lên',
+  'favorite': 'Yêu thích',
   'unfollow': 'Hủy theo dõi',
   'followed': 'Đã theo dõi',
   'follow': 'Theo dõi',

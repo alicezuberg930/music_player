@@ -134,6 +134,6 @@ const server = http.createServer(app)
 
 server.listen(port, () => {
     routes.forEach((target, path) => {
-        console.info(`[${path.replaceAll('/api/v1/', '').toUpperCase()} Service]: Started on ${target}`)
+        console.info(`[${path.replace('/api/v1/', '').toUpperCase()} Service]: Started on ${target}`)
     })
 })

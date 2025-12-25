@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
-import { and, db, eq } from "@yukikaze/db"
+import { and, db, eq, inArray } from "@yukikaze/db"
 import { artistFollowers, artists, playlists, songs, userFavoritePlaylists, userFavoriteSongs, users } from "@yukikaze/db/schemas"
-import { User } from "./user.model"
+import { Playlist, Song, User } from "./user.model"
 import { BadRequestException, HttpException, NotFoundException } from "@yukikaze/lib/exception"
 import { UpdateUserDto } from "./dto/update-user.dto"
 
@@ -80,24 +80,76 @@ export class UserService {
         }
     }
 
-    public async userSongs(request: Request<{}, {}, {}, { type: 'upload' | 'favorite' }>, response: Response) {
+    public async userSongs(request: Request<{}, {}, {}, { type: 'uploaded' | 'favorite' }>, response: Response) {
         try {
             let { type } = request.query
-            if (!type) type = 'upload'
-            const data = type === 'upload' ? await db.query.songs.findMany({ where: eq(songs.userId, request.userId!) }) : []
-            return response.json({ message: 'User songs fetched successfully', data })
+            if (!type) type = 'uploaded'
+            let data: Song[] = []
+            if (type === 'uploaded') {
+                data = await db.query.songs.findMany({ where: eq(songs.userId, request.userId!) })
+            }
+            if (type === 'favorite') {
+                data = await db.query.userFavoriteSongs.findMany({
+                    where: eq(userFavoriteSongs.userId, request.userId!),
+                    with: { song: true }
+                }).then(favorites => favorites.map(f => f.song))
+            }
+            // If user is logged in, check which songs they've liked
+            let likedSongIds: Set<string> = new Set()
+            if (request.userId) {
+                const songIds = data.map(song => song.id)
+                const likedSongs = await db.query.userFavoriteSongs.findMany({
+                    where: and(
+                        eq(userFavoriteSongs.userId, request.userId),
+                        inArray(userFavoriteSongs.songId, songIds)
+                    ),
+                    columns: { songId: true }
+                })
+                likedSongIds = new Set(likedSongs.map(ls => ls.songId))
+            }
+            const songsWithLikedStatus = data.map(song => ({
+                ...song,
+                liked: request.userId ? likedSongIds.has(song.id) : false
+            }))
+            return response.json({ message: 'User songs fetched successfully', data: songsWithLikedStatus })
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)
         }
     }
 
-    public async userPlaylists(request: Request<{}, {}, {}, { type: 'upload' | 'favorite' }>, response: Response) {
+    public async userPlaylists(request: Request<{}, {}, {}, { type: 'created' | 'favorite' }>, response: Response) {
         try {
             let { type } = request.query
-            if (!type) type = 'upload'
-            const data = type === 'upload' ? await db.query.playlists.findMany({ where: eq(playlists.userId, request.userId!) }) : []
-            return response.json({ message: 'User playlists fetched successfully', data })
+            if (!type) type = 'created'
+            let data: Playlist[] = []
+            if (type === 'created') {
+                data = await db.query.playlists.findMany({ where: eq(playlists.userId, request.userId!) })
+            }
+            if (type === 'favorite') {
+                data = await db.query.userFavoritePlaylists.findMany({
+                    where: eq(userFavoritePlaylists.userId, request.userId!),
+                    with: { playlist: true }
+                }).then(favorites => favorites.map(f => f.playlist))
+            }
+            // If user is logged in, check which playlists they've liked
+            let likedPlaylistIds: Set<string> = new Set()
+            if (request.userId) {
+                const playlistIds = data.map(playlist => playlist.id)
+                const likedPlaylists = await db.query.userFavoritePlaylists.findMany({
+                    where: and(
+                        eq(userFavoritePlaylists.userId, request.userId),
+                        inArray(userFavoritePlaylists.playlistId, playlistIds)
+                    ),
+                    columns: { playlistId: true }
+                })
+                likedPlaylistIds = new Set(likedPlaylists.map(lp => lp.playlistId))
+            }
+            const playlistsWithLikedStatus = data.map(playlist => ({
+                ...playlist,
+                liked: request.userId ? likedPlaylistIds.has(playlist.id) : false
+            }))
+            return response.json({ message: 'User playlists fetched successfully', data: playlistsWithLikedStatus })
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)

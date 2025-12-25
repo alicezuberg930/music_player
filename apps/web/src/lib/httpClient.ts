@@ -211,9 +211,9 @@ export const verifyEmail = async (userId: string, token: string): Promise<Respon
     }
 }
 
-export const fetchUserSongList = async (): Promise<Response<Song[]>> => {
+export const fetchUserSongList = async (type: string): Promise<Response<Song[]>> => {
     try {
-        const response = await axios.get<Response<Song[]>>(`/users/song/list`)
+        const response = await axios.get<Response<Song[]>>(`/users/song/list`, { params: { type } })
         return response.data
     } catch (error) {
         console.error(error)
@@ -221,9 +221,9 @@ export const fetchUserSongList = async (): Promise<Response<Song[]>> => {
     }
 }
 
-export const fetchUserPlaylistList = async (): Promise<Response<Playlist[]>> => {
+export const fetchUserPlaylistList = async (type: string): Promise<Response<Playlist[]>> => {
     try {
-        const response = await axios.get<Response<Playlist[]>>(`/users/playlist/list`)
+        const response = await axios.get<Response<Playlist[]>>(`/users/playlist/list`, { params: { type } })
         return response.data
     } catch (error) {
         console.error(error)

@@ -1,10 +1,11 @@
-import { memo } from "react"
+import { memo, type MouseEvent } from "react"
 import { formatDuration } from "@/lib/utils"
 import { useDispatch } from "react-redux"
 import { setIsPlaying, addRecentSong, setCurrentSong, setCurrentPlaylistName } from "@/redux/slices/music"
 import type { Song } from "@/@types/song"
-import { MusicIcon } from '@yukikaze/ui/icons'
+import { HeartIcon, MusicIcon } from '@yukikaze/ui/icons'
 import { LazyLoadImage } from "@/components/lazy-load-image"
+import { useApi } from "@/hooks/useApi"
 
 type Props = {
     song: Song
@@ -15,6 +16,7 @@ type Props = {
 
 const SongCard: React.FC<Props> = ({ song, playlistTitle, hideAlbum, order }) => {
     const dispatch = useDispatch()
+    const toggleFavoriteSongMutation = useApi().useToggleFavoriteSong()
     const orderCss = () => {
         switch (order) {
             case 1: return 'text-shadow-1'
@@ -29,6 +31,11 @@ const SongCard: React.FC<Props> = ({ song, playlistTitle, hideAlbum, order }) =>
         dispatch(setIsPlaying(true))
         dispatch(addRecentSong(song))
         dispatch(setCurrentPlaylistName(playlistTitle))
+    }
+
+    const handleFavorite = (e: MouseEvent<SVGSVGElement>) => {
+        e.stopPropagation()
+        toggleFavoriteSongMutation.mutate(song.id)
     }
 
     return (
@@ -57,7 +64,12 @@ const SongCard: React.FC<Props> = ({ song, playlistTitle, hideAlbum, order }) =>
                     <span className="text-ellipsis overflow-hidden">{""}</span>
                 </div>
             )}
-            <div className="flex w-[10%] justify-end text-xs font-semibold text-gray-600">
+            <div className="flex gap-5 w-[10%] justify-end text-xs font-semibold text-gray-600">
+                <HeartIcon
+                    className={`${song.liked && 'fill-main-500'} stroke-main-500`}
+                    onClick={handleFavorite} size={16}
+                    aria-label='like/unlike song'
+                />
                 {formatDuration(song.duration)}
             </div>
         </div>

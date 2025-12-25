@@ -1,4 +1,7 @@
 const cn = {
+  'created': '已创建',
+  'uploaded': '已上传',
+  'favorite': '收藏',
   'unfollow': '取消关注',
   'followed': '已关注',
   'follow': '关注',

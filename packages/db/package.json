@@ -28,7 +28,7 @@
   "devDependencies": {
     "drizzle-kit": "^0.31.6",
     "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
+    "@yukikaze/typescript-config": "workspace:*",
     "@types/node": "catalog:",
     "eslint": "catalog:",
     "typescript": "catalog:",

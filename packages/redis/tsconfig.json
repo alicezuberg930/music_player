@@ -1,5 +1,5 @@
 {
-  "extends": "@repo/typescript-config/internal-package.json",
+  "extends": "@yukikaze/typescript-config/internal-package.json",
   "compilerOptions": {
     "paths": {
       "@/*": [

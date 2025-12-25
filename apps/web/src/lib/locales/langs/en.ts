@@ -1,4 +1,7 @@
 const en = {
+    'created': 'Created',
+    'uploaded': 'Uploaded',
+    'favorite': 'Favorite',
     'unfollow': 'Unfollow',
     'followed': 'Followed',
     'follow': 'Follow',

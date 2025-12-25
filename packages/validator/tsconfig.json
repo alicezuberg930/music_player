@@ -1,8 +1,14 @@
 {
   "extends": "@yukikaze/typescript-config/internal-package.json",
-  "compilerOptions": {},
+  "compilerOptions": {
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  },
   "include": [
-    "src", "src/cloudinary.ts",
+    "src"
   ],
   "exclude": [
     "node_modules"

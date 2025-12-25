@@ -30,6 +30,6 @@
     "typescript": "catalog:",
     "eslint": "catalog:",
     "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*"
+    "@yukikaze/typescript-config": "workspace:*"
   }
 }

@@ -39,12 +39,12 @@ userRouter.get("/verify-email/:id",
 
 userRouter.get("/song/list",
     JWTMiddleware,
-    (request: Request<{}, {}, {}, { type: 'upload' | 'favorite' }>, response: Response) => userController.userSongs(request, response)
+    (request: Request<{}, {}, {}, { type: 'uploaded' | 'favorite' }>, response: Response) => userController.userSongs(request, response)
 )
 
 userRouter.get("/playlist/list",
     JWTMiddleware,
-    (request: Request<{}, {}, {}, { type: 'upload' | 'favorite' }>, response: Response) => userController.userPlaylists(request, response)
+    (request: Request<{}, {}, {}, { type: 'created' | 'favorite' }>, response: Response) => userController.userPlaylists(request, response)
 )
 
 userRouter.get("/artist/list",

@@ -17,22 +17,14 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@yukikaze/lib": "workspace:*",
-    "express": "catalog:express",
-    "express-rate-limit": "catalog:express",
-    "class-validator": "^0.14.2",
-    "class-transformer": "^0.5.1",
-    "file-type": "^21.0.0",
-    "multer": "catalog:multer"
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
+    "@yukikaze/typescript-config": "workspace:*",
     "@types/node": "catalog:",
     "eslint": "catalog:",
     "typescript": "catalog:",
-    "tsdown": "catalog:",
-    "@types/express": "catalog:express",
-    "@types/multer": "catalog:multer"
+    "tsdown": "catalog:"
   }
 }

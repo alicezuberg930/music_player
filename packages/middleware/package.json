@@ -17,7 +17,13 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "zod": "^4.2.1"
+    "@yukikaze/lib": "workspace:*",
+    "express": "catalog:express",
+    "express-rate-limit": "catalog:express",
+    "class-validator": "^0.14.2",
+    "class-transformer": "^0.5.1",
+    "file-type": "^21.0.0",
+    "multer": "catalog:multer"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
@@ -25,6 +31,8 @@
     "@types/node": "catalog:",
     "eslint": "catalog:",
     "typescript": "catalog:",
-    "tsdown": "catalog:"
+    "tsdown": "catalog:",
+    "@types/express": "catalog:express",
+    "@types/multer": "catalog:multer"
   }
 }

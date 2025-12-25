@@ -30,7 +30,7 @@ const SongOptionDropdown: React.FC<Props> = ({ addToPlaylist, triggerElement }) 
 
     useEffect(() => {
         const fetchPlaylist = async () => {
-            const response = await fetchUserPlaylistList()
+            const response = await fetchUserPlaylistList('created')
             setPlaylists(response.data ?? [])
         }
         fetchPlaylist()

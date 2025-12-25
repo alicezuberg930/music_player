@@ -48,8 +48,6 @@ jobs:
             git pull origin main
 
             # Install deps, build, and run with PM2
-            bun add -g pm2
-            pm2 delete all
             bun install
             bun run build:packages
 

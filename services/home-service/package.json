@@ -10,11 +10,9 @@
     "@yukikaze/lib": "workspace:*",
     "@yukikaze/db": "workspace:*",
     "cookie-parser": "^1.4.7",
-    "cors": "^2.8.5",
     "express": "catalog:express"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.19",
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "catalog:express",
     "@types/node": "catalog:",

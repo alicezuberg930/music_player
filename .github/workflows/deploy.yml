@@ -50,6 +50,7 @@ jobs:
             # Install deps, build, and run with PM2
             bun install
             bun run build:packages
+            bun run build:web
 
             # bun run build:services
             turbo run build --filter=@yukikaze/playlist-service 
@@ -60,8 +61,6 @@ jobs:
             turbo run build --filter=@yukikaze/banner-service 
             turbo run build --filter=@yukikaze/user-service 
             turbo run build --filter=@yukikaze/auth-service
-
-            bun run build:web
 
             # Start or reload the service
             if pm2 describe "$SERVER_NAME" >/dev/null 2>&1; then

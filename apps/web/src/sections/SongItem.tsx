@@ -9,7 +9,7 @@ import { addSongsToPlaylist } from '@/lib/httpClient'
 import { useSnackbar } from '@/components/snackbar'
 import SongOptionDropdown from './SongOptionDropdown'
 import { useApi } from '@/hooks/useApi'
-import LazyLoadImage from '@/components/lazy-load-image/LazyLoadImage'
+import { LazyLoadImage } from '@/components/lazy-load-image'
 
 dayjs.extend(relativeTime)
 
@@ -48,7 +48,7 @@ const SongItem: React.FC<Props> = ({ song, order, percent, imgSize, style, showT
     const addToPlaylist = async (playlistId: string) => {
         const response = await addSongsToPlaylist(playlistId, [song.id])
         if (response.statusCode === 200) {
-            enqueueSnackbar('Đã thêm bài hát vào playlist', { variant: 'success' })
+            enqueueSnackbar(response.message, { variant: 'success' })
         } else {
             enqueueSnackbar(response.message, { variant: 'error' })
         }

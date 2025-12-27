@@ -30,7 +30,7 @@ const PlaylistCard: React.FC<Props> = ({ playlist, sectionId, isSearch, visibleS
         >
             <div className="relative w-full group overflow-hidden rounded-lg bg-main-200 aspect-square">
                 <div className="z-1 text-white absolute w-full h-full gap-3 bg-overlay invisible group-hover:visible flex items-center justify-center">
-                    <Heart onClick={handleFavorite} className={`${playlist.liked && 'fill-main-500'}`} />
+                    <Heart onClick={handleFavorite} className={`${playlist.liked && 'fill-main-500 stroke-main-500'}`} />
                     <Link to={`/playlist/${playlist.id}`} state={{ playAlbum: true }} aria-label={`Play ${playlist.title}`}>
                         <PlayCircle size={56} />
                     </Link>

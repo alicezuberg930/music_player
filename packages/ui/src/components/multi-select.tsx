@@ -722,7 +722,8 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(({
                         style={{
                             ...widthConstraints,
                             maxWidth: `min(${widthConstraints.maxWidth}, 100%)`,
-                        }}>
+                        }}
+                    >
                         {selectedValues.length > 0 ? (
                             <div className="flex justify-between items-center w-full">
                                 <div
@@ -771,7 +772,8 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(({
                                                         ...badgeStyle,
                                                         animationDuration: `${animationConfig?.duration || animation}s`,
                                                         animationDelay: `${animationConfig?.delay || 0}s`,
-                                                    }}>
+                                                    }}
+                                                >
                                                     {IconComponent && !responsiveSettings.hideIcons && (
                                                         <IconComponent
                                                             className={cn(
@@ -782,10 +784,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(({
                                                             {...(customStyle?.iconColor && { style: { color: customStyle.iconColor }, })}
                                                         />
                                                     )}
-                                                    <span
-                                                        className={cn(
-                                                            screenSize === "mobile" && "truncate"
-                                                        )}>
+                                                    <span className={cn(screenSize === "mobile" && "truncate")}>
                                                         {option.label}
                                                     </span>
                                                     <Button
@@ -802,10 +801,17 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(({
                                                                 toggleOption(value)
                                                             }
                                                         }}
+                                                        variant={'ghost'}
+                                                        size={'icon-sm'}
                                                         aria-label={`Remove ${option.label} from selection`}
-                                                        className="ml-2 cursor-pointer hover:bg-white/20 rounded-sm p-0.5 -m-0.5 focus:outline-none focus:ring-1 focus:ring-white/50"
+                                                        className="ml-2 hover:bg-white/20"
                                                     >
-                                                        <XCircle className={cn("h-2 w-2", responsiveSettings.compactMode && "h-2.5 w-2.5")} />
+                                                        <XCircle
+                                                            className={cn(
+                                                                'size-4 stroke-main-500',
+                                                                responsiveSettings.compactMode && "size-3 stroke-main-500"
+                                                            )}
+                                                        />
                                                     </Button>
                                                 </Badge>
                                             )
@@ -818,7 +824,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(({
                                                 getBadgeAnimationClass(),
                                                 multiSelectVariants({ variant }),
                                                 responsiveSettings.compactMode &&
-                                                "text-xs px-1.5 py-0.5",
+                                                "text-xs px-0 py-0",
                                                 singleLine && "shrink-0 whitespace-nowrap",
                                                 "[&>svg]:pointer-events-auto"
                                             )}
@@ -829,8 +835,8 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(({
                                             {`+ ${selectedValues.length - responsiveSettings.maxCount} more`}
                                             <XCircle
                                                 className={cn(
-                                                    "ml-2 h-4 w-4 cursor-pointer",
-                                                    responsiveSettings.compactMode && "ml-1 h-3 w-3"
+                                                    "ml-2 size-4 stroke-main-500",
+                                                    responsiveSettings.compactMode && "ml-1 size-3"
                                                 )}
                                                 onClick={(event) => {
                                                     event.stopPropagation()

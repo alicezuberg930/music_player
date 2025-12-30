@@ -1,18 +1,19 @@
-import { useFormContext, Controller } from 'react-hook-form';
-import { Field, FieldError, FieldLabel } from '@yukikaze/ui/field';
-import { Input } from '@yukikaze/ui/input';
+import { useFormContext, Controller } from 'react-hook-form'
+import { Field, FieldError, FieldLabel } from '@yukikaze/ui/field'
+import { Input } from '@yukikaze/ui/input'
+import { Textarea } from '@yukikaze/ui/textarea'
 
 type RHFTextFieldProps = React.ComponentProps<"input"> & {
-    name: string;
+    name: string
     fieldLabel: string
-};
+}
 
-export default function RHFTextField({
+export const RHFTextField = ({
     name,
     fieldLabel,
     ...other
-}: RHFTextFieldProps) {
-    const { control } = useFormContext();
+}: RHFTextFieldProps) => {
+    const { control } = useFormContext()
 
     return (
         <Controller
@@ -28,9 +29,42 @@ export default function RHFTextField({
                         aria-invalid={invalid}
                         autoComplete="off"
                     />
-                    {invalid && <FieldError errors={[error]} className='ml-4' />}
+                    {invalid && <FieldError errors={[error]} />}
                 </Field>
             )}
         />
-    );
+    )
+}
+
+type RHFTextAreaProps = React.ComponentProps<"textarea"> & {
+    name: string
+    fieldLabel: string
+}
+
+export const RHFTextArea = ({
+    name,
+    fieldLabel,
+    ...other
+}: RHFTextAreaProps) => {
+    const { control } = useFormContext()
+
+    return (
+        <Controller
+            name={name}
+            control={control}
+            render={({ field, fieldState: { error, invalid } }) => (
+                <Field data-invalid={invalid}>
+                    <FieldLabel htmlFor={field.name}>{fieldLabel}</FieldLabel>
+                    <Textarea
+                        {...other}
+                        {...field}
+                        id={field.name}
+                        aria-invalid={invalid}
+                        autoComplete="off"
+                    />
+                    {invalid && <FieldError errors={[error]} />}
+                </Field>
+            )}
+        />
+    )
 }

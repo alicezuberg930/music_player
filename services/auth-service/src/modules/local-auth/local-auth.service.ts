@@ -3,16 +3,15 @@ import { db, eq } from "@yukikaze/db"
 import { users } from "@yukikaze/db/schemas"
 import { User } from "./local-auth.model"
 import { BadRequestException, HttpException, NotFoundException } from "@yukikaze/lib/exception"
-import { CreateUserDto } from "./dto/create-user.dto"
 import { Password } from "@yukikaze/lib/password"
-import { LoginUserDto } from "./dto/login-user.dto"
 import { env } from "@yukikaze/lib/create-env"
 import { createId } from "@yukikaze/lib/create-cuid"
 import { JWT } from "@yukikaze/lib/jwt"
 import sendEmail from "@yukikaze/email"
+import { AuthValidators } from "@yukikaze/validator"
 
 export class UserService {
-    public async signIn(request: Request<{}, {}, LoginUserDto>, response: Response) {
+    public async signIn(request: Request<{}, {}, AuthValidators.LoginInput>, response: Response) {
         try {
             const { email, password } = request.body
             const user: User | undefined = await db.query.users.findFirst({ where: eq(users.email, email) })
@@ -38,7 +37,7 @@ export class UserService {
         }
     }
 
-    public async signUp(request: Request<{}, {}, CreateUserDto>, response: Response) {
+    public async signUp(request: Request<{}, {}, AuthValidators.RegisterInput>, response: Response) {
         try {
             const { password, fullname, email } = request.body
             const existingUser: User | undefined = await db.query.users.findFirst({ where: eq(users.email, email) })

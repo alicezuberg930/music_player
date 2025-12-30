@@ -1,0 +1,1 @@
+ALTER TABLE `artists` ADD `description` varchar(255);

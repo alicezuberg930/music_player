@@ -1,5 +1,6 @@
 import type { User } from "@/@types/user"
 import BaseProvider from "./providers/base"
+import type { AuthValidators } from "@yukikaze/validator"
 
 export type ActionMapType<M extends { [index: string]: any }> = {
   [Key in keyof M]: M[Key] extends undefined ? { type: Key } : { type: Key, payload: M[Key] }
@@ -17,8 +18,8 @@ export type JWTContextType = {
   isAuthenticated: boolean
   isInitialized: boolean
   user: User | null
-  signin: (username: string, password: string) => Promise<void>
-  signup: (email: string, password: string, name: string) => Promise<void>
+  signin: (data: AuthValidators.LoginInput) => Promise<void>
+  signup: (data: AuthValidators.RegisterInput) => Promise<void>
   signout: () => void
   signInWithProvider: (provider: string) => void
 }

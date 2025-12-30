@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react"
 import { NavLink, useLocation, useParams } from "react-router-dom"
-import SongList from "../sections/SongList"
+import SongList from "@/sections/SongList"
 import { setCurrentPlaylistSongs, setCurrentSong, setIsPlaying } from "@/redux/slices/music"
 import { getBaseUrl, roundPeopleAmount } from "@/lib/utils"
-import { Audio } from "react-loader-spinner"
 import { useDispatch, useSelector } from "@/redux/store"
 import type { Song } from "@/@types/song"
 import { fDate } from "@/lib/formatTime"
@@ -15,6 +14,7 @@ import { useMetaTags } from "@/hooks/useMetaTags"
 import { LazyLoadImage } from "@/components/lazy-load-image"
 import { useApi } from "@/hooks/useApi"
 import { PlaylistDetailsShimmer } from "@/components/loading-placeholder"
+import { Spinner } from "@yukikaze/ui/spinner"
 
 const PlaylistPage: React.FC = () => {
     const { id } = useParams()
@@ -63,7 +63,7 @@ const PlaylistPage: React.FC = () => {
                                 <div className={`${(inPlaylist && isPlaying) ? 'rounded-full' : 'rounded-md'} text-white absolute top-0 left-0 bottom-0 right-0 flex items-center justify-center`}>
                                     <button onClick={() => dispatch(setIsPlaying(!isPlaying))} aria-label={(inPlaylist && isPlaying) ? 'Pause playlist' : 'Play playlist'}>
                                         {(inPlaylist && isPlaying) ? (
-                                            <Audio color="white" width={48} height={48} />
+                                            <Spinner className="size-12" />
                                         ) : (
                                             <PlayCircle size={48} />
                                         )}

@@ -1,16 +1,15 @@
 import express, { Request, Response } from "express"
 import artistController from "./artist.controller"
 import multer from "multer"
-import { validateDtoHanlder, fileMimeAndSizeOptions, multerOptions, Options } from "@yukikaze/middleware"
-import { CreateArtistDto } from "./dto/create-artist.dto"
-import { UpdateArtistDto } from "./dto/update-artist.dto"
+import { fileMimeAndSizeOptions, multerOptions, Options, validateRequest } from "@yukikaze/middleware"
+import { ArtistValidators } from "@yukikaze/validator"
 
 const artistRouter = express.Router()
 
 const uploadOptions: Options = {
     allowedFields: ["thumbnail"],
     allowed: {
-        thumbnail: { mimes: ["image/jpeg", "image/png"], exts: ["jpg", "jpeg", "png"] }
+        thumbnail: { mimes: ["image/jpeg", "image/png", "image/webp"], exts: ["jpg", "jpeg", "png", "webp"] }
     }
 }
 const upload = multer(multerOptions(uploadOptions))
@@ -21,8 +20,8 @@ artistRouter.get("/", (request: Request, response: Response) => artistController
 artistRouter.post("/",
     upload.fields([{ name: "thumbnail", maxCount: 1 }]),
     fileValidator,
-    validateDtoHanlder(CreateArtistDto),
-    (request: Request<{}, {}, CreateArtistDto>, response: Response) => artistController.createArtist(request, response)
+    validateRequest(ArtistValidators.createArtistInput),
+    (request: Request<{}, {}, ArtistValidators.CreateArtistInput>, response: Response) => artistController.createArtist(request, response)
 )
 
 artistRouter.get("/:id", (request: Request<{ id: string }>, response: Response) => artistController.findArtist(request, response))
@@ -30,8 +29,7 @@ artistRouter.get("/:id", (request: Request<{ id: string }>, response: Response) 
 artistRouter.put("/:id",
     upload.fields([{ name: "thumbnail", maxCount: 1 }]),
     fileValidator,
-    validateDtoHanlder(UpdateArtistDto),
-    (request: Request<{ id: string }, {}, UpdateArtistDto>, response: Response) => artistController.updateArtist(request, response)
+    (request: Request<{ id: string }, {}, Partial<ArtistValidators.CreateArtistInput>>, response: Response) => artistController.updateArtist(request, response)
 )
 
 artistRouter.delete("/:id", (request: Request<{ id: string }>, response: Response) => artistController.deleteArtist(request, response))

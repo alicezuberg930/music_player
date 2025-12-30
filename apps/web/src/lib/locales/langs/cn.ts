@@ -71,6 +71,7 @@ const cn = {
   'artist_name': '艺术家名称',
   'enter_artist_name': '输入艺术家名称',
   'artist_avatar': '艺术家头像',
+  'enter_artist_description': '为您的艺术家输入描述。',
   // upload music form
   'song_name': '歌曲名称',
   'song_name_is_required': '歌曲名称是必需的',

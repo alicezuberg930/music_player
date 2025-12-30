@@ -1,7 +1,6 @@
 import { Request, Response } from "express"
 import { ArtistService } from "./artist.service"
-import { UpdateArtistDto } from "./dto/update-artist.dto"
-import { CreateArtistDto } from "./dto/create-artist.dto"
+import { ArtistValidators } from "@yukikaze/validator"
 
 class ArtistController {
     private readonly artistService: ArtistService
@@ -14,11 +13,11 @@ class ArtistController {
         return await this.artistService.getArtists(request, response)
     }
 
-    public async createArtist(request: Request<{}, {}, CreateArtistDto>, response: Response) {
+    public async createArtist(request: Request<{}, {}, ArtistValidators.CreateArtistInput>, response: Response) {
         return await this.artistService.createArtist(request, response)
     }
 
-    public async updateArtist(request: Request<{ id: string }, {}, UpdateArtistDto>, response: Response) {
+    public async updateArtist(request: Request<{ id: string }, {}, Partial<ArtistValidators.CreateArtistInput>>, response: Response) {
         return await this.artistService.updateArtist(request, response)
     }
 

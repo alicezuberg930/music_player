@@ -1,66 +1,44 @@
-import * as Yup from 'yup'
-import { useCallback, useEffect, useState } from 'react'
-import { RotatingLines } from 'react-loader-spinner'
-import { createSong, fetchArtistList } from '@/lib/httpClient'
+import * as z from 'zod'
+import { useLocales } from '@/lib/locales'
+import { SongValidators } from '@yukikaze/validator'
+import { useCallback } from 'react'
+import { useApi } from '@/hooks/useApi'
 // types
-import type { Response } from '@/@types/response'
-import type { Artist } from '@/@types/artist'
 import type { Song } from '@/@types/song'
 import { type CustomFile } from '@/components/upload'
 // form
 import { useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
+import { zodResolver } from '@hookform/resolvers/zod'
 // components
 import { FormProvider, RHFMultiSelect, RHFSingleDatePicker, RHFTextField } from '@/components/hook-form'
 import { RHFUpload } from '@/components/hook-form/RHFUpload'
 import { Button } from '@yukikaze/ui/button'
 import { Card, CardContent } from '@yukikaze/ui/card'
-import { useSnackbar } from '@/components/snackbar'
-import { useLocales } from '@/lib/locales'
+import { Spinner } from '@yukikaze/ui/spinner'
 
-type FormValuesProps = {
-    audio: CustomFile | string
+type FormValuesProps = SongValidators.CreateSongInput & {
+    audio: CustomFile | string | null
     lyrics?: CustomFile | string
     thumbnail?: CustomFile | string
-    title: string
-    releaseDate: string
-    artistIds: string[]
 }
 
 const UploadMusicPage: React.FC<{ editSong?: Song, id?: string }> = ({ editSong, id }) => {
     console.log(id)
-    const [artists, setArtists] = useState<Artist[]>([])
-    const { enqueueSnackbar } = useSnackbar()
     const { translate } = useLocales()
+    const { useCreateSong, useArtistList } = useApi()
+    const { data: artistsData } = useArtistList()
+    const artists = artistsData?.data || []
+    const { mutateAsync: createSong } = useCreateSong()
 
-    useEffect(() => {
-        const a = async () => {
-            const response = await fetchArtistList()
-            setArtists(response.data || [])
-        }
-        a()
-    }, [])
-
-    const SongSchema: Yup.ObjectSchema<FormValuesProps> = Yup.object().shape({
-        audio: Yup.mixed<CustomFile | string>().required(translate('song_audio_file_is_required')),
-        lyrics: Yup.mixed<CustomFile | string>().optional(),
-        thumbnail: Yup.mixed<CustomFile | string>().optional()
-            .test('aspect-ratio', translate('thumbnail_must_be_square'), value => {
-                if (!value || typeof value === 'string') return true
-                const img = new Image()
-                img.onload = () => {
-                    URL.revokeObjectURL(img.src)
-                    return img.naturalWidth / img.naturalHeight === 1
-                }
-                img.onerror = () => {
-                    URL.revokeObjectURL(img.src)
-                    return false
-                }
-                img.src = URL.createObjectURL(value as File)
-            }),
-        title: Yup.string().required(translate('song_name_is_required')),
-        releaseDate: Yup.string().required(translate('song_release_date_is_required')),
-        artistIds: Yup.array().min(1, translate('at_least_one_artist_required')).required(translate('artist_is_required')),
+    // song_name_is_required
+    // song_release_date_is_required
+    // at_least_one_artist_required
+    const SongSchema = SongValidators.createSongInput.extend({
+        audio: z.custom<CustomFile | string | null>((val) => val !== null && val !== '', {
+            message: translate('song_audio_file_is_required'),
+        }),
+        thumbnail: z.union([z.instanceof(File), z.string()]).optional(),
+        lyrics: z.union([z.instanceof(File), z.string()]).optional(),
     })
 
     const defaultValues = {
@@ -72,11 +50,12 @@ const UploadMusicPage: React.FC<{ editSong?: Song, id?: string }> = ({ editSong,
     }
 
     const methods = useForm<FormValuesProps>({
-        resolver: yupResolver(SongSchema),
+        resolver: zodResolver(SongSchema),
         defaultValues,
     })
 
     const {
+        setError,
         setValue,
         handleSubmit,
         reset,
@@ -84,22 +63,20 @@ const UploadMusicPage: React.FC<{ editSong?: Song, id?: string }> = ({ editSong,
     } = methods
 
     const onSubmit = async (data: FormValuesProps) => {
-        try {
-            const formData = new FormData()
-            for (const [key, value] of Object.entries(data)) {
-                if (value !== undefined) formData.append(key, value as string | Blob)
+        const formData = new FormData()
+        for (const [key, value] of Object.entries(data)) {
+            if (value !== undefined) {
+                // Serialize arrays/objects as JSON strings
+                if (Array.isArray(value) || (typeof value === 'object' && value !== null && !(value instanceof File))) {
+                    formData.append(key, JSON.stringify(value))
+                } else {
+                    formData.append(key, value as Blob)
+                }
             }
-            let response: Response = await createSong(formData)
-            if (response?.statusCode && response?.statusCode === 201) {
-                reset()
-                enqueueSnackbar(response.message, { variant: 'success' })
-            } else {
-                enqueueSnackbar(translate(response.message), { variant: 'error' })
-            }
-        } catch (error) {
-            console.log(error)
-            enqueueSnackbar(translate('unknown_error'), { variant: 'error' })
         }
+        await createSong(formData, {
+            onSuccess: () => reset()
+        })
     }
 
     const handleDropAudio = useCallback((acceptedFiles: File[]) => {
@@ -120,11 +97,40 @@ const UploadMusicPage: React.FC<{ editSong?: Song, id?: string }> = ({ editSong,
 
     const handleDropThumbnail = useCallback((acceptedFiles: File[]) => {
         const file = acceptedFiles[0]
-        const newFile = Object.assign(file, {
-            preview: URL.createObjectURL(file),
-        })
-        if (file) setValue('thumbnail', newFile, { shouldValidate: true })
-    }, [setValue])
+        if (!file) return
+        const img = new window.Image()
+        img.src = URL.createObjectURL(file)
+        img.onload = () => {
+            URL.revokeObjectURL(img.src)
+            if (img.naturalWidth / img.naturalHeight !== 1) {
+                setError('thumbnail', { type: 'manual', message: translate('thumbnail_must_be_square') })
+            } else {
+                const newFile = Object.assign(file, {
+                    preview: URL.createObjectURL(file),
+                })
+                setValue('thumbnail', newFile, { shouldValidate: true })
+            }
+        }
+        img.onerror = () => {
+            URL.revokeObjectURL(img.src)
+            setError('thumbnail', { type: 'manual', message: translate('thumbnail_must_be_square') })
+        }
+    }, [setValue, setError, translate])
+
+    // const handleDropMultiFile = useCallback(
+    //     (acceptedFiles: File[]) => {
+    //         const files = multiUpload || [];
+
+    //         const newFiles = acceptedFiles.map((file) =>
+    //             Object.assign(file, {
+    //                 preview: URL.createObjectURL(file),
+    //             })
+    //         );
+
+    //         setValue('multiUpload', [...files, ...newFiles], { shouldValidate: true });
+    //     },
+    //     [setValue, multiUpload]
+    // );
 
     return (
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -141,7 +147,7 @@ const UploadMusicPage: React.FC<{ editSong?: Song, id?: string }> = ({ editSong,
                             />
                             <Button type="submit" size={'lg'} className='w-full' disabled={isSubmitting}>
                                 {isSubmitting ? (
-                                    <RotatingLines strokeColor="white" />
+                                    <Spinner className='size-6' />
                                 ) : (
                                     translate('upload_music')
                                 )}
@@ -157,7 +163,7 @@ const UploadMusicPage: React.FC<{ editSong?: Song, id?: string }> = ({ editSong,
                                 maxSize={15728640}
                                 accept={{ 'audio/*': [] }}
                                 onDrop={handleDropAudio}
-                                onDelete={() => setValue('audio', '', { shouldValidate: true })}
+                                onDelete={() => setValue('audio', null, { shouldValidate: true })}
                                 fieldLabel={translate('song_audio_file')}
                             />
                             <RHFUpload
@@ -175,6 +181,24 @@ const UploadMusicPage: React.FC<{ editSong?: Song, id?: string }> = ({ editSong,
                                 onDelete={() => setValue('thumbnail', undefined, { shouldValidate: true })}
                                 fieldLabel={translate('song_thumbnail_image')}
                             />
+                            {/* <RHFUpload
+                                multiple
+                                thumbnail
+                                name="multiUpload"
+                                maxSize={3145728}
+                                onDrop={handleDropMultiFile}
+                                onRemove={(inputFile) =>
+                                    setValue(
+                                        'multiUpload',
+                                        multiUpload &&
+                                        multiUpload.filter((file) => file !== inputFile),
+                                        { shouldValidate: true }
+                                    )
+                                }
+                                onRemoveAll={() => setValue('multiUpload', [], { shouldValidate: true })}
+                                onUpload={() => console.log('ON UPLOAD')}
+                                fieldLabel={translate('song_thumbnail_image')}
+                            /> */}
                         </CardContent>
                     </Card>
                 </div>

@@ -2,13 +2,12 @@ import { Request, Response } from "express"
 import { db, eq } from "@yukikaze/db"
 import { banners } from "@yukikaze/db/schemas"
 import { BadRequestException, HttpException, NotFoundException } from "@yukikaze/lib/exception"
-import { CreateBannerDto } from "./dto/create-banner.dto"
 import { deleteFile, extractPublicId, uploadFile } from "@yukikaze/lib/cloudinary"
-import { UpdateBannerDto } from "./dto/update-banner.dto"
 import { createId } from "@yukikaze/lib/create-cuid"
 import { Banner } from "./banner.model"
 import { resizeImageToBuffer } from "@yukikaze/lib/image-resize"
 import fs from "node:fs"
+import { BannerValidators } from "@yukikaze/validator"
 
 export class BannerService {
     public async getBanners(_: Request, response: Response) {
@@ -21,7 +20,7 @@ export class BannerService {
         }
     }
 
-    public async createBanner(request: Request<{}, {}, CreateBannerDto>, response: Response) {
+    public async createBanner(request: Request<{}, {}, BannerValidators.CreateBannerInput>, response: Response) {
         try {
             const { name } = request.body
             let thumbnailUrl: string | null = null
@@ -52,7 +51,7 @@ export class BannerService {
         }
     }
 
-    public async updateBanner(request: Request<{ id: string }, {}, UpdateBannerDto>, response: Response) {
+    public async updateBanner(request: Request<{ id: string }, {}, BannerValidators.UpdateBannerInput>, response: Response) {
         try {
             const { id } = request.params
             const banner = await db.query.banners.findFirst({

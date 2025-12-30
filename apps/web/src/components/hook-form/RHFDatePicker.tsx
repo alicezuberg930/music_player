@@ -66,7 +66,7 @@ export function RHFSingleDatePicker({
                             />
                         </PopoverContent>
                     </Popover>
-                    {invalid && <FieldError errors={[error]} className='ml-4' />}
+                    {invalid && <FieldError errors={[error]} />}
                 </Field>
             )}
         />
@@ -133,7 +133,7 @@ export function RHFRangeDatePicker({
                                 <Button variant={'outline'} onClick={() => setOpen(false)}>OK</Button>
                             </PopoverContent>
                         </Popover>
-                        {invalid && <FieldError errors={[error]} className='ml-4' />}
+                        {invalid && <FieldError errors={[error]} />}
                     </Field>
                 )
             }}

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react'
 // components
-import { RotatingLines } from 'react-loader-spinner'
+import { Spinner } from '@yukikaze/ui/spinner'
 import { Typography } from '@yukikaze/ui/typography'
 import { Button } from '@yukikaze/ui/button'
 import LazyLoadImage from '@/components/lazy-load-image/LazyLoadImage'
@@ -20,7 +20,7 @@ import { useApi } from '@/hooks/useApi'
 
 const Player: React.FC = () => {
     const dispatch = useDispatch()
-    const addSongListen = useApi().useAddSongListen()
+    const { mutateAsync: addSongListen } = useApi().useAddSongListen()
     // redux states
     const { showSideBarRight } = useSelector(state => state.app)
     const { currentSong, isPlaying, currentPlaylistSongs } = useSelector(state => state.music)
@@ -195,7 +195,7 @@ const Player: React.FC = () => {
     // initialize player when current song changes and update player UI
     useEffect(() => {
         initializePlayer()
-        addSongListen.mutate(currentSong?.id!)
+        addSongListen(currentSong?.id!)
         // Cleanup function runs when song changes or component unmounts
         return () => {
             if (audioRef.current) {
@@ -309,7 +309,7 @@ const Player: React.FC = () => {
                             aria-label={isPlaying ? 'Pause' : 'Play'}
                         >
                             {isLoadingAudio ? (
-                                <RotatingLines strokeColor='#0E8080' width={42} height={42} />
+                                <Spinner className='size-10.5' />
                             ) : isPlaying ? (
                                 <PauseCircle size={42} />
                             ) : (

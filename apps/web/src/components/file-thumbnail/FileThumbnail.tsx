@@ -2,15 +2,14 @@ import { fileData, fileFormat, fileThumb } from './utils'
 import DownloadButton from './DownloadButton'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@yukikaze/ui/tooltip'
 import { cn } from '@yukikaze/ui'
-import { type LazyLoadImageProps, LazyLoadImage } from '@/components/lazy-load-image'
 
 type FileIconProps = {
   file: File | string
   tooltip?: boolean
   imageView?: boolean
   onDownload?: VoidFunction
-  imageProps?: LazyLoadImageProps
-  fileProps?: LazyLoadImageProps
+  imageProps?: React.ImgHTMLAttributes<HTMLImageElement>
+  fileProps?: React.ImgHTMLAttributes<HTMLImageElement>
 }
 
 export default function FileThumbnail({
@@ -27,13 +26,13 @@ export default function FileThumbnail({
 
   const renderContent =
     format === 'image' && imageView ? (
-      <LazyLoadImage
+      <img
         src={preview}
         {...imageProps}
         className={cn('shrink-0 w-full h-full object-cover', imageProps?.className)}
       />
     ) : (
-      <LazyLoadImage
+      <img
         src={fileThumb(format)}
         {...fileProps}
         className={cn('w-8 h-8 shrink-0', fileProps?.className)}

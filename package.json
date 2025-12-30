@@ -49,7 +49,7 @@
   "scripts": {
     "build": "turbo run build",
     "build:web": "turbo run build --filter=@yukikaze/web",
-    "build:packages": "turbo run build --filter=@yukikaze/lib --filter=@yukikaze/ui --filter=@yukikaze/db --filter=@yukikaze/email --filter=@yukikaze/middleware --filter=@yukikaze/redis",
+    "build:packages": "turbo run build --filter=@yukikaze/lib --filter=@yukikaze/ui --filter=@yukikaze/db --filter=@yukikaze/email --filter=@yukikaze/middleware --filter=@yukikaze/redis --filter=@yukikaze/validator",
     "build:services": "turbo run build --filter=@yukikaze/playlist-service --filter=@yukikaze/gateway-service --filter=@yukikaze/home-service --filter=@yukikaze/song-service --filter=@yukikaze/artist-service --filter=@yukikaze/banner-service --filter=@yukikaze/user-service --filter=@yukikaze/auth-service",
     "clean:workspaces": "turbo run clean",
     "db:generate": "turbo run db:generate -F @yukikaze/db",
@@ -59,7 +59,7 @@
     "dev": "turbo run dev",
     "dev:web": "turbo run dev --filter=@yukikaze/web",
     "dev:services": "turbo run dev --filter=@yukikaze/playlist-service --filter=@yukikaze/gateway-service --filter=@yukikaze/home-service --filter=@yukikaze/song-service --filter=@yukikaze/artist-service --filter=@yukikaze/banner-service --filter=@yukikaze/user-service --filter=@yukikaze/auth-service",
-    "dev:packages": "turbo run dev --filter=@yukikaze/lib --filter=@yukikaze/ui --filter=@yukikaze/db --filter=@yukikaze/email --filter=@yukikaze/middleware --filter=@yukikaze/validator",
+    "dev:packages": "turbo run dev --filter=@yukikaze/lib --filter=@yukikaze/ui --filter=@yukikaze/db --filter=@yukikaze/email --filter=@yukikaze/middleware --filter=@yukikaze/redis --filter=@yukikaze/validator",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",

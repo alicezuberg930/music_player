@@ -1,9 +1,6 @@
 import { Request, Response } from "express"
 import { PlaylistService } from "./playlist.service"
-import { UpdatePlaylistDto } from "./dto/update-playlist.dto"
-import { CreatePlaylistDto } from "./dto/create-playlist.dto"
-import { QueryPlaylistDto } from "./dto/query-playlist.dto"
-import { PlaylistSongDto } from "./dto/playlist-songs.dto"
+import { PlaylistValidators } from "@yukikaze/validator"
 
 class PlaylistController {
     private readonly playlistService: PlaylistService
@@ -12,15 +9,15 @@ class PlaylistController {
         this.playlistService = new PlaylistService()
     }
 
-    public async getPlaylists(request: Request<{}, {}, {}, QueryPlaylistDto>, response: Response) {
+    public async getPlaylists(request: Request<{}, {}, {}, PlaylistValidators.QueryPlaylistParams>, response: Response) {
         return await this.playlistService.getPlaylists(request, response)
     }
 
-    public async createPlaylist(request: Request<{}, {}, CreatePlaylistDto>, response: Response) {
+    public async createPlaylist(request: Request<{}, {}, PlaylistValidators.CreatePlaylistInput>, response: Response) {
         return await this.playlistService.createPlaylist(request, response)
     }
 
-    public async updatePlaylist(request: Request<{ id: string }, {}, UpdatePlaylistDto>, response: Response) {
+    public async updatePlaylist(request: Request<{ id: string }, {}, PlaylistValidators.UpdatePlaylistInput>, response: Response) {
         return await this.playlistService.updatePlaylist(request, response)
     }
 
@@ -32,11 +29,11 @@ class PlaylistController {
         return await this.playlistService.deletePlaylist(request, response)
     }
 
-    public async addSongs(request: Request<{ id: string }, {}, PlaylistSongDto>, response: Response) {
+    public async addSongs(request: Request<{ id: string }, {}, PlaylistValidators.AddSongsInput>, response: Response) {
         return await this.playlistService.addSongs(request, response)
     }
 
-    public async removeSongs(request: Request<{ id: string }, {}, PlaylistSongDto>, response: Response) {
+    public async removeSongs(request: Request<{ id: string }, {}, PlaylistValidators.RemoveSongsInput>, response: Response) {
         return await this.playlistService.removeSongs(request, response)
     }
 }

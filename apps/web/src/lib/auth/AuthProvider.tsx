@@ -8,6 +8,7 @@ import { useSnackbar } from '@/components/snackbar'
 import { fetchProfile, signIn, signOut, signUp } from '../httpClient'
 import { paths } from '../route/paths'
 import { useLocales } from '../locales'
+import type { AuthValidators } from '@yukikaze/validator'
 
 enum Types {
   INITIAL = 'INITIAL',
@@ -99,9 +100,9 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
     initialize()
   }, [initialize])
 
-  const signin = useCallback(async (email: string, password: string) => {
+  const signin = useCallback(async (data: AuthValidators.LoginInput) => {
     try {
-      const response = await signIn(email, password)
+      const response = await signIn(data)
       if (response.statusCode === 200) {
         navigate(paths.HOME, { replace: true })
         enqueueSnackbar(response.message, { variant: 'success' })
@@ -118,11 +119,11 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
     } catch (error) {
       enqueueSnackbar(error instanceof Error ? error.message : translate('unknown_error'), { variant: 'error' })
     }
-  }, [initialize])  
+  }, [initialize])
 
-  const signup = useCallback(async (fullname: string, email: string, password: string) => {
+  const signup = useCallback(async (data: AuthValidators.RegisterInput) => {
     try {
-      const response = await signUp(fullname, email, password)
+      const response = await signUp(data)
       if (response.statusCode === 201) {
         dispatch({
           type: Types.REGISTER,

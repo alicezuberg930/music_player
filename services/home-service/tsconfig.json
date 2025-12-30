@@ -9,8 +9,6 @@
         "./src/*"
       ]
     },
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
     "verbatimModuleSyntax": false,
     "target": "es2020",
     "module": "node20",

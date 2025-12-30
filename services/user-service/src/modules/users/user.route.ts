@@ -1,15 +1,15 @@
 import express, { Request, Response } from "express"
 import userController from "./user.controller"
 import multer from "multer"
-import { fileMimeAndSizeOptions, JWTMiddleware, multerOptions, Options } from "@yukikaze/middleware"
-import { UpdateUserDto } from "./dto/update-user.dto"
+import { fileMimeAndSizeOptions, JWTMiddleware, multerOptions, Options, validateRequest } from "@yukikaze/middleware"
+import { AuthValidators } from "@yukikaze/validator"
 
 const userRouter = express.Router()
 
 const uploadOptions: Options = {
     allowedFields: ["avatar"],
     allowed: {
-        avatar: { mimes: ["image/jpeg", "image/png"], exts: ["jpg", "jpeg", "png"] }
+        avatar: { mimes: ["image/jpeg", "image/png", "image/webp"], exts: ["jpg", "jpeg", "png", "webp"] }
     }
 }
 const upload = multer(multerOptions(uploadOptions))
@@ -30,7 +30,8 @@ userRouter.get("/me/profile",
 userRouter.put("/:id",
     upload.fields([{ name: "avatar", maxCount: 1 }]),
     fileValidator,
-    (request: Request<{ id: string }, {}, UpdateUserDto>, response: Response) => userController.updateUser(request, response)
+    validateRequest(AuthValidators.updateUserInput),
+    (request: Request<{ id: string }, {}, AuthValidators.UpdateUserInput>, response: Response) => userController.updateUser(request, response)
 )
 
 userRouter.get("/verify-email/:id",

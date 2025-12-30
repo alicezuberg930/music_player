@@ -1,8 +1,6 @@
 import { Request, Response } from "express"
 import { SongService } from "./song.service"
-import { CreateSongDto } from "./dto/create-song.dto"
-import { UpdateSongDto } from "./dto/update-song.dto"
-import { QueryParams } from "./dto/query.param"
+import { SongValidators } from "@yukikaze/validator"
 
 class SongController {
     private readonly songService: SongService
@@ -11,15 +9,15 @@ class SongController {
         this.songService = new SongService()
     }
 
-    public async getSongs(request: Request<{}, {}, {}, QueryParams>, response: Response) {
+    public async getSongs(request: Request<{}, {}, {}, SongValidators.QuerySongParams>, response: Response) {
         return await this.songService.getSongs(request, response)
     }
 
-    public async createSong(request: Request<{}, {}, CreateSongDto>, response: Response) {
+    public async createSong(request: Request<{}, {}, SongValidators.CreateSongInput>, response: Response) {
         return await this.songService.createSong(request, response)
     }
 
-    public async updateSong(request: Request<{ id: string }, {}, UpdateSongDto>, response: Response) {
+    public async updateSong(request: Request<{ id: string }, {}, SongValidators.UpdateSongInput>, response: Response) {
         return await this.songService.updateSong(request, response)
     }
 

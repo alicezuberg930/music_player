@@ -9,11 +9,13 @@ import http, { ClientRequest, IncomingMessage, ServerResponse } from 'node:http'
 import { Socket } from 'node:net'
 import { db } from "@yukikaze/db"
 import { logs } from '@yukikaze/db/schemas'
+import { errorInterceptor } from './middleware/error.interceptor'
 const app = express()
 
 app.set('trust proxy', 1)
 
 const allowedOrigins = new Set([
+    'http://192.168.2.100:5173',
     'http://localhost:5173',
     'https://tien-music-player.site',
     'https://www.tien-music-player.site'
@@ -84,23 +86,24 @@ const onError = (err: Error, req: IncomingMessage, res: ServerResponse<IncomingM
     const now = new Date()
     const timestamp = `${String(now.getDate()).padStart(2, '0')}-${String(now.getMonth() + 1).padStart(2, '0')}-${now.getFullYear()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`
     const message = `[${timestamp}] Error proxying request to ${req.url}: ${err.message}`
-    db.insert(logs).values({
-        message,
-        environment: env.NODE_ENV === "production" ? 'production' : 'development',
-        level: 'error',
-        ipAddress: req.socket.remoteAddress || ''
-    }).then(() => {
-        // Successfully logged error to database
-    }).catch((error) => {
-        console.error('Failed to log error to database:', error)
-    })
+    if (env.NODE_ENV === 'production') {
+        db.insert(logs).values({
+            message,
+            environment: env.NODE_ENV === "production" ? 'production' : 'development',
+            level: 'error',
+            ipAddress: req.socket.remoteAddress || ''
+        }).then(() => {
+            // Successfully logged error to database
+        }).catch((error) => {
+            console.error('Failed to log error to database:', error)
+        })
+    }
     console.error(message)
     // send HTTP error response
     if (res instanceof ServerResponse && !res.headersSent) {
         res.writeHead(503, { 'Content-Type': 'application/json' })
         res.end(JSON.stringify({
             message: 'The requested service is currently unavailable. Please try again later.',
-            details: env.NODE_ENV === 'development' ? err.message : undefined
         }))
     }
 }
@@ -129,6 +132,8 @@ routes.forEach((target, path) => {
         }
     }))
 })
+
+app.use([errorInterceptor])
 
 const server = http.createServer(app)
 

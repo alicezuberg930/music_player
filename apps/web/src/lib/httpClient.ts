@@ -8,6 +8,7 @@ import type { Playlist } from '@/@types/playlist'
 import type { User } from '@/@types/user'
 import type { Banner } from '@/@types/banner'
 import type { HomeData } from '@/@types/home'
+import type { AuthValidators, PlaylistValidators } from '@yukikaze/validator'
 
 export const fetchHomeData = async (): Promise<Response<HomeData>> => {
     try {
@@ -101,9 +102,9 @@ export const followArtist = async (artistId: string): Promise<Response> => {
     }
 }
 
-export const createPlaylist = async (formData: FormData): Promise<Response> => {
+export const createPlaylist = async (data: PlaylistValidators.CreatePlaylistInput): Promise<Response> => {
     try {
-        const response = await axios.post<Response>(`/playlists`, formData)
+        const response = await axios.post<Response>(`/playlists`, data)
         return response.data
     } catch (error) {
         console.error(error)
@@ -161,9 +162,9 @@ export const fetchPlaylistList = async (): Promise<Response<Playlist[]>> => {
     }
 }
 
-export const signIn = async (email: string, password: string): Promise<Response<{ user: User }>> => {
+export const signIn = async (data: AuthValidators.LoginInput): Promise<Response<{ user: User }>> => {
     try {
-        const response = await axios.post<Response<{ user: User }>>(`/auth/sign-in`, { email, password })
+        const response = await axios.post<Response<{ user: User }>>(`/auth/sign-in`, data)
         return response.data
     } catch (error) {
         console.error(error)
@@ -171,9 +172,9 @@ export const signIn = async (email: string, password: string): Promise<Response<
     }
 }
 
-export const signUp = async (fullname: string, email: string, password: string): Promise<Response> => {
+export const signUp = async (data: AuthValidators.RegisterInput): Promise<Response> => {
     try {
-        const response = await axios.post<Response>(`/auth/sign-up`, { fullname, email, password })
+        const response = await axios.post<Response>(`/auth/sign-up`, data)
         return response.data
     } catch (error) {
         console.error(error)

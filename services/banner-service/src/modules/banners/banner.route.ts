@@ -1,16 +1,15 @@
 import express, { Request, Response } from "express"
 import bannerController from "./banner.controller"
 import multer from "multer"
-import { validateDtoHanlder, JWTMiddleware, fileMimeAndSizeOptions, multerOptions, Options } from "@yukikaze/middleware"
-import { CreateBannerDto } from "./dto/create-banner.dto"
-import { UpdateBannerDto } from "./dto/update-banner.dto"
+import { JWTMiddleware, fileMimeAndSizeOptions, multerOptions, Options, validateRequest } from "@yukikaze/middleware"
+import { BannerValidators } from "@yukikaze/validator"
 
 const bannerRouter = express.Router()
 
 const uploadOptions: Options = {
     allowedFields: ["thumbnail"],
     allowed: {
-        thumbnail: { mimes: ["image/jpeg", "image/png"], exts: ["jpg", "jpeg", "png"], maxSize: 2 * 1024 * 1024 }
+        thumbnail: { mimes: ["image/jpeg", "image/png", "image/webp"], exts: ["jpg", "jpeg", "png", "webp"], maxSize: 2 * 1024 * 1024 }
     }
 }
 const upload = multer(multerOptions(uploadOptions))
@@ -24,8 +23,8 @@ bannerRouter.post("/",
     JWTMiddleware,
     upload.fields([{ name: "thumbnail", maxCount: 1 }]),
     fileValidator,
-    validateDtoHanlder(CreateBannerDto),
-    (request: Request<{}, {}, CreateBannerDto>, response: Response) => bannerController.createBanner(request, response)
+    validateRequest(BannerValidators.createBannerInput),
+    (request: Request<{}, {}, BannerValidators.CreateBannerInput>, response: Response) => bannerController.createBanner(request, response)
 )
 
 bannerRouter.get("/:id",
@@ -36,8 +35,8 @@ bannerRouter.put("/:id",
     JWTMiddleware,
     upload.fields([{ name: "thumbnail", maxCount: 1 }]),
     fileValidator,
-    validateDtoHanlder(UpdateBannerDto),
-    (request: Request<{ id: string }, {}, UpdateBannerDto>, response: Response) => bannerController.updateBanner(request, response)
+    validateRequest(BannerValidators.updateBannerInput),
+    (request: Request<{ id: string }, {}, BannerValidators.UpdateBannerInput>, response: Response) => bannerController.updateBanner(request, response)
 )
 
 bannerRouter.delete("/:id",

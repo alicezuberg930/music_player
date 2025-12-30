@@ -1,7 +1,6 @@
 import { Request, Response } from "express"
 import { BannerService } from "./banner.service"
-import { CreateBannerDto } from "./dto/create-banner.dto"
-import { UpdateBannerDto } from "./dto/update-banner.dto"
+import { BannerValidators } from "@yukikaze/validator"
 
 class BannerController {
     private readonly bannerService: BannerService
@@ -14,11 +13,11 @@ class BannerController {
         return await this.bannerService.getBanners(request, response)
     }
 
-    public async createBanner(request: Request<{}, {}, CreateBannerDto>, response: Response) {
+    public async createBanner(request: Request<{}, {}, BannerValidators.CreateBannerInput>, response: Response) {
         return await this.bannerService.createBanner(request, response)
     }
 
-    public async updateBanner(request: Request<{ id: string }, {}, UpdateBannerDto>, response: Response) {
+    public async updateBanner(request: Request<{ id: string }, {}, BannerValidators.UpdateBannerInput>, response: Response) {
         return await this.bannerService.updateBanner(request, response)
     }
 

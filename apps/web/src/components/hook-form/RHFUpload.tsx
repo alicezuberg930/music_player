@@ -26,7 +26,7 @@ export function RHFUploadAvatar({ name, ...other }: Readonly<Props>) {
             file={field.value}
             {...other}
           />
-          {!!error && <FieldError errors={[error]} className='mt-1 ml-4' />}
+          {!!error && <FieldError errors={[error]} className='mt-1' />}
         </Field>
       )}
     />
@@ -49,7 +49,7 @@ export function RHFUpload({ name, multiple, helperText, fieldLabel, ...other }: 
               accept={{ 'image/*': [] }}
               files={field.value}
               error={!!error}
-              helperText={(!!error || helperText) && <FieldError errors={[error]} className='mt-3 ml-4' />}
+              helperText={(!!error || helperText) && <FieldError errors={[error]} className='mt-3' />}
               {...other}
             />
           </Field>
@@ -60,7 +60,7 @@ export function RHFUpload({ name, multiple, helperText, fieldLabel, ...other }: 
               accept={{ 'image/*': [] }}
               file={field.value}
               error={!!error}
-              helperText={(!!error || helperText) && <FieldError errors={[error]} className='mt-3 ml-4' />}
+              helperText={(!!error || helperText) && <FieldError errors={[error]} className='mt-3' />}
               {...other}
             />
           </Field>

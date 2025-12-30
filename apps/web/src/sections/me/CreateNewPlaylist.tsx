@@ -1,9 +1,7 @@
-import * as Yup from 'yup'
-import { RotatingLines } from 'react-loader-spinner'
 // form
 import { useForm } from 'react-hook-form'
 import { useApi } from '@/hooks/useApi'
-import { yupResolver } from '@hookform/resolvers/yup'
+import { zodResolver } from '@hookform/resolvers/zod'
 // components
 import { FormProvider, RHFTextField } from '@/components/hook-form'
 import { Button } from "@yukikaze/ui/button"
@@ -18,12 +16,8 @@ import {
 import RHFSwitch from '@/components/hook-form/RHFSwitch'
 import { useSnackbar } from '@/components/snackbar'
 import { useLocales } from '@/lib/locales'
-
-type FormValuesProps = {
-    isPrivate: boolean
-    title: string
-    description?: string
-}
+import { Spinner } from '@yukikaze/ui/spinner'
+import { PlaylistValidators } from '@yukikaze/validator'
 
 type Props = {
     onOpenChange?: (open: boolean) => void
@@ -32,21 +26,18 @@ type Props = {
 const CreateNewPlaylistDialog: React.FC<Props> = ({ onOpenChange }) => {
     const { enqueueSnackbar } = useSnackbar()
     const { translate } = useLocales()
+    const { mutateAsync: createPlaylist } = useApi().useCreatePlaylist()
 
-    const createPlaylistMutation = useApi().useCreatePlaylist()
-
-    const PlaylistSchema: Yup.ObjectSchema<FormValuesProps> = Yup.object().shape({
-        isPrivate: Yup.boolean().required(translate('privacy_setting_required')),
-        title: Yup.string().required(translate('playlist_title_required')),
-        description: Yup.string().optional(),
-    })
-
+    // privacy_setting_required
+    // playlist_title_required
     const defaultValues = {
-        isPrivate: true
+        isPrivate: true,
+        title: '',
+        description: '',
     }
 
-    const methods = useForm<FormValuesProps>({
-        resolver: yupResolver(PlaylistSchema),
+    const methods = useForm<PlaylistValidators.CreatePlaylistInput>({
+        resolver: zodResolver(PlaylistValidators.createPlaylistInput),
         defaultValues,
     })
 
@@ -56,12 +47,8 @@ const CreateNewPlaylistDialog: React.FC<Props> = ({ onOpenChange }) => {
         formState: { isSubmitting },
     } = methods
 
-    const onSubmit = async (data: FormValuesProps) => {
-        const formData = new FormData()
-        for (const [key, value] of Object.entries(data)) {
-            if (value !== undefined) formData.append(key, value as string)
-        }
-        createPlaylistMutation.mutate(formData, {
+    const onSubmit = async (data: PlaylistValidators.CreatePlaylistInput) => {
+        await createPlaylist(data, {
             onSuccess: (response) => {
                 onOpenChange?.(false)
                 reset()
@@ -93,7 +80,7 @@ const CreateNewPlaylistDialog: React.FC<Props> = ({ onOpenChange }) => {
                     </DialogClose>
                     <Button type="submit" disabled={isSubmitting}>
                         {isSubmitting ? (
-                            <RotatingLines strokeColor="white" />
+                            <Spinner className='size-6' />
                         ) : (
                             translate('create_playlist')
                         )}

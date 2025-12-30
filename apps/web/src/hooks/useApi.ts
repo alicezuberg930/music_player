@@ -1,15 +1,17 @@
+import * as api from '@/lib/httpClient'
 import { useMutation, useQuery, useQueryClient, type UseMutationOptions, type UseQueryOptions, useInfiniteQuery } from '@tanstack/react-query'
+import { useLocales } from '@/lib/locales'
+import { useSnackbar } from 'notistack'
+// types
 import type { Response } from '@/@types/response'
 import type { QuerySong, Song } from '@/@types/song'
 import type { Video } from '@/@types/video'
 import type { Artist } from '@/@types/artist'
 import type { Playlist } from '@/@types/playlist'
 import type { User } from '@/@types/user'
-import * as api from '@/lib/httpClient'
-import { useLocales } from '@/lib/locales'
-import { useSnackbar } from 'notistack'
 import type { Banner } from '@/@types/banner'
 import type { HomeData } from '@/@types/home'
+import type { PlaylistValidators } from '@yukikaze/validator'
 
 export const useApi = () => {
     const queryClient = useQueryClient()
@@ -149,9 +151,12 @@ export const useApi = () => {
     const useCreateSong = (options?: UseMutationOptions<Response, Error, FormData>) => {
         return useMutation({
             mutationFn: api.createSong,
-            onSuccess: () => {
-                // queryClient.invalidateQueries({ queryKey: queryKeys.songs })
+            onSuccess: (response) => {
                 queryClient.invalidateQueries({ queryKey: queryKeys.userSongs('uploaded') })
+                enqueueSnackbar(response.message, { variant: 'success' })
+            },
+            onError: (error) => {
+                enqueueSnackbar(translate(error.message ?? 'unknown_error'), { variant: 'error' })
             },
             ...options,
         })
@@ -172,7 +177,7 @@ export const useApi = () => {
         })
     }
 
-    const useCreatePlaylist = (options?: UseMutationOptions<Response, Error, FormData>) => {
+    const useCreatePlaylist = (options?: UseMutationOptions<Response, Error, PlaylistValidators.CreatePlaylistInput>) => {
         return useMutation({
             mutationFn: api.createPlaylist,
             onSuccess: () => {

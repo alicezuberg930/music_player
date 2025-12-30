@@ -123,8 +123,8 @@ export function resizeImage(
         fit = 'cover',
         position = 'center',
         background,
-        format,
-        quality = 80
+        format = 'webp',
+        quality = 100
     } = options
 
     const dimensions = calculateDimensions(width, height, aspectRatio)
@@ -144,42 +144,34 @@ export function resizeImage(
         background: background || { r: 0, g: 0, b: 0, alpha: 0 }
     })
 
-    if (format) {
-        switch (format) {
-            case 'jpeg':
-                image = image.jpeg({ quality })
-                break
-            case 'png':
-                image = image.png({ quality })
-                break
-            case 'webp':
-                image = image.webp({ quality })
-                break
-            case 'avif':
-                image = image.avif({ quality })
-                break
-            case 'gif':
-                image = image.gif()
-                break
-            case 'tiff':
-                image = image.tiff({ quality })
-                break
-        }
+    switch (format) {
+        case 'jpeg':
+            image = image.jpeg({ quality })
+            break
+        case 'png':
+            image = image.png({ quality })
+            break
+        case 'webp':
+            image = image.webp({ quality })
+            break
+        case 'avif':
+            image = image.avif({ quality })
+            break
+        case 'gif':
+            image = image.gif()
+            break
+        case 'tiff':
+            image = image.tiff({ quality })
+            break
     }
+
     return image
 }
 
-export async function resizeImageToFile(
-    input: string | Buffer,
-    output: string,
-    options: ResizeImageOptions
-): Promise<sharp.OutputInfo> {
+export async function resizeImageToFile(input: string | Buffer, output: string, options: ResizeImageOptions): Promise<sharp.OutputInfo> {
     return resizeImage(input, options).toFile(output)
 }
 
-export async function resizeImageToBuffer(
-    input: string | Buffer,
-    options: ResizeImageOptions
-): Promise<Buffer> {
+export async function resizeImageToBuffer(input: string | Buffer, options: ResizeImageOptions): Promise<Buffer> {
     return resizeImage(input, options).toBuffer()
 }

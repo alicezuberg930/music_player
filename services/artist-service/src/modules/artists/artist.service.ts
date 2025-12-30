@@ -4,11 +4,10 @@ import { Artist } from "./artist.model"
 import { artists } from "@yukikaze/db/schemas"
 import { BadRequestException, HttpException, NotFoundException } from "@yukikaze/lib/exception"
 import { extractPublicId, uploadFile } from "@yukikaze/lib/cloudinary"
-import { CreateArtistDto } from "./dto/create-artist.dto"
-import { UpdateArtistDto } from "./dto/update-artist.dto"
 import { createId } from "@yukikaze/lib/create-cuid"
 import { resizeImageToBuffer } from "@yukikaze/lib/image-resize"
 import fs from "node:fs"
+import { ArtistValidators } from "@yukikaze/validator"
 
 export class ArtistService {
     public async getArtists(request: Request, response: Response) {
@@ -32,7 +31,7 @@ export class ArtistService {
         }
     }
 
-    public async createArtist(request: Request<{}, {}, CreateArtistDto>, response: Response) {
+    public async createArtist(request: Request<{}, {}, ArtistValidators.CreateArtistInput>, response: Response) {
         try {
             const { name } = request.body
             let thumbnailUrl: string | null = null
@@ -65,7 +64,7 @@ export class ArtistService {
         }
     }
 
-    public async updateArtist(request: Request<{ id: string }, {}, UpdateArtistDto>, response: Response) {
+    public async updateArtist(request: Request<{ id: string }, {}, Partial<ArtistValidators.CreateArtistInput>>, response: Response) {
         try {
             const { id } = request.params
             const findArtist = await db.query.artists.findFirst({ where: eq(artists.id, id), columns: { thumbnail: true } })

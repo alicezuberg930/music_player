@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { UserService } from "./user.service"
-import { UpdateUserDto } from "./dto/update-user.dto"
+import { AuthValidators } from "@yukikaze/validator"
 
 class UserController {
     private readonly userService: UserService
@@ -21,7 +21,7 @@ class UserController {
         return await this.userService.myProfile(request, response)
     }
 
-    public async updateUser(request: Request<{ id: string }, {}, UpdateUserDto>, response: Response) {
+    public async updateUser(request: Request<{ id: string }, {}, AuthValidators.UpdateUserInput>, response: Response) {
         return await this.userService.updateUser(request, response)
     }
 

@@ -1,43 +1,32 @@
 import { FormProvider, RHFTextField } from '@/components/hook-form'
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-import * as Yup from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useAuthContext } from '@/lib/auth/useAuthContext'
 import { Button } from '@yukikaze/ui/button'
 import { Field, FieldGroup } from '@yukikaze/ui/field'
-
+import { AuthValidators } from "@yukikaze/validator"
 import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@yukikaze/ui/dialog'
 import { useLocales } from '@/lib/locales'
-
-interface FormValuesProps {
-    email: string
-    password: string
-}
 
 const SigninPage: React.FC = () => {
     const { signin } = useAuthContext()
     const { translate } = useLocales()
 
-    const FormSchema = Yup.object().shape({
-        email: Yup.string().required('Email is required'),
-        password: Yup.string().required('Password is required'),
-    })
-
     const defaultValues = useMemo(() => ({
         email: 'tien23851@gmail.com',
-        password: '123456',
+        password: 'V1nht1en1411@',
     }), [])
 
-    const methods = useForm<FormValuesProps>({
-        resolver: yupResolver(FormSchema),
+    const methods = useForm<AuthValidators.LoginInput>({
+        resolver: zodResolver(AuthValidators.loginInput),
         defaultValues,
     })
 
     const { handleSubmit } = methods
 
-    const onSubmit = async (data: FormValuesProps) => {
-        await signin(data.email, data.password)
+    const onSubmit = async (data: AuthValidators.LoginInput) => {
+        await signin(data)
     }
 
     return (

@@ -36,11 +36,11 @@ export default function MultiFilePreview({ thumbnail, files, onRemove }: UploadP
 
               {onRemove && (
                 <Button
-                  size={'sm'} variant='ghost'
-                  className='absolute top-1 right-1 rounded-full bg-black/30 hover:bg-black/50'
+                  size={'icon-sm'} variant='ghost'
+                  className="absolute top-1 right-1 rounded-full bg-gray-900/60 hover:bg-gray-900/70"
                   onClick={() => onRemove(file)}
                 >
-                  <CircleX size={16} />
+                  <CircleX className='size-5 stroke-white' />
                 </Button>
               )}
             </m.div>
@@ -67,11 +67,11 @@ export default function MultiFilePreview({ thumbnail, files, onRemove }: UploadP
 
             {onRemove && (
               <Button
-                size={'sm'} variant='ghost'
-                className='bg-black/30 hover:bg-black/50'
+                size={'icon-sm'} variant='ghost'
+                className="absolute top-1 right-1 rounded-full h-8 w-8 bg-gray-900/60 hover:bg-gray-900/70"
                 onClick={() => onRemove(file)}
               >
-                <CircleX size={16} />
+                <CircleX className='size-4 stroke-white' />
               </Button>
             )}
           </m.div>

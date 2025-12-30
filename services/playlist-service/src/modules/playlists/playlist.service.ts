@@ -3,17 +3,14 @@ import { and, db, eq, inArray } from "@yukikaze/db"
 import { CreatePlayList, PlayList } from "./playlist.model"
 import { playlistArtists, playlists, playlistSongs, songs, userFavoritePlaylists } from "@yukikaze/db/schemas"
 import { BadRequestException, HttpException, NotFoundException } from "@yukikaze/lib/exception"
-import { CreatePlaylistDto } from "./dto/create-playlist.dto"
 import { deleteFile, extractPublicId, uploadFile } from "@yukikaze/lib/cloudinary"
-import { UpdatePlaylistDto } from "./dto/update-playlist.dto"
-import { QueryPlaylistDto } from "./dto/query-playlist.dto"
 import { createId } from "@yukikaze/lib/create-cuid"
-import { PlaylistSongDto } from "./dto/playlist-songs.dto"
 import { resizeImageToBuffer } from "@yukikaze/lib/image-resize"
 import fs from "node:fs"
+import { PlaylistValidators } from "@yukikaze/validator"
 
 export class PlaylistService {
-    public async getPlaylists(request: Request<{}, {}, {}, QueryPlaylistDto>, response: Response) {
+    public async getPlaylists(request: Request<{}, {}, {}, PlaylistValidators.QueryPlaylistParams>, response: Response) {
         try {
             // const { artistName, songTitle, title, releaseDate } = request.query
             const userId = request.userId // Get user ID from JWT middleware (undefined if not logged in)
@@ -58,28 +55,28 @@ export class PlaylistService {
         }
     }
 
-    public async createPlaylist(request: Request<{}, {}, CreatePlaylistDto>, response: Response) {
+    public async createPlaylist(request: Request<{}, {}, PlaylistValidators.CreatePlaylistInput>, response: Response) {
         try {
             const { releaseDate, title, description } = request.body
-            let thumbnailUrl: string | null = null
-            const files = request.files as { [fieldname: string]: Express.Multer.File[] }
-            const thumbnailFile: Express.Multer.File | null = files['thumbnail']?.[0] ?? null
-            if (thumbnailFile) {
-                // Read file into buffer first to release file handle
-                const originalBuffer = fs.readFileSync(thumbnailFile.path)
-                // Resize image from buffer
-                const resizedBuffer = await resizeImageToBuffer(originalBuffer, {
-                    height: 600, width: 600,
-                    aspectRatio: '1:1',
-                    fit: 'cover',
-                })
-                fs.writeFileSync(thumbnailFile.path, resizedBuffer)
-                thumbnailUrl = (await uploadFile({ files: thumbnailFile, subFolder: '/playlist', publicId: createId() })) as string
-            }
+            // let thumbnailUrl: string | null = null
+            // const files = request.files as { [fieldname: string]: Express.Multer.File[] }
+            // const thumbnailFile: Express.Multer.File | null = files['thumbnail']?.[0] ?? null
+            // if (thumbnailFile) {
+            //     // Read file into buffer first to release file handle
+            //     const originalBuffer = fs.readFileSync(thumbnailFile.path)
+            //     // Resize image from buffer
+            //     const resizedBuffer = await resizeImageToBuffer(originalBuffer, {
+            //         height: 600, width: 600,
+            //         aspectRatio: '1:1',
+            //         fit: 'cover',
+            //     })
+            //     fs.writeFileSync(thumbnailFile.path, resizedBuffer)
+            //     thumbnailUrl = (await uploadFile({ files: thumbnailFile, subFolder: '/playlist', publicId: createId() })) as string
+            // }
             const playlist = {
                 releaseDate, title, description,
                 userId: request.userId,
-                thumbnail: thumbnailUrl ?? '/assets/default/default-playlist-thumbnail.png',
+                thumbnail: '/assets/default/default-playlist-thumbnail.png',
                 artistNames: ''
             } as CreatePlayList
             await db.insert(playlists).values(playlist)
@@ -90,7 +87,7 @@ export class PlaylistService {
         }
     }
 
-    public async updatePlaylist(request: Request<{ id: string }, {}, UpdatePlaylistDto>, response: Response) {
+    public async updatePlaylist(request: Request<{ id: string }, {}, PlaylistValidators.UpdatePlaylistInput>, response: Response) {
         try {
             const { id } = request.params
             const myPlaylist = await db.query.playlists.findFirst({
@@ -194,6 +191,11 @@ export class PlaylistService {
             if (!myPlaylist.thumbnail.includes('/assets/')) {
                 await deleteFile(extractPublicId(myPlaylist.thumbnail))
             }
+            // delete all song in playlist_songs
+            await db.delete(playlistSongs).where(eq(playlistSongs.playlistId, id))
+            // delete all artists in playlist_artists
+            await db.delete(playlistArtists).where(eq(playlistArtists.playlistId, id))
+            // finally delete playlist
             await db.delete(playlists).where(eq(playlists.id, id))
             return response.json({ message: 'Playlist deleted successfully' })
         } catch (error) {
@@ -202,7 +204,7 @@ export class PlaylistService {
         }
     }
 
-    public async addSongs(request: Request<{ id: string }, {}, PlaylistSongDto>, response: Response) {
+    public async addSongs(request: Request<{ id: string }, {}, PlaylistValidators.AddSongsInput>, response: Response) {
         const { id } = request.params
         const myPlaylist = await db.query.playlists.findFirst({
             columns: { totalDuration: true, thumbnail: true },
@@ -261,7 +263,7 @@ export class PlaylistService {
         return response.json({ message: 'Song added successfully' })
     }
 
-    public async removeSongs(request: Request<{ id: string }, {}, PlaylistSongDto>, response: Response) {
+    public async removeSongs(request: Request<{ id: string }, {}, PlaylistValidators.RemoveSongsInput>, response: Response) {
         const { id } = request.params
         const myPlaylist = await db.query.playlists.findFirst({
             columns: { totalDuration: true },

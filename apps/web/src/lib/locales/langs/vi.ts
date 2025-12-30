@@ -71,6 +71,7 @@ const vi = {
   'artist_name': 'Tên nghệ sĩ',
   'enter_artist_name': 'Nhập tên nghệ sĩ',
   'artist_avatar': 'Ảnh nghệ sĩ',
+  'enter_artist_description': 'Nhập mô tả cho nghệ sĩ của bạn.',
   // upload music form
   'song_name': 'Tên bài hát',
   'song_name_is_required': 'Tên bài hát là bắt buộc',

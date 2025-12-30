@@ -86,7 +86,7 @@ jobs:
           #     # fetch and pull newest code from github
           #     git fetch origin
           #     git checkout main
-          #     git pull --ff-only origin main
+          #     git pull
 
           #     # check if docker is installed
           #     if ! command -v docker compose &> /dev/null; then
@@ -119,16 +119,16 @@ jobs:
           #       sudo systemctl status docker
           #     fi
 
-          #     echo "Stopping existing containers"
-          #     docker compose --profile prod down || true
+          #     echo "Stopping music-player-container only"
+          #     docker stop music-player-container || true
 
           #     echo "Removing old images"
-          #     docker compose --profile prod rm -f || true
+          #     docker compose -f docker-compose.yml rm -f || true
 
           #     echo "Building and starting containers"
-          #     docker compose --profile prod up --build -d
+          #     docker compose -f docker-compose.yml up --build -d --name music-player-container
 
           #     echo "Deployment completed successfully"
 
           #     echo "Container status:"
-          #     docker compose --profile prod ps
+          #     docker compose -f docker-compose.yml ps

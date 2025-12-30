@@ -3,7 +3,7 @@ import { and, db, eq, inArray } from "@yukikaze/db"
 import { artistFollowers, artists, playlists, songs, userFavoritePlaylists, userFavoriteSongs, users } from "@yukikaze/db/schemas"
 import { Playlist, Song, User } from "./user.model"
 import { BadRequestException, HttpException, NotFoundException } from "@yukikaze/lib/exception"
-import { UpdateUserDto } from "./dto/update-user.dto"
+import { AuthValidators } from "@yukikaze/validator"
 
 export class UserService {
     public async getUsers(request: Request, response: Response) {
@@ -52,11 +52,11 @@ export class UserService {
         }
     }
 
-    public async updateUser(request: Request<{ id: string }, {}, UpdateUserDto>, response: Response) {
+    public async updateUser(request: Request<{ id: string }, {}, AuthValidators.UpdateUserInput>, response: Response) {
         try {
             const { id } = request.params
-            const { fullname, email, password } = request.body
-            return response.json({ message: 'User updated successfully', data: { id, fullname, email, password } })
+            const { fullname, password } = request.body
+            return response.json({ message: 'User updated successfully', data: { id, fullname, password } })
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)
@@ -86,7 +86,10 @@ export class UserService {
             if (!type) type = 'uploaded'
             let data: Song[] = []
             if (type === 'uploaded') {
-                data = await db.query.songs.findMany({ where: eq(songs.userId, request.userId!) })
+                data = await db.query.songs.findMany({
+                    where: eq(songs.userId, request.userId!),
+                    orderBy: (songs, { desc }) => [desc(songs.createdAt)],
+                })
             }
             if (type === 'favorite') {
                 data = await db.query.userFavoriteSongs.findMany({
@@ -124,7 +127,10 @@ export class UserService {
             if (!type) type = 'created'
             let data: Playlist[] = []
             if (type === 'created') {
-                data = await db.query.playlists.findMany({ where: eq(playlists.userId, request.userId!) })
+                data = await db.query.playlists.findMany({
+                    where: eq(playlists.userId, request.userId!),
+                    orderBy: (playlists, { desc }) => [desc(playlists.createdAt)],
+                })
             }
             if (type === 'favorite') {
                 data = await db.query.userFavoritePlaylists.findMany({

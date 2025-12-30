@@ -1,10 +1,10 @@
 // lib
 import { Request, Response } from 'express'
-import musicMetadata from 'music-metadata'
+import * as musicMetadata from 'music-metadata'
 import fs from 'node:fs'
 import NodeID3 from 'node-id3'
 // database
-import { db, eq, inArray, and, like, or, count } from '@yukikaze/db'
+import { db, eq, inArray, and, like, or } from '@yukikaze/db'
 import { CreateSong, Song } from './song.model'
 import { artists, songs, artistsSongs, userFavoriteSongs } from '@yukikaze/db/schemas'
 // utils
@@ -13,13 +13,10 @@ import slugify from '@yukikaze/lib/slugify'
 import { deleteFile, extractPublicId, uploadFile } from "@yukikaze/lib/cloudinary"
 import { createId } from "@yukikaze/lib/create-cuid"
 import { resizeImageToBuffer } from '@yukikaze/lib/image-resize'
-// dto
-import { CreateSongDto } from './dto/create-song.dto'
-import { UpdateSongDto } from './dto/update-song.dto'
-import { QueryParams } from './dto/query.param'
+import { SongValidators } from '@yukikaze/validator'
 
 export class SongService {
-    public async getSongs(request: Request<{}, {}, {}, QueryParams>, response: Response) {
+    public async getSongs(request: Request<{}, {}, {}, SongValidators.QuerySongParams>, response: Response) {
         try {
             let { page, limit, search } = request.query
             let currentPage = 1
@@ -30,10 +27,9 @@ export class SongService {
             // Get total count with same search filter
             const condition = search ? or(like(songs.title, `%${search}%`), like(songs.artistNames, `%${search}%`)) : undefined
             const total = await db.$count(songs, condition)
-            // select({ total: count() }).from(songs).where(condition)
             const totalPages = Math.ceil(total / currentLimit)
 
-            const data: Song[] = await db.query.songs.findMany({
+            const data = await db.query.songs.findMany({
                 where: condition,
                 limit: currentLimit,
                 offset: (currentPage - 1) * currentLimit,
@@ -88,12 +84,13 @@ export class SongService {
         }
     }
 
-    public async createSong(request: Request<{}, {}, CreateSongDto>, response: Response) {
+    public async createSong(request: Request<{}, {}, SongValidators.CreateSongInput>, response: Response) {
         try {
             const { title, releaseDate, artistIds } = request.body
             const files = request.files as { [fieldname: string]: Express.Multer.File[] }
             const audioFile: Express.Multer.File | null = files['audio']?.[0] ?? null
             if (!audioFile) throw new BadRequestException('Audio file is required')
+            console.log(audioFile.path)
             const lyricsFile: Express.Multer.File | null = files['lyrics']?.[0] ?? null
             const thumbnailFile: Express.Multer.File | null = files['thumbnail']?.[0] ?? null
             // initialize urls
@@ -181,7 +178,7 @@ export class SongService {
         }
     }
 
-    public async updateSong(request: Request<{ id: string }, {}, UpdateSongDto>, response: Response) {
+    public async updateSong(request: Request<{ id: string }, {}, SongValidators.UpdateSongInput>, response: Response) {
         try {
             const { id } = request.params
             const findSong = await db.query.songs.findFirst({

@@ -9,6 +9,7 @@ export const artists = mysqlTable("artists", {
     name: varchar({ length: 255 }).notNull(),
     spotlight: boolean().default(false),
     alias: varchar({ length: 255 }),
+    description: varchar({ length: 255 }),
     thumbnail: text(),
     totalFollow: int().default(0),
     createdAt,

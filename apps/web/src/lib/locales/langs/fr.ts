@@ -71,6 +71,7 @@ const fr = {
   'artist_name': 'Nom de l\'artiste',
   'enter_artist_name': 'Entrez le nom de l\'artiste',
   'artist_avatar': 'Avatar de l\'artiste',
+  'enter_artist_description': 'Entrez une description pour votre artiste.',
   // upload music form
   'song_name': 'Nom de la chanson',
   'song_name_is_required': 'Le nom de la chanson est requis',

@@ -13,9 +13,9 @@ RUN turbo prune @yukikaze/gateway-service --docker
 FROM base AS builder
 
 WORKDIR /build
-COPY --from=prepare /prune/out/json .
+COPY --from=prepare /prune/out/json ./
 RUN bun install
-COPY --from=prepare /prune/out/full .
+COPY --from=prepare /prune/out/full ./
 
 # Build packages and API
 RUN bun run build

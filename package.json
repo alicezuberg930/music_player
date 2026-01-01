@@ -22,7 +22,7 @@
   "catalogs": {
     "express": {
       "express": "^5.1.0",
-      "@types/express": "^5.0.4",
+      "@types/express": "^5.0.1",
       "express-rate-limit": "^7.0.0"
     },
     "tailwind": {

@@ -35,6 +35,7 @@ RUN addgroup --system --gid 1001 yukikaze && \
 COPY --from=builder --chown=web:yukikaze /build/node_modules ./node_modules
 COPY --from=builder --chown=web:yukikaze /build/packages ./packages
 COPY --from=builder --chown=web:yukikaze /build/services/user-service/dist ./dist
+COPY --from=prepare --chown=web:yukikaze /prune/ca.pem ./
 
 # Create uploads directory with correct permissions
 RUN mkdir -p uploads && chown -R web:yukikaze uploads
@@ -42,7 +43,7 @@ RUN mkdir -p uploads && chown -R web:yukikaze uploads
 USER web
 
 # Expose the port the app runs on
-EXPOSE 5001
+EXPOSE 5006
 
 # Start the application
 CMD ["bun", "dist/index.js"]

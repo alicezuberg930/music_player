@@ -7,7 +7,7 @@ WORKDIR /prune
 RUN bun install -g turbo
 
 COPY . .
-RUN turbo prune @yukikaze/services --docker
+RUN turbo prune @yukikaze/user-service --docker
 
 # Stage 2: Development build
 FROM base AS builder

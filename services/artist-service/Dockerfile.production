@@ -43,7 +43,7 @@ RUN mkdir -p uploads && chown -R web:yukikaze uploads
 USER web
 
 # Expose the port the app runs on
-EXPOSE 5001
+EXPOSE 5004
 
 # Start the application
 CMD ["bun", "dist/index.js"]

@@ -1,6 +1,5 @@
 // lib
 import { Request, Response } from 'express'
-import * as musicMetadata from 'music-metadata'
 import fs from 'node:fs'
 import NodeID3 from 'node-id3'
 // database
@@ -14,6 +13,8 @@ import { deleteFile, extractPublicId, uploadFile } from "@yukikaze/lib/cloudinar
 import { createId } from "@yukikaze/lib/create-cuid"
 import { resizeImageToBuffer } from '@yukikaze/lib/image-resize'
 import { SongValidators } from '@yukikaze/validator'
+
+// import { parseFile } from 'music-metadata'
 
 export class SongService {
     public async getSongs(request: Request<{}, {}, {}, SongValidators.QuerySongParams>, response: Response) {
@@ -99,7 +100,7 @@ export class SongService {
             // find artist names from artistIds
             const findArtists = await db.query.artists.findMany({ columns: { name: true }, where: inArray(artists.id, artistIds) })
             // extract metadata from audio file
-            const metadata = await musicMetadata.parseFile(audioFile.path)
+            // const metadata = await parseFile(audioFile.path)
             // let metadata = await esmMusicMetadata().then(m => m.parseFile(audioFile.path))
             if (lyricsFile) {
                 lyricsUrl = (await uploadFile({ files: lyricsFile, subFolder: '/lyrics', publicId: createId() })) as string
@@ -131,26 +132,26 @@ export class SongService {
                 fs.writeFileSync(thumbnailFile.path, resizedBuffer)
                 thumbnailUrl = (await uploadFile({ files: thumbnailFile, subFolder: '/cover', publicId: createId() })) as string
             } else {
-                const picture = metadata.common.picture?.[0]
-                if (picture) {
-                    const coverPath = `uploads/${Date.now() + '-' + Math.round(Math.random() * 1e9)}.${picture.format.split('/')[1]}`
-                    fs.writeFileSync(coverPath, Buffer.from(picture.data))
-                    // Read file into buffer first to release file handle
-                    const originalBuffer = fs.readFileSync(coverPath)
-                    // Resize image from buffer
-                    const resizedBuffer = await resizeImageToBuffer(originalBuffer, {
-                        height: 100, width: 100,
-                        aspectRatio: '1:1',
-                        fit: 'cover',
-                    })
-                    fs.writeFileSync(coverPath, resizedBuffer)
-                    const coverFile = {
-                        path: coverPath,
-                        mimetype: picture.format,
-                        originalname: `cover.${picture.format.split('/')[1]}`
-                    } as Express.Multer.File
-                    thumbnailUrl = (await uploadFile({ files: coverFile, subFolder: '/cover', publicId: createId() })) as string
-                }
+                // const picture = metadata.common.picture?.[0]
+                // if (picture) {
+                //     const coverPath = `uploads/${Date.now() + '-' + Math.round(Math.random() * 1e9)}.${picture.format.split('/')[1]}`
+                //     fs.writeFileSync(coverPath, Buffer.from(picture.data))
+                //     // Read file into buffer first to release file handle
+                //     const originalBuffer = fs.readFileSync(coverPath)
+                //     // Resize image from buffer
+                //     const resizedBuffer = await resizeImageToBuffer(originalBuffer, {
+                //         height: 100, width: 100,
+                //         aspectRatio: '1:1',
+                //         fit: 'cover',
+                //     })
+                //     fs.writeFileSync(coverPath, resizedBuffer)
+                //     const coverFile = {
+                //         path: coverPath,
+                //         mimetype: picture.format,
+                //         originalname: `cover.${picture.format.split('/')[1]}`
+                //     } as Express.Multer.File
+                //     thumbnailUrl = (await uploadFile({ files: coverFile, subFolder: '/cover', publicId: createId() })) as string
+                // }
             }
             console.log(thumbnailUrl)
             // upload audio file to cloud storage and get the url
@@ -160,7 +161,7 @@ export class SongService {
                 userId: request.userId!,
                 size: audioFile.size,
                 alias: slugify(title),
-                duration: Math.floor(metadata.format.duration ?? 0),
+                // duration: Math.floor(metadata.format.duration ?? 0),
                 artistNames: findArtists.map(a => a.name).join(", "),
                 hasLyrics: !!lyricsFile,
                 stream: audioUrl as string,

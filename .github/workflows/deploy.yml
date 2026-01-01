@@ -120,13 +120,13 @@ jobs:
           #     fi
 
           #     echo "Stopping music-player-container only"
-          #     docker stop music-player-container || true
+          #     docker compose down || true
 
           #     echo "Removing old images"
           #     docker compose -f docker-compose.yml rm -f || true
 
           #     echo "Building and starting containers"
-          #     docker compose -f docker-compose.yml up --build -d --name music-player-container
+          #     docker compose -f docker-compose.yml up --build
 
           #     echo "Deployment completed successfully"
 

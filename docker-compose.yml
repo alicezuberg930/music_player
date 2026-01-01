@@ -33,32 +33,25 @@ services:
       timeout: 10s
       retries: 5
       start_period: 10s
-    depends_on:
-      yukikaze_player_api_prod:
-        condition: service_healthy
+    # depends_on:
+    #   yukikaze_player_song_prod:
+    #     condition: service_healthy
+    #   yukikaze_player_home_prod:
+    #     condition: service_healthy
+    #   yukikaze_player_gateway_prod:
+    #     condition: service_healthy
+    #   yukikaze_player_artist_prod:
+    #     condition: service_healthy
+    #   yukikaze_player_auth_prod:
+    #     condition: service_healthy
+    #   yukikaze_player_playlist_prod:
+    #     condition: service_healthy
+    #   yukikaze_player_banner_prod:
+    #     condition: service_healthy
+    #   yukikaze_player_user_prod:
+    #     condition: service_healthy
       # yukikaze_player_db:
       #   condition: service_healthy
-
-  yukikaze_player_api_prod:
-    build:
-      context: .
-      dockerfile: services/api/Dockerfile.production
-    restart: unless-stopped
-    env_file: .env
-    container_name: yukikaze_player_api_prod
-    ports:
-      - "5001:5001"
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:5001/check || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 10s
-    depends_on:
-      yukikaze_player_gateway_prod:
-        condition: service_healthy
-    #   yukikaze_player_db:
-    #     condition: service_healthy
 
   yukikaze_player_song_prod:
     build:
@@ -68,9 +61,9 @@ services:
     env_file: .env
     container_name: yukikaze_player_song_prod
     ports:
-      - "5004:5004"
+      - "5003:5003"
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:5004/check || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://localhost:5003/check || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -89,7 +82,7 @@ services:
     env_file: .env
     container_name: yukikaze_player_home_prod
     ports:
-      - "5002:5002"
+      - "5001:5001"
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:5002/check || exit 1"]
       interval: 30s
@@ -101,7 +94,6 @@ services:
         condition: service_healthy
     #   yukikaze_player_db:
     #     condition: service_healthy
-
 
   yukikaze_player_gateway_prod:
     build:
@@ -119,12 +111,107 @@ services:
       retries: 5
       start_period: 10s
 
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: yukikaze_player_rabbitmq
+  yukikaze_player_artist_prod:
+    build:
+      context: .
+      dockerfile: services/artist-service/Dockerfile.production
+    restart: unless-stopped
+    env_file: .env
+    container_name: yukikaze_player_artist_prod
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "5004:5004"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5004/check || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    depends_on:
+      yukikaze_player_gateway_prod:
+        condition: service_healthy
+
+  yukikaze_player_auth_prod:
+    build:
+      context: .
+      dockerfile: services/auth-service/Dockerfile.production
+    restart: unless-stopped
+    env_file: .env
+    container_name: yukikaze_player_auth_prod
+    ports:
+      - "5002:5002"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5002/check || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    depends_on:
+      yukikaze_player_gateway_prod:
+        condition: service_healthy
+
+  yukikaze_player_banner_prod:
+    build:
+      context: .
+      dockerfile: services/banner-service/Dockerfile.production
+    restart: unless-stopped
+    env_file: .env
+    container_name: yukikaze_player_banner_prod
+    ports:
+      - "5005:5005"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5005/check || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    depends_on:
+      yukikaze_player_gateway_prod:
+        condition: service_healthy
+
+  # yukikaze_player_playlist_prod:
+  #   build:
+  #     context: .
+  #     dockerfile: services/playlist-service/Dockerfile.production
+  #   restart: unless-stopped
+  #   env_file: .env
+  #   container_name: yukikaze_player_playlist_prod
+  #   ports:
+  #     - "5007:5007"
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "curl -f http://localhost:5007/check || exit 1"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 5
+  #     start_period: 10s
+  #   depends_on:
+  #     yukikaze_player_gateway_prod:
+  #       condition: service_healthy
+
+  yukikaze_player_user_prod:
+    build:
+      context: .
+      dockerfile: services/user-service/Dockerfile.production
+    restart: unless-stopped
+    env_file: .env
+    container_name: yukikaze_player_user_prod
+    ports:
+      - "5006:5006"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5006/check || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    depends_on:
+      yukikaze_player_gateway_prod:
+        condition: service_healthy
+
+  # rabbitmq:
+  #   image: rabbitmq:3-management
+  #   container_name: yukikaze_player_rabbitmq
+  #   ports:
+  #     - "5672:5672"
+  #     - "15672:15672"
 
   redis:
     image: redis:7-alpine
@@ -141,6 +228,7 @@ services:
       start_period: 10s
     volumes:
       - yukikaze_player_redis_data:/data
+
 
 volumes:
   yukikaze_player_redis_data:

@@ -50,13 +50,13 @@ const port = env.GATEWAY_PORT
 app.use(rateLimiter)
 
 const routes: Map<string, string> = new Map([
-    ['/api/v1/home', `http://localhost:${env.HOME_SERVICE_PORT}`],
-    ['/api/v1/auth', `http://localhost:${env.AUTH_SERVICE_PORT}`],
-    ['/api/v1/songs', `http://localhost:${env.SONG_SERVICE_PORT}`],
-    ['/api/v1/banners', `http://localhost:${env.BANNER_SERVICE_PORT}`],
-    ['/api/v1/artists', `http://localhost:${env.ARTIST_SERVICE_PORT}`],
-    ['/api/v1/playlists', `http://localhost:${env.PLAYLIST_SERVICE_PORT}`],
-    ['/api/v1/users', `http://localhost:${env.USER_SERVICE_PORT}`],
+    ['/api/v1/home', `http://${env.HOME_SERVICE_HOST}:${env.HOME_SERVICE_PORT}`],
+    ['/api/v1/auth', `http://${env.AUTH_SERVICE_HOST}:${env.AUTH_SERVICE_PORT}`],
+    ['/api/v1/songs', `http://${env.SONG_SERVICE_HOST}:${env.SONG_SERVICE_PORT}`],
+    ['/api/v1/banners', `http://${env.BANNER_SERVICE_HOST}:${env.BANNER_SERVICE_PORT}`],
+    ['/api/v1/artists', `http://${env.ARTIST_SERVICE_HOST}:${env.ARTIST_SERVICE_PORT}`],
+    ['/api/v1/playlists', `http://${env.PLAYLIST_SERVICE_HOST}:${env.PLAYLIST_SERVICE_PORT}`],
+    ['/api/v1/users', `http://${env.USER_SERVICE_HOST}:${env.USER_SERVICE_PORT}`],
 ])
 
 const onProxyRequest = (proxyReq: ClientRequest, req: IncomingMessage, target: string) => {
@@ -86,7 +86,7 @@ const onProxyRequest = (proxyReq: ClientRequest, req: IncomingMessage, target: s
 const onError = (err: Error, req: IncomingMessage, res: ServerResponse<IncomingMessage> | Socket) => {
     const now = new Date()
     const timestamp = `${String(now.getDate()).padStart(2, '0')}-${String(now.getMonth() + 1).padStart(2, '0')}-${now.getFullYear()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`
-    const message = `[${timestamp}] Error proxying request to ${req.url}: ${err.message}`
+    const message = `[${timestamp}] Error proxying request to ${req.url}: ${err.message} - Stack: ${err.stack}`
     if (env.NODE_ENV === 'production') {
         db.insert(logs).values({
             message,
@@ -105,6 +105,7 @@ const onError = (err: Error, req: IncomingMessage, res: ServerResponse<IncomingM
         res.writeHead(503, { 'Content-Type': 'application/json' })
         res.end(JSON.stringify({
             message: 'The requested service is currently unavailable. Please try again later.',
+            stack: err.stack
         }))
     }
 }

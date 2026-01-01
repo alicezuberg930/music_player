@@ -101,6 +101,14 @@ services:
       dockerfile: services/gateway-service/Dockerfile.production
     restart: unless-stopped
     env_file: .env
+    environment:
+      - HOME_SERVICE_HOST=yukikaze_player_home_prod
+      - AUTH_SERVICE_HOST=yukikaze_player_auth_prod
+      - SONG_SERVICE_HOST=yukikaze_player_song_prod
+      - BANNER_SERVICE_HOST=yukikaze_player_banner_prod
+      - ARTIST_SERVICE_HOST=yukikaze_player_artist_prod
+      - PLAYLIST_SERVICE_HOST=yukikaze_player_playlist_prod
+      - USER_SERVICE_HOST=yukikaze_player_user_prod
     container_name: yukikaze_player_gateway_prod
     ports:
       - "5000:5000"

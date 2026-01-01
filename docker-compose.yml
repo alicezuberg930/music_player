@@ -28,7 +28,7 @@ services:
     restart: unless-stopped
     env_file: .env
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:5173/ || exit 1"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:5173/ || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -63,7 +63,7 @@ services:
     ports:
       - "5003:5003"
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:5003/check || exit 1"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:5003/check || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -84,7 +84,7 @@ services:
     ports:
       - "5001:5001"
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:5001/check || exit 1"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:5001/check || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -104,12 +104,12 @@ services:
     container_name: yukikaze_player_gateway_prod
     ports:
       - "5000:5000"
-    # healthcheck:
-    #   test: ["CMD-SHELL", "curl -f http://localhost:5000/check || exit 1"]
-    #   interval: 30s
-    #   timeout: 10s
-    #   retries: 5
-    #   start_period: 10s
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:5000/check || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
 
   yukikaze_player_artist_prod:
     build:
@@ -121,7 +121,7 @@ services:
     ports:
       - "5004:5004"
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:5004/check || exit 1"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:5004/check || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -140,7 +140,7 @@ services:
     ports:
       - "5002:5002"
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:5002/check || exit 1"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:5002/check || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -159,7 +159,7 @@ services:
     ports:
       - "5005:5005"
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:5005/check || exit 1"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:5005/check || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -178,7 +178,7 @@ services:
     ports:
       - "5007:5007"
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:5007/check || exit 1"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:5007/check || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -197,7 +197,7 @@ services:
     ports:
       - "5006:5006"
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:5006/check || exit 1"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:5006/check || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5

@@ -126,7 +126,7 @@ jobs:
           #     docker compose -f docker-compose.yml rm -f || true
 
           #     echo "Building and starting containers"
-          #     docker compose -f docker-compose.yml up --build
+          #     docker compose -f docker-compose.yml up --build -d
 
           #     echo "Deployment completed successfully"
 

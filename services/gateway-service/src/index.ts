@@ -14,6 +14,11 @@ const app = express()
 
 app.set('trust proxy', 1)
 
+// Health check endpoint (before CORS to allow Docker healthchecks)
+app.get('/check', (_: Request, res: Response) => {
+    res.json({ message: 'Welcome to YukikazeMP3 Express Gateway!' })
+})
+
 const allowedOrigins = new Set([
     'http://192.168.2.100:5173',
     'http://localhost:5173',
@@ -24,7 +29,7 @@ const allowedOrigins = new Set([
 // setup cors 
 app.use(cors({
     origin: function (origin, callback) {
-        if (!origin ) {
+        if (!origin && env.NODE_ENV !== 'production') {
             return callback(null, true)
         }
         if (origin && allowedOrigins.has(origin)) {
@@ -43,10 +48,6 @@ const port = env.GATEWAY_PORT
 
 // global rate limiter
 app.use(rateLimiter)
-
-app.get('/check', (_: Request, res: Response) => {
-    res.json({ message: 'Welcome to YukikazeMP3 Express Gateway!' })
-})
 
 const routes: Map<string, string> = new Map([
     ['/api/v1/home', `http://localhost:${env.HOME_SERVICE_PORT}`],

@@ -34,7 +34,7 @@ export const tokenExpired = (exp: number, action?: VoidFunction) => {
   const timeLeft = exp * 1000 - currentTime
   clearTimeout(expiredTimer)
   expiredTimer = setTimeout(async () => {
-    await fetch('/api/auth/sign-out', { method: "POST" })
+    // sign-out
     if (action) action()
   }, timeLeft)
 }
@@ -45,9 +45,5 @@ export const setSession = (accessToken: string | null, action?: VoidFunction) =>
     // This function below will handle when token is expired
     const { exp } = jwtDecode(accessToken)
     tokenExpired(exp, action)
-  } else {
-    fetch('/api/auth/sign-out', { method: "POST" }).then(res => {
-      if (res.ok) delete axios.defaults.headers.common.Authorization
-    })
   }
 }

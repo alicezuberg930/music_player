@@ -5,6 +5,11 @@ export const allLangs = [
     icon: '/assets/icons/flags/ic_flag_en.svg',
   },
   {
+    label: 'Spanish',
+    value: 'es',
+    icon: '/assets/icons/flags/ic_flag_es.svg',
+  },
+  {
     label: 'French',
     value: 'fr',
     icon: '/assets/icons/flags/ic_flag_fr.svg',
@@ -18,7 +23,7 @@ export const allLangs = [
     label: 'Chinese',
     value: 'cn',
     icon: '/assets/icons/flags/ic_flag_cn.svg',
-  }
+  },
 ]
 
 export const defaultLang = allLangs[0] // English

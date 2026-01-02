@@ -22,7 +22,7 @@ services:
       args:
         VITE_API_URL: ${VITE_API_URL}
         WEB_PORT: ${WEB_PORT}
-    container_name: yukikaze_player_app_prod
+    container_name: yukikaze_player_app
     ports:
       - "5173:5173"
     restart: unless-stopped
@@ -59,7 +59,7 @@ services:
       dockerfile: services/song-service/Dockerfile.production
     restart: unless-stopped
     env_file: .env
-    container_name: yukikaze_player_song_prod
+    container_name: yukikaze_player_song
     ports:
       - "5003:5003"
     healthcheck:
@@ -80,7 +80,7 @@ services:
       dockerfile: services/home-service/Dockerfile.production
     restart: unless-stopped
     env_file: .env
-    container_name: yukikaze_player_home_prod
+    container_name: yukikaze_player_home
     ports:
       - "5001:5001"
     healthcheck:
@@ -125,7 +125,7 @@ services:
       dockerfile: services/artist-service/Dockerfile.production
     restart: unless-stopped
     env_file: .env
-    container_name: yukikaze_player_artist_prod
+    container_name: yukikaze_player_artist
     ports:
       - "5004:5004"
     healthcheck:
@@ -144,7 +144,7 @@ services:
       dockerfile: services/auth-service/Dockerfile.production
     restart: unless-stopped
     env_file: .env
-    container_name: yukikaze_player_auth_prod
+    container_name: yukikaze_player_auth
     ports:
       - "5002:5002"
     healthcheck:
@@ -163,7 +163,7 @@ services:
       dockerfile: services/banner-service/Dockerfile.production
     restart: unless-stopped
     env_file: .env
-    container_name: yukikaze_player_banner_prod
+    container_name: yukikaze_player_banner
     ports:
       - "5005:5005"
     healthcheck:
@@ -182,7 +182,7 @@ services:
       dockerfile: services/playlist-service/Dockerfile.production
     restart: unless-stopped
     env_file: .env
-    container_name: yukikaze_player_playlist_prod
+    container_name: yukikaze_player_playlist
     ports:
       - "5007:5007"
     healthcheck:
@@ -201,7 +201,7 @@ services:
       dockerfile: services/user-service/Dockerfile.production
     restart: unless-stopped
     env_file: .env
-    container_name: yukikaze_player_user_prod
+    container_name: yukikaze_player_user
     ports:
       - "5006:5006"
     healthcheck:
@@ -214,12 +214,12 @@ services:
       yukikaze_player_gateway_prod:
         condition: service_healthy
 
-  # rabbitmq:
-  #   image: rabbitmq:3-management
-  #   container_name: yukikaze_player_rabbitmq
-  #   ports:
-  #     - "5672:5672"
-  #     - "15672:15672"
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: yukikaze_player_rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 
   redis:
     image: redis:7-alpine

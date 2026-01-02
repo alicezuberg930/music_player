@@ -15,7 +15,7 @@ services:
   #   volumes:
   #     - yukikaze_player_db_data:/var/lib/mysql/data
 
-  yukikaze_player_app_prod:
+  yukikaze_player_app_dev:
     build: 
       context: .
       dockerfile: apps/web/Dockerfile.development
@@ -34,7 +34,21 @@ services:
       retries: 5
       start_period: 10s
     depends_on:
-      yukikaze_player_api_prod:
+      yukikaze_player_song_dev:
+        condition: service_healthy
+      yukikaze_player_home_dev:
+        condition: service_healthy
+      yukikaze_player_gateway_dev:
+        condition: service_healthy
+      yukikaze_player_artist_dev:
+        condition: service_healthy
+      yukikaze_player_auth_dev:
+        condition: service_healthy
+      yukikaze_player_playlist_dev:
+        condition: service_healthy
+      yukikaze_player_banner_dev:
+        condition: service_healthy
+      yukikaze_player_user_dev:
         condition: service_healthy
       # yukikaze_player_db:
       #   condition: service_healthy
@@ -53,33 +67,269 @@ services:
           ignore:
             - node_modules/
 
-  yukikaze_player_api_prod:
+  yukikaze_player_song_dev:
     build:
       context: .
-      dockerfile: services/api/Dockerfile.development
+      dockerfile: services/song-service/Dockerfile.development
     restart: unless-stopped
     env_file: .env
-    container_name: yukikaze_player_api
+    container_name: yukikaze_player_song
     ports:
-      - "5000:5000"
+      - "5003:5003"
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:5000/ || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://localhost:5003/check || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
       start_period: 10s
-    # depends_on:
-    #   yukikaze_player_db:
-    #     condition: service_healthy
+    depends_on:
+      yukikaze_player_gateway_dev:
+        condition: service_healthy
     develop:
       watch:
         - action: sync
-          path: ./services/api/src
-          target: /app/services/api/src
+          path: ./services/song-service/src
+          target: /app/services/song-service/src
           ignore:
             - node_modules/
         - action: rebuild
-          path: ./services/api/package.json
+          path: ./services/song-service/package.json
+        - action: sync
+          path: ./packages
+          target: /app/packages
+          ignore:
+            - node_modules/
+
+  yukikaze_player_home_dev:
+    build:
+      context: .
+      dockerfile: services/home-service/Dockerfile.development
+    restart: unless-stopped
+    env_file: .env
+    container_name: yukikaze_player_home
+    ports:
+      - "5001:5001"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5001/check || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    depends_on:
+      yukikaze_player_gateway_dev:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: sync
+          path: ./services/home-service/src
+          target: /app/services/home-service/src
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./services/home-service/package.json
+        - action: sync
+          path: ./packages
+          target: /app/packages
+          ignore:
+            - node_modules/
+
+  yukikaze_player_gateway_dev:
+    build:
+      context: .
+      dockerfile: services/gateway-service/Dockerfile.development
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - HOME_SERVICE_HOST=yukikaze_player_home_dev
+      - AUTH_SERVICE_HOST=yukikaze_player_auth_dev
+      - SONG_SERVICE_HOST=yukikaze_player_song_dev
+      - BANNER_SERVICE_HOST=yukikaze_player_banner_dev
+      - ARTIST_SERVICE_HOST=yukikaze_player_artist_dev
+      - PLAYLIST_SERVICE_HOST=yukikaze_player_playlist_dev
+      - USER_SERVICE_HOST=yukikaze_player_user_dev
+    container_name: yukikaze_player_gateway
+    ports:
+      - "5000:5000"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5000/check || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    develop:
+      watch:
+        - action: sync
+          path: ./services/gateway-service/src
+          target: /app/services/gateway-service/src
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./services/gateway-service/package.json
+        - action: sync
+          path: ./packages
+          target: /app/packages
+          ignore:
+            - node_modules/
+
+  yukikaze_player_artist_dev:
+    build:
+      context: .
+      dockerfile: services/artist-service/Dockerfile.development
+    restart: unless-stopped
+    env_file: .env
+    container_name: yukikaze_player_artist
+    ports:
+      - "5004:5004"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5004/check || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    depends_on:
+      yukikaze_player_gateway_dev:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: sync
+          path: ./services/artist-service/src
+          target: /app/services/artist-service/src
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./services/artist-service/package.json
+        - action: sync
+          path: ./packages
+          target: /app/packages
+          ignore:
+            - node_modules/
+
+  yukikaze_player_auth_dev:
+    build:
+      context: .
+      dockerfile: services/auth-service/Dockerfile.development
+    restart: unless-stopped
+    env_file: .env
+    container_name: yukikaze_player_auth
+    ports:
+      - "5002:5002"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5002/check || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    depends_on:
+      yukikaze_player_gateway_dev:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: sync
+          path: ./services/auth-service/src
+          target: /app/services/auth-service/src
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./services/auth-service/package.json
+        - action: sync
+          path: ./packages
+          target: /app/packages
+          ignore:
+            - node_modules/
+
+  yukikaze_player_banner_dev:
+    build:
+      context: .
+      dockerfile: services/banner-service/Dockerfile.development
+    restart: unless-stopped
+    env_file: .env
+    container_name: yukikaze_player_banner
+    ports:
+      - "5005:5005"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5005/check || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    depends_on:
+      yukikaze_player_gateway_dev:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: sync
+          path: ./services/banner-service/src
+          target: /app/services/banner-service/src
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./services/banner-service/package.json
+        - action: sync
+          path: ./packages
+          target: /app/packages
+          ignore:
+            - node_modules/
+
+  yukikaze_player_playlist_dev:
+    build:
+      context: .
+      dockerfile: services/playlist-service/Dockerfile.development
+    restart: unless-stopped
+    env_file: .env
+    container_name: yukikaze_player_playlist
+    ports:
+      - "5007:5007"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5007/check || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    depends_on:
+      yukikaze_player_gateway_dev:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: sync
+          path: ./services/playlist-service/src
+          target: /app/services/playlist-service/src
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./services/playlist-service/package.json
+        - action: sync
+          path: ./packages
+          target: /app/packages
+          ignore:
+            - node_modules/
+
+  yukikaze_player_user_dev:
+    build:
+      context: .
+      dockerfile: services/user-service/Dockerfile.development
+    restart: unless-stopped
+    env_file: .env
+    container_name: yukikaze_player_user
+    ports:
+      - "5006:5006"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5006/check || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    depends_on:
+      yukikaze_player_gateway_dev:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: sync
+          path: ./services/user-service/src
+          target: /app/services/user-service/src
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./services/user-service/package.json
         - action: sync
           path: ./packages
           target: /app/packages
@@ -93,9 +343,28 @@ services:
       - "5672:5672"
       - "15672:15672"
 
-# volumes:
-#   yukikaze_player_db_data:
-#     driver: local
+  redis:
+    image: redis:7-alpine
+    container_name: yukikaze_player_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --save 60 1 --loglevel warning
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    volumes:
+      - yukikaze_player_redis_data:/data
+
+
+volumes:
+  yukikaze_player_redis_data:
+    driver: local
+  # yukikaze_player_db_data:
+  # driver: local
 
 # clean cache
 # docker system prune -a --volumes

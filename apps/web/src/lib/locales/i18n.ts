@@ -7,6 +7,7 @@ import enLocales from './langs/en'
 import frLocales from './langs/fr'
 import viLocales from './langs/vi'
 import cnLocales from './langs/cn'
+import esLocales from './langs/es'
 
 const lng = localStorage.getItem('i18nextLng') || defaultLang.value
 
@@ -18,6 +19,7 @@ i18next
       fr: { translations: frLocales },
       vi: { translations: viLocales },
       cn: { translations: cnLocales },
+      es: { translations: esLocales }
     },
     lng,
     fallbackLng: defaultLang.value,

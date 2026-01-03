@@ -73,6 +73,10 @@ services:
       dockerfile: services/song-service/Dockerfile.development
     restart: unless-stopped
     env_file: .env
+    environment:
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
     container_name: yukikaze_player_song
     ports:
       - "5003:5003"
@@ -177,6 +181,10 @@ services:
       dockerfile: services/artist-service/Dockerfile.development
     restart: unless-stopped
     env_file: .env
+    environment:
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
     container_name: yukikaze_player_artist
     ports:
       - "5004:5004"
@@ -243,6 +251,10 @@ services:
       dockerfile: services/banner-service/Dockerfile.development
     restart: unless-stopped
     env_file: .env
+    environment:
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
     container_name: yukikaze_player_banner
     ports:
       - "5005:5005"
@@ -276,6 +288,10 @@ services:
       dockerfile: services/playlist-service/Dockerfile.development
     restart: unless-stopped
     env_file: .env
+    environment:
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
     container_name: yukikaze_player_playlist
     ports:
       - "5007:5007"

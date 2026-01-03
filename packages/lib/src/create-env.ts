@@ -1,11 +1,28 @@
 import { config } from 'dotenv'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { existsSync } from 'node:fs'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
-config({ path: resolve(__dirname, '../../../', '.env') })
+// Only load .env file if it exists (for local development)
+// In Docker, environment variables are provided by docker-compose
+const envPath = resolve(__dirname, '../../../', '.env')
+console.log('Looking for .env at:', envPath)
+console.log('.env exists:', existsSync(envPath))
+if (existsSync(envPath)) {
+    console.log('Loading .env file from:', envPath)
+    config({ path: envPath })
+} else {
+    console.log('No .env file found, using process.env directly')
+}
+
+console.log('Cloudinary env vars at init:', {
+    CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
+    CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
+    CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET ? 'present' : 'missing'
+})
 
 export const env = {
     NODE_ENV: process.env.NODE_ENV,

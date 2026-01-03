@@ -14,7 +14,9 @@ export class UserService {
     public async signIn(request: Request<{}, {}, AuthValidators.LoginInput>, response: Response) {
         try {
             const { email, password } = request.body
-            const user: User | undefined = await db.query.users.findFirst({ where: eq(users.email, email) })
+            const user: User | undefined = await db.query.users.findFirst({
+                where: eq(users.email, email),
+            })
             if (!user) throw new NotFoundException('User not found')
             const isPasswordValid = await new Password().verify(user.password!, password)
             if (!isPasswordValid) throw new BadRequestException('Invalid password')

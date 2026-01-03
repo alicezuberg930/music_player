@@ -7,7 +7,7 @@
   "devDependencies": {
     "prettier": "^3.7.4",
     "turbo": "^2.6.3",
-    "typescript": "catalog:",
+    "typescript": "5.9.2",
     "@changesets/changelog-github": "^0.5.2",
     "@changesets/cli": "^2.29.8"
   },
@@ -18,12 +18,12 @@
     "@tanstack/react-query": "^5.90.11",
     "typescript": "5.9.2",
     "tsdown": "^0.17.2",
-    "@types/node": "^24.9.1",
+    "@types/node": "^24.10.1",
     "eslint": "^9.36.0"
   },
   "catalogs": {
     "express": {
-      "express": "^5.1.0",
+      "express": "^5.0.1",
       "@types/express": "^5.0.1",
       "express-rate-limit": "^7.0.0"
     },
@@ -49,6 +49,7 @@
   "packageManager": "bun@1.3.4",
   "private": true,
   "scripts": {
+    "build": "turbo run build",
     "build:web": "turbo run build --filter=@yukikaze/web",
     "build:packages": "turbo run build --filter=@yukikaze/lib --filter=@yukikaze/ui --filter=@yukikaze/db --filter=@yukikaze/email --filter=@yukikaze/middleware --filter=@yukikaze/redis --filter=@yukikaze/validator",
     "build:services": "turbo run build --filter=@yukikaze/playlist-service --filter=@yukikaze/gateway-service --filter=@yukikaze/home-service --filter=@yukikaze/song-service --filter=@yukikaze/artist-service --filter=@yukikaze/banner-service --filter=@yukikaze/user-service --filter=@yukikaze/auth-service",

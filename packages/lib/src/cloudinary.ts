@@ -4,11 +4,39 @@ import fs from 'node:fs'
 import { BadRequestException } from './exception'
 import { createId } from "./create-cuid"
 
-cloudinary.config({
-    cloud_name: env.CLOUDINARY_CLOUD_NAME,
-    api_key: env.CLOUDINARY_API_KEY,
-    api_secret: env.CLOUDINARY_API_SECRET,
-})
+// CLOUDINARY_API_KEY=985481525136418
+// CLOUDINARY_API_SECRET=WA7UCedHy-me1Sv637XDzumpSqc
+// CLOUDINARY_CLOUD_NAME=db8sebzhg
+
+
+let isConfigured = false
+
+const ensureCloudinaryConfig = () => {
+    if (!isConfigured) {
+        const cloudName = env.CLOUDINARY_CLOUD_NAME
+        const apiKey = env.CLOUDINARY_API_KEY
+        const apiSecret = env.CLOUDINARY_API_SECRET
+
+        if (!cloudName || !apiKey || !apiSecret) {
+            throw new BadRequestException(
+                `Cloudinary credentials missing: cloud_name=${cloudName || 'missing'}, api_key=${apiKey || 'missing'}, api_secret=${apiSecret ? 'present' : 'missing'}`
+            )
+        }
+
+        console.log('Configuring Cloudinary with:', {
+            cloud_name: cloudName,
+            api_key: apiKey,
+            api_secret: apiSecret.substring(0, 5) + '...'
+        })
+
+        cloudinary.config({
+            cloud_name: cloudName,
+            api_key: apiKey,
+            api_secret: apiSecret,
+        })
+        isConfigured = true
+    }
+}
 
 const cleanupLocalFiles = (files: Express.Multer.File[]): void => {
     files.forEach((file) =>
@@ -25,6 +53,7 @@ type UploadOptions = {
 }
 
 export const uploadFile = async ({ files, subFolder, publicId }: UploadOptions): Promise<string | string[]> => {
+    ensureCloudinaryConfig()
     const tempFiles = Array.isArray(files) ? files : [files]
     try {
         const uploadPromises = tempFiles.map((file) =>
@@ -36,7 +65,7 @@ export const uploadFile = async ({ files, subFolder, publicId }: UploadOptions):
                 invalidate: true,
                 use_filename: false,
                 unique_filename: false,
-                use_asset_folder_as_public_id_prefix: false
+                use_asset_folder_as_public_id_prefix: false,
             })
         )
         const uploadResults: UploadApiResponse[] = await Promise.all(uploadPromises)
@@ -45,6 +74,7 @@ export const uploadFile = async ({ files, subFolder, publicId }: UploadOptions):
         console.log('Files uploaded to Cloudinary:', fileUrls)
         return fileUrls.length > 1 ? fileUrls : fileUrls[0]!
     } catch (error) {
+        console.log(error)
         cleanupLocalFiles(tempFiles)
         throw new BadRequestException(JSON.stringify(error))
     }
@@ -62,6 +92,7 @@ const getResourceType = (url: string): 'image' | 'video' | 'raw' => {
 }
 
 export const deleteFile = async (fileUrls: string | string[]): Promise<void> => {
+    ensureCloudinaryConfig()
     try {
         const tempURLs = Array.isArray(fileUrls) ? fileUrls : [fileUrls]
         console.log(tempURLs.map(url => extractPublicId(url)))

@@ -8,9 +8,9 @@
   "dependencies": {
     "@yukikaze/validator": "workspace:*",
     "@yukikaze/middleware": "workspace:*",
-    "@yukikaze/email": "workspace:*",
     "@yukikaze/lib": "workspace:*",
     "@yukikaze/db": "workspace:*",
+    "@yukikaze/redis": "workspace:*",
     "cookie-parser": "^1.4.7",
     "express": "catalog:express",
     "music-metadata": "^11.9.0",

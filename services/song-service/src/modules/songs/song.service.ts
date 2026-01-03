@@ -2,6 +2,7 @@
 import { Request, Response } from 'express'
 import fs from 'node:fs'
 import NodeID3 from 'node-id3'
+import { cached, invalidateCache } from "@yukikaze/redis"
 // database
 import { db, eq, inArray, and, like, or } from '@yukikaze/db'
 import { CreateSong, Song } from './song.model'
@@ -14,8 +15,6 @@ import { createId } from "@yukikaze/lib/create-cuid"
 import { resizeImageToBuffer } from '@yukikaze/lib/image-resize'
 import { SongValidators } from '@yukikaze/validator'
 
-// import { parseFile } from 'music-metadata'
-
 export class SongService {
     public async getSongs(request: Request<{}, {}, {}, SongValidators.QuerySongParams>, response: Response) {
         try {
@@ -24,60 +23,70 @@ export class SongService {
             let currentLimit = 15
             if (page) currentPage = Number(page)
             if (limit) currentLimit = Number(limit)
-            const userId = request.userId
-            // Get total count with same search filter
-            const condition = search ? or(like(songs.title, `%${search}%`), like(songs.artistNames, `%${search}%`)) : undefined
-            const total = await db.$count(songs, condition)
-            const totalPages = Math.ceil(total / currentLimit)
 
-            const data = await db.query.songs.findMany({
-                where: condition,
-                limit: currentLimit,
-                offset: (currentPage - 1) * currentLimit,
-                // with: {
-                //     user: { columns: { password: false, email: false } },
-                //     genres: {
-                //         columns: { id: false, genreId: false, songId: false },
-                //         with: { genre: true }
-                //     },
-                //     artists: {
-                //         columns: { id: false, artistId: false, songId: false },
-                //         with: { artist: true }
-                //     }
-                // }
-            })
+            // Create cache key based on query parameters
+            const cacheKey = `songs:list:page:${currentPage}:limit:${currentLimit}:search:${search || 'all'}}`
 
-            // .then(result => result.map(song => ({
-            // ...song,
-            // artists: song.artists.map(a => a.artist),
-            // genres: song.genres.map(g => g.genre)
-            // })))
-            // If user is logged in, check which songs they've liked
-            let likedSongIds: Set<string> = new Set()
-            if (userId) {
-                const songIds = data.map(song => song.id)
-                const likedSongs = await db.query.userFavoriteSongs.findMany({
-                    where: and(
-                        eq(userFavoriteSongs.userId, userId),
-                        inArray(userFavoriteSongs.songId, songIds)
-                    ),
-                    columns: { songId: true }
+            const result = await cached(cacheKey, 3600, async () => {
+                // Get total count with same search filter
+                const condition = search ? or(like(songs.title, `%${search}%`), like(songs.artistNames, `%${search}%`)) : undefined
+                const total = await db.$count(songs, condition)
+                const totalPages = Math.ceil(total / currentLimit)
+
+                const data = await db.query.songs.findMany({
+                    where: condition,
+                    limit: currentLimit,
+                    offset: (currentPage - 1) * currentLimit,
+                    orderBy: (songs, { desc }) => [desc(songs.createdAt)],
+                    // with: {
+                    //     user: { columns: { password: false, email: false } },
+                    //     genres: {
+                    //         columns: { id: false, genreId: false, songId: false },
+                    //         with: { genre: true }
+                    //     },
+                    //     artists: {
+                    //         columns: { id: false, artistId: false, songId: false },
+                    //         with: { artist: true }
+                    //     }
+                    // }
                 })
-                likedSongIds = new Set(likedSongs.map(ls => ls.songId))
-            }
-            const songsWithLikedStatus = data.map(song => ({
-                ...song,
-                liked: likedSongIds.has(song.id)
-            }))
+
+                // .then(result => result.map(song => ({
+                // ...song,
+                // artists: song.artists.map(a => a.artist),
+                // genres: song.genres.map(g => g.genre)
+                // })))
+                // If user is logged in, check which songs they've liked
+                let likedSongIds: Set<string> = new Set()
+                if (request.userId) {
+                    const songIds = data.map(song => song.id)
+                    const likedSongs = await db.query.userFavoriteSongs.findMany({
+                        where: and(
+                            eq(userFavoriteSongs.userId, request.userId),
+                            inArray(userFavoriteSongs.songId, songIds)
+                        ),
+                        columns: { songId: true }
+                    })
+                    likedSongIds = new Set(likedSongs.map(ls => ls.songId))
+                }
+                const songsWithLikedStatus = data.map(song => ({
+                    ...song,
+                    liked: likedSongIds.has(song.id)
+                }))
+
+                return {
+                    data: songsWithLikedStatus,
+                    paginate: {
+                        limit: currentLimit,
+                        currentPage,
+                        totalPages,
+                    }
+                }
+            })
 
             return response.json({
                 message: 'Song list fetched successfully',
-                data: songsWithLikedStatus,
-                paginate: {
-                    limit: currentLimit,
-                    currentPage,
-                    totalPages,
-                }
+                ...result
             })
         } catch (error) {
             if (error instanceof HttpException) throw error
@@ -91,7 +100,6 @@ export class SongService {
             const files = request.files as { [fieldname: string]: Express.Multer.File[] }
             const audioFile: Express.Multer.File | null = files['audio']?.[0] ?? null
             if (!audioFile) throw new BadRequestException('Audio file is required')
-            console.log(audioFile.path)
             const lyricsFile: Express.Multer.File | null = files['lyrics']?.[0] ?? null
             const thumbnailFile: Express.Multer.File | null = files['thumbnail']?.[0] ?? null
             // initialize urls
@@ -100,7 +108,8 @@ export class SongService {
             // find artist names from artistIds
             const findArtists = await db.query.artists.findMany({ columns: { name: true }, where: inArray(artists.id, artistIds) })
             // extract metadata from audio file
-            // const metadata = await parseFile(audioFile.path)
+            const { parseFile } = await import('music-metadata')
+            const metadata = await parseFile(audioFile.path)
             // let metadata = await esmMusicMetadata().then(m => m.parseFile(audioFile.path))
             if (lyricsFile) {
                 lyricsUrl = (await uploadFile({ files: lyricsFile, subFolder: '/lyrics', publicId: createId() })) as string
@@ -132,28 +141,27 @@ export class SongService {
                 fs.writeFileSync(thumbnailFile.path, resizedBuffer)
                 thumbnailUrl = (await uploadFile({ files: thumbnailFile, subFolder: '/cover', publicId: createId() })) as string
             } else {
-                // const picture = metadata.common.picture?.[0]
-                // if (picture) {
-                //     const coverPath = `uploads/${Date.now() + '-' + Math.round(Math.random() * 1e9)}.${picture.format.split('/')[1]}`
-                //     fs.writeFileSync(coverPath, Buffer.from(picture.data))
-                //     // Read file into buffer first to release file handle
-                //     const originalBuffer = fs.readFileSync(coverPath)
-                //     // Resize image from buffer
-                //     const resizedBuffer = await resizeImageToBuffer(originalBuffer, {
-                //         height: 100, width: 100,
-                //         aspectRatio: '1:1',
-                //         fit: 'cover',
-                //     })
-                //     fs.writeFileSync(coverPath, resizedBuffer)
-                //     const coverFile = {
-                //         path: coverPath,
-                //         mimetype: picture.format,
-                //         originalname: `cover.${picture.format.split('/')[1]}`
-                //     } as Express.Multer.File
-                //     thumbnailUrl = (await uploadFile({ files: coverFile, subFolder: '/cover', publicId: createId() })) as string
-                // }
+                const picture = metadata.common.picture?.[0]
+                if (picture) {
+                    const coverPath = `uploads/${Date.now() + '-' + Math.round(Math.random() * 1e9)}.${picture.format.split('/')[1]}`
+                    fs.writeFileSync(coverPath, Buffer.from(picture.data))
+                    // Read file into buffer first to release file handle
+                    const originalBuffer = fs.readFileSync(coverPath)
+                    // Resize image from buffer
+                    const resizedBuffer = await resizeImageToBuffer(originalBuffer, {
+                        height: 100, width: 100,
+                        aspectRatio: '1:1',
+                        fit: 'cover',
+                    })
+                    fs.writeFileSync(coverPath, resizedBuffer)
+                    const coverFile = {
+                        path: coverPath,
+                        mimetype: picture.format,
+                        originalname: `cover.${picture.format.split('/')[1]}`
+                    } as Express.Multer.File
+                    thumbnailUrl = (await uploadFile({ files: coverFile, subFolder: '/cover', publicId: createId() })) as string
+                }
             }
-            console.log(thumbnailUrl)
             // upload audio file to cloud storage and get the url
             const audioUrl = await uploadFile({ files: audioFile, subFolder: '/audio', publicId: createId() })
             const song = {
@@ -161,7 +169,7 @@ export class SongService {
                 userId: request.userId!,
                 size: audioFile.size,
                 alias: slugify(title),
-                // duration: Math.floor(metadata.format.duration ?? 0),
+                duration: Math.floor(metadata.format.duration ?? 0),
                 artistNames: findArtists.map(a => a.name).join(", "),
                 hasLyrics: !!lyricsFile,
                 stream: audioUrl as string,
@@ -169,11 +177,11 @@ export class SongService {
                 thumbnail: thumbnailUrl ?? '/assets/default/default-song-thumbnail.png'
             } as CreateSong
             const insertSong = await db.insert(songs).values(song).$returningId()
-            await db.insert(artistsSongs).values(artistIds.map(artistId => ({
-                songId: insertSong[0]!.id, artistId
-            })))
+            await db.insert(artistsSongs).values(artistIds.map(artistId => ({ songId: insertSong[0]!.id, artistId })))
+            await invalidateCache('songs:list:*')
             return response.status(201).json({ message: 'Song created successfully' })
         } catch (error) {
+            console.log(error)
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)
         }
@@ -206,9 +214,7 @@ export class SongService {
                 const artistIdsToAdd = artistIds.filter(aid => !existingArtistIds.includes(aid))
                 const artistIdsToRemove = existingArtistIds.filter(aid => !artistIds.includes(aid))
                 if (artistIdsToAdd.length > 0) {
-                    await db.insert(artistsSongs).values(artistIdsToAdd.map(artistId => ({
-                        songId: id, artistId
-                    })))
+                    await db.insert(artistsSongs).values(artistIdsToAdd.map(artistId => ({ songId: id, artistId })))
                 }
                 // remove old artist-song relations
                 if (artistIdsToRemove.length > 0) {
@@ -252,6 +258,7 @@ export class SongService {
                 },
             } as CreateSong
             if (Object.entries(song).length > 0) await db.update(songs).set(song).where(eq(songs.id, id))
+            await invalidateCache('songs:list:*')
             return response.json({ message: 'Song updated successfully' })
         } catch (error) {
             if (error instanceof HttpException) throw error
@@ -304,6 +311,7 @@ export class SongService {
             ]
             await deleteFile(deleteUrls)
             await db.delete(songs).where(eq(songs.id, request.params.id))
+            await invalidateCache('songs:list:*')
             return response.json({ message: 'Song deleted successfully' })
         } catch (error) {
             if (error instanceof HttpException) throw error

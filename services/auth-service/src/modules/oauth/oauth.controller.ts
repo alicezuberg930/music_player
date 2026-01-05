@@ -11,6 +11,10 @@ class OAuthController {
     public async handleProvider(request: Request<{ provider: string }>, response: Response) {
         return await this.oauthService.handleProvider(request, response)
     }
+
+    public async handleCallback(request: Request<{ provider: string }>, response: Response) {
+        return await this.oauthService.handleCallback(request, response)
+    }
 }
 
 export default new OAuthController()

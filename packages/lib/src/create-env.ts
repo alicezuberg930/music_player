@@ -18,13 +18,8 @@ if (existsSync(envPath)) {
     console.log('No .env file found, using process.env directly')
 }
 
-console.log('Cloudinary env vars at init:', {
-    CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
-    CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
-    CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET ? 'present' : 'missing'
-})
-
 export const env = {
+    ALLOW_CORS_WITHOUT_ORIGIN: process.env.ALLOW_CORS_WITHOUT_ORIGIN,
     NODE_ENV: process.env.NODE_ENV,
     MYSQL_SSL_MODE: process.env.MYSQL_SSL_MODE,
     MYSQL_DATABASE: process.env.MYSQL_DATABASE,
@@ -39,6 +34,9 @@ export const env = {
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     GOOGLE_REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI,
+    FACEBOOK_CLIENT_ID: process.env.FACEBOOK_CLIENT_ID,
+    FACEBOOK_CLIENT_SECRET: process.env.FACEBOOK_CLIENT_SECRET,
+    FACEBOOK_REDIRECT_URI: process.env.FACEBOOK_REDIRECT_URI,
     JWT_SECRET: process.env.JWT_SECRET,
     JWT_EXPIRES_IN: Number.parseInt(process.env.JWT_EXPIRES_IN ?? '86400'),
     RESEND_API_KEY: process.env.RESEND_API_KEY,

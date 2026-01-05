@@ -17,16 +17,16 @@ const reconn_strategy = (retries: number): number | Error => {
 }
 
 //Then we can create redis client which can interact with redis
-const redisClient: RedisClientType = env.REDIS_URL || process.env.NODE_ENV === "production"
-    ? createClient({ url: env.REDIS_URL })
-    : createClient({
-        socket: {
-            host: env.REDIS_HOST,
-            port: env.REDIS_PORT,
-            reconnectStrategy: reconn_strategy
-        }
-    })
+const redisClient: RedisClientType = createClient({
+    socket: {
+        host: env.REDIS_HOST,
+        port: env.REDIS_PORT,
+        // reconnectStrategy: reconn_strategy
+    }
+})
 
+redisClient.connect().then().catch((err) => { }
+)
 redisClient.on("connect", () => {
     console.log("Connected to Redis!")
 })
@@ -34,8 +34,5 @@ redisClient.on("connect", () => {
 redisClient.on("error", (err) => {
     console.error("Redis Client Error", err)
 })
-
-// Connect to Redis
-redisClient.connect().catch(console.error)
 
 export default redisClient

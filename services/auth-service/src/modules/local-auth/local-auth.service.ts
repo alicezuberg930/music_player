@@ -28,7 +28,7 @@ export class UserService {
                 sameSite: env.NODE_ENV === "production" ? 'lax' : 'strict', // Required for cross-domain cookies
                 domain: env.NODE_ENV === "production" ? '.tien-music-player.site' : undefined, // Share cookie across subdomains
                 maxAge: env.JWT_EXPIRES_IN * 1000 // 1 day
-            });
+            })
             return response.json({
                 message: 'User logged in successfully',
                 data: { user, accessToken: token }
@@ -64,7 +64,7 @@ export class UserService {
                 sameSite: env.NODE_ENV === "production" ? 'lax' : 'strict', // Required for cross-domain cookies
                 domain: env.NODE_ENV === "production" ? '.tien-music-player.site' : undefined, // Share cookie across subdomains
                 maxAge: env.JWT_EXPIRES_IN * 1000 // 1 day
-            });
+            })
             return response.status(201).json({ message: 'User registered successfully' })
         } catch (error) {
             if (error instanceof HttpException) throw error

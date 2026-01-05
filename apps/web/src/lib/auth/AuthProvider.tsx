@@ -9,6 +9,7 @@ import { fetchProfile, signIn, signOut, signUp } from '../httpClient'
 import { paths } from '../route/paths'
 import { useLocales } from '../locales'
 import type { AuthValidators } from '@yukikaze/validator'
+import { axios } from '../axiosConfig'
 
 enum Types {
   INITIAL = 'INITIAL',
@@ -152,7 +153,8 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
   }, [initialize])
 
   const signInWithProvider = useCallback((provider: string) => {
-    globalThis.location.href = `/api/auth/${provider}`
+    const apiUrl = import.meta.env.VITE_API_URL
+    window.location.href = `${apiUrl}/auth/provider/${provider}`
   }, [])
 
   const memoizedValue = useMemo(() => ({

@@ -6,11 +6,12 @@ import { useAuthContext } from '@/lib/auth/useAuthContext'
 import { Button } from '@yukikaze/ui/button'
 import { Field, FieldGroup } from '@yukikaze/ui/field'
 import { AuthValidators } from "@yukikaze/validator"
-import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@yukikaze/ui/dialog'
+import { DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@yukikaze/ui/dialog'
 import { useLocales } from '@/lib/locales'
+import { Typography } from '@yukikaze/ui/typography'
 
 const SigninPage: React.FC = () => {
-    const { signin } = useAuthContext()
+    const { signin, signInWithProvider } = useAuthContext()
     const { translate } = useLocales()
 
     const defaultValues = useMemo(() => ({
@@ -44,14 +45,31 @@ const SigninPage: React.FC = () => {
                 <RHFTextField name="password" type="password" fieldLabel="Password" placeholder="Type your password" />
             </FieldGroup>
 
+            <div className='flex justify-around gap-4 mb-4'>
+                <Button type='button'
+                    className='flex-auto bg-white hover:bg-gray-200/50 drop-shadow-2xl shadow-gray-900 text-black'
+                    onClick={() => signInWithProvider('google')}
+                >
+                    <img src="./assets/providers/google-icon.svg" width={24} height={24} />
+                    Google
+                </Button>
+                <Button type='button'
+                    className='flex-auto bg-white hover:bg-gray-200/50 drop-shadow-2xl shadow-gray-900 text-black'
+                    onClick={() => signInWithProvider('facebook')}
+                >
+                    <img src="./assets/providers/facebook-icon.svg" width={24} height={24} />
+                    Facebook
+                </Button>
+            </div>
+
             <DialogFooter>
                 <Field orientation="vertical">
                     <Field orientation={'horizontal'}>
-                        <DialogClose asChild>
+                        {/* <DialogClose asChild>
                             <Button type="reset" variant="outline" className="flex-auto">
                                 Reset
                             </Button>
-                        </DialogClose>
+                        </DialogClose> */}
                         <Button type="submit" className="flex-auto">Submit</Button>
                     </Field>
                 </Field>

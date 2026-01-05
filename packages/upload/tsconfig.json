@@ -2,7 +2,7 @@
   "extends": "@yukikaze/typescript-config/internal-package.json",
   "compilerOptions": {},
   "include": [
-    "src",
+    "src"
   ],
   "exclude": [
     "node_modules"

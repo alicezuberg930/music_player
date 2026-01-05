@@ -12,6 +12,13 @@ export async function cached<T>(
     fn: () => Promise<T>
 ): Promise<T> {
     try {
+        if (!redisClient.isOpen) {
+            await redisClient.connect()
+        }
+        if (!redisClient.isReady) {
+            console.warn('Redis client not ready, falling back to direct query')
+            return fn()
+        }
         const cached = await redisClient.get(key) as string
         if (cached) {
             console.log(`Cache hit: ${key}`)
@@ -19,12 +26,10 @@ export async function cached<T>(
         }
         console.log(`Cache miss: ${key}`)
         const result = await fn()
-        // Store in cache
         await redisClient.setEx(key, ttl, JSON.stringify(result))
         return result
     } catch (error) {
         console.error('Cache error:', error)
-        // If Redis fails, fall back to direct query
         return fn()
     }
 }
@@ -34,6 +39,13 @@ export async function cached<T>(
  */
 export async function invalidateCache(pattern: string): Promise<void> {
     try {
+        if (!redisClient.isOpen) {
+            await redisClient.connect()
+        }
+        if (!redisClient.isReady) {
+            console.warn('Redis client not ready, skipping cache invalidation')
+            return
+        }
         const keys = await redisClient.keys(pattern)
         if (keys.length > 0) {
             await redisClient.del(keys)
@@ -46,8 +58,14 @@ export async function invalidateCache(pattern: string): Promise<void> {
 
 export async function clearCache(): Promise<void> {
     try {
+        if (!redisClient.isOpen) {
+            await redisClient.connect()
+        }
+        if (!redisClient.isReady) {
+            console.warn('Redis client not ready, skipping cache clear')
+            return
+        }
         await redisClient.flushDb()
-        console.log('All cache cleared')
     } catch (error) {
         console.error('Cache clear error:', error)
     }

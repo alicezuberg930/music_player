@@ -29,7 +29,8 @@ export const songs = mysqlTable("songs", {
     updatedAt
 }, (t) => [
     index('songs_user_id_idx').on(t.userId),
-    index('songs_title_idx').on(t.title)
+    index('songs_title_idx').on(t.title),
+    index('songs_artist_names_idx').on(t.artistNames)
 ])
 
 export const songsRelations = relations(songs, ({ one, many }) => ({

@@ -6,6 +6,7 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
+    "@yukikaze/upload": "workspace:*",
     "@yukikaze/validator": "workspace:*",
     "@yukikaze/middleware": "workspace:*",
     "@yukikaze/email": "workspace:*",

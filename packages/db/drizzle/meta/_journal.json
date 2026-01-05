@@ -71,6 +71,13 @@
       "when": 1767066843450,
       "tag": "0009_romantic_deathstrike",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1767591200672,
+      "tag": "0010_certain_nightshade",
+      "breakpoints": true
     }
   ]
 }

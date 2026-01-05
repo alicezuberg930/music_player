@@ -11,6 +11,7 @@ import { ZodObject, ZodError } from "zod"
 
 export const validateRequest = (schema: ZodObject) => async (req: Request, res: Response, next: NextFunction) => {
     try {
+        // req.body = Object.fromEntries(Object.entries(req.body).filter(([_, v]) => v != null));
         // const parsedData = { ...req.body, ...req.query, ...req.params }
         const arrayFields = ['artistIds', 'genreIds']
         for (const field of arrayFields) {

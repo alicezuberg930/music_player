@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express'
 import cookieParser from "cookie-parser"
 import { env } from '@yukikaze/lib/create-env'
 import { errorInterceptor, notFoundHandlerMiddleware, responseInterceptor } from '@yukikaze/middleware'
-import { localAuthRoute } from './modules'
+import { localAuthRoute, oauthAuthRoute } from './modules'
 const app = express()
 
 app.set('trust proxy', 1);
@@ -25,7 +25,7 @@ app.get('/check', (_: Request, res: Response) => {
 })
 
 // map routers to express server
-app.use('/', [localAuthRoute])
+app.use('/', [localAuthRoute, oauthAuthRoute])
 
 // assign global middlewares to express server
 app.use([notFoundHandlerMiddleware, errorInterceptor])

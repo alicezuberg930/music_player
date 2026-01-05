@@ -226,20 +226,6 @@ services:
       yukikaze_player_gateway_prod:
         condition: service_healthy
 
-  # yukikaze_player_aaa_prod:
-  #   build:
-  #     context: .
-  #     dockerfile: services/aaa-service/Dockerfile.production
-  #   restart: unless-stopped
-  #   env_file: .env
-  #   environment:
-  #     - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
-  #     - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
-  #     - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
-  #   container_name: yukikaze_player_aaa_prod
-  #   ports:
-  #     - "9999:9999"
-    
   rabbitmq:
     image: rabbitmq:3-management
     container_name: yukikaze_player_rabbitmq

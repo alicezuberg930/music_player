@@ -10,7 +10,7 @@ import { artists, songs, artistsSongs, userFavoriteSongs } from '@yukikaze/db/sc
 // utils
 import { HttpException, BadRequestException, NotFoundException } from '@yukikaze/lib/exception'
 import slugify from '@yukikaze/lib/slugify'
-import { deleteFile, extractPublicId, uploadFile } from "@yukikaze/lib/cloudinary"
+import { deleteFile, extractPublicId, uploadFile } from "@yukikaze/upload"
 import { createId } from "@yukikaze/lib/create-cuid"
 import { resizeImageToBuffer } from '@yukikaze/lib/image-resize'
 import { SongValidators } from '@yukikaze/validator'

@@ -1,17 +1,10 @@
 {
-  "name": "@yukikaze/lib",
+  "name": "@yukikaze/upload",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "exports": {
-    "./create-cuid": "./dist/create-cuid.mjs",
-    "./create-env": "./dist/create-env.mjs",
-    "./crypto": "./dist/crypto.mjs",
-    "./exception": "./dist/exception.mjs",
-    "./image-resize": "./dist/image-resize.mjs",
-    "./jwt": "./dist/jwt.mjs",
-    "./password": "./dist/password.mjs",
-    "./slugify": "./dist/slugify.mjs",
+    ".": "./dist/index.mjs",
     "./package.json": "./package.json"
   },
   "scripts": {
@@ -21,8 +14,7 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "dotenv": "^17.2.3",
-    "sharp": "^0.34.5",
+    "@yukikaze/lib": "workspace:*",
     "multer": "catalog:multer"
   },
   "devDependencies": {
@@ -34,5 +26,8 @@
     "typescript": "catalog:",
     "tsdown": "catalog:",
     "@types/multer": "catalog:multer"
-  }
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts"
 }

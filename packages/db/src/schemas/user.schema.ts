@@ -1,6 +1,6 @@
 import { createdAt, updatedAt } from "../utils"
 import { createId } from "@yukikaze/lib/create-cuid"
-import { mysqlTable, varchar, date, boolean, timestamp, index, primaryKey } from "drizzle-orm/mysql-core"
+import { mysqlTable, varchar, date, boolean, timestamp, index, primaryKey, mysqlEnum } from "drizzle-orm/mysql-core"
 import { relations } from "drizzle-orm"
 import { songs, playlists } from "./"
 
@@ -10,6 +10,7 @@ export const users = mysqlTable("users", {
     fullname: varchar({ length: 100 }).notNull(),
     phone: varchar({ length: 20 }).unique(),
     avatar: varchar({ length: 255 }),
+    provider: mysqlEnum(['local', 'facebook', 'google']).default('local').notNull(),
     birthday: date({ mode: 'string' }),
     email: varchar({ length: 100 }).notNull().unique(),
     password: varchar({ length: 255 }),

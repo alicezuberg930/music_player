@@ -26,22 +26,34 @@ const allowedOrigins = new Set([
     'https://www.tien-music-player.site'
 ])
 
-// setup cors 
-app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin && env.NODE_ENV !== 'production') {
-            return callback(null, true)
-        }
-        if (origin && allowedOrigins.has(origin)) {
-            return callback(null, true)
-        }
-        return callback(new UnauthorizedException(`${origin} not allowed by our CORS Policy.`))
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true,
-}))
+const skipCorsForPaths = [
+    /^\/api\/v1\/auth\/callback\/.+/,
+    /^\/api\/v1\/auth\/provider\/.+/
+]
 
-// parse cookies
+// setup cors 
+app.use((req, res, next) => {
+    // Skip CORS for OAuth provider routes (they handle redirects)
+    if (skipCorsForPaths.some((pattern) => pattern.test(req.path))) {
+        return next()
+    }
+    // Apply CORS for all other routes
+    cors({
+        origin: function (origin, callback) {
+            if (!origin && env.ALLOW_CORS_WITHOUT_ORIGIN === 'true') {
+                return callback(null, true)
+            }
+            if (origin && allowedOrigins.has(origin)) {
+                return callback(null, true)
+            }
+            return callback(new UnauthorizedException(`${origin} not allowed by our CORS Policy.`))
+        },
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        credentials: true,
+    })(req, res, next)
+})
+
+// parse cookies 
 app.use(cookieParser())
 
 const port = env.GATEWAY_PORT

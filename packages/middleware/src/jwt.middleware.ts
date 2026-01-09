@@ -13,7 +13,7 @@ export const JWTMiddleware = async (request: Request, _: Response, next: NextFun
     }
     // Verify token signature annd expiration 
     try {
-        const jwt = await new JWT(env.JWT_SECRET).verify(token) as { id: string } & JWTHeader
+        const jwt = await new JWT(env.ACCESS_TOKEN_SECRET).verify(token) as { id: string } & JWTHeader
         if (!jwt || !jwt.id) {
             throw new UnauthorizedException("Invalid or expired access token")
         }
@@ -32,7 +32,7 @@ export const OptionalJWTMiddleware = async (request: Request, _: Response, next:
     }
     if (token) {
         try {
-            const jwt = await new JWT(env.JWT_SECRET).verify(token) as { id: string } & JWTHeader
+            const jwt = await new JWT(env.ACCESS_TOKEN_SECRET).verify(token) as { id: string } & JWTHeader
             if (jwt && jwt.id) request.userId = jwt.id
         } catch (error) {
             console.log(error)

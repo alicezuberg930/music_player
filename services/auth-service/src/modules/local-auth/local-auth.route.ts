@@ -21,4 +21,8 @@ localAuthRoute.post("/sign-out",
     (request: Request, response: Response) => userController.signOut(request, response)
 )
 
+localAuthRoute.post("/refresh-token",
+    (request: Request, response: Response) => userController.refreshToken(request, response)
+)
+
 export { localAuthRoute }

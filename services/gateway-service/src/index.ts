@@ -69,6 +69,7 @@ const routes: Map<string, string> = new Map([
     ['/api/v1/artists', `http://${env.ARTIST_SERVICE_HOST}:${env.ARTIST_SERVICE_PORT}`],
     ['/api/v1/playlists', `http://${env.PLAYLIST_SERVICE_HOST}:${env.PLAYLIST_SERVICE_PORT}`],
     ['/api/v1/users', `http://${env.USER_SERVICE_HOST}:${env.USER_SERVICE_PORT}`],
+    ['/api/v1/genres', `http://${env.GENRE_SERVICE_HOST}:${env.GENRE_SERVICE_PORT}`],
 ])
 
 const onProxyRequest = (proxyReq: ClientRequest, req: IncomingMessage, target: string) => {

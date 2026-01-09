@@ -22,6 +22,7 @@ export type JWTContextType = {
   signup: (data: AuthValidators.RegisterInput) => Promise<void>
   signout: () => void
   signInWithProvider: (provider: string) => void
+  refreshToken: () => Promise<void>
 }
 
 export type GoogleUserResponse = {

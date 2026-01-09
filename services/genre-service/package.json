@@ -1,0 +1,25 @@
+{
+  "name": "@yukikaze/genre-service",
+  "scripts": {
+    "dev": "npx tsx --watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@yukikaze/validator": "workspace:*",
+    "@yukikaze/middleware": "workspace:*",
+    "@yukikaze/lib": "workspace:*",
+    "@yukikaze/db": "workspace:*",
+    "cookie-parser": "^1.4.7",
+    "express": "catalog:express"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.10",
+    "@types/express": "catalog:express",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "eslint": "catalog:",
+    "@repo/eslint-config": "workspace:*",
+    "@yukikaze/typescript-config": "workspace:*"
+  }
+}

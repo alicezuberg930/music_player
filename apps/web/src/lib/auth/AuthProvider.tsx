@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { createContext, useEffect, useReducer, useCallback, useMemo } from 'react'
+import { createContext, useEffect, useReducer, useCallback, useMemo, useRef } from 'react'
 // types
 import type { ActionMapType, AuthStateType, AuthUser, JWTContextType } from './types'
 // components
@@ -79,6 +79,8 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
   const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
   const { translate } = useLocales()
+  const isRefreshing = useRef(false)
+  const refreshTimerRef = useRef<number | null>(null)
 
   const initialize = useCallback(async () => {
     try {
@@ -147,15 +149,101 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
       await signOut()
       dispatch({ type: Types.LOGOUT })
       navigate('/', { replace: true })
+      localStorage.removeItem('lastTokenRefresh')
     } catch (error) {
       enqueueSnackbar(error instanceof Error ? error.message : translate('unknown_error'), { variant: 'error' })
     }
   }, [initialize])
 
+  const refreshToken = useCallback(async () => {
+    if (isRefreshing.current) return
+    isRefreshing.current = true
+    try {
+      const response = await axios.post('/auth/refresh-token')
+      if (response.status === 200) {
+        console.log('Token refreshed successfully')
+        // Store the refresh timestamp
+        localStorage.setItem('lastTokenRefresh', Date.now().toString())
+        // enqueueSnackbar(translate('token_refresh_success'), { variant: 'success' })
+      }
+    } catch (error) {
+      console.error('Failed to refresh token:', error)
+      // If refresh fails, log out the user
+      dispatch({ type: Types.LOGOUT })
+      navigate('/', { replace: true })
+    } finally {
+      isRefreshing.current = false
+    }
+  }, [navigate])
+
   const signInWithProvider = useCallback((provider: string) => {
     const apiUrl = import.meta.env.VITE_API_URL
     window.location.href = `${apiUrl}/auth/provider/${provider}`
   }, [])
+
+  // Set up axios interceptor for automatic token refresh on 401
+  useEffect(() => {
+    const interceptor = axios.interceptors.response.use((response) => response,
+      async (error) => {
+        const originalRequest = error.config
+        if (error.response?.status === 401 && !originalRequest._retry) {
+          originalRequest._retry = true
+          try {
+            await refreshToken()
+            return axios(originalRequest)
+          } catch (refreshError) {
+            return Promise.reject(refreshError)
+          }
+        }
+
+        return Promise.reject(error)
+      }
+    )
+    return () => {
+      axios.interceptors.response.eject(interceptor)
+    }
+  }, [refreshToken])
+
+  // Set up automatic token refresh every 30 minutes  
+  useEffect(() => {
+    if (state.isAuthenticated) {
+      // 30 minutes in milliseconds
+      const REFRESH_INTERVAL = 30 * 60 * 1000
+      // Check when the last refresh happened
+      const lastRefresh = localStorage.getItem('lastTokenRefresh')
+      const now = Date.now()
+      let timeUntilNextRefresh = REFRESH_INTERVAL
+
+      if (lastRefresh) {
+        const timeSinceLastRefresh = now - parseInt(lastRefresh, 10)
+        timeUntilNextRefresh = Math.max(REFRESH_INTERVAL - timeSinceLastRefresh, 0)
+        // If it's been more than 30 minutes, refresh immediately
+        if (timeSinceLastRefresh >= REFRESH_INTERVAL) {
+          refreshToken()
+          timeUntilNextRefresh = REFRESH_INTERVAL
+        }
+      } else {
+        // No previous refresh recorded, store current time
+        localStorage.setItem('lastTokenRefresh', now.toString())
+      }
+
+      // Schedule the first refresh
+      const initialTimer = setTimeout(() => {
+        refreshToken()
+        // Then set up recurring refresh
+        refreshTimerRef.current = setInterval(() => {
+          refreshToken()
+        }, REFRESH_INTERVAL)
+      }, timeUntilNextRefresh)
+
+      return () => {
+        clearTimeout(initialTimer)
+        if (refreshTimerRef.current) {
+          clearInterval(refreshTimerRef.current)
+        }
+      }
+    }
+  }, [state.isAuthenticated, refreshToken])
 
   const memoizedValue = useMemo(() => ({
     isInitialized: state.isInitialized,
@@ -165,7 +253,8 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
     signInWithProvider,
     signup,
     signout,
-  }), [state, signin, signout, signup, signInWithProvider])
+    refreshToken
+  }), [state, signin, signout, signup, signInWithProvider, refreshToken])
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>
 }

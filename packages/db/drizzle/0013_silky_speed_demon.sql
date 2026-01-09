@@ -1,0 +1,2 @@
+ALTER TABLE `genres` ADD `sub_genre_id` varchar(36);--> statement-breakpoint
+ALTER TABLE `genres` ADD CONSTRAINT `genres_sub_genre_id_fkey` FOREIGN KEY (`sub_genre_id`) REFERENCES `genres`(`id`) ON DELETE no action ON UPDATE no action;

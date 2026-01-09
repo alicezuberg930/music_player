@@ -12,18 +12,18 @@ import { ZodObject, ZodError } from "zod"
 export const validateRequest = (schema: ZodObject) => async (req: Request, res: Response, next: NextFunction) => {
     try {
         // req.body = Object.fromEntries(Object.entries(req.body).filter(([_, v]) => v != null));
-        // const parsedData = { ...req.body, ...req.query, ...req.params }
+        const parsedData = { ...req.body, ...req.query, ...req.params }
         const arrayFields = ['artistIds', 'genreIds']
         for (const field of arrayFields) {
-            if (typeof req.body[field] === 'string') {
+            if (typeof parsedData[field] === 'string') {
                 try {
-                    req.body[field] = JSON.parse(req.body[field]);
+                    parsedData[field] = JSON.parse(parsedData[field]);
                 } catch {
-                    req.body[field] = req.body[field].split(',').map((v: string) => v.trim());
+                    parsedData[field] = parsedData[field].split(',').map((v: string) => v.trim());
                 }
             }
         }
-        schema.parse(req.body)
+        schema.parse(parsedData)
         next()
     } catch (error) {
         //Example of ZodError when min() is not satisfied for firstName

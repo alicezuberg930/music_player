@@ -1,0 +1,25 @@
+{
+  "extends": "@yukikaze/typescript-config/base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "noEmit": false,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "verbatimModuleSyntax": false,
+    "target": "es2020",
+    "module": "node20",
+    "moduleResolution": "node16"
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

@@ -12,7 +12,7 @@ export const users = mysqlTable("users", {
     avatar: varchar({ length: 255 }),
     provider: mysqlEnum(['local', 'facebook', 'google']).default('local').notNull(),
     birthday: date({ mode: 'string' }),
-    email: varchar({ length: 100 }).notNull().unique(),
+    email: varchar({ length: 100 }).notNull(),
     password: varchar({ length: 255 }),
     isVerified: boolean().notNull().default(false),
     verifyToken: varchar({ length: 255 }),

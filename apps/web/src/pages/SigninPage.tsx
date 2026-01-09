@@ -8,7 +8,6 @@ import { Field, FieldGroup } from '@yukikaze/ui/field'
 import { AuthValidators } from "@yukikaze/validator"
 import { DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@yukikaze/ui/dialog'
 import { useLocales } from '@/lib/locales'
-import { Typography } from '@yukikaze/ui/typography'
 
 const SigninPage: React.FC = () => {
     const { signin, signInWithProvider } = useAuthContext()

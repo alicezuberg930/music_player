@@ -15,7 +15,7 @@ const getCloudinaryCredentials = (): CloudinaryCredentials => {
     return { cloudName, apiKey, apiSecret }
 }
 
-const generateSignature = (params: Record<string, string>, apiSecret: string): string => {
+const generateSignature = (params: Record<string, string | boolean>, apiSecret: string): string => {
     const sortedParams = Object.keys(params)
         .filter(key => params[key] !== undefined && params[key] !== null)
         .sort()
@@ -37,11 +37,11 @@ export const uploadFile = async ({ files, subFolder, publicId }: UploadOptions):
     const tempFiles = Array.isArray(files) ? files : [files]
     try {
         const uploadPromises = tempFiles.map(async (file) => {
-            const timestamp = Math.round(Date.now() / 1000)
+            const timestamp = Math.round(Date.now() / 1000).toString()
             const folder = subFolder ? `lili-music${subFolder}` : undefined
             const public_id = publicId ?? createId()
             // Prepare signature parameters
-            const signatureParams: Record<string, any> = {
+            const signatureParams: Record<string, string | boolean> = {
                 timestamp,
                 public_id,
                 overwrite: true,
@@ -57,7 +57,7 @@ export const uploadFile = async ({ files, subFolder, publicId }: UploadOptions):
             const blob = new Blob([fileBuffer])
             formData.append('file', blob, file.filename)
             formData.append('api_key', apiKey)
-            formData.append('timestamp', timestamp.toString())
+            formData.append('timestamp', timestamp)
             formData.append('signature', signature)
             formData.append('public_id', public_id)
             formData.append('overwrite', 'true')

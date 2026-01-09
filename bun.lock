@@ -345,6 +345,28 @@
         "typescript": "catalog:",
       },
     },
+    "services/genre-service": {
+      "name": "@yukikaze/genre-service",
+      "dependencies": {
+        "@yukikaze/db": "workspace:*",
+        "@yukikaze/lib": "workspace:*",
+        "@yukikaze/middleware": "workspace:*",
+        "@yukikaze/validator": "workspace:*",
+        "cookie-parser": "^1.4.7",
+        "express": "catalog:express",
+        "multer": "catalog:multer",
+      },
+      "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@types/cookie-parser": "^1.4.10",
+        "@types/express": "catalog:express",
+        "@types/multer": "catalog:multer",
+        "@types/node": "catalog:",
+        "@yukikaze/typescript-config": "workspace:*",
+        "eslint": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
     "services/home-service": {
       "name": "@yukikaze/home-service",
       "dependencies": {
@@ -1086,6 +1108,8 @@
     "@yukikaze/email": ["@yukikaze/email@workspace:packages/email"],
 
     "@yukikaze/gateway-service": ["@yukikaze/gateway-service@workspace:services/gateway-service"],
+
+    "@yukikaze/genre-service": ["@yukikaze/genre-service@workspace:services/genre-service"],
 
     "@yukikaze/home-service": ["@yukikaze/home-service@workspace:services/home-service"],
 

@@ -1,0 +1,1 @@
+ALTER TABLE `genres` ADD `description` text;

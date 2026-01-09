@@ -1,0 +1,1 @@
+export { genreRouter } from './genres/genre.route'

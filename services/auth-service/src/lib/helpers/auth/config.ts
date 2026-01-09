@@ -26,11 +26,10 @@ export const DEFAULT_OPTIONS = {
         redirect: 'auth.redirect',
     },
     cookieOptions: {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-        // secure: env.NODE_ENV === "production", // Required for HTTPS
-        // sameSite: env.NODE_ENV === "production" ? 'lax' : 'strict', // Required for cross-domain cookies
         path: '/',
+        httpOnly: true,
+        secure: true, // Required for SameSite=None
+        sameSite: env.NODE_ENV === 'production' ? 'lax' : 'strict', // Required for cross-domain cookies
+        domain: env.NODE_ENV === 'production' ? '.tien-music-player.site' : undefined, // Share cookie across subdomains
     },
 } as const satisfies Omit<Required<AuthOptions>, 'providers'>

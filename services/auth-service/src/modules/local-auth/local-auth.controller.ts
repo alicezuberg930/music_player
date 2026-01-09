@@ -20,6 +20,10 @@ class UserController {
     public async signOut(request: Request, response: Response) {
         return await this.userService.signOut(request, response)
     }
+
+    public async refreshToken(request: Request, response: Response) {
+        return await this.userService.refreshToken(request, response)
+    }
 }
 
 export default new UserController()

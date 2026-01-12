@@ -60,4 +60,8 @@ songRouter.put("/listens/add/:id",
     (request: Request<{ id: string }, {}>, response: Response) => songController.addSongListen(request, response)
 )
 
+songRouter.get("/stream/:id",
+    (request: Request<{ id: string }>, response: Response) => songController.streamSong(request, response)
+)
+
 export { songRouter }

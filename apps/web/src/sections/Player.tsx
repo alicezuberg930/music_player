@@ -173,13 +173,22 @@ const Player: React.FC = () => {
 
     const initializePlayer = async () => {
         dispatch(setIsPlaying(false))
-        currentTimeRef.current!.innerText = '00:00'
-        thumbRef.current!.style.cssText = `right: 100%`
-        if (currentSong?.stream) {
+        if (currentSong?.id) {
+            currentTimeRef.current!.innerText = '00:00'
+            thumbRef.current!.style.cssText = `right: 100%`
             setIsLoadingAudio(true)
+            // Use streaming endpoint URL instead of direct Cloudinary URL
+            const streamingUrl = `${import.meta.env.VITE_API_URL}/songs/stream/${currentSong.id}`
+            // Check if audio is cached
             const isCached = await isAudioCached(currentSong.id)
-            if (!isCached) await saveAudioToCache(currentSong.id, currentSong.stream)
-            const audioUrl = await getAudioFromCache(currentSong.id)
+            let audioUrl: string | null = null
+            if (isCached) {
+                audioUrl = await getAudioFromCache(currentSong.id)
+            } else {
+                audioUrl = streamingUrl
+                // Optionally cache in background (non-blocking)
+                saveAudioToCache(currentSong.id, streamingUrl).catch(err => console.log('Background caching failed:', err))
+            }
             if (audioUrl) {
                 audioRef.current = new Audio(audioUrl)
                 audioRef.current.load()

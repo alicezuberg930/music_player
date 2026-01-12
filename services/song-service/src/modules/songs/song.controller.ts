@@ -32,6 +32,10 @@ class SongController {
     public async addSongListen(request: Request<{ id: string }, {}>, response: Response) {
         return await this.songService.addSongListen(request, response)
     }
+
+    public async streamSong(request: Request<{ id: string }>, response: Response) {
+        return await this.songService.streamSong(request, response)
+    }
 }
 
 export default new SongController()

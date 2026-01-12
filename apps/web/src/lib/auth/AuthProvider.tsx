@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { createContext, useEffect, useReducer, useCallback, useMemo, useRef } from 'react'
+import { useQuery } from '@tanstack/react-query'
 // types
 import type { ActionMapType, AuthStateType, AuthUser, JWTContextType } from './types'
 // components
@@ -10,6 +11,8 @@ import { paths } from '../route/paths'
 import { useLocales } from '../locales'
 import type { AuthValidators } from '@yukikaze/validator'
 import { axios } from '../axiosConfig'
+import { useDispatch, useSelector } from '@/redux/store'
+import { setLastTokenRefresh } from '@/redux/slices/app'
 
 enum Types {
   INITIAL = 'INITIAL',
@@ -79,29 +82,28 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
   const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
   const { translate } = useLocales()
-  const isRefreshing = useRef(false)
+  const isRefreshing = useRef<boolean>(false)
   const refreshTimerRef = useRef<number | null>(null)
+  const { lastTokenRefresh } = useSelector(state => state.app)
+  const dispatchRedux = useDispatch()
 
-  const initialize = useCallback(async () => {
-    try {
-      const response = await fetchProfile()
-      if (response.statusCode === 200) {
-        dispatch({
-          type: Types.INITIAL,
-          payload: {
-            isAuthenticated: true,
-            user: response.data!
-          },
-        })
-      }
-    } catch (error) {
-      console.error(error)
-    }
-  }, [])
+  const { data: profileData, isSuccess } = useQuery({
+    queryKey: ['profile'],
+    queryFn: fetchProfile,
+    retry: false,
+  })
 
   useEffect(() => {
-    initialize()
-  }, [initialize])
+    if (isSuccess && profileData?.data) {
+      dispatch({
+        type: Types.INITIAL,
+        payload: {
+          isAuthenticated: true,
+          user: profileData.data
+        },
+      })
+    }
+  }, [isSuccess, profileData])
 
   const signin = useCallback(async (data: AuthValidators.LoginInput) => {
     try {
@@ -122,7 +124,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
     } catch (error) {
       enqueueSnackbar(error instanceof Error ? error.message : translate('unknown_error'), { variant: 'error' })
     }
-  }, [initialize])
+  }, [navigate, enqueueSnackbar, translate])
 
   const signup = useCallback(async (data: AuthValidators.RegisterInput) => {
     try {
@@ -142,18 +144,18 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
     } catch (error) {
       enqueueSnackbar(error instanceof Error ? error.message : translate('unknown_error'), { variant: 'error' })
     }
-  }, [initialize])
+  }, [navigate, enqueueSnackbar, translate])
 
   const signout = useCallback(async () => {
     try {
       await signOut()
       dispatch({ type: Types.LOGOUT })
       navigate('/', { replace: true })
-      localStorage.removeItem('lastTokenRefresh')
+      dispatchRedux(setLastTokenRefresh(null))
     } catch (error) {
       enqueueSnackbar(error instanceof Error ? error.message : translate('unknown_error'), { variant: 'error' })
     }
-  }, [initialize])
+  }, [navigate, enqueueSnackbar, translate])
 
   const refreshToken = useCallback(async () => {
     if (isRefreshing.current) return
@@ -163,8 +165,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
       if (response.status === 200) {
         console.log('Token refreshed successfully')
         // Store the refresh timestamp
-        localStorage.setItem('lastTokenRefresh', Date.now().toString())
-        // enqueueSnackbar(translate('token_refresh_success'), { variant: 'success' })
+        dispatchRedux(setLastTokenRefresh(Date.now()))
       }
     } catch (error) {
       console.error('Failed to refresh token:', error)
@@ -210,12 +211,11 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
       // 30 minutes in milliseconds
       const REFRESH_INTERVAL = 30 * 60 * 1000
       // Check when the last refresh happened
-      const lastRefresh = localStorage.getItem('lastTokenRefresh')
       const now = Date.now()
       let timeUntilNextRefresh = REFRESH_INTERVAL
 
-      if (lastRefresh) {
-        const timeSinceLastRefresh = now - parseInt(lastRefresh, 10)
+      if (lastTokenRefresh) {
+        const timeSinceLastRefresh = now - lastTokenRefresh
         timeUntilNextRefresh = Math.max(REFRESH_INTERVAL - timeSinceLastRefresh, 0)
         // If it's been more than 30 minutes, refresh immediately
         if (timeSinceLastRefresh >= REFRESH_INTERVAL) {
@@ -223,14 +223,13 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
           timeUntilNextRefresh = REFRESH_INTERVAL
         }
       } else {
-        // No previous refresh recorded, store current time
-        localStorage.setItem('lastTokenRefresh', now.toString())
+        dispatchRedux(setLastTokenRefresh(now))
       }
-
+      console.log(timeUntilNextRefresh / 1000, 'seconds until next token refresh')
       // Schedule the first refresh
       const initialTimer = setTimeout(() => {
         refreshToken()
-        // Then set up recurring refresh
+        // set up recurring refresh if the user doesn't refresh the page
         refreshTimerRef.current = setInterval(() => {
           refreshToken()
         }, REFRESH_INTERVAL)

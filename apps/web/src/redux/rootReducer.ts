@@ -23,7 +23,7 @@ export const appPersistConfig = {
   key: 'app',
   storage,
   keyPrefix: 'redux-',
-  whitelist: ['showSideBarRight', 'scrollTop', 'language']
+  whitelist: ['showSideBarRight', 'scrollTop', 'language', 'lastTokenRefresh']
 }
 
 const rootReducer = combineReducers({

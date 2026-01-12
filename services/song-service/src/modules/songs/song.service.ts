@@ -1,5 +1,5 @@
 // lib
-import { Request, Response } from 'express'
+import type { Request, Response } from 'express'
 import fs from 'node:fs'
 import NodeID3 from 'node-id3'
 import { cached, invalidateCache } from "@yukikaze/redis"
@@ -14,6 +14,7 @@ import { deleteFile, extractPublicId, uploadFile } from "@yukikaze/upload"
 import { createId } from "@yukikaze/lib/create-cuid"
 import { resizeImageToBuffer } from '@yukikaze/lib/image-resize'
 import { SongValidators } from '@yukikaze/validator'
+import { IncomingHttpHeaders } from 'node:http'
 
 export class SongService {
     public async getSongs(request: Request<{}, {}, {}, SongValidators.QuerySongParams>, response: Response) {
@@ -181,7 +182,6 @@ export class SongService {
             await invalidateCache('songs:list:*')
             return response.status(201).json({ message: 'Song created successfully' })
         } catch (error) {
-            console.log(error)
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)
         }
@@ -329,6 +329,66 @@ export class SongService {
             if (!findSong) throw new NotFoundException('Song not found')
             await db.update(songs).set({ listens: (findSong.listens ?? 0) + 1 }).where(eq(songs.id, id))
             return response.json({ message: 'Song view added successfully' })
+        } catch (error) {
+            if (error instanceof HttpException) throw error
+            throw new BadRequestException(error instanceof Error ? error.message : undefined)
+        }
+    }
+
+    public async streamSong(request: Request<{ id: string }>, response: Response) {
+        try {
+            const { id } = request.params
+            const findSong = await db.query.songs.findFirst({
+                where: eq(songs.id, id),
+                columns: { stream: true }
+            })
+            if (!findSong || !findSong.stream) throw new NotFoundException('Song not found')
+            // Fetch audio file from Cloudinary with range support
+            const range = request.headers.range
+            console.log(request.headers.range)
+            // Make request to Cloudinary with range header
+            const headers: RequestInit['headers'] = {}
+            if (range) headers['Range'] = range
+            const audioResponse = await fetch(findSong.stream, { headers })
+            if (!audioResponse.ok) throw new BadRequestException('Failed to fetch audio from storage')
+            const contentType = audioResponse.headers.get('content-type') || 'audio/mpeg'
+            const contentLength = audioResponse.headers.get('content-length')
+            const acceptRanges = audioResponse.headers.get('accept-ranges')
+            const contentRange = audioResponse.headers.get('content-range')
+            console.log({ contentRange, contentLength, acceptRanges })
+            // Set response headers
+            response.setHeader('Content-Type', contentType)
+            if (contentLength) response.setHeader('Content-Length', contentLength)
+            if (acceptRanges) response.setHeader('Accept-Ranges', acceptRanges)
+            if (contentRange) response.setHeader('Content-Range', contentRange)
+            response.status(206)
+            // Stream the response
+            if (audioResponse.body) {
+                const reader = audioResponse.body.getReader()
+                const stream = new ReadableStream({
+                    async start(controller) {
+                        try {
+                            while (true) {
+                                const { done, value } = await reader.read()
+                                if (done) break
+                                controller.enqueue(value)
+                            }
+                            controller.close()
+                        } catch (error) {
+                            controller.error(error)
+                        }
+                    }
+                })
+                // Convert web stream to Node stream
+                const nodeStream = new Response(stream).body
+                if (nodeStream) {
+                    // @ts-ignore - Node.js types compatibility
+                    for await (const chunk of nodeStream) {
+                        response.write(chunk)
+                    }
+                }
+            }
+            response.end()
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)

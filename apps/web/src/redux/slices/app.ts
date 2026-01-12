@@ -3,11 +3,13 @@ import { createSlice } from '@reduxjs/toolkit'
 type AppState = {
     showSideBarRight: boolean
     scrollTop: boolean
+    lastTokenRefresh: number | null
 }
 
 const initialState: AppState = {
     showSideBarRight: false,
     scrollTop: false,
+    lastTokenRefresh: null,
 }
 
 const slice = createSlice({
@@ -19,6 +21,9 @@ const slice = createSlice({
         },
         setScrollTop(state, action) {
             state.scrollTop = action.payload as boolean
+        },
+        setLastTokenRefresh(state, action) {
+            state.lastTokenRefresh = action.payload as number | null
         }
     }
 })
@@ -30,4 +35,5 @@ export default slice.reducer
 export const {
     setShowSidebarRight,
     setScrollTop,
+    setLastTokenRefresh,
 } = slice.actions

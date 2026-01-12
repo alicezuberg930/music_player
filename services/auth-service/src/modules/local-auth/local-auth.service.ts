@@ -9,7 +9,7 @@ import { createId } from "@yukikaze/lib/create-cuid"
 import { JWT } from "@yukikaze/lib/jwt"
 import sendEmail from "@yukikaze/email"
 import { AuthValidators } from "@yukikaze/validator"
-import { DEFAULT_OPTIONS } from "@/lib/helpers/auth"
+import { DEFAULT_OPTIONS } from "../../lib/helpers/auth"
 
 export class UserService {
     private cookieOptions = DEFAULT_OPTIONS.cookieOptions;

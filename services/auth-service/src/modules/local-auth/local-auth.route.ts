@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express"
 import userController from "./local-auth.controller"
-import { JWTMiddleware, Options } from "@yukikaze/middleware"
+import { JWTMiddleware } from "@yukikaze/middleware"
 import { validateRequest } from "@yukikaze/middleware"
 import { AuthValidators } from "@yukikaze/validator"
 

@@ -37,7 +37,7 @@ jobs:
 
             bun install -g turbo
 
-            pm2 delete all || true
+            # pm2 delete all || true
 
             cd "/var/www/html/music_player"
 

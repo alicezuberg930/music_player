@@ -32,13 +32,10 @@ jobs:
             # export NVM_DIR="$HOME/.nvm"
             # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-            # Or if using fnm
-            # if command -v fnm >/dev/null 2>&1; then
-            #   eval "$(fnm env --use-on-cd)"
-            # fi
-
             SERVER_NAME="music-api"
             FRONTEND_NAME="music-app"
+
+            bun install -g turbo
 
             cd "/var/www/html/music_player"
 
@@ -50,10 +47,11 @@ jobs:
             # Install deps, build, and run with PM2
             bun install
             bun run build:packages
-            bun run build:web
 
             # bun run build:services
-            turbo run build --filter=@yukikaze/playlist-service && turbo run build --filter=@yukikaze/gateway-service && turbo run build --filter=@yukikaze/home-service && turbo run build --filter=@yukikaze/song-service && turbo run build --filter=@yukikaze/artist-service && turbo run build --filter=@yukikaze/banner-service && turbo run build --filter=@yukikaze/user-service && turbo run build --filter=@yukikaze/auth-service
+            turbo run build --filter=@yukikaze/playlist-service && turbo run build --filter=@yukikaze/gateway-service && turbo run build --filter=@yukikaze/home-service && turbo run build --filter=@yukikaze/song-service && turbo run build --filter=@yukikaze/artist-service && turbo run build --filter=@yukikaze/banner-service && turbo run build --filter=@yukikaze/user-service && turbo run build --filter=@yukikaze/auth-service && turbo run build --filter=@yukikaze/genre-service
+
+            bun run build:web
 
             # Start or reload the service
             if pm2 describe "$SERVER_NAME" >/dev/null 2>&1; then

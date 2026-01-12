@@ -361,7 +361,7 @@ export class SongService {
             if (contentLength) response.setHeader('Content-Length', contentLength)
             if (acceptRanges) response.setHeader('Accept-Ranges', acceptRanges)
             if (contentRange) response.setHeader('Content-Range', contentRange)
-            response.status(206)
+            response.status(audioResponse.status)
             // Stream the response
             if (audioResponse.body) {
                 const reader = audioResponse.body.getReader()

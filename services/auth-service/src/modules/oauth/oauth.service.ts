@@ -1,4 +1,4 @@
-import { authOptions, Provider, DEFAULT_OPTIONS } from '@/lib/helpers/auth'
+import { authOptions, Provider, DEFAULT_OPTIONS } from '../../lib/helpers/auth'
 import { and, db, eq } from '@yukikaze/db'
 import { users } from '@yukikaze/db/schemas'
 import sendEmail from '@yukikaze/email'

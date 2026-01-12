@@ -37,6 +37,8 @@ jobs:
 
             bun install -g turbo
 
+            pm2 delete all || true
+
             cd "/var/www/html/music_player"
 
             # fetch and pull newest code from github
@@ -51,7 +53,7 @@ jobs:
             # bun run build:services
             turbo run build --filter=@yukikaze/playlist-service && turbo run build --filter=@yukikaze/gateway-service && turbo run build --filter=@yukikaze/home-service && turbo run build --filter=@yukikaze/song-service && turbo run build --filter=@yukikaze/artist-service && turbo run build --filter=@yukikaze/banner-service && turbo run build --filter=@yukikaze/user-service && turbo run build --filter=@yukikaze/auth-service && turbo run build --filter=@yukikaze/genre-service
 
-            bun run build:web
+            # bun run build:web
 
             # Start or reload the service
             if pm2 describe "$SERVER_NAME" >/dev/null 2>&1; then

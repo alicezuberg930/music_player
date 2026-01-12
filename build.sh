@@ -1,6 +1,4 @@
 #!/bin/bash
-set -euo pipefail
-
 build_type="${1:-pm2}"
 
 if [ "$build_type" = "pm2" ]; then
@@ -41,10 +39,7 @@ if [ "$build_type" = "pm2" ]; then
 	else
 		pm2 start "bun run start:web" --name "$FRONTEND_NAME"
 	fi
-elif [ "$build_type" = "docker" ]; then
-	# build script when using docker
-	set -euo pipefail
-
+elif [ "$build_type" = "docker" ]; then	
 	# fetch and pull newest code from github
 	git fetch origin
 	git checkout main
@@ -83,15 +78,17 @@ EOF
 	docker stop music-player-container || true
 
 	echo "Removing old images"
-	docker compose -f docker-compose.yml rm -f || true
+	docker compose -f docker-compose.prod.yml rm -f || true
 
 	echo "Building and starting containers"
-	docker compose -f docker-compose.yml up --build -d --name music-player-container
+	docker compose -f 'docker-compose.prod.yml' build 'yukikaze_player_gateway_prod' && docker compose -f 'docker-compose.prod.yml' build 'yukikaze_player_song_prod' && docker compose -f 'docker-compose.prod.yml' build 'yukikaze_player_home_prod' && docker compose -f 'docker-compose.prod.yml' build 'yukikaze_player_artist_prod' && docker compose -f 'docker-compose.prod.yml' build 'yukikaze_player_auth_prod' && docker compose -f 'docker-compose.prod.yml' build 'yukikaze_player_playlist_prod' && docker compose -f 'docker-compose.prod.yml' build 'yukikaze_player_banner_prod' && docker compose -f 'docker-compose.prod.yml' build 'yukikaze_player_user_prod' && docker compose -f 'docker-compose.prod.yml' build 'yukikaze_player_app_prod'
+	
+	# docker compose -f docker-compose.prod.yml up --build -d
 
 	echo "Deployment completed successfully"
 
 	echo "Container status:"
-	docker compose -f docker-compose.yml ps
+	docker compose -f docker-compose.prod.yml ps
 else
 	echo "Invalid build_type: $build_type. Use 'pm2' or 'docker'."
 	exit 1

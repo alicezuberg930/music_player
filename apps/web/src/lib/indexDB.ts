@@ -69,25 +69,17 @@ export const removeReactQueryClient = async () => {
 /**
  * Save audio file from URL to IndexedDB
  * @param songId - Unique identifier for the song
- * @param url - URL to fetch the audio file from
- * @returns Promise<boolean> - true if saved successfully
+ * @param audioBlob - Blob of the audio file
+ * @returns Promise<void>
  */
-export const saveAudioToCache = async (songId: string, url: string): Promise<boolean> => {
-    try {
-        const response = await fetch(url)
-        if (!response.ok) throw new Error(`Failed to fetch audio: ${response.statusText}`)
-
-        const blob = await response.blob()
-        const db = await getDB()
-
-        await db.put(AUDIO_FILES_STORE, { songId, blob, url, cachedAt: Date.now() }, songId)
-
-        console.log(`Audio cached successfully for song: ${songId}`)
-        return true
-    } catch (error) {
-        console.error(`Error caching audio for song ${songId}:`, error)
-        return false
-    }
+export const saveAudioToCache = async (songId: string, audioBlob: Blob): Promise<void> => {
+    const db = await getDB()
+    await db.put(AUDIO_FILES_STORE, {
+        songId,
+        blob: audioBlob,
+        url: '',
+        cachedAt: Date.now()
+    }, songId)
 }
 
 /**
@@ -96,36 +88,20 @@ export const saveAudioToCache = async (songId: string, url: string): Promise<boo
  * @returns Promise<boolean> - true if exists
  */
 export const isAudioCached = async (songId: string): Promise<boolean> => {
-    try {
-        const db = await getDB()
-        const data = await db.get(AUDIO_FILES_STORE, songId)
-        return !!data
-    } catch (error) {
-        console.error(`Error checking cache for song ${songId}:`, error)
-        return false
-    }
+    const db = await getDB()
+    const result = await db.get(AUDIO_FILES_STORE, songId)
+    return !!result
 }
 
 /**
  * Retrieve audio file from IndexedDB cache
  * @param songId - Unique identifier for the song
- * @returns Promise<string | null> - Object URL of the cached audio or null if not found
+ * @returns Promise<Blob | null> - Object URL of the cached audio or null if not found
  */
-export const getAudioFromCache = async (songId: string): Promise<string | null> => {
-    try {
-        const db = await getDB()
-        const data = await db.get(AUDIO_FILES_STORE, songId)
-        if (data) {
-            // Create an object URL from the blob
-            const objectUrl = URL.createObjectURL(data.blob)
-            console.log(`Audio retrieved from cache for song: ${songId}`)
-            return objectUrl
-        }
-        return null
-    } catch (error) {
-        console.error(`Error retrieving audio from cache for song ${songId}:`, error)
-        return null
-    }
+export const getAudioFromCache = async (songId: string): Promise<Blob | null> => {
+    const db = await getDB()
+    const result = await db.get(AUDIO_FILES_STORE, songId)
+    return result?.blob || null
 }
 
 /**

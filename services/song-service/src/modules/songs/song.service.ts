@@ -1,6 +1,8 @@
 // lib
 import type { Request, Response } from 'express'
 import fs from 'node:fs'
+import { OutgoingHttpHeaders } from 'node:http'
+import { Readable } from 'node:stream'
 import NodeID3 from 'node-id3'
 import { cached, invalidateCache } from "@yukikaze/redis"
 // database
@@ -14,7 +16,6 @@ import { deleteFile, extractPublicId, uploadFile } from "@yukikaze/upload"
 import { createId } from "@yukikaze/lib/create-cuid"
 import { resizeImageToBuffer } from '@yukikaze/lib/image-resize'
 import { SongValidators } from '@yukikaze/validator'
-import { IncomingHttpHeaders } from 'node:http'
 
 export class SongService {
     public async getSongs(request: Request<{}, {}, {}, SongValidators.QuerySongParams>, response: Response) {
@@ -338,57 +339,37 @@ export class SongService {
     public async streamSong(request: Request<{ id: string }>, response: Response) {
         try {
             const { id } = request.params
-            const findSong = await db.query.songs.findFirst({
-                where: eq(songs.id, id),
-                columns: { stream: true }
-            })
+            const findSong = await db.query.songs.findFirst({ where: eq(songs.id, id), columns: { stream: true, size: true } })
             if (!findSong || !findSong.stream) throw new NotFoundException('Song not found')
-            // Fetch audio file from Cloudinary with range support
+
             const range = request.headers.range
-            console.log(request.headers.range)
-            // Make request to Cloudinary with range header
-            const headers: RequestInit['headers'] = {}
-            if (range) headers['Range'] = range
-            const audioResponse = await fetch(findSong.stream, { headers })
+            const chunkSize = 1000 * 1024 // 1000KB
+            const audioSize = findSong.size || 0
+            // define start and end of current chunk
+            const start = Number(range?.replace(/\D/g, ''))
+            const end = Math.min(start + chunkSize, audioSize - 1)
+            const contentLength = end - start + 1
+            let i = 0
+            // make request to Cloudinary to get file with range header
+            const audioResponse = await fetch(findSong.stream, { headers: { Range: `bytes=${start}-${end}` } })
             if (!audioResponse.ok) throw new BadRequestException('Failed to fetch audio from storage')
-            const contentType = audioResponse.headers.get('content-type') || 'audio/mpeg'
-            const contentLength = audioResponse.headers.get('content-length')
-            const acceptRanges = audioResponse.headers.get('accept-ranges')
-            const contentRange = audioResponse.headers.get('content-range')
-            console.log({ contentRange, contentLength, acceptRanges })
-            // Set response headers
-            response.setHeader('Content-Type', contentType)
-            if (contentLength) response.setHeader('Content-Length', contentLength)
-            if (acceptRanges) response.setHeader('Accept-Ranges', acceptRanges)
-            if (contentRange) response.setHeader('Content-Range', contentRange)
-            response.status(audioResponse.status)
-            // Stream the response
-            if (audioResponse.body) {
-                const reader = audioResponse.body.getReader()
-                const stream = new ReadableStream({
-                    async start(controller) {
-                        try {
-                            while (true) {
-                                const { done, value } = await reader.read()
-                                if (done) break
-                                controller.enqueue(value)
-                            }
-                            controller.close()
-                        } catch (error) {
-                            controller.error(error)
-                        }
-                    }
-                })
-                // Convert web stream to Node stream
-                const nodeStream = new Response(stream).body
-                if (nodeStream) {
-                    // @ts-ignore - Node.js types compatibility
-                    for await (const chunk of nodeStream) {
-                        response.write(chunk)
-                    }
-                }
+            console.log("fetching chunk number", ++i, "for song", id, `(${start}-${end}/${audioSize})`)
+
+            const headers: OutgoingHttpHeaders = {
+                'Content-Range': `bytes ${start}-${end}/${audioSize}`,
+                'Accept-Ranges': 'bytes',
+                'Content-Length': contentLength.toString(),
+                'Content-Type': 'audio/mpeg',
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
             }
-            response.end()
+            response.writeHead(206, headers)
+
+            const stream = audioResponse.body
+            if (stream) {
+                const nodeStream = Readable.fromWeb(stream)
+                nodeStream.pipe(response)
+            }
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)

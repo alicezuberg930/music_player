@@ -9,7 +9,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@yukikaze/ui/tooltip'
 import { Ellipsis, Heart, MicVocal, MusicIcon, PauseCircle, PlayCircle, Repeat, Repeat1, Shuffle, SkipBack, SkipForward, Volume1, Volume2, VolumeX } from '@yukikaze/ui/icons'
 // utils
 import { formatDuration } from '@/lib/utils'
-import { getAudioFromCache, isAudioCached, saveAudioToCache } from '@/lib/indexDB'
 // redux
 import { setCurrentSong, setIsPlaying } from '@/redux/slices/music'
 import { setShowSidebarRight } from '@/redux/slices/app'
@@ -174,28 +173,20 @@ const Player: React.FC = () => {
     const initializePlayer = async () => {
         dispatch(setIsPlaying(false))
         if (currentSong?.id) {
+            audioRef.current = null
             currentTimeRef.current!.innerText = '00:00'
             thumbRef.current!.style.cssText = `right: 100%`
             setIsLoadingAudio(true)
-            // Use streaming endpoint URL instead of direct Cloudinary URL
+
+            // Use streaming endpoint with HTTP caching
             const streamingUrl = `${import.meta.env.VITE_API_URL}/songs/stream/${currentSong.id}`
-            // Check if audio is cached
-            const isCached = await isAudioCached(currentSong.id)
-            let audioUrl: string | null = null
-            if (isCached) {
-                audioUrl = await getAudioFromCache(currentSong.id)
-            } else {
-                audioUrl = streamingUrl
-                // Optionally cache in background (non-blocking)
-                saveAudioToCache(currentSong.id, streamingUrl).catch(err => console.log('Background caching failed:', err))
-            }
-            if (audioUrl) {
-                audioRef.current = new Audio(audioUrl)
-                audioRef.current.load()
-                audioRef.current.volume = (volume / 100)
-                audioRef.current.oncanplaythrough = onCanPlayThrough
-                updatePlayerUI()
-            }
+            console.log(`Streaming with HTTP cache: ${currentSong.title}`)
+
+            audioRef.current = new Audio(streamingUrl)
+            audioRef.current.load()
+            audioRef.current.volume = (volume / 100)
+            audioRef.current.oncanplaythrough = onCanPlayThrough
+            updatePlayerUI()
         }
     }
 

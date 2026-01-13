@@ -349,11 +349,11 @@ export class SongService {
             const start = Number(range?.replace(/\D/g, ''))
             const end = Math.min(start + chunkSize, audioSize - 1)
             const contentLength = end - start + 1
-            let i = 0
+
             // make request to Cloudinary to get file with range header
             const audioResponse = await fetch(findSong.stream, { headers: { Range: `bytes=${start}-${end}` } })
             if (!audioResponse.ok) throw new BadRequestException('Failed to fetch audio from storage')
-            console.log("fetching chunk number", ++i, "for song", id, `(${start}-${end}/${audioSize})`)
+            console.log(`fetching chunk for song`, id, `(${start}-${end}/${audioSize})`)
 
             const headers: OutgoingHttpHeaders = {
                 'Content-Range': `bytes ${start}-${end}/${audioSize}`,

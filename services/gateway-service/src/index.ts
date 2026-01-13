@@ -28,12 +28,13 @@ const allowedOrigins = new Set([
 
 const skipCorsForPaths = [
     /^\/api\/v1\/auth\/callback\/.+/,
-    /^\/api\/v1\/auth\/provider\/.+/
+    /^\/api\/v1\/auth\/provider\/.+/,
+    /^\/api\/v1\/songs\/stream\/.+/,
 ]
 
 // setup cors 
 app.use((req, res, next) => {
-    // Skip CORS for OAuth provider routes (they handle redirects)
+    // Skip CORS for OAuth provider routes (they handle redirects) and song streaming
     if (skipCorsForPaths.some((pattern) => pattern.test(req.path))) {
         return next()
     }

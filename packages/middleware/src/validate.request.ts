@@ -11,14 +11,15 @@ import { ZodObject, ZodError } from "zod"
 
 export const validateRequest = (schema: ZodObject) => async (req: Request, res: Response, next: NextFunction) => {
     try {
-        // req.body = Object.fromEntries(Object.entries(req.body).filter(([_, v]) => v != null));
         const parsedData = { ...req.body, ...req.query, ...req.params }
         const arrayFields = ['artistIds', 'genreIds']
         for (const field of arrayFields) {
             if (typeof parsedData[field] === 'string') {
                 try {
+                    req.body[field] = JSON.parse(parsedData[field]);
                     parsedData[field] = JSON.parse(parsedData[field]);
                 } catch {
+                    req.body[field] = parsedData[field].split(',').map((v: string) => v.trim());
                     parsedData[field] = parsedData[field].split(',').map((v: string) => v.trim());
                 }
             }
@@ -46,9 +47,7 @@ export const validateRequest = (schema: ZodObject) => async (req: Request, res: 
             //message is what we have set as error message in our ZodSchema
             //Used https://github.com/colinhacks/zod/discussions/3217 as reference
             return res.status(422).send({
-                errors: error.issues.map((error) => ({
-                    field: error.path[1], message: error.message
-                }))
+                message: error.issues.map((error) => (error.message)),
             })
             //Example of response from above return statement
             // {

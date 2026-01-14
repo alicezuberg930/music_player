@@ -7,6 +7,8 @@ if [ "$build_type" = "pm2" ]; then
 	git checkout main
 	git pull
 
+	pm2 delete all || true
+
 	# build script when not using docker
 	# Load Bun
 	export BUN_INSTALL="$HOME/.bun"

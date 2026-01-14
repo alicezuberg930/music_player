@@ -112,7 +112,6 @@ export class SongService {
             // extract metadata from audio file
             const { parseFile } = await import('music-metadata')
             const metadata = await parseFile(audioFile.path)
-            // let metadata = await esmMusicMetadata().then(m => m.parseFile(audioFile.path))
             if (lyricsFile) {
                 lyricsUrl = (await uploadFile({ files: lyricsFile, subFolder: '/lyrics', publicId: createId() })) as string
             }

@@ -208,8 +208,8 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
   // Set up automatic token refresh every 30 minutes  
   useEffect(() => {
     if (state.isAuthenticated) {
-      // 30 minutes in milliseconds
-      const REFRESH_INTERVAL = 30 * 60 * 1000
+      // 29 minutes in milliseconds
+      const REFRESH_INTERVAL = 29 * 60 * 1000
       // Check when the last refresh happened
       const now = Date.now()
       let timeUntilNextRefresh = REFRESH_INTERVAL
@@ -217,7 +217,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
       if (lastTokenRefresh) {
         const timeSinceLastRefresh = now - lastTokenRefresh
         timeUntilNextRefresh = Math.max(REFRESH_INTERVAL - timeSinceLastRefresh, 0)
-        // If it's been more than 30 minutes, refresh immediately
+        // If it's been more than 29 minutes, refresh immediately
         if (timeSinceLastRefresh >= REFRESH_INTERVAL) {
           refreshToken()
           timeUntilNextRefresh = REFRESH_INTERVAL

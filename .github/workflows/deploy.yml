@@ -24,7 +24,7 @@ jobs:
           script: |
             set -euo pipefail
             cd "/var/www/html/music_player"
-            bash ./deploy.sh pm2
+            bash ./build.sh pm2
 
             # Load Bun 
             # export BUN_INSTALL="$HOME/.bun"

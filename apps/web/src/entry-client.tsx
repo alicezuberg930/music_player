@@ -12,6 +12,8 @@ import { AuthProvider } from './lib/auth/AuthProvider.tsx'
 // react query provider with persistence
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { getQueryClient, createIDBPersister } from './lib/queryClient.ts'
+// theme provider
+import { ThemeProvider } from '@yukikaze/ui'
 // 
 import { StrictMode } from 'react'
 import { hydrateRoot } from 'react-dom/client'
@@ -27,17 +29,24 @@ hydrateRoot(document.getElementById('root') as HTMLElement,
         maxAge: 1000 * 60 * 60 * 1, // 1 hours
       }}
     >
-      <SnackbarProvider>
-        <ReduxProvider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
-            <BrowserRouter>
-              <AuthProvider>
-                <App />
-              </AuthProvider>
-            </BrowserRouter>
-          </PersistGate>
-        </ReduxProvider>
-      </SnackbarProvider>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="default"
+        themes={['default', 'red', 'blue', 'green']}
+        disableTransitionOnChange
+      >
+        <SnackbarProvider>
+          <ReduxProvider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+              <BrowserRouter>
+                <AuthProvider>
+                  <App />
+                </AuthProvider>
+              </BrowserRouter>
+            </PersistGate>
+          </ReduxProvider>
+        </SnackbarProvider>
+      </ThemeProvider>
     </PersistQueryClientProvider>
   </StrictMode>
 )

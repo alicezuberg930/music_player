@@ -16,7 +16,7 @@ const SidebarLeft: React.FC = () => {
     const [open, setOpen] = useState(false)
 
     return (
-        <aside className="sm:block hidden lg:w-48 w-20 flex-none border bg-main-200 transition-all duration-500 ease-in-out">
+        <aside className="sm:block hidden lg:w-48 w-20 flex-none border text-sidebar-foreground transition-all duration-500 ease-in-out bg-sidebar">
             <div className="h-full flex flex-col relative">
                 <div className="w-full my-5 flex justify-center items-center">
                     <img src='/favicon.ico' alt="logo" className="h-12 w-12 object-cover" />
@@ -30,8 +30,8 @@ const SidebarLeft: React.FC = () => {
                             <NavLink
                                 to={value.path} key={value.path}
                                 className={({ isActive }) => cn(
-                                    'text-gray-500 text-sm px-6 py-2 font-bold flex gap-3 justify-start items-center',
-                                    isActive && 'text-[#0F7070] bg-main-400',
+                                    'text-sm px-6 py-2 font-bold flex gap-3 justify-start items-center ring-sidebar-ring [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                                    isActive && 'bg-sidebar-accent text-sidebar-accent-foreground font-medium',
                                 )}
                             >
                                 {value.icon}

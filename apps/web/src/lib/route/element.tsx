@@ -23,3 +23,4 @@ export const UploadMusicPage = Loadable(lazy(() => import('@/pages/UploadMusicPa
 export const MyMusicPage = Loadable(lazy(() => import('@/pages/MyMusicPage')));
 export const VerifyPage = Loadable(lazy(() => import('@/pages/VerifyPage')));
 export const AddArtistPage = Loadable(lazy(() => import('@/pages/AddArtistPage')));
+export const Page404 = Loadable(lazy(() => import('@/pages/Page404')));

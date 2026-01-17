@@ -1,4 +1,5 @@
 const vi = {
+  'switch_theme': 'Chuyển đổi chủ đề',
   'created': 'Đã tạo',
   'uploaded': 'Đã tải lên',
   'favorite': 'Yêu thích',

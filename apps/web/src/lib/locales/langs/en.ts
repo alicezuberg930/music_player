@@ -1,4 +1,5 @@
 const en = {
+    'switch_theme': 'Switch Theme',
     'created': 'Created',
     'uploaded': 'Uploaded',
     'favorite': 'Favorite',

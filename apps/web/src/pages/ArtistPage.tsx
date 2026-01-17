@@ -57,7 +57,7 @@ const ArtistPage = () => {
                                 <span className='text-sm text-gray-300'>
                                     {(+(artist?.totalFollow ?? 0)).toLocaleString()} người quan tâm
                                 </span>
-                                <Button className='bg-main-500 text-white px-4 py-2 text-sm rounded-full flex items-center justify-center gap-1' aria-label="Follow artist">
+                                <Button className='bg-primary text-white px-4 py-2 text-sm rounded-full flex items-center justify-center gap-1' aria-label="Follow artist">
                                     <UserPlus />
                                     <span className='text-xs'>QUAN TÂM</span>
                                 </Button>

@@ -259,7 +259,7 @@ const Player: React.FC = () => {
     }, [isPlaying])
 
     return (
-        <div className={`fixed w-full z-20 h-24 content-center bg-main-400 select-none border-t border-main-500/20 shadow-up`}>
+        <div className={`fixed w-full z-20 h-24 content-center bg-background select-none border-t shadow-up`}>
             <div className='flex justify-between px-4'>
                 <div className='flex-1 items-center gap-4 hidden md:flex'>
                     <LazyLoadImage src={currentSong?.thumbnail} effect='blur' alt='thumbnail' className='w-16 h-16 object-cover' />
@@ -369,7 +369,7 @@ const Player: React.FC = () => {
                             ref={trackRef}
                             aria-label="Seek audio"
                         >
-                            <div ref={thumbRef} className='absolute top-0 left-0 bottom-0 h-full bg-main-500 rounded-full'></div>
+                            <div ref={thumbRef} className='absolute top-0 left-0 bottom-0 h-full bg-primary rounded-full'></div>
                         </button>
                         <Typography className='font-semibold text-gray-700 m-0'>{formatDuration(currentSong?.duration ?? 0)}</Typography>
                     </div>

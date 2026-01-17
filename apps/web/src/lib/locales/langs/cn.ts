@@ -1,4 +1,5 @@
 const cn = {
+  'switch_theme': '切换主题',
   'created': '已创建',
   'uploaded': '已上传',
   'favorite': '收藏',

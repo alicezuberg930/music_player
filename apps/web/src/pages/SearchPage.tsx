@@ -16,7 +16,7 @@ const SearchPage = () => {
                             key={menu.path} to={{ pathname: menu.path, search: `q=${q}` }}
                             className={({ isActive }) => cn(
                                 'px-4 hover:text-main-500 font-semibold cursor-pointer h-full relative content-center',
-                                isActive && 'text-main-500 after:absolute after:top-full after:left-0 after:w-full after:h-0.5 bg-main-400 after:bg-main-500'
+                                isActive && 'text-main-500 after:absolute after:top-full after:left-0 after:w-full after:h-0.5 bg-main-400 after:bg-primary'
                             )}
                         >
                             <Typography className='text-gray-600 font-bold m-0' variant={'caption'}>

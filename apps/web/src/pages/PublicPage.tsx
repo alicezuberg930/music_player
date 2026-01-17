@@ -20,11 +20,11 @@ const PublicPage: React.FC = () => {
     }
 
     return (
-        <div className={`w-full bg-main-300 ${currentSong ? 'h-[calc(100vh-96px)]' : 'h-screen'}`}>
+        <div className={`w-full bg-background  ${currentSong ? 'h-[calc(100vh-96px)]' : 'h-screen'}`}>
             <div className="w-full h-full flex">
                 <SidebarLeft />
                 <div className="flex-1 flex flex-col relative">
-                    <header className={`fixed top-0 right-0 left-0 z-4 transition-all duration-500 ease-in-out sm:left-20 lg:left-48 flex-none px-4 md:px-8 ${showSideBarRight && 'xl:right-[330px]'} ${scrollTop ? 'bg-main-500 backdrop-blur-xl' : 'bg-main-400 backdrop-blur-xl'}`}>
+                    <header className={`fixed top-0 right-0 left-0 z-4 transition-all duration-500 ease-in-out sm:left-20 lg:left-48 flex-none px-4 md:px-8 ${showSideBarRight && 'xl:right-[330px]'} ${scrollTop ? 'bg-primary' : 'bg-primary/80'} border-b shadow-down`}>
                         <Header />
                     </header>
                     <main className={`px-4 md:px-8 mt-14 pb-12 flex-auto overflow-y-scroll scroll-smooth transition-all duration-600 ease-in-out ${showSideBarRight && 'xl:mr-[330px] mr-0'}`} onScroll={handleScrollTop}>

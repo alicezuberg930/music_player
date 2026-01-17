@@ -5,8 +5,12 @@ import {
     DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
+    DropdownMenuPortal,
     DropdownMenuSeparator,
     DropdownMenuShortcut,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "@yukikaze/ui/dropdown-menu"
 import { useAuthContext } from "@/lib/auth/useAuthContext"
@@ -14,10 +18,12 @@ import { useLocales } from "@/lib/locales"
 import { paths } from "@/lib/route/paths"
 import { LogOut, Settings, Spotlight, Upload, User } from '@yukikaze/ui/icons'
 import { Link } from "react-router-dom"
+import { useTheme } from "@yukikaze/ui"
 
 const UserDropdown: React.FC = () => {
     const { user, signout } = useAuthContext()
     const { translate } = useLocales()
+    const { setTheme, themes } = useTheme()
 
     return (
         <DropdownMenu>
@@ -57,27 +63,20 @@ const UserDropdown: React.FC = () => {
                             <Spotlight />
                         </DropdownMenuShortcut>
                     </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                {/* <DropdownMenuGroup>
-                    <DropdownMenuItem>Team</DropdownMenuItem>
                     <DropdownMenuSub>
-                        <DropdownMenuSubTrigger>Invite users</DropdownMenuSubTrigger>
+                        <DropdownMenuSubTrigger>{translate('switch_theme')}</DropdownMenuSubTrigger>
                         <DropdownMenuPortal>
                             <DropdownMenuSubContent>
-                                <DropdownMenuItem>Email</DropdownMenuItem>
-                                <DropdownMenuItem>Message</DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem>More...</DropdownMenuItem>
+                                {themes.map((t) => (
+                                    <DropdownMenuItem key={t} onClick={() => setTheme(t)}>
+                                        {t}
+                                    </DropdownMenuItem>
+                                ))}
                             </DropdownMenuSubContent>
                         </DropdownMenuPortal>
                     </DropdownMenuSub>
-                    <DropdownMenuItem>
-                        New Team
-                        <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                </DropdownMenuGroup> */}
-                {/* <DropdownMenuSeparator /> */}
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
                 {/* <DropdownMenuItem>GitHub</DropdownMenuItem> */}
                 {/* <DropdownMenuItem>Support</DropdownMenuItem> */}
                 {/* <DropdownMenuItem disabled>API</DropdownMenuItem> */}

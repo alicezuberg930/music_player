@@ -39,7 +39,7 @@ const SongCard: React.FC<Props> = ({ song, playlistTitle, hideAlbum, order }) =>
     }
 
     return (
-        <div onClick={handleSongClick} className="flex justify-between items-center p-2 border-t border-[#0000000d] hover:bg-main-200 cursor-pointer">
+        <div onClick={handleSongClick} className="flex justify-between items-center p-2 border-t border-[#0000000d] hover:bg-sidebar-accent cursor-pointer">
             <div className="flex w-[45%] items-center justify-start gap-2">
                 {order && (
                     <div className={`w-1/12 flex justify-center text-3xl px-1 text-[#33104cf2] ${orderCss}`}>
@@ -66,7 +66,7 @@ const SongCard: React.FC<Props> = ({ song, playlistTitle, hideAlbum, order }) =>
             )}
             <div className="flex gap-5 w-[10%] justify-end text-xs font-semibold text-gray-600">
                 <HeartIcon
-                    className={`${song.liked && 'fill-main-500'} stroke-main-500`}
+                    className={`${song.liked && 'fill-primary/80'} stroke-primary/80`}
                     onClick={handleFavorite} size={16}
                     aria-label='like/unlike song'
                 />

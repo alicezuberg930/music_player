@@ -150,7 +150,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
     try {
       await signOut()
       dispatch({ type: Types.LOGOUT })
-      navigate('/', { replace: true })
+      navigate(paths.HOME, { replace: true })
       dispatchRedux(setLastTokenRefresh(null))
     } catch (error) {
       enqueueSnackbar(error instanceof Error ? error.message : translate('unknown_error'), { variant: 'error' })
@@ -171,7 +171,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
       console.error('Failed to refresh token:', error)
       // If refresh fails, log out the user
       dispatch({ type: Types.LOGOUT })
-      navigate('/', { replace: true })
+      navigate(paths.HOME, { replace: true })
     } finally {
       isRefreshing.current = false
     }
@@ -196,7 +196,6 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
             return Promise.reject(refreshError)
           }
         }
-
         return Promise.reject(error)
       }
     )

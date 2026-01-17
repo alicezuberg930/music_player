@@ -1,4 +1,5 @@
 const fr = {
+  'switch_theme': 'Changer de thème',
   'created': 'Créé',
   'uploaded': 'Téléchargé',
   'favorite': 'Favori',

@@ -60,7 +60,7 @@ const SongItem: React.FC<Props> = ({ song, order, percent, imgSize, style, showT
     }
 
     return (
-        <div className={`${style || 'text-black hover:bg-main-200'} w-full p-2 h-auto rounded-md cursor-pointer`} onClick={handlePlay}>
+        <div className={`${style || 'text-black hover:bg-sidebar-accent'} w-full p-2 h-auto rounded-md cursor-pointer`} onClick={handlePlay}>
             <div className='flex items-center gap-2 group'>
                 {order && (
                     <span className={`text-3xl px-1 text-[#33104cf2] ${textColor()}`}>
@@ -86,7 +86,7 @@ const SongItem: React.FC<Props> = ({ song, order, percent, imgSize, style, showT
                 {!percent && (
                     <>
                         <HeartIcon
-                            className={`group-hover:opacity-100 opacity-0 stroke-main-500 ${song.liked && 'fill-main-500'}`}
+                            className={`group-hover:opacity-100 opacity-0 stroke-primary/80 ${song.liked && 'fill-primary/80'}`}
                             onClick={handleFavorite}
                             aria-label='like/unlike song'
                         />

@@ -28,9 +28,9 @@ const PlaylistCard: React.FC<Props> = ({ playlist, sectionId, isSearch, visibleS
             className={`flex flex-col gap-3 cursor-pointer px-3 ${isSearch ? 'mb-5' : ''}`}
             style={{ width: `${100 / visibleSlides}%`, flex: '0 0 auto' }}
         >
-            <div className="relative w-full group overflow-hidden rounded-lg bg-main-200 aspect-square">
+            <div className="relative w-full group overflow-hidden rounded-lg aspect-square">
                 <div className="z-1 text-white absolute w-full h-full gap-3 bg-overlay invisible group-hover:visible flex items-center justify-center">
-                    <Heart onClick={handleFavorite} className={`${playlist.liked && 'fill-main-500 stroke-main-500'}`} />
+                    <Heart onClick={handleFavorite} className={`${playlist.liked && 'fill-primary/80 stroke-primary/80'}`} />
                     <Link to={`/playlist/${playlist.id}`} state={{ playAlbum: true }} aria-label={`Play ${playlist.title}`}>
                         <PlayCircle size={56} />
                     </Link>

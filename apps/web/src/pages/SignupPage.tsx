@@ -8,6 +8,7 @@ import { Field, FieldGroup } from '@yukikaze/ui/field'
 import { AuthValidators } from "@yukikaze/validator"
 import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@yukikaze/ui/dialog'
 import { useLocales } from '@/lib/locales'
+import { Spinner } from '@yukikaze/ui/spinner'
 
 const SignupPage: React.FC = () => {
     const { signup } = useAuthContext()
@@ -25,7 +26,7 @@ const SignupPage: React.FC = () => {
         defaultValues,
     })
 
-    const { handleSubmit } = methods
+    const { handleSubmit, formState: { isSubmitting } } = methods
 
     const onSubmit = async (data: AuthValidators.RegisterInput) => {
         await signup(data)
@@ -58,7 +59,9 @@ const SignupPage: React.FC = () => {
                                 Reset
                             </Button>
                         </DialogClose>
-                        <Button type="submit" className="flex-auto">Submit</Button>
+                        <Button type="submit" className="flex-auto" disabled={isSubmitting}>
+                            {isSubmitting ? <Spinner className='size-6' /> : <>{translate('signup')}</>}
+                        </Button>
                     </Field>
                 </Field>
             </DialogFooter>

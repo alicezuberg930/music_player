@@ -195,7 +195,7 @@ const Player: React.FC = () => {
     // initialize player when current song changes and update player UI
     useEffect(() => {
         initializePlayer()
-        addSongListen(currentSong?.id!)
+        if (currentSong) addSongListen(currentSong.id)
         // Cleanup function runs when song changes or component unmounts
         return () => {
             if (audioRef.current) {

@@ -13,28 +13,19 @@ import {
 import { useLocales } from "@/lib/locales"
 import { Heart, ListFilterPlusIcon, ListMusic, Plus } from '@yukikaze/ui/icons'
 import CreateNewPlaylistDialog from "./me/CreateNewPlaylist"
-import { useEffect, useState } from "react"
-import { fetchUserPlaylistList } from "@/lib/httpClient"
+import { useState } from "react"
 import { type Playlist } from "@/@types/playlist"
 import { Dialog, DialogTrigger } from "@yukikaze/ui/dialog"
 
 type Props = {
     addToPlaylist: (playlistId: string) => void
     triggerElement: React.ReactNode
+    playlists?: Playlist[]
 }
 
-const SongOptionDropdown: React.FC<Props> = ({ addToPlaylist, triggerElement }) => {
+const SongOptionDropdown: React.FC<Props> = ({ addToPlaylist, triggerElement, playlists }) => {
     const { translate } = useLocales()
-    const [playlists, setPlaylists] = useState<Playlist[]>([])
     const [open, setOpen] = useState(false)
-
-    useEffect(() => {
-        const fetchPlaylist = async () => {
-            const response = await fetchUserPlaylistList('created')
-            setPlaylists(response.data ?? [])
-        }
-        fetchPlaylist()
-    }, [])
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -68,7 +59,7 @@ const SongOptionDropdown: React.FC<Props> = ({ addToPlaylist, triggerElement }) 
                                             {translate('create_playlist')}
                                         </DropdownMenuItem>
                                     </DialogTrigger>
-                                    {playlists.map(playlist => (
+                                    {playlists && playlists.map(playlist => (
                                         <DropdownMenuItem key={playlist.id} onClick={() => addToPlaylist(playlist.id)} >
                                             <ListMusic />
                                             {playlist.title}

@@ -3,8 +3,6 @@ import { createContext, useEffect, useReducer, useCallback, useMemo, useRef } fr
 import { useQuery } from '@tanstack/react-query'
 // types
 import type { ActionMapType, AuthStateType, AuthUser, JWTContextType } from './types'
-// components
-import { useSnackbar } from '@/components/snackbar'
 // http requests
 import { fetchProfile, signIn, signOut, signUp } from '../httpClient'
 import { paths } from '../route/paths'
@@ -13,6 +11,7 @@ import type { AuthValidators } from '@yukikaze/validator'
 import { axios } from '../axiosConfig'
 import { useDispatch, useSelector } from '@/redux/store'
 import { setLastTokenRefresh } from '@/redux/slices/app'
+import { toast } from '@yukikaze/ui'
 
 enum Types {
   INITIAL = 'INITIAL',
@@ -80,7 +79,6 @@ export const AuthContext = createContext<JWTContextType | null>(null)
 export function AuthProvider({ children }: Readonly<{ children: React.ReactNode }>) {
   const [state, dispatch] = useReducer(reducer, initialState)
   const navigate = useNavigate()
-  const { enqueueSnackbar } = useSnackbar()
   const { translate } = useLocales()
   const isRefreshing = useRef<boolean>(false)
   const refreshTimerRef = useRef<number | null>(null)
@@ -110,7 +108,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
       const response = await signIn(data)
       if (response.statusCode === 200) {
         navigate(paths.HOME, { replace: true })
-        enqueueSnackbar(response.message, { variant: 'success' })
+        toast.success(response.message)
         dispatch({
           type: Types.LOGIN,
           payload: {
@@ -119,12 +117,12 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
         })
       }
       else {
-        enqueueSnackbar(translate(response.message), { variant: 'error' })
+        toast.error(translate(response.message))
       }
     } catch (error) {
-      enqueueSnackbar(error instanceof Error ? error.message : translate('unknown_error'), { variant: 'error' })
+      toast.error(translate(error instanceof Error ? error.message : translate('unknown_error')))
     }
-  }, [navigate, enqueueSnackbar, translate])
+  }, [navigate, translate])
 
   const signup = useCallback(async (data: AuthValidators.RegisterInput) => {
     try {
@@ -136,15 +134,15 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
             user: response.data as AuthUser
           },
         })
-        enqueueSnackbar(response.message)
+        toast.success(response.message)
         navigate('/', { replace: true })
       } else {
-        enqueueSnackbar(translate(response.message), { variant: 'error' })
+        toast.error(translate(response.message))
       }
     } catch (error) {
-      enqueueSnackbar(error instanceof Error ? error.message : translate('unknown_error'), { variant: 'error' })
+      toast.error(error instanceof Error ? error.message : translate('unknown_error'))
     }
-  }, [navigate, enqueueSnackbar, translate])
+  }, [navigate, translate])
 
   const signout = useCallback(async () => {
     try {
@@ -153,9 +151,9 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
       navigate(paths.HOME, { replace: true })
       dispatchRedux(setLastTokenRefresh(null))
     } catch (error) {
-      enqueueSnackbar(error instanceof Error ? error.message : translate('unknown_error'), { variant: 'error' })
+      toast.error(error instanceof Error ? error.message : translate('unknown_error'))
     }
-  }, [navigate, enqueueSnackbar, translate])
+  }, [navigate, translate])
 
   const refreshToken = useCallback(async () => {
     if (isRefreshing.current) return

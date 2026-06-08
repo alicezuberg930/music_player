@@ -5,8 +5,6 @@ import './lib/locales/i18n.ts'
 import { Provider as ReduxProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistor, store } from './redux/store.ts'
-// snackbar provider
-import SnackbarProvider from './components/snackbar/SnackbarProvider.tsx'
 // authentication provider
 import { AuthProvider } from './lib/auth/AuthProvider.tsx'
 // react query provider with persistence
@@ -14,6 +12,8 @@ import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client
 import { getQueryClient, createIDBPersister } from './lib/queryClient.ts'
 // theme provider
 import { ThemeProvider } from '@yukikaze/ui'
+// snackbar
+import { Toaster } from '@yukikaze/ui/sonner'
 // 
 import { StrictMode } from 'react'
 import { hydrateRoot } from 'react-dom/client'
@@ -35,17 +35,16 @@ hydrateRoot(document.getElementById('root') as HTMLElement,
         themes={['default', 'red', 'blue', 'green']}
         disableTransitionOnChange
       >
-        <SnackbarProvider>
-          <ReduxProvider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-              <BrowserRouter>
-                <AuthProvider>
-                  <App />
-                </AuthProvider>
-              </BrowserRouter>
-            </PersistGate>
-          </ReduxProvider>
-        </SnackbarProvider>
+        <ReduxProvider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <BrowserRouter>
+              <AuthProvider>
+                <App />
+                <Toaster />
+              </AuthProvider>
+            </BrowserRouter>
+          </PersistGate>
+        </ReduxProvider>
       </ThemeProvider>
     </PersistQueryClientProvider>
   </StrictMode>

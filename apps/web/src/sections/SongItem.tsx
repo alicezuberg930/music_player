@@ -1,4 +1,5 @@
 import type { Song } from '@/@types/song'
+import type { Playlist } from '@/@types/playlist'
 import { addRecentSong, setCurrentSong } from '@/redux/slices/music'
 import { memo, type MouseEvent } from 'react'
 import { useDispatch } from 'react-redux'
@@ -6,15 +7,16 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { HeartIcon, MoreHorizontalIcon } from '@yukikaze/ui/icons'
 import { addSongsToPlaylist } from '@/lib/httpClient'
-import { useSnackbar } from '@/components/snackbar'
 import SongOptionDropdown from './SongOptionDropdown'
 import { useApi } from '@/hooks/useApi'
 import { LazyLoadImage } from '@/components/lazy-load-image'
+import { toast } from '@yukikaze/ui'
 
 dayjs.extend(relativeTime)
 
 type Props = {
     song: Song
+    playlists?: Playlist[]
     order?: number
     percent?: number
     imgSize?: 'sm' | 'md' | 'lg' | 'xl'
@@ -22,9 +24,8 @@ type Props = {
     showTime?: boolean
 }
 
-const SongItem: React.FC<Props> = ({ song, order, percent, imgSize, style, showTime }) => {
+const SongItem: React.FC<Props> = ({ song, playlists, order, percent, imgSize, style, showTime }) => {
     const dispatch = useDispatch()
-    const { enqueueSnackbar } = useSnackbar()
     const toggleFavoriteSongMutation = useApi().useToggleFavoriteSong()
     const imageSizeCss = () => {
         if (imgSize === 'xl') return 'w-20 h-20'
@@ -48,9 +49,9 @@ const SongItem: React.FC<Props> = ({ song, order, percent, imgSize, style, showT
     const addToPlaylist = async (playlistId: string) => {
         const response = await addSongsToPlaylist(playlistId, [song.id])
         if (response.statusCode === 200) {
-            enqueueSnackbar(response.message, { variant: 'success' })
+            toast.success(response.message)
         } else {
-            enqueueSnackbar(response.message, { variant: 'error' })
+            toast.error(response.message)
         }
     }
 
@@ -93,6 +94,7 @@ const SongItem: React.FC<Props> = ({ song, order, percent, imgSize, style, showT
                         <button onClick={(e) => e.stopPropagation()} className='group-hover:opacity-100 opacity-0' aria-label="More song options">
                             <SongOptionDropdown
                                 triggerElement={<MoreHorizontalIcon aria-label='More song options' />}
+                                playlists={playlists}
                                 addToPlaylist={(playlistId) => addToPlaylist(playlistId)}
                             />
                         </button>

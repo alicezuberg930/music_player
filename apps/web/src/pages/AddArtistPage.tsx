@@ -86,7 +86,7 @@ const AddArtistPage: React.FC = () => {
             setError('thumbnail', { type: 'manual', message: translate('thumbnail_must_be_square') })
         }
     }, [setValue, setError, translate])
-    console.log(isSubmitting)
+
     return (
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <div className='flex flex-col md:flex-row gap-6 mt-6'>

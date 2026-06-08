@@ -11,15 +11,13 @@
     "start": "bun --env-file=../../.env server.js"
   },
   "dependencies": {
-    "zod": "4.2.1",
-    "@yukikaze/validator": "workspace:*",
-    "@tailwindcss/vite": "catalog:tailwind",
-    "@yukikaze/ui": "workspace:*",
-    "redux": "^5.0.1",
     "@hookform/resolvers": "^5.2.2",
     "@reduxjs/toolkit": "^2.10.1",
+    "@tailwindcss/vite": "catalog:tailwind",
     "@tanstack/react-query": "^5.90.11",
     "@tanstack/react-query-persist-client": "^5.90.14",
+    "@yukikaze/ui": "workspace:*",
+    "@yukikaze/validator": "workspace:*",
     "axios": "^1.13.2",
     "compression": "^1.8.1",
     "dayjs": "^1.11.19",
@@ -28,7 +26,6 @@
     "framer-motion": "^11.11.12",
     "i18next": "^25.7.1",
     "idb": "^8.0.3",
-    "notistack": "^3.0.2",
     "react": "catalog:react",
     "react-day-picker": "^9.11.1",
     "react-dom": "catalog:react",
@@ -38,10 +35,12 @@
     "react-lrc": "^3.2.1",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.9.6",
+    "recharts": "^3.6.0",
+    "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^3.1.0",
     "vite-plugin-sitemap": "^0.8.2",
-    "recharts": "^3.6.0"
+    "zod": "4.2.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",

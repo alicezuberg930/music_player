@@ -4,6 +4,7 @@ import type { Song } from "@/@types/song"
 import { Button } from "@yukikaze/ui/button"
 import { Typography } from "@yukikaze/ui/typography"
 import { useLocales } from "@/lib/locales"
+import { useFetchUserPlaylists } from "@/hooks/useFetchUserPlaylists"
 
 type Props = {
     songs: Song[]
@@ -12,6 +13,7 @@ type Props = {
 const NewReleaseListSection: React.FC<Props> = ({ songs }) => {
     const [type, setType] = useState(-1)
     const { translate } = useLocales()
+    const { playlists } = useFetchUserPlaylists('created')
 
     const memoizedSongs = useMemo(() => {
         if (type === -1) return songs //all
@@ -42,7 +44,7 @@ const NewReleaseListSection: React.FC<Props> = ({ songs }) => {
                     {[0, 1, 2].map((col) => (
                         <div key={col} className="w-full md:w-1/2 xl:w-1/3">
                             {memoizedSongs.slice(col * 3, (col + 1) * 3).map(item => (
-                                <SongItem key={item.id} song={item} imgSize="lg" showTime={true} />
+                                <SongItem key={item.id} song={item} playlists={playlists} imgSize="lg" showTime={true} />
                             ))}
                         </div>
                     ))}

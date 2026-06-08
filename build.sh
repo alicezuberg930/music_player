@@ -25,7 +25,7 @@ if [ "$build_type" = "pm2" ]; then
 
 	# 3. Build services
 	# bun run build:services
-	turbo run build --filter=@yukikaze/playlist-service && turbo run build --filter=@yukikaze/gateway-service && turbo run build --filter=@yukikaze/home-service && turbo run build --filter=@yukikaze/song-service && turbo run build --filter=@yukikaze/artist-service && turbo run build --filter=@yukikaze/banner-service && turbo run build --filter=@yukikaze/user-service && turbo run build --filter=@yukikaze/auth-service
+	turbo run build --filter=@yukikaze/playlist-service && turbo run build --filter=@yukikaze/genre-service && turbo run build --filter=@yukikaze/gateway-service && turbo run build --filter=@yukikaze/home-service && turbo run build --filter=@yukikaze/song-service && turbo run build --filter=@yukikaze/artist-service && turbo run build --filter=@yukikaze/banner-service && turbo run build --filter=@yukikaze/user-service && turbo run build --filter=@yukikaze/auth-service
 
 	# 4. Build web
 	bun run build:web

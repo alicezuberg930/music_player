@@ -14,17 +14,16 @@ import {
     DialogTitle,
 } from "@yukikaze/ui/dialog"
 import RHFSwitch from '@/components/hook-form/RHFSwitch'
-import { useSnackbar } from '@/components/snackbar'
 import { useLocales } from '@/lib/locales'
 import { Spinner } from '@yukikaze/ui/spinner'
 import { PlaylistValidators } from '@yukikaze/validator'
+import { toast } from '@yukikaze/ui'
 
 type Props = {
     onOpenChange?: (open: boolean) => void
 }
 
 const CreateNewPlaylistDialog: React.FC<Props> = ({ onOpenChange }) => {
-    const { enqueueSnackbar } = useSnackbar()
     const { translate } = useLocales()
     const { mutateAsync: createPlaylist } = useApi().useCreatePlaylist()
 
@@ -52,10 +51,10 @@ const CreateNewPlaylistDialog: React.FC<Props> = ({ onOpenChange }) => {
             onSuccess: (response) => {
                 onOpenChange?.(false)
                 reset()
-                enqueueSnackbar(response.message, { variant: 'success' })
+                toast.success(response.message)
             },
             onError: (error) => {
-                enqueueSnackbar(translate(error.message ?? 'unknown_error'), { variant: 'error' })
+                toast.error(translate(error.message ?? 'unknown_error'))
             }
         })
     }

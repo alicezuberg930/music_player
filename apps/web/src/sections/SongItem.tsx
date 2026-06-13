@@ -1,16 +1,16 @@
-import type { Song } from '@/@types/song'
-import type { Playlist } from '@/@types/playlist'
+import type { Playlist, Song } from '@/@types'
 import { addRecentSong, setCurrentSong } from '@/redux/slices/music'
 import { memo, type MouseEvent } from 'react'
 import { useDispatch } from 'react-redux'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { HeartIcon, MoreHorizontalIcon } from '@yukikaze/ui/icons'
-import { addSongsToPlaylist } from '@/lib/httpClient'
 import SongOptionDropdown from './SongOptionDropdown'
-import { useApi } from '@/hooks/useApi'
 import { LazyLoadImage } from '@/components/lazy-load-image'
 import { toast } from '@yukikaze/ui'
+import { useMutation } from '@tanstack/react-query'
+import { userQueries } from '@/lib/queries/user'
+import { playlistQueries } from '@/lib/queries/playlist'
 
 dayjs.extend(relativeTime)
 
@@ -26,7 +26,8 @@ type Props = {
 
 const SongItem: React.FC<Props> = ({ song, playlists, order, percent, imgSize, style, showTime }) => {
     const dispatch = useDispatch()
-    const toggleFavoriteSongMutation = useApi().useToggleFavoriteSong()
+    const { mutate: favoriteSong } = useMutation(userQueries().favoriteSong.mutationOptions())
+    const { mutate: addToPlaylist } = useMutation(playlistQueries().addToPlaylist.mutationOptions())
     const imageSizeCss = () => {
         if (imgSize === 'xl') return 'w-20 h-20'
         if (imgSize == 'lg') return 'w-14 h-14'
@@ -46,18 +47,20 @@ const SongItem: React.FC<Props> = ({ song, playlists, order, percent, imgSize, s
         dispatch(setCurrentSong(song))
     }
 
-    const addToPlaylist = async (playlistId: string) => {
-        const response = await addSongsToPlaylist(playlistId, [song.id])
-        if (response.statusCode === 200) {
-            toast.success(response.message)
-        } else {
-            toast.error(response.message)
-        }
+    const handleAddToPlaylist = async (playlistId: string) => {
+        addToPlaylist({ id: playlistId, songIds: [song.id] }, {
+            onSuccess: (res) => {
+                toast.success(res.message)
+            },
+            onError: (err) => {
+                toast.error(err.message)
+            }
+        })
     }
 
     const handleFavorite = (e: MouseEvent<SVGSVGElement>) => {
         e.stopPropagation()
-        toggleFavoriteSongMutation.mutate(song.id)
+        favoriteSong(song.id)
     }
 
     return (
@@ -95,7 +98,7 @@ const SongItem: React.FC<Props> = ({ song, playlists, order, percent, imgSize, s
                             <SongOptionDropdown
                                 triggerElement={<MoreHorizontalIcon aria-label='More song options' />}
                                 playlists={playlists}
-                                addToPlaylist={(playlistId) => addToPlaylist(playlistId)}
+                                addToPlaylist={(playlistId) => handleAddToPlaylist(playlistId)}
                             />
                         </button>
                     </>

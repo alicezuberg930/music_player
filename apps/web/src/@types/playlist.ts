@@ -18,3 +18,9 @@ export type Playlist = {
     createdAt: string
     updatedAt: string
 }
+
+export type QueryPlaylist = {
+    name?: string
+    page?: number
+    limit?: number
+}

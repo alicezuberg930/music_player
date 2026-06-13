@@ -34,7 +34,7 @@ userRouter.put("/:id",
     (request: Request<{ id: string }, {}, AuthValidators.UpdateUserInput>, response: Response) => userController.updateUser(request, response)
 )
 
-userRouter.get("/verify-email/:id",
+userRouter.put("/verify-email/:id",
     (request: Request<{ id: string }, {}, {}, { token: string }>, response: Response) => userController.verifyEmail(request, response)
 )
 

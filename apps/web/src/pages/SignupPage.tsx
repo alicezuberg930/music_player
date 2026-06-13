@@ -11,7 +11,7 @@ import { useLocales } from '@/lib/locales'
 import { Spinner } from '@yukikaze/ui/spinner'
 
 const SignupPage: React.FC = () => {
-    const { signup } = useAuthContext()
+    const { signUp } = useAuthContext()
     const { translate } = useLocales()
 
     const defaultValues = useMemo(() => ({
@@ -21,16 +21,14 @@ const SignupPage: React.FC = () => {
         confirmPassword: '',
     }), [])
 
-    const methods = useForm<AuthValidators.RegisterInput>({
-        resolver: zodResolver(AuthValidators.registerInput),
+    const methods = useForm<AuthValidators.SignUpInput>({
+        resolver: zodResolver(AuthValidators.signUpInput),
         defaultValues,
     })
 
     const { handleSubmit, formState: { isSubmitting } } = methods
 
-    const onSubmit = async (data: AuthValidators.RegisterInput) => {
-        await signup(data)
-    }
+    const onSubmit = async (data: AuthValidators.SignUpInput) => await signUp(data)
 
     return (
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

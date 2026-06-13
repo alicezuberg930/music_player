@@ -11,3 +11,9 @@ export type Video = {
     artists: Artist[]
     recommends: Video[]
 }
+
+export type QueryVideo = {
+    search?: string
+    page?: number
+    limit?: number
+}

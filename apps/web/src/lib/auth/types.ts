@@ -6,8 +6,6 @@ export type ActionMapType<M extends { [index: string]: any }> = {
   [Key in keyof M]: M[Key] extends undefined ? { type: Key } : { type: Key, payload: M[Key] }
 }
 
-export type AuthUser = User
-
 export type AuthStateType = {
   isAuthenticated: boolean
   isInitialized: boolean
@@ -18,11 +16,11 @@ export type JWTContextType = {
   isAuthenticated: boolean
   isInitialized: boolean
   user: User | null
-  signin: (data: AuthValidators.LoginInput) => Promise<void>
-  signup: (data: AuthValidators.RegisterInput) => Promise<void>
-  signout: () => void
+  signIn: (data: AuthValidators.SignInInput) => Promise<void>
+  signUp: (data: AuthValidators.SignUpInput) => Promise<void>
+  signOut: () => void
   signInWithProvider: (provider: string) => void
-  refreshToken: () => Promise<void>
+  // refreshToken: () => Promise<void>
 }
 
 export type GoogleUserResponse = {

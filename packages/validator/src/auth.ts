@@ -8,7 +8,7 @@ export namespace AuthValidators {
             'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character',
         )
 
-    export const registerInput = z
+    export const signUpInput = z
         .object({
             fullname: z
                 .string('Fullname is required')
@@ -26,17 +26,17 @@ export namespace AuthValidators {
             message: 'Passwords do not match',
             path: ['confirmPassword'],
         })
-    export type RegisterInput = z.infer<typeof registerInput>
-    export const registerOutput = z.object({ id: z.cuid() })
-    export type RegisterOutput = z.infer<typeof registerOutput>
+    export type SignUpInput = z.infer<typeof signUpInput>
+    export const signUpOutput = z.object({ id: z.cuid() })
+    export type SignUpOutput = z.infer<typeof signUpOutput>
 
-    export const loginInput = z.object({
+    export const signInInput = z.object({
         email: z.email('Invalid email address'),
         password: passwordRegex,
     })
-    export type LoginInput = z.infer<typeof loginInput>
-    export const loginOutput = z.object({ token: z.string() })
-    export type LoginOutput = z.infer<typeof loginOutput>
+    export type SignInInput = z.infer<typeof signInInput>
+    export const signInOutput = z.object({ token: z.string() })
+    export type SignInOutput = z.infer<typeof signInOutput>
 
     export const allSessionsInput = z.object({
         userId: z.cuid(),

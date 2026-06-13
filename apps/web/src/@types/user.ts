@@ -8,3 +8,7 @@ export type User = {
     createdAt: string
     updatedAt: string
 }
+
+export type SongType = 'uploaded' | 'favorite'
+
+export type PlaylistType = 'created' | 'favorite'

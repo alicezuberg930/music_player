@@ -14,7 +14,7 @@ import { DEFAULT_OPTIONS } from "../../lib/helpers/auth"
 export class UserService {
     private cookieOptions = DEFAULT_OPTIONS.cookieOptions;
 
-    public async signIn(request: Request<{}, {}, AuthValidators.LoginInput>, response: Response) {
+    public async signIn(request: Request<{}, {}, AuthValidators.SignInInput>, response: Response) {
         try {
             const { email, password } = request.body
             const user: User | undefined = await db.query.users.findFirst({ where: eq(users.email, email) })
@@ -48,7 +48,7 @@ export class UserService {
         }
     }
 
-    public async signUp(request: Request<{}, {}, AuthValidators.RegisterInput>, response: Response) {
+    public async signUp(request: Request<{}, {}, AuthValidators.SignUpInput>, response: Response) {
         try {
             const { password, fullname, email } = request.body
             const existingUser: User | undefined = await db.query.users.findFirst({ where: eq(users.email, email) })
@@ -66,17 +66,17 @@ export class UserService {
             })
                 .then(_ => console.log('Verification email sent successfully'))
                 .catch(err => console.error('Failed to send verification email:', err))
-            const accessToken = await new JWT(env.ACCESS_TOKEN_SECRET).sign({ id: user[0]!.id }, { expiresIn: env.ACCESS_TOKEN_EXPIRES_IN })
-            const refreshToken = await new JWT(env.REFRESH_TOKEN_SECRET).sign({ id: user[0]!.id }, { expiresIn: env.REFRESH_TOKEN_EXPIRES_IN })
-            response.cookie('accessToken', accessToken, {
-                ...this.cookieOptions,
-                maxAge: env.ACCESS_TOKEN_EXPIRES_IN * 1000
-            })
-            response.cookie('refreshToken', refreshToken, {
-                ...this.cookieOptions,
-                maxAge: env.REFRESH_TOKEN_EXPIRES_IN * 1000
-            })
-            return response.status(201).json({ message: 'User registered successfully' })
+            // const accessToken = await new JWT(env.ACCESS_TOKEN_SECRET).sign({ id: user[0]!.id }, { expiresIn: env.ACCESS_TOKEN_EXPIRES_IN })
+            // const refreshToken = await new JWT(env.REFRESH_TOKEN_SECRET).sign({ id: user[0]!.id }, { expiresIn: env.REFRESH_TOKEN_EXPIRES_IN })
+            // response.cookie('accessToken', accessToken, {
+            //     ...this.cookieOptions,
+            //     maxAge: env.ACCESS_TOKEN_EXPIRES_IN * 1000
+            // })
+            // response.cookie('refreshToken', refreshToken, {
+            //     ...this.cookieOptions,
+            //     maxAge: env.REFRESH_TOKEN_EXPIRES_IN * 1000
+            // })
+            return response.status(201).json({ message: 'Verify your account in email to login' })
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)

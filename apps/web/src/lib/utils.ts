@@ -1,7 +1,10 @@
+import { toast } from "@yukikaze/ui"
+import { HttpError } from "./repository/http-error"
+
 export const formatDuration = (duration: number): string => {
-  let hour = duration >= 3600 ? `${(Math.floor(duration / 3600)).toString()}:` : ''
-  let minute = ((Math.floor(duration / 60) % 60)).toString().padStart(2, '0')
-  let second = (duration % 60).toString().padStart(2, '0')
+  const hour = duration >= 3600 ? `${(Math.floor(duration / 3600)).toString()}:` : ''
+  const minute = ((Math.floor(duration / 60) % 60)).toString().padStart(2, '0')
+  const second = (duration % 60).toString().padStart(2, '0')
   return `${hour}${minute}:${second}`
 }
 
@@ -19,7 +22,7 @@ export const deepObjectComparison = (obj1: any, obj2: any): boolean => {
   const keys1 = Object.keys(obj1);
   const keys2 = Object.keys(obj2);
   if (keys1.length !== keys2.length) return false;
-  for (let key of keys1) {
+  for (const key of keys1) {
     if (!keys2.includes(key) || !deepObjectComparison(obj1[key], obj2[key])) {
       return false;
     }
@@ -64,4 +67,26 @@ export const shuffle = <T>(array: T[]): T[] => {
     [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]]
   }
   return array
+}
+
+export function handleServerError(error: unknown) {
+  // eslint-disable-next-line no-console
+  console.log(error)
+
+  let errMsg = 'Something went wrong!'
+
+  if (
+    error &&
+    typeof error === 'object' &&
+    'status' in error &&
+    Number(error.status) === 204
+  ) {
+    errMsg = 'Content not found.'
+  }
+
+  if (error instanceof HttpError) {
+    errMsg = error.message
+  }
+
+  toast.error(errMsg)
 }

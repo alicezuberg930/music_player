@@ -6,7 +6,8 @@ import { UserRoundPlus } from '@yukikaze/ui/icons'
 import { Button } from "@yukikaze/ui/button"
 import LazyLoadImage from "@/components/lazy-load-image/LazyLoadImage"
 import { useLocales } from "@/lib/locales"
-import { useApi } from "@/hooks/useApi"
+import { useMutation } from "@tanstack/react-query"
+import { userQueries } from "@/lib/queries/user"
 
 type Props = {
     artist: Omit<Artist, 'recommendedArtists' | 'songs' | 'topAlbum' | 'playlists' | 'videos'>
@@ -15,11 +16,7 @@ type Props = {
 
 const ArtistCard = ({ artist, visibleSlides = 5 }: Props) => {
     const { translate } = useLocales()
-    const followArtist = useApi().useFollowArtist()
-
-    const toggleFollow = () => {
-        followArtist.mutate(artist.id)
-    }
+    const { mutate } = useMutation(userQueries().followArtist.mutationOptions())
 
     return (
         <div className="space-x-3 text-center flex flex-col items-center gap-3 px-2" style={{ width: `${100 / visibleSlides}%` }}>
@@ -39,7 +36,7 @@ const ArtistCard = ({ artist, visibleSlides = 5 }: Props) => {
                 <span className="text-sm font-medium hover:underline hover:text-main-500">{artist.name}</span>
                 <span className="text-xs text-gray-600">{roundPeopleAmount(artist.totalFollow)} {translate('following')}</span>
             </div>
-            <Button className="rounded-full" onClick={toggleFollow}>
+            <Button className="rounded-full" onClick={() => mutate(artist.id)}>
                 <UserRoundPlus size={14} />
                 <span className="text-xs">{translate(artist.followed ? 'unfollow' : 'follow')}</span>
             </Button>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { memo, useEffect, useState } from "react"
 import SongCard from "./SongCard"
 import { useNavigate } from "react-router-dom"
 import type { Song } from "@/@types/song"
@@ -21,7 +21,7 @@ const RankListCard = ({ songs, hideAlbum, initialAmount, link }: Props) => {
         } else {
             setCurrentSongs(songs?.slice(0, initialAmount))
         }
-    }, [isShowAll, songs])
+    }, [isShowAll, songs, initialAmount])
 
     return (
         <div className="w-full">
@@ -46,4 +46,4 @@ const RankListCard = ({ songs, hideAlbum, initialAmount, link }: Props) => {
     )
 }
 
-export default RankListCard
+export default memo(RankListCard)

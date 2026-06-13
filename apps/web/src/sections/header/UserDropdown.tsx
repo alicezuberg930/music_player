@@ -21,7 +21,7 @@ import { Link } from "react-router-dom"
 import { useTheme } from "@yukikaze/ui"
 
 const UserDropdown: React.FC = () => {
-    const { user, signout } = useAuthContext()
+    const { user, signOut } = useAuthContext()
     const { translate } = useLocales()
     const { setTheme, themes } = useTheme()
 
@@ -81,7 +81,7 @@ const UserDropdown: React.FC = () => {
                 {/* <DropdownMenuItem>Support</DropdownMenuItem> */}
                 {/* <DropdownMenuItem disabled>API</DropdownMenuItem> */}
                 {/* <DropdownMenuSeparator /> */}
-                <DropdownMenuItem onClick={signout}>
+                <DropdownMenuItem onClick={signOut}>
                     {translate('logout')}
                     <DropdownMenuShortcut>
                         <LogOut />

@@ -1,21 +1,21 @@
-import { useApi } from "@/hooks/useApi"
 import { HomeShimmer } from "@/components/loading-placeholder"
+import { homeQueries } from "@/lib/queries/home"
 import { ArtistSection, BannerSliderSection, ChartSection, NewReleaseListSection, PlaylistSection } from "@/sections/home"
+import { useQuery } from "@tanstack/react-query"
 
 const HomePage: React.FC = () => {
-    const { useHomeData } = useApi()
-    const { data: home, isLoading } = useHomeData()
+    const { data, isLoading } = useQuery(homeQueries().all.queryOptions())
 
-    const songs = home?.data?.newReleaseSongs ?? []
-    const playlists = home?.data?.newPlaylists ?? []
-    const artists = home?.data?.weeklyTopArtists ?? []
-    const banners = home?.data?.banners ?? []
+    const songs = data?.newReleaseSongs ?? []
+    const playlists = data?.newPlaylists ?? []
+    const artists = data?.weeklyTopArtists ?? []
+    const banners = data?.banners ?? []
 
     return (
         <>
             {isLoading ? (
                 <HomeShimmer />
-            ) : home && (
+            ) : data && (
                 <>
                     <BannerSliderSection banners={banners} />
 

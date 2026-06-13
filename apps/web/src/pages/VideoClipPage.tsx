@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react"
-import { fetchVideo } from "@/lib/httpClient"
 import { Link, NavLink, useParams } from "react-router-dom"
 // import Hls from "hls.js"
 import { formatDuration } from "@/lib/utils"
@@ -10,6 +9,7 @@ import type { Video } from "@/@types/video"
 
 const VideoClipPage = () => {
     const { id } = useParams()
+    console.log(id)
     // local states
     const [video, setVideo] = useState<Video | null>(null)
     const [isPlaying, setIsPlaying] = useState(false)
@@ -40,7 +40,6 @@ const VideoClipPage = () => {
     const getVideo = async () => {
         try {
             setVideo(null)
-            await fetchVideo(id!)
             initializeVideoPlayer('')
             // if (response?.err === 0) {
             //     setVideo(response?.data)

@@ -11,7 +11,7 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
   const hostname = mode === 'production' ? 'https://tien-music-player.site' : 'http://localhost:5173'
 
   // Fetch dynamic routes from API sitemap
-  let dynamicRoutes: string[] = []
+  const dynamicRoutes: string[] = []
   try {
     const response = await fetch('http://localhost:5001/sitemap-urls')
     const data = await response.json() as { data: string[] }

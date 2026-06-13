@@ -18,3 +18,7 @@ export type Artist = {
     videos: Video[]
     recommendedArtists?: Omit<Artist, 'recommendedArtists' | 'songs' | 'topAlbum' | 'playlists' | 'videos'>[]
 }
+
+export type QueryArtist = {
+    name?: string
+}

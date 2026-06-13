@@ -3,6 +3,7 @@ import ArtistCard from "../ArtistCard"
 import { useIsMobile } from "@/hooks/useMobile"
 import { Typography } from "@yukikaze/ui/typography"
 import { useLocales } from "@/lib/locales"
+import { memo } from "react"
 
 export const favoriteArtistsHC = {
     "title": "Nghệ sĩ yêu thích",
@@ -147,4 +148,4 @@ const ArtistSection: React.FC<Props> = ({ artists }) => {
     )
 }
 
-export default ArtistSection
+export default memo(ArtistSection)

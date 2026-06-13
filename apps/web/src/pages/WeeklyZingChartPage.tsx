@@ -5,7 +5,6 @@ import type { Song } from "@/@types/song"
 
 const WeeklyZingChartPage = () => {
     const { id } = useParams()
-    // const { BsPlayFill } = icons
     const normalStyle = "mr-4 py-3 font-semibold text-2xl cursor-pointer h-full relative flex items-center"
     const activeStyle = " search-tab-item after:w-full text-main-500"
     const [songs, setSongs] = useState<Song[]>([])

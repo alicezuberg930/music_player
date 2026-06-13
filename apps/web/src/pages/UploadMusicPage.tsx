@@ -2,7 +2,6 @@ import * as z from 'zod'
 import { useLocales } from '@/lib/locales'
 import { SongValidators } from '@yukikaze/validator'
 import { useCallback } from 'react'
-import { useApi } from '@/hooks/useApi'
 // types
 import type { Song } from '@/@types/song'
 import { type CustomFile } from '@/components/upload'
@@ -15,6 +14,10 @@ import { RHFUpload } from '@/components/hook-form/RHFUpload'
 import { Button } from '@yukikaze/ui/button'
 import { Card, CardContent } from '@yukikaze/ui/card'
 import { Spinner } from '@yukikaze/ui/spinner'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { artistQueries } from '@/lib/queries/artist'
+import { songQueries } from '@/lib/queries/song'
+import { toast } from '@yukikaze/ui'
 
 type FormValuesProps = SongValidators.CreateSongInput & {
     audio: CustomFile | string | null
@@ -25,10 +28,8 @@ type FormValuesProps = SongValidators.CreateSongInput & {
 const UploadMusicPage: React.FC<{ editSong?: Song, id?: string }> = ({ editSong, id }) => {
     console.log(id)
     const { translate } = useLocales()
-    const { useCreateSong, useArtistList } = useApi()
-    const { data: artistsData } = useArtistList()
-    const artists = artistsData?.data || []
-    const { mutateAsync: createSong } = useCreateSong()
+    const { data } = useQuery(artistQueries().all.queryOptions({}))
+    const { mutateAsync } = useMutation(songQueries().create.mutationOptions())
 
     // song_name_is_required
     // song_release_date_is_required
@@ -74,8 +75,14 @@ const UploadMusicPage: React.FC<{ editSong?: Song, id?: string }> = ({ editSong,
                 }
             }
         }
-        await createSong(formData, {
-            onSuccess: () => reset()
+        await mutateAsync(formData, {
+            onSuccess: (res) => {
+                toast.success(res.message)
+                reset()
+            },
+            onError: (err) => {
+                toast.error(translate(err.message ?? 'unknown_error'))
+            }
         })
     }
 
@@ -140,11 +147,13 @@ const UploadMusicPage: React.FC<{ editSong?: Song, id?: string }> = ({ editSong,
                         <CardContent className="space-y-4">
                             <RHFTextField name='title' fieldLabel={translate('song_name')} placeholder={translate('enter_song_name')} />
                             <RHFSingleDatePicker name='releaseDate' fieldLabel={translate('release_date')} placeholder={translate('select_release_date')} />
-                            <RHFMultiSelect
-                                name='artistIds' fieldLabel={translate('artist_name')}
-                                options={artists.map(artist => ({ label: artist.name, value: artist.id }))}
-                                placeholder={translate('select_artist')}
-                            />
+                            {data && (
+                                <RHFMultiSelect
+                                    name='artistIds' fieldLabel={translate('artist_name')}
+                                    options={data.map(artist => ({ label: artist.name, value: artist.id }))}
+                                    placeholder={translate('select_artist')}
+                                />
+                            )}
                             <Button type="submit" size={'lg'} className='w-full' disabled={isSubmitting}>
                                 {isSubmitting ? (
                                     <Spinner className='size-6' />

@@ -5,7 +5,8 @@ import { setIsPlaying, addRecentSong, setCurrentSong, setCurrentPlaylistName } f
 import type { Song } from "@/@types/song"
 import { HeartIcon, MusicIcon } from '@yukikaze/ui/icons'
 import { LazyLoadImage } from "@/components/lazy-load-image"
-import { useApi } from "@/hooks/useApi"
+import { useMutation } from "@tanstack/react-query"
+import { userQueries } from "@/lib/queries/user"
 
 type Props = {
     song: Song
@@ -16,7 +17,7 @@ type Props = {
 
 const SongCard: React.FC<Props> = ({ song, playlistTitle, hideAlbum, order }) => {
     const dispatch = useDispatch()
-    const toggleFavoriteSongMutation = useApi().useToggleFavoriteSong()
+    const { mutate } = useMutation(userQueries().favoriteSong.mutationOptions())
     const orderCss = () => {
         switch (order) {
             case 1: return 'text-shadow-1'
@@ -35,7 +36,7 @@ const SongCard: React.FC<Props> = ({ song, playlistTitle, hideAlbum, order }) =>
 
     const handleFavorite = (e: MouseEvent<SVGSVGElement>) => {
         e.stopPropagation()
-        toggleFavoriteSongMutation.mutate(song.id)
+        mutate(song.id)
     }
 
     return (

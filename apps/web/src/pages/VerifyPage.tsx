@@ -1,28 +1,18 @@
-import { verifyEmail } from "@/lib/httpClient"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useParams, useSearchParams } from "react-router-dom"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@yukikaze/ui/card"
 import { Typography } from "@yukikaze/ui/typography"
+import { useMutation } from "@tanstack/react-query"
+import { userQueries } from "@/lib/queries/user"
 
 const VerifyPage: React.FC = () => {
-    const [result, setResult] = useState<string>("")
-    const [loading, setLoading] = useState<boolean>(true)
     const { id } = useParams()
     const [searchParams] = useSearchParams()
     const token = searchParams.get('token')
+    const { mutate, status, data } = useMutation(userQueries().verify.mutationOptions())
 
     useEffect(() => {
-        const verify = async () => {
-            setLoading(true)
-            const response = await verifyEmail(id!, token!)
-            if (response.statusCode === 200) {
-                setResult(response.message)
-            } else {
-                setResult(response.message || 'Verification failed')
-            }
-            setLoading(false)
-        }
-        if (id && token) verify()
+        if (id && token) mutate({ userId: id, token })
     }, [id, token])
 
     return (
@@ -31,12 +21,12 @@ const VerifyPage: React.FC = () => {
                 <CardHeader>
                     <CardTitle className="text-center">Email Verification</CardTitle>
                     <CardDescription className="text-center">
-                        {loading ? 'Verifying your email...' : 'Verification Status'}
+                        {status === 'pending' ? 'Verifying your email...' : 'Verification Status'}
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <Typography className="text-center wrap-break-word">
-                        {loading ? 'Please wait...' : result}
+                        {status === 'pending' ? 'Please wait...' : data?.message}
                     </Typography>
                 </CardContent>
             </Card>

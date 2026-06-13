@@ -1,0 +1,497 @@
+{
+    "err": 0,
+    "msg": "Success",
+    "data": {
+        "correctKeyword": null,
+        "items": [
+            {
+                "encodeId": "Z8CDAEEA",
+                "title": "In a Dark Place (Live at the Electric Ballroom)",
+                "alias": "In-a-Dark-Place-Live-at-the-Electric-Ballroom-Gary-Numan",
+                "isOffical": true,
+                "username": "",
+                "artistsNames": "Gary Numan",
+                "artists": [
+                    {
+                        "id": "IWZ9676F",
+                        "name": "Gary Numan",
+                        "link": "/Gary-Numan",
+                        "spotlight": false,
+                        "alias": "Gary-Numan",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/1/1/1167610aa17b0813233fe82d99403e41_1289710637.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/1/1/1167610aa17b0813233fe82d99403e41_1289710637.jpg",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "6UAEZ967"
+                    }
+                ],
+                "isWorldWide": false,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w600_r300x169_jpeg/cover/7/3/b/1/73b192d6e83a050a47ecc8853f4ab0dc.jpg",
+                "link": "/video-clip/In-a-Dark-Place-Live-at-the-Electric-Ballroom-Gary-Numan/Z8CDAEEA.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r16x9_jpeg/cover/7/3/b/1/73b192d6e83a050a47ecc8853f4ab0dc.jpg",
+                "duration": 318,
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "artist": {
+                    "id": "IWZ9676F",
+                    "name": "Gary Numan",
+                    "link": "/Gary-Numan",
+                    "spotlight": false,
+                    "alias": "Gary-Numan",
+                    "cover": "https://zmp3-static.zmdcdn.me/skins/zmp3-v5.2/images/default_cover.png",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/1/1/1167610aa17b0813233fe82d99403e41_1289710637.jpg"
+                }
+            },
+            {
+                "encodeId": "Z66IC9EC",
+                "title": "Rock In A Hard Place (Cheshire Cat) (Audio)",
+                "alias": "Rock-In-A-Hard-Place-Cheshire-Cat-Audio-Aerosmith",
+                "isOffical": true,
+                "username": "",
+                "artistsNames": "Aerosmith",
+                "artists": [
+                    {
+                        "id": "IWZ9ZIUF",
+                        "name": "Aerosmith",
+                        "link": "/Aerosmith",
+                        "spotlight": false,
+                        "alias": "Aerosmith",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/0/b/0bd597586d4193bc4b8e384870a15332_1508470517.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/0/b/0bd597586d4193bc4b8e384870a15332_1508470517.jpg",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "6UAEWBE6"
+                    }
+                ],
+                "isWorldWide": false,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w600_r300x169_jpeg/cover/7/9/a/d/79ad359e708d28334b834e7de30c35e3.jpg",
+                "link": "/video-clip/Rock-In-A-Hard-Place-Cheshire-Cat-Audio-Aerosmith/Z66IC9EC.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r16x9_jpeg/cover/7/9/a/d/79ad359e708d28334b834e7de30c35e3.jpg",
+                "duration": 285,
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "artist": {
+                    "id": "IWZ9ZIUF",
+                    "name": "Aerosmith",
+                    "link": "/Aerosmith",
+                    "spotlight": false,
+                    "alias": "Aerosmith",
+                    "playlistId": "6UAEWBE6",
+                    "cover": "https://zmp3-static.zmdcdn.me/skins/zmp3-v5.2/images/default_cover.png",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/0/b/0bd597586d4193bc4b8e384870a15332_1508470517.jpg"
+                }
+            },
+            {
+                "encodeId": "ZZAO8B6Z",
+                "title": "A Place In This World (A Beautiful Revolution Pt 1 - Performance Video)",
+                "alias": "A-Place-In-This-World-A-Beautiful-Revolution-Pt-1-Performance-Video-Common",
+                "isOffical": true,
+                "username": "",
+                "artistsNames": "Common",
+                "artists": [
+                    {
+                        "id": "IWZ9ZZDU",
+                        "name": "Common",
+                        "link": "/Common.IWZ9ZZDU",
+                        "spotlight": false,
+                        "alias": "Common.IWZ9ZZDU",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/5/5/55a45fb97bb19828acd94e103b16426b_1335454403.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/5/5/55a45fb97bb19828acd94e103b16426b_1335454403.jpg",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "6UAEOOOE"
+                    }
+                ],
+                "isWorldWide": false,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w600_r300x169_jpeg/cover/3/8/9/3/3893e7771a766155fa87d10e169809cc.jpg",
+                "link": "/video-clip/A-Place-In-This-World-A-Beautiful-Revolution-Pt-1-Performance-Video-Common/ZZAO8B6Z.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r16x9_jpeg/cover/3/8/9/3/3893e7771a766155fa87d10e169809cc.jpg",
+                "duration": 216,
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "artist": {
+                    "id": "IWZ9ZZDU",
+                    "name": "Common",
+                    "link": "/Common.IWZ9ZZDU",
+                    "spotlight": false,
+                    "alias": "Common.IWZ9ZZDU",
+                    "cover": "https://zmp3-static.zmdcdn.me/skins/zmp3-v5.2/images/default_cover.png",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/5/5/55a45fb97bb19828acd94e103b16426b_1335454403.jpg"
+                }
+            },
+            {
+                "encodeId": "ZZA6U866",
+                "title": "A Place In This World (Official Audio)",
+                "alias": "A-Place-In-This-World-Official-Audio-Common",
+                "isOffical": true,
+                "username": "",
+                "artistsNames": "Common",
+                "artists": [
+                    {
+                        "id": "IWZ9ZZDU",
+                        "name": "Common",
+                        "link": "/Common.IWZ9ZZDU",
+                        "spotlight": false,
+                        "alias": "Common.IWZ9ZZDU",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/5/5/55a45fb97bb19828acd94e103b16426b_1335454403.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/5/5/55a45fb97bb19828acd94e103b16426b_1335454403.jpg",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "6UAEOOOE"
+                    }
+                ],
+                "isWorldWide": false,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w600_r300x169_jpeg/cover/b/e/8/0/be8051469b68061aa31fc1ea975e6dbd.jpg",
+                "link": "/video-clip/A-Place-In-This-World-Official-Audio-Common/ZZA6U866.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r16x9_jpeg/cover/b/e/8/0/be8051469b68061aa31fc1ea975e6dbd.jpg",
+                "duration": 217,
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "artist": {
+                    "id": "IWZ9ZZDU",
+                    "name": "Common",
+                    "link": "/Common.IWZ9ZZDU",
+                    "spotlight": false,
+                    "alias": "Common.IWZ9ZZDU",
+                    "cover": "https://zmp3-static.zmdcdn.me/skins/zmp3-v5.2/images/default_cover.png",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/5/5/55a45fb97bb19828acd94e103b16426b_1335454403.jpg"
+                }
+            },
+            {
+                "encodeId": "ZWABE97D",
+                "title": "A Place in Your Heart (Audio)",
+                "alias": "A-Place-in-Your-Heart-Audio-Ray-Davies",
+                "isOffical": true,
+                "username": "",
+                "artistsNames": "Ray Davies",
+                "artists": [
+                    {
+                        "id": "IWZAW87E",
+                        "name": "Ray Davies",
+                        "link": "/Ray-Davies",
+                        "spotlight": false,
+                        "alias": "Ray-Davies",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/1/a/2/7/1a27769dccc5d485f84a9b68bd666be0.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/1/a/2/7/1a27769dccc5d485f84a9b68bd666be0.jpg",
+                        "isOA": false,
+                        "isOABrand": false
+                    }
+                ],
+                "isWorldWide": false,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w600_r300x169_jpeg/thumb_video/8/3/0/d/830df3cb0d03419d953ecb12173bf4a0.jpg",
+                "link": "/video-clip/A-Place-in-Your-Heart-Audio-Ray-Davies/ZWABE97D.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r16x9_jpeg/thumb_video/8/3/0/d/830df3cb0d03419d953ecb12173bf4a0.jpg",
+                "duration": 305,
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "artist": {
+                    "id": "IWZAW87E",
+                    "name": "Ray Davies",
+                    "link": "/Ray-Davies",
+                    "spotlight": false,
+                    "alias": "Ray-Davies",
+                    "cover": "https://zmp3-static.zmdcdn.me/skins/zmp3-v5.2/images/default_cover.png",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/1/a/2/7/1a27769dccc5d485f84a9b68bd666be0.jpg"
+                }
+            },
+            {
+                "encodeId": "Z6W9BUEZ",
+                "title": "A Place In The Choir (Live From Ontario / 2015)",
+                "alias": "A-Place-In-The-Choir-Live-From-Ontario-2015-Celtic-Thunder",
+                "isOffical": true,
+                "username": "",
+                "artistsNames": "Celtic Thunder",
+                "artists": [
+                    {
+                        "id": "IWZ9BDC6",
+                        "name": "Celtic Thunder",
+                        "link": "/Celtic-Thunder",
+                        "spotlight": false,
+                        "alias": "Celtic-Thunder",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_png/avatars/a/3/a3df85f27c14f9acd50dfb33b2a1bb01_1355595172.png",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_png/avatars/a/3/a3df85f27c14f9acd50dfb33b2a1bb01_1355595172.png",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "6UB66EUI"
+                    }
+                ],
+                "isWorldWide": false,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w600_r300x169_jpeg/cover/8/0/0/d/800deadeb1b9a8bec3e57cf89c5f2789.jpg",
+                "link": "/video-clip/A-Place-In-The-Choir-Live-From-Ontario-2015-Celtic-Thunder/Z6W9BUEZ.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r16x9_jpeg/cover/8/0/0/d/800deadeb1b9a8bec3e57cf89c5f2789.jpg",
+                "duration": 163,
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "artist": {
+                    "id": "IWZ9BDC6",
+                    "name": "Celtic Thunder",
+                    "link": "/Celtic-Thunder",
+                    "spotlight": false,
+                    "alias": "Celtic-Thunder",
+                    "playlistId": "6UB66EUI",
+                    "cover": "https://zmp3-static.zmdcdn.me/skins/zmp3-v5.2/images/default_cover.png",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_png/avatars/a/3/a3df85f27c14f9acd50dfb33b2a1bb01_1355595172.png"
+                }
+            },
+            {
+                "encodeId": "Z6CZD0C8",
+                "title": "A Place In The Choir (Live From Kansas City / 2011)",
+                "alias": "A-Place-In-The-Choir-Live-From-Kansas-City-2011-Celtic-Thunder",
+                "isOffical": true,
+                "username": "",
+                "artistsNames": "Celtic Thunder",
+                "artists": [
+                    {
+                        "id": "IWZ9BDC6",
+                        "name": "Celtic Thunder",
+                        "link": "/Celtic-Thunder",
+                        "spotlight": false,
+                        "alias": "Celtic-Thunder",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_png/avatars/a/3/a3df85f27c14f9acd50dfb33b2a1bb01_1355595172.png",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_png/avatars/a/3/a3df85f27c14f9acd50dfb33b2a1bb01_1355595172.png",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "6UB66EUI"
+                    }
+                ],
+                "isWorldWide": false,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w600_r300x169_jpeg/cover/f/a/b/1/fab1bf31ad61e49ab5daa1562242015a.jpg",
+                "link": "/video-clip/A-Place-In-The-Choir-Live-From-Kansas-City-2011-Celtic-Thunder/Z6CZD0C8.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r16x9_jpeg/cover/f/a/b/1/fab1bf31ad61e49ab5daa1562242015a.jpg",
+                "duration": 175,
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "artist": {
+                    "id": "IWZ9BDC6",
+                    "name": "Celtic Thunder",
+                    "link": "/Celtic-Thunder",
+                    "spotlight": false,
+                    "alias": "Celtic-Thunder",
+                    "playlistId": "6UB66EUI",
+                    "cover": "https://zmp3-static.zmdcdn.me/skins/zmp3-v5.2/images/default_cover.png",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_png/avatars/a/3/a3df85f27c14f9acd50dfb33b2a1bb01_1355595172.png"
+                }
+            },
+            {
+                "encodeId": "Z6FF8760",
+                "title": "A Place In The Choir (Live From Kansas City / 2011 / Lyric Video)",
+                "alias": "A-Place-In-The-Choir-Live-From-Kansas-City-2011-Lyric-Video-Celtic-Thunder",
+                "isOffical": true,
+                "username": "",
+                "artistsNames": "Celtic Thunder",
+                "artists": [
+                    {
+                        "id": "IWZ9BDC6",
+                        "name": "Celtic Thunder",
+                        "link": "/Celtic-Thunder",
+                        "spotlight": false,
+                        "alias": "Celtic-Thunder",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_png/avatars/a/3/a3df85f27c14f9acd50dfb33b2a1bb01_1355595172.png",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_png/avatars/a/3/a3df85f27c14f9acd50dfb33b2a1bb01_1355595172.png",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "6UB66EUI"
+                    }
+                ],
+                "isWorldWide": false,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w600_r300x169_jpeg/cover/c/8/c/6/c8c64a896faa0887a8f104d37af609fb.jpg",
+                "link": "/video-clip/A-Place-In-The-Choir-Live-From-Kansas-City-2011-Lyric-Video-Celtic-Thunder/Z6FF8760.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r16x9_jpeg/cover/c/8/c/6/c8c64a896faa0887a8f104d37af609fb.jpg",
+                "duration": 175,
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "artist": {
+                    "id": "IWZ9BDC6",
+                    "name": "Celtic Thunder",
+                    "link": "/Celtic-Thunder",
+                    "spotlight": false,
+                    "alias": "Celtic-Thunder",
+                    "playlistId": "6UB66EUI",
+                    "cover": "https://zmp3-static.zmdcdn.me/skins/zmp3-v5.2/images/default_cover.png",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_png/avatars/a/3/a3df85f27c14f9acd50dfb33b2a1bb01_1355595172.png"
+                }
+            },
+            {
+                "encodeId": "Z7BI6I6W",
+                "title": "A Place In The Choir (Live From Poughkeepsie / 2010 / Lyric Video)",
+                "alias": "A-Place-In-The-Choir-Live-From-Poughkeepsie-2010-Lyric-Video-Celtic-Thunder",
+                "isOffical": true,
+                "username": "",
+                "artistsNames": "Celtic Thunder",
+                "artists": [
+                    {
+                        "id": "IWZ9BDC6",
+                        "name": "Celtic Thunder",
+                        "link": "/Celtic-Thunder",
+                        "spotlight": false,
+                        "alias": "Celtic-Thunder",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_png/avatars/a/3/a3df85f27c14f9acd50dfb33b2a1bb01_1355595172.png",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_png/avatars/a/3/a3df85f27c14f9acd50dfb33b2a1bb01_1355595172.png",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "6UB66EUI"
+                    }
+                ],
+                "isWorldWide": false,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w600_r300x169_jpeg/cover/b/b/6/b/bb6bade4455d22037ce9993de9653f80.jpg",
+                "link": "/video-clip/A-Place-In-The-Choir-Live-From-Poughkeepsie-2010-Lyric-Video-Celtic-Thunder/Z7BI6I6W.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r16x9_jpeg/cover/b/b/6/b/bb6bade4455d22037ce9993de9653f80.jpg",
+                "duration": 251,
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "artist": {
+                    "id": "IWZ9BDC6",
+                    "name": "Celtic Thunder",
+                    "link": "/Celtic-Thunder",
+                    "spotlight": false,
+                    "alias": "Celtic-Thunder",
+                    "playlistId": "6UB66EUI",
+                    "cover": "https://zmp3-static.zmdcdn.me/skins/zmp3-v5.2/images/default_cover.png",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_png/avatars/a/3/a3df85f27c14f9acd50dfb33b2a1bb01_1355595172.png"
+                }
+            },
+            {
+                "encodeId": "Z6EBU9UF",
+                "title": "A Place In The Choir (Live From Ontario / 2015 / Lyric Video)",
+                "alias": "A-Place-In-The-Choir-Live-From-Ontario-2015-Lyric-Video-Celtic-Thunder",
+                "isOffical": true,
+                "username": "",
+                "artistsNames": "Celtic Thunder",
+                "artists": [
+                    {
+                        "id": "IWZ9BDC6",
+                        "name": "Celtic Thunder",
+                        "link": "/Celtic-Thunder",
+                        "spotlight": false,
+                        "alias": "Celtic-Thunder",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_png/avatars/a/3/a3df85f27c14f9acd50dfb33b2a1bb01_1355595172.png",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_png/avatars/a/3/a3df85f27c14f9acd50dfb33b2a1bb01_1355595172.png",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "6UB66EUI"
+                    }
+                ],
+                "isWorldWide": false,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w600_r300x169_jpeg/cover/6/7/3/e/673ecb46418cef3a168170aecdda843b.jpg",
+                "link": "/video-clip/A-Place-In-The-Choir-Live-From-Ontario-2015-Lyric-Video-Celtic-Thunder/Z6EBU9UF.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r16x9_jpeg/cover/6/7/3/e/673ecb46418cef3a168170aecdda843b.jpg",
+                "duration": 176,
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "artist": {
+                    "id": "IWZ9BDC6",
+                    "name": "Celtic Thunder",
+                    "link": "/Celtic-Thunder",
+                    "spotlight": false,
+                    "alias": "Celtic-Thunder",
+                    "playlistId": "6UB66EUI",
+                    "cover": "https://zmp3-static.zmdcdn.me/skins/zmp3-v5.2/images/default_cover.png",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_png/avatars/a/3/a3df85f27c14f9acd50dfb33b2a1bb01_1355595172.png"
+                }
+            },
+            {
+                "encodeId": "Z679UICF",
+                "title": "A Place In The Choir (Live From Poughkeepsie / 2010)",
+                "alias": "A-Place-In-The-Choir-Live-From-Poughkeepsie-2010-Celtic-Thunder",
+                "isOffical": true,
+                "username": "",
+                "artistsNames": "Celtic Thunder",
+                "artists": [
+                    {
+                        "id": "IWZ9BDC6",
+                        "name": "Celtic Thunder",
+                        "link": "/Celtic-Thunder",
+                        "spotlight": false,
+                        "alias": "Celtic-Thunder",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_png/avatars/a/3/a3df85f27c14f9acd50dfb33b2a1bb01_1355595172.png",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_png/avatars/a/3/a3df85f27c14f9acd50dfb33b2a1bb01_1355595172.png",
+                        "isOA": false,
+                        "isOABrand": false,
+                        "playlistId": "6UB66EUI"
+                    }
+                ],
+                "isWorldWide": false,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w600_r300x169_jpeg/cover/c/1/3/f/c13fb17ca02652a01d7c713181e82cd5.jpg",
+                "link": "/video-clip/A-Place-In-The-Choir-Live-From-Poughkeepsie-2010-Celtic-Thunder/Z679UICF.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r16x9_jpeg/cover/c/1/3/f/c13fb17ca02652a01d7c713181e82cd5.jpg",
+                "duration": 250,
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "artist": {
+                    "id": "IWZ9BDC6",
+                    "name": "Celtic Thunder",
+                    "link": "/Celtic-Thunder",
+                    "spotlight": false,
+                    "alias": "Celtic-Thunder",
+                    "playlistId": "6UB66EUI",
+                    "cover": "https://zmp3-static.zmdcdn.me/skins/zmp3-v5.2/images/default_cover.png",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_png/avatars/a/3/a3df85f27c14f9acd50dfb33b2a1bb01_1355595172.png"
+                }
+            },
+            {
+                "encodeId": "Z60OCZC6",
+                "title": "Your Presence Is A Promise (Live In Studio at Haven Place, Charlotte, NC/2020)",
+                "alias": "Your-Presence-Is-A-Promise-Live-In-Studio-at-Haven-Place-Charlotte-NC-2020-Mack-Brock",
+                "isOffical": true,
+                "username": "",
+                "artistsNames": "Mack Brock",
+                "artists": [
+                    {
+                        "id": "IW6WACDO",
+                        "name": "Mack Brock",
+                        "link": "/Mack Brock",
+                        "spotlight": false,
+                        "alias": "Mack Brock",
+                        "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/1/a/2/7/1a27769dccc5d485f84a9b68bd666be0.jpg",
+                        "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/1/a/2/7/1a27769dccc5d485f84a9b68bd666be0.jpg",
+                        "isOA": false,
+                        "isOABrand": false
+                    }
+                ],
+                "isWorldWide": false,
+                "thumbnailM": "https://photo-resize-zmp3.zmdcdn.me/w600_r300x169_jpeg/cover/f/e/c/3/fec36f0746af47ee98430b59c43fbf95.jpg",
+                "link": "/video-clip/Your-Presence-Is-A-Promise-Live-In-Studio-at-Haven-Place-Charlotte-NC-2020-Mack-Brock/Z60OCZC6.html",
+                "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r16x9_jpeg/cover/f/e/c/3/fec36f0746af47ee98430b59c43fbf95.jpg",
+                "duration": 242,
+                "streamingStatus": 2,
+                "streamPrivileges": [
+                    2
+                ],
+                "artist": {
+                    "id": "IW6WACDO",
+                    "name": "Mack Brock",
+                    "link": "/Mack Brock",
+                    "spotlight": false,
+                    "alias": "Mack Brock",
+                    "cover": "https://zmp3-static.zmdcdn.me/skins/zmp3-v5.2/images/default_cover.png",
+                    "thumbnail": "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/1/a/2/7/1a27769dccc5d485f84a9b68bd666be0.jpg"
+                }
+            }
+        ],
+        "total": 12,
+        "sectionId": "search"
+    },
+    "timestamp": 1781150590450
+}

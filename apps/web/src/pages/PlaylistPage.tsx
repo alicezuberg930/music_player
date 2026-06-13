@@ -12,9 +12,10 @@ import { Typography } from "@yukikaze/ui/typography"
 import { useIsMobile } from "@/hooks/useMobile"
 import { useMetaTags } from "@/hooks/useMetaTags"
 import { LazyLoadImage } from "@/components/lazy-load-image"
-import { useApi } from "@/hooks/useApi"
 import { PlaylistDetailsShimmer } from "@/components/loading-placeholder"
 import { Spinner } from "@yukikaze/ui/spinner"
+import { useQuery } from "@tanstack/react-query"
+import { playlistQueries } from "@/lib/queries/playlist"
 
 const PlaylistPage: React.FC = () => {
     const { id } = useParams()
@@ -23,24 +24,24 @@ const PlaylistPage: React.FC = () => {
     const { currentSong, isPlaying, currentPlaylistSongs } = useSelector(state => state.music)
     const [inPlaylist, setInPlaylist] = useState<boolean>(false)
     const location = useLocation()
-    const { data: playlistData, isLoading } = useApi().usePlaylist(id ?? '')
+    const { data, isLoading } = useQuery(playlistQueries().one.queryOptions(id!))
 
     useMetaTags({
-        title: `Playlist - ${playlistData?.data?.title ?? 'Yukikaze Music Player'}`,
-        description: playlistData?.data?.description ?? 'Nghe danh sách phát của bạn trên Yukikaze Music Player.',
-        image: playlistData?.data?.thumbnail ?? `${getBaseUrl()}/web-app-manifest-512x512.png`,
+        title: `Playlist - ${data?.title ?? 'Yukikaze Music Player'}`,
+        description: data?.description ?? 'Nghe danh sách phát của bạn trên Yukikaze Music Player.',
+        image: data?.thumbnail ?? `${getBaseUrl()}/web-app-manifest-512x512.png`,
         url: `${getBaseUrl()}/playlist/${id}`
     })
 
     useEffect(() => {
-        if (location.state?.playAlbum && playlistData?.data?.songs?.length) {
-            dispatch(setCurrentPlaylistSongs(playlistData?.data?.songs ?? []))
-            dispatch(setCurrentSong(playlistData?.data?.songs[0]))
+        if (location.state?.playAlbum && data?.songs) {
+            dispatch(setCurrentPlaylistSongs(data?.songs))
+            dispatch(setCurrentSong(data?.songs[0]))
             dispatch(setIsPlaying(true))
             // Clear the state so it doesn't auto-play on subsequent visits
             globalThis.history.replaceState({}, document.title)
         }
-    }, [playlistData])
+    }, [data])
 
     useEffect(() => {
         if (currentSong) setInPlaylist(currentPlaylistSongs.some((song: Song) => song.id === currentSong.id))
@@ -50,13 +51,13 @@ const PlaylistPage: React.FC = () => {
         <>
             {isLoading ? (
                 <PlaylistDetailsShimmer />
-            ) : playlistData && (
+            ) : data && (
                 <>
                     <div className="flex flex-col md:flex-row gap-6 mt-10">
                         <div className="w-full md:w-1/4 h-fit space-y-3 relative md:sticky top-10 self-start shrink-0">
                             <div className="relative">
                                 <LazyLoadImage
-                                    src={playlistData?.data?.thumbnail} alt="thumbnail" effect="blur"
+                                    src={data?.thumbnail} alt="thumbnail" effect="blur"
                                     className="w-full aspect-square rounded-lg"
                                     wrapperClassName="w-full"
                                 />
@@ -70,31 +71,31 @@ const PlaylistPage: React.FC = () => {
                                     </button>
                                 </div>
                             </div>
-                            <Typography className="text-center" variant={'h5'}>{playlistData?.data?.title}</Typography>
+                            <Typography className="text-center" variant={'h5'}>{data?.title}</Typography>
                             <div className="flex flex-col items-center gap-2 text-gray-700 text-xs">
-                                <span>Cập nhật: {fDate(playlistData?.data?.updatedAt!, 'DD-MM-YYYY')}</span>
+                                <span>Cập nhật: {fDate(data?.updatedAt!, 'DD-MM-YYYY')}</span>
                                 <NavLink to="artist" className="text-center">
-                                    {playlistData?.data?.artistNames}
+                                    {data?.artistNames}
                                 </NavLink>
-                                <span>{roundPeopleAmount(playlistData?.data?.likes ?? 0)} người yêu thích</span>
+                                <span>{roundPeopleAmount(data?.likes ?? 0)} người yêu thích</span>
                             </div>
                         </div>
                         <div className="flex-1">
                             <div className="text-sm">
                                 <span className="text-gray-700">Lời tựa: </span>
-                                <span>{playlistData?.data?.description}</span>
+                                <span>{data?.description}</span>
                             </div>
                             <SongList
-                                songs={playlistData?.data?.songs!}
-                                playlistTitle={playlistData?.data?.title}
-                                totalDuration={playlistData?.data?.totalDuration}
+                                songs={data?.songs!}
+                                playlistTitle={data?.title}
+                                totalDuration={data?.totalDuration}
                             />
                         </div>
                     </div>
                     <div className='mt-12'>
                         <Typography variant={'h5'} className="mb-4">Các họa sĩ trong danh sách</Typography>
                         <div className='flex -mx-2'>
-                            {playlistData?.data?.artists?.slice(0, isMobile ? 2 : 5).map(artist => (
+                            {data?.artists?.slice(0, isMobile ? 2 : 5).map(artist => (
                                 <ArtistCard visibleSlides={isMobile ? 2 : 5} artist={artist} key={artist?.id} />
                             ))}
                         </div>

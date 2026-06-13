@@ -13,6 +13,7 @@ export namespace PlaylistValidators {
     export type CreatePlaylistInput = z.infer<typeof createPlaylistInput>
 
     export const updatePlaylistInput = createPlaylistInput.partial().extend({
+        id: z.string().optional(),
         songIds: z
             .array(z.string('Each song id must be a string'))
             .min(1, 'At least one song id is required')

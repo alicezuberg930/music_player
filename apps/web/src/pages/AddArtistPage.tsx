@@ -1,5 +1,4 @@
 import z from 'zod'
-import { useApi } from '@/hooks/useApi'
 import { useCallback } from 'react'
 import { useLocales } from '@/lib/locales'
 import { ArtistValidators } from '@yukikaze/validator'
@@ -14,6 +13,9 @@ import { RHFUpload } from '@/components/hook-form/RHFUpload'
 import { Button } from '@yukikaze/ui/button'
 import { Card, CardContent } from '@yukikaze/ui/card'
 import { Spinner } from "@yukikaze/ui/spinner"
+import { useMutation } from '@tanstack/react-query'
+import { artistQueries } from '@/lib/queries/artist'
+import { toast } from '@yukikaze/ui'
 
 type FormValuesProps = ArtistValidators.CreateArtistInput & {
     thumbnail?: CustomFile | string
@@ -21,8 +23,7 @@ type FormValuesProps = ArtistValidators.CreateArtistInput & {
 
 const AddArtistPage: React.FC = () => {
     const { translate } = useLocales()
-
-    const { mutateAsync: createArtist } = useApi().useCreateArtist()
+    const { mutateAsync } = useMutation(artistQueries().create.mutationOptions())
 
     // artist_name_is_required
     const ArtistSchema = ArtistValidators.createArtistInput.extend({
@@ -60,8 +61,14 @@ const AddArtistPage: React.FC = () => {
                 }
             }
         }
-        await createArtist(formData, {
-            onSuccess: () => reset()
+        await mutateAsync(formData, {
+            onSuccess: (res) => {
+                toast.success(res.message)
+                reset()
+            },
+            onError: (err) => {
+                toast.error(translate(err.message ?? 'unknown_error'))
+            }
         })
     }
 

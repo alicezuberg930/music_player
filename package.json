@@ -62,6 +62,7 @@
     "deps:bump": "bunx npm-check-updates --deep -u && bun install",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format:check": "prettier --check .",
     "check-types": "turbo run check-types",
     "start:web": "turbo run start --filter=@yukikaze/web",
     "start:services": "turbo run start --filter=@yukikaze/genre-service --filter=@yukikaze/playlist-service --filter=@yukikaze/gateway-service --filter=@yukikaze/home-service --filter=@yukikaze/song-service --filter=@yukikaze/artist-service --filter=@yukikaze/banner-service --filter=@yukikaze/user-service --filter=@yukikaze/auth-service",

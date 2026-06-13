@@ -7,13 +7,13 @@ import { AuthValidators } from "@yukikaze/validator"
 const localAuthRoute = express.Router()
 
 localAuthRoute.post("/sign-up",
-    validateRequest(AuthValidators.registerInput),
-    (request: Request<{}, {}, AuthValidators.RegisterInput>, response: Response) => userController.signUp(request, response)
+    validateRequest(AuthValidators.signUpInput),
+    (request: Request<{}, {}, AuthValidators.SignUpInput>, response: Response) => userController.signUp(request, response)
 )
 
 localAuthRoute.post("/sign-in",
-    validateRequest(AuthValidators.loginInput),
-    (request: Request<{}, {}, AuthValidators.LoginInput>, response: Response) => userController.signIn(request, response)
+    validateRequest(AuthValidators.signInInput),
+    (request: Request<{}, {}, AuthValidators.SignInInput>, response: Response) => userController.signIn(request, response)
 )
 
 localAuthRoute.post("/sign-out",
@@ -21,7 +21,7 @@ localAuthRoute.post("/sign-out",
     (request: Request, response: Response) => userController.signOut(request, response)
 )
 
-localAuthRoute.post("/refresh-token",
+localAuthRoute.post("/refresh",
     (request: Request, response: Response) => userController.refreshToken(request, response)
 )
 

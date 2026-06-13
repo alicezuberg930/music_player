@@ -2,8 +2,9 @@ import { Link, useNavigate } from "react-router-dom"
 import type { Playlist } from "@/@types/playlist"
 import { Ellipsis, Heart, PlayCircle } from '@yukikaze/ui/icons'
 import { Typography } from "@yukikaze/ui/typography"
-import { useApi } from "@/hooks/useApi"
 import LazyLoadImage from "@/components/lazy-load-image/LazyLoadImage"
+import { useMutation } from "@tanstack/react-query"
+import { userQueries } from "@/lib/queries/user"
 
 type Props = {
     playlist: Playlist
@@ -13,13 +14,12 @@ type Props = {
 }
 
 const PlaylistCard: React.FC<Props> = ({ playlist, sectionId, isSearch, visibleSlides = 5 }) => {
-    const { useToggleFavoritePlaylist } = useApi()
-    const toggleFavoritePlaylistMutation = useToggleFavoritePlaylist()
+    const { mutate } = useMutation(userQueries().favoritePlaylist.mutationOptions())
     const navigate = useNavigate()
 
     const handleFavorite = (e: React.MouseEvent<SVGSVGElement>) => {
         e.stopPropagation()
-        toggleFavoritePlaylistMutation.mutate(playlist.id)
+        mutate(playlist.id)
     }
 
     return (

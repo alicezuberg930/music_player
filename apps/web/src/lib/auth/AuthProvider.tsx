@@ -1,17 +1,18 @@
+import { useLocales } from '../locales'
 import { useNavigate } from 'react-router-dom'
 import { createContext, useEffect, useReducer, useCallback, useMemo, useRef } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { useDispatch } from '@/redux/store'
 // types
-import type { ActionMapType, AuthStateType, AuthUser, JWTContextType } from './types'
-// http requests
-import { fetchProfile, signIn, signOut, signUp } from '../httpClient'
+import type { ActionMapType, AuthStateType, JWTContextType } from './types'
+import type { User } from '@/@types'
+// utils
 import { paths } from '../route/paths'
-import { useLocales } from '../locales'
 import type { AuthValidators } from '@yukikaze/validator'
-import { axios } from '../axiosConfig'
-import { useDispatch, useSelector } from '@/redux/store'
 import { setLastTokenRefresh } from '@/redux/slices/app'
 import { toast } from '@yukikaze/ui'
+import { userQueries } from '../queries/user'
+import { jwtDecode } from './utils'
 
 enum Types {
   INITIAL = 'INITIAL',
@@ -23,13 +24,13 @@ enum Types {
 type Payload = {
   [Types.INITIAL]: {
     isAuthenticated: boolean
-    user: AuthUser | null
+    user: User | null
   }
   [Types.LOGIN]: {
-    user: AuthUser
+    user: User
   }
   [Types.REGISTER]: {
-    user: AuthUser
+    user: null
   }
   [Types.LOGOUT]: undefined
 }
@@ -77,103 +78,108 @@ const reducer = (state: AuthStateType, action: ActionsType) => {
 export const AuthContext = createContext<JWTContextType | null>(null)
 
 export function AuthProvider({ children }: Readonly<{ children: React.ReactNode }>) {
+  const { translate } = useLocales()
   const [state, dispatch] = useReducer(reducer, initialState)
   const navigate = useNavigate()
-  const { translate } = useLocales()
-  const isRefreshing = useRef<boolean>(false)
-  const refreshTimerRef = useRef<number | null>(null)
-  const { lastTokenRefresh } = useSelector(state => state.app)
+  const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const dispatchRedux = useDispatch()
-
-  const { data: profileData, isSuccess } = useQuery({
-    queryKey: ['profile'],
-    queryFn: fetchProfile,
-    retry: false,
-  })
+  const interceptorRegisteredRef = useRef<boolean>(false)
+  // tanstack query
+  const { data, isError } = useQuery(userQueries().profile.queryOptions())
+  const { mutateAsync: m1 } = useMutation(userQueries().refreshToken.mutationOptions())
+  const { mutateAsync: m2 } = useMutation(userQueries().signIn.mutationOptions())
+  const { mutateAsync: m3 } = useMutation(userQueries().signUp.mutationOptions())
+  const { mutateAsync: m4 } = useMutation(userQueries().signOut.mutationOptions())
 
   useEffect(() => {
-    if (isSuccess && profileData?.data) {
+    if (data) {
       dispatch({
         type: Types.INITIAL,
         payload: {
           isAuthenticated: true,
-          user: profileData.data
+          user: data
         },
       })
     }
-  }, [isSuccess, profileData])
+  }, [data])
 
-  const signin = useCallback(async (data: AuthValidators.LoginInput) => {
-    try {
-      const response = await signIn(data)
-      if (response.statusCode === 200) {
+  useEffect(() => {
+    if (isError) {
+      dispatch({
+        type: Types.INITIAL,
+        payload: {
+          user: null,
+          isAuthenticated: false,
+        },
+      })
+    }
+  }, [isError])
+
+  useEffect(() => {
+    if (interceptorRegisteredRef.current) return
+
+    // httpClient.interceptors.response.use(async (response) => {
+    //   // Check for token expiration in response headers from auto-refresh
+    //   const expiration = (response as ResponseWithHeaders<any>).headers?.get?.(
+    //     'X-Access-Token-Expiration'
+    //   )
+    //   if (expiration) localStorage.setItem('accessTokenExpiration', expiration)
+    //   return response
+    // })
+
+    interceptorRegisteredRef.current = true
+  }, [])
+
+  const signIn = useCallback(async (data: AuthValidators.SignInInput) => {
+    await m2(data, {
+      onSuccess: (res) => {
         navigate(paths.HOME, { replace: true })
-        toast.success(response.message)
+        toast.success(res.message)
+        const { exp } = jwtDecode(res.data?.accessToken!)
+        localStorage.setItem('accessTokenExpiration', exp)
         dispatch({
           type: Types.LOGIN,
           payload: {
-            user: response.data?.user!
+            user: res.data!.user
           },
         })
+      },
+      onError: (err) => {
+        toast.error(translate(err.message ?? translate('unknown_error')))
       }
-      else {
-        toast.error(translate(response.message))
-      }
-    } catch (error) {
-      toast.error(translate(error instanceof Error ? error.message : translate('unknown_error')))
-    }
+    })
   }, [navigate, translate])
 
-  const signup = useCallback(async (data: AuthValidators.RegisterInput) => {
-    try {
-      const response = await signUp(data)
-      if (response.statusCode === 201) {
+  const signUp = useCallback(async (data: AuthValidators.SignUpInput) => {
+    await m3(data, {
+      onSuccess: (res) => {
         dispatch({
           type: Types.REGISTER,
           payload: {
-            user: response.data as AuthUser
+            user: null
           },
         })
-        toast.success(response.message)
-        navigate('/', { replace: true })
-      } else {
-        toast.error(translate(response.message))
+        toast.success(res.message)
+        navigate('/sign-up', { replace: true })
+      },
+      onError: (err) => {
+        toast.error(err.message ?? translate('unknown_error'))
       }
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : translate('unknown_error'))
-    }
+    })
   }, [navigate, translate])
 
-  const signout = useCallback(async () => {
-    try {
-      await signOut()
-      dispatch({ type: Types.LOGOUT })
-      navigate(paths.HOME, { replace: true })
-      dispatchRedux(setLastTokenRefresh(null))
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : translate('unknown_error'))
-    }
-  }, [navigate, translate])
-
-  const refreshToken = useCallback(async () => {
-    if (isRefreshing.current) return
-    isRefreshing.current = true
-    try {
-      const response = await axios.post('/auth/refresh-token')
-      if (response.status === 200) {
-        console.log('Token refreshed successfully')
-        // Store the refresh timestamp
-        dispatchRedux(setLastTokenRefresh(Date.now()))
+  const signOut = useCallback(async () => {
+    await m4(undefined, {
+      onSuccess: (_res) => {
+        dispatch({ type: Types.LOGOUT })
+        navigate(paths.HOME, { replace: true })
+        dispatchRedux(setLastTokenRefresh(null))
+      },
+      onError: (err) => {
+        toast.error(err.message ?? translate('unknown_error'))
       }
-    } catch (error) {
-      console.error('Failed to refresh token:', error)
-      // If refresh fails, log out the user
-      dispatch({ type: Types.LOGOUT })
-      navigate(paths.HOME, { replace: true })
-    } finally {
-      isRefreshing.current = false
-    }
-  }, [navigate])
+    })
+  }, [navigate, translate])
 
   const signInWithProvider = useCallback((provider: string) => {
     const apiUrl = import.meta.env.VITE_API_URL
@@ -181,76 +187,101 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
   }, [])
 
   // Set up axios interceptor for automatic token refresh on 401
-  useEffect(() => {
-    const interceptor = axios.interceptors.response.use((response) => response,
-      async (error) => {
-        const originalRequest = error.config
-        if (error.response?.status === 401 && !originalRequest._retry) {
-          originalRequest._retry = true
-          try {
-            await refreshToken()
-            return axios(originalRequest)
-          } catch (refreshError) {
-            return Promise.reject(refreshError)
-          }
-        }
-        return Promise.reject(error)
-      }
-    )
-    return () => {
-      axios.interceptors.response.eject(interceptor)
-    }
-  }, [refreshToken])
+  // useEffect(() => {
+  //   const interceptor = axios.interceptors.response.use((response) => response,
+  //     async (error) => {
+  //       const originalRequest = error.config
+  //       if (error.response?.status === 401 && !originalRequest._retry) {
+  //         originalRequest._retry = true
+  //         try {
+  //           await refreshToken()
+  //           return axios(originalRequest)
+  //         } catch (refreshError) {
+  //           return Promise.reject(refreshError)
+  //         }
+  //       }
+  //       return Promise.reject(error)
+  //     }
+  //   )
+  //   return () => {
+  //     axios.interceptors.response.eject(interceptor)
+  //   }
+  // }, [refreshToken])
 
-  // Set up automatic token refresh every 30 minutes  
+  // Schedule token refresh before expiration. Refreshes 20 seconds before the token expires
+  const scheduleTokenRefresh = useCallback(async () => {
+    if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current)
+
+    const expiredIn = localStorage.getItem('accessTokenExpiration')
+    if (!expiredIn) return
+    const expirationTime = Number(expiredIn) * 1000
+    const now = Date.now()
+    const timeUntilExpiration = Math.max(expirationTime - now, 0)
+    const REFRESH_BUFFER = 20 * 1000
+
+    // If token already expired or expires within buffer, refresh immediately
+    if (timeUntilExpiration <= REFRESH_BUFFER) {
+      await m1(undefined, {
+        onError(_err) {
+          dispatch({ type: Types.LOGOUT })
+          navigate(paths.HOME, { replace: true })
+        },
+        onSuccess(res) {
+          const { exp } = jwtDecode(res.data?.accessToken!)
+          localStorage.setItem(
+            'accessTokenExpiration',
+            exp
+          )
+          // After successful refresh, schedule the next one
+          scheduleTokenRefresh()
+        },
+      })
+      return
+    }
+
+    // Schedule refresh for later
+    const timeUntilRefresh = timeUntilExpiration - REFRESH_BUFFER
+    refreshTimerRef.current = setTimeout(() => {
+      m1(undefined, {
+        onError(_err) {
+          // If refresh fails, log out the user
+          dispatch({ type: Types.LOGOUT })
+          navigate(paths.HOME, { replace: true })
+        },
+        onSuccess(res) {
+          const { exp } = jwtDecode(res.data?.accessToken!)
+          localStorage.setItem(
+            'accessTokenExpiration',
+            exp
+          )
+          // After successful refresh, schedule the next one
+          scheduleTokenRefresh()
+        },
+      })
+    }, timeUntilRefresh)
+  }, [m4, navigate])
+
+  // Schedule token refresh when user logs in
   useEffect(() => {
     if (state.isAuthenticated) {
-      // 29 minutes in milliseconds
-      const REFRESH_INTERVAL = 29 * 60 * 1000
-      // Check when the last refresh happened
-      const now = Date.now()
-      let timeUntilNextRefresh = REFRESH_INTERVAL
-
-      if (lastTokenRefresh) {
-        const timeSinceLastRefresh = now - lastTokenRefresh
-        timeUntilNextRefresh = Math.max(REFRESH_INTERVAL - timeSinceLastRefresh, 0)
-        // If it's been more than 29 minutes, refresh immediately
-        if (timeSinceLastRefresh >= REFRESH_INTERVAL) {
-          refreshToken()
-          timeUntilNextRefresh = REFRESH_INTERVAL
-        }
-      } else {
-        dispatchRedux(setLastTokenRefresh(now))
-      }
-      console.log(timeUntilNextRefresh / 1000, 'seconds until next token refresh')
-      // Schedule the first refresh
-      const initialTimer = setTimeout(() => {
-        refreshToken()
-        // set up recurring refresh if the user doesn't refresh the page
-        refreshTimerRef.current = setInterval(() => {
-          refreshToken()
-        }, REFRESH_INTERVAL)
-      }, timeUntilNextRefresh)
-
-      return () => {
-        clearTimeout(initialTimer)
-        if (refreshTimerRef.current) {
-          clearInterval(refreshTimerRef.current)
-        }
-      }
+      scheduleTokenRefresh()
+    } else {
+      if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current)
     }
-  }, [state.isAuthenticated, refreshToken])
+    return () => {
+      if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current)
+    }
+  }, [state.isAuthenticated, scheduleTokenRefresh])
 
   const memoizedValue = useMemo(() => ({
     isInitialized: state.isInitialized,
     isAuthenticated: state.isAuthenticated,
     user: state.user,
-    signin,
+    signIn,
+    signUp,
+    signOut,
     signInWithProvider,
-    signup,
-    signout,
-    refreshToken
-  }), [state, signin, signout, signup, signInWithProvider, refreshToken])
+  }), [state, signIn, signUp, signOut, signInWithProvider])
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>
 }

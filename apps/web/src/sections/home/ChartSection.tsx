@@ -15,7 +15,7 @@ const lines = [
 
 interface LegendFormatterProps {
     value: string
-    chartItems: Record<string, any>
+    chartItems: Record<string, unknown>
     promotes: Song[]
 }
 

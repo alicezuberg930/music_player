@@ -11,7 +11,7 @@ type Props = {
 const PlaylistSection: React.FC<Props> = ({ playlists }) => {
     const isMobile = useIsMobile()
     const { translate } = useLocales()
-    let displayAmount = isMobile ? 2 : 5
+    const displayAmount = isMobile ? 2 : 5
 
     return (
         <section className="mt-12">

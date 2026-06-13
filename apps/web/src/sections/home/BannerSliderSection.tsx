@@ -1,5 +1,5 @@
 import { MoveLeft, MoveRight } from '@yukikaze/ui/icons'
-import { useCallback, useEffect, useState } from "react"
+import { memo, useCallback, useEffect, useState } from "react"
 import { LazyLoadImage } from '@/components/lazy-load-image'
 import { useIsMobile } from '@/hooks/useMobile'
 import type { Banner } from '@/@types/banner'
@@ -8,7 +8,7 @@ type Props = {
     banners: Banner[]
 }
 
-let interval: number | undefined
+let interval: ReturnType<typeof setTimeout> | undefined = undefined
 
 const BannerSliderSection: React.FC<Props> = ({ banners }) => {
     const [currentIndex, setCurrentIndex] = useState(0)
@@ -41,13 +41,13 @@ const BannerSliderSection: React.FC<Props> = ({ banners }) => {
     }, [totalBanners, displayCount])
 
     const clickNextBanner = useCallback(() => {
-        interval && clearInterval(interval)
+        if (interval) clearInterval(interval)
         setIsAuto(false)
         handleNext()
     }, [handleNext])
 
     const clickPreviousBanner = useCallback(() => {
-        interval && clearInterval(interval)
+        if (interval) clearInterval(interval)
         setIsAuto(false)
         handlePrevious()
     }, [handlePrevious])
@@ -59,7 +59,7 @@ const BannerSliderSection: React.FC<Props> = ({ banners }) => {
             }, 4000)
         }
         return () => {
-            interval && clearInterval(interval)
+            if (interval) clearInterval(interval)
         }
     }, [isAuto, totalBanners, handleNext, displayCount])
 
@@ -120,4 +120,4 @@ const BannerSliderSection: React.FC<Props> = ({ banners }) => {
     )
 }
 
-export default BannerSliderSection
+export default memo(BannerSliderSection)

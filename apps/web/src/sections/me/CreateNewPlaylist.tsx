@@ -1,6 +1,5 @@
 // form
 import { useForm } from 'react-hook-form'
-import { useApi } from '@/hooks/useApi'
 import { zodResolver } from '@hookform/resolvers/zod'
 // components
 import { FormProvider, RHFTextField } from '@/components/hook-form'
@@ -18,6 +17,8 @@ import { useLocales } from '@/lib/locales'
 import { Spinner } from '@yukikaze/ui/spinner'
 import { PlaylistValidators } from '@yukikaze/validator'
 import { toast } from '@yukikaze/ui'
+import { useMutation } from '@tanstack/react-query'
+import { playlistQueries } from '@/lib/queries/playlist'
 
 type Props = {
     onOpenChange?: (open: boolean) => void
@@ -25,7 +26,7 @@ type Props = {
 
 const CreateNewPlaylistDialog: React.FC<Props> = ({ onOpenChange }) => {
     const { translate } = useLocales()
-    const { mutateAsync: createPlaylist } = useApi().useCreatePlaylist()
+    const { mutateAsync } = useMutation(playlistQueries().create.mutationOptions())
 
     // privacy_setting_required
     // playlist_title_required
@@ -47,7 +48,7 @@ const CreateNewPlaylistDialog: React.FC<Props> = ({ onOpenChange }) => {
     } = methods
 
     const onSubmit = async (data: PlaylistValidators.CreatePlaylistInput) => {
-        await createPlaylist(data, {
+        await mutateAsync(data, {
             onSuccess: (response) => {
                 onOpenChange?.(false)
                 reset()

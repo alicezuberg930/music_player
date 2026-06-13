@@ -15,11 +15,12 @@ import { setShowSidebarRight } from '@/redux/slices/app'
 import { useDispatch, useSelector } from '@/redux/store'
 // sections
 import LyricsDrawer from './LyricsDrawer'
-import { useApi } from '@/hooks/useApi'
+import { useMutation } from '@tanstack/react-query'
+import { songQueries } from '@/lib/queries/song'
 
 const Player: React.FC = () => {
     const dispatch = useDispatch()
-    const { mutateAsync: addSongListen } = useApi().useAddSongListen()
+    const { mutate } = useMutation(songQueries().addListens.mutationOptions())
     // redux states
     const { showSideBarRight } = useSelector(state => state.app)
     const { currentSong, isPlaying, currentPlaylistSongs } = useSelector(state => state.music)
@@ -195,7 +196,7 @@ const Player: React.FC = () => {
     // initialize player when current song changes and update player UI
     useEffect(() => {
         initializePlayer()
-        if (currentSong) addSongListen(currentSong.id)
+        if (currentSong) mutate(currentSong.id)
         // Cleanup function runs when song changes or component unmounts
         return () => {
             if (audioRef.current) {

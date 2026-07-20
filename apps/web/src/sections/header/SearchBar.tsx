@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-import { Search, X } from '@yukikaze/ui/icons'
+import { Search, X } from '@yukikaze/ui'
 import { useLocales } from '@/lib/locales'
 
 const SearchBar = () => {

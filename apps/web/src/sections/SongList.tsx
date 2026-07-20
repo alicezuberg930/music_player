@@ -2,7 +2,7 @@ import { memo } from "react"
 import SongCard from "./SongCard"
 import { formatDuration } from "@/lib/utils"
 import type { Song } from "@/@types/song"
-import { Dot } from '@yukikaze/ui/icons'
+import { Dot } from '@yukikaze/ui'
 
 type Props = {
     songs: Song[]

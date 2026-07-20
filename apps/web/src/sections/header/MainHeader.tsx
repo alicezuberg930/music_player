@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import SearchBar from "./SearchBar"
-import { ArrowLeft, ArrowRight } from '@yukikaze/ui/icons'
+import { ArrowLeft, ArrowRight } from '@yukikaze/ui'
 import { useAuthContext } from "@/lib/auth/useAuthContext"
 import UserDropdown from "./UserDropdown"
 import LanguageDropdown from "./LanguageDropdown"

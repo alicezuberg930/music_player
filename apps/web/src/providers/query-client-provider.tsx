@@ -1,15 +1,16 @@
 import { defaultShouldDehydrateQuery, QueryCache, QueryClient } from '@tanstack/react-query'
 import type { PersistedClient, Persister } from '@tanstack/react-query-persist-client'
-import { persistReactQueryClient, removeReactQueryClient, restoreReactQueryClient } from './indexDB'
-import { HttpError } from './repository/http-error'
+import { persistReactQueryClient, removeReactQueryClient, restoreReactQueryClient } from '../lib/index-db'
+import { HttpError } from '../lib/repository/http-error'
 import { toast } from '@yukikaze/ui'
-import { handleServerError } from './utils'
+import { showResponseError } from '../lib/utils'
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 
 /**
  * Creates an IndexedDB persister for React Query cache
  * Stores cache in IndexedDB for better performance and larger storage capacity
  */
-export function createIDBPersister() {
+const createIDBPersister = () => {
     return {
         persistClient: async (client: PersistedClient) => {
             await persistReactQueryClient(client)
@@ -23,16 +24,15 @@ export function createIDBPersister() {
     } satisfies Persister
 }
 
-export const createQueryClient = () => new QueryClient({
+const createQueryClient = () => new QueryClient({
     defaultOptions: {
         queries: {
             retry: (failureCount, error) => {
                 // eslint-disable-next-line no-console
-                if (failureCount > 3) return false
-
-                return !(
-                    error instanceof HttpError && [401, 403].includes(error.status ?? 0)
-                )
+                if (import.meta.env.DEV) console.log({ failureCount, error })
+                if (failureCount >= 0 && import.meta.env.DEV) return false
+                if (failureCount > 3 && import.meta.env.PROD) return false
+                return !(error instanceof HttpError && [401, 403].includes(error.status ?? 0))
             },
             // With SSR, we usually want to set some default staleTime
             // above 0 to avoid refetching immediately on the client
@@ -45,47 +45,51 @@ export const createQueryClient = () => new QueryClient({
         },
         mutations: {
             onError: (error) => {
-                handleServerError(error)
-
-                if (error instanceof HttpError && error.status === 304) {
-                    toast.error('Content not modified!')
+                console.log(error instanceof HttpError)
+                if (error instanceof HttpError) {
+                    if (error.status === 304) {
+                        toast.error('Content not modified!')
+                    }
+                    toast.error(error.message)
                 }
             },
         },
         dehydrate: {
-            shouldDehydrateQuery: (query) => defaultShouldDehydrateQuery(query) || query.state.status === 'pending',
+            shouldDehydrateQuery: (query) =>
+                defaultShouldDehydrateQuery(query) ||
+                query.state.status === 'pending',
         },
         hydrate: {},
     },
     queryCache: new QueryCache({
         onError: (error) => {
-            if (error instanceof HttpError) {
-                if (error.status === 401) {
-                    toast.error('Session expired!')
-                    // const redirect = `${router.history.location.href}`
-                    // router.navigate({ to: '/sign-in', search: { redirect } })
-                }
-                if (error.status === 500) {
-                    toast.error('Internal Server Error!')
-                    // Only navigate to error page in production to avoid disrupting HMR in development
-                    // if (import.meta.env.PROD) {
-                    //     router.navigate({ to: '/500' })
-                    // }
-                }
-                if (error.status === 403) {
-                }
-            }
+            showResponseError(error)
         },
     }),
 })
 
-
 let clientQueryClientSingleton: QueryClient | undefined = undefined
 
-export const getQueryClient = () => {
+const getQueryClient = () => {
     // Server: always return a new query client
     if (typeof globalThis === 'undefined') return createQueryClient()
     // Browser: reuse singleton to avoid creating new clients on every request
     clientQueryClientSingleton ??= createQueryClient();
     return clientQueryClientSingleton
 }
+
+const QueryClientProvider = ({ children }: { children: React.ReactNode }) => {
+    return (
+        <PersistQueryClientProvider
+            client={getQueryClient()}
+            persistOptions={{
+                persister: createIDBPersister(),
+                maxAge: 1000 * 60 * 60 * 1, // 1 hours
+            }}
+        >
+            {children}
+        </PersistQueryClientProvider>
+    )
+}
+
+export { QueryClientProvider, getQueryClient, createIDBPersister }

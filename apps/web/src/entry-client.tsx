@@ -6,10 +6,8 @@ import { Provider as ReduxProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistor, store } from './redux/store.ts'
 // authentication provider
-import { AuthProvider } from './lib/auth/AuthProvider.tsx'
-// react query provider with persistence
-import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
-import { getQueryClient, createIDBPersister } from './lib/queryClient.ts'
+import { AuthProvider } from './providers/auth-provider.tsx'
+import { QueryClientProvider } from './providers/query-client-provider.tsx'
 // theme provider
 import { ThemeProvider } from '@yukikaze/ui'
 // snackbar
@@ -22,13 +20,7 @@ import { BrowserRouter } from 'react-router-dom'
 
 hydrateRoot(document.getElementById('root') as HTMLElement,
   <StrictMode>
-    <PersistQueryClientProvider
-      client={getQueryClient()}
-      persistOptions={{
-        persister: createIDBPersister(),
-        maxAge: 1000 * 60 * 60 * 1, // 1 hours
-      }}
-    >
+    <QueryClientProvider>
       <ThemeProvider
         attribute="class"
         defaultTheme="default"
@@ -46,6 +38,6 @@ hydrateRoot(document.getElementById('root') as HTMLElement,
           </PersistGate>
         </ReduxProvider>
       </ThemeProvider>
-    </PersistQueryClientProvider>
+    </QueryClientProvider>
   </StrictMode>
 )

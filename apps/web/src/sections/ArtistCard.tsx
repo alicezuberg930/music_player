@@ -1,8 +1,8 @@
 import { memo } from "react"
-import { roundPeopleAmount } from "@/lib/utils"
+import { formatPeopleNumber } from "@/lib/utils"
 import { Link } from "react-router-dom"
 import type { Artist } from "@/@types/artist"
-import { UserRoundPlus } from '@yukikaze/ui/icons'
+import { UserRoundPlus } from '@yukikaze/ui'
 import { Button } from "@yukikaze/ui/button"
 import LazyLoadImage from "@/components/lazy-load-image/LazyLoadImage"
 import { useLocales } from "@/lib/locales"
@@ -34,7 +34,7 @@ const ArtistCard = ({ artist, visibleSlides = 5 }: Props) => {
             </Link>
             <div className="flex flex-col items-center">
                 <span className="text-sm font-medium hover:underline hover:text-main-500">{artist.name}</span>
-                <span className="text-xs text-gray-600">{roundPeopleAmount(artist.totalFollow)} {translate('following')}</span>
+                <span className="text-xs text-gray-600">{formatPeopleNumber(artist.totalFollow)} {translate('following')}</span>
             </div>
             <Button className="rounded-full" onClick={() => mutate(artist.id)}>
                 <UserRoundPlus size={14} />

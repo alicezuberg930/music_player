@@ -1,12 +1,12 @@
 import { m, AnimatePresence } from 'framer-motion'
 // utils
-import { fData } from '@/lib/formatNumber'
+import { fData } from '@/lib/format-number'
 //
 import { varFade } from '@/components/animate'
 import FileThumbnail, { fileData } from '@/components/file-thumbnail'
 //
 import { type UploadProps } from '../types'
-import { CircleX } from '@yukikaze/ui/icons'
+import { CircleX } from '@yukikaze/ui'
 import { Button } from '@yukikaze/ui/button'
 import { Typography } from '@yukikaze/ui/typography'
 

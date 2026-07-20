@@ -2,11 +2,11 @@ import { useEffect, useState } from "react"
 import { NavLink, useLocation, useParams } from "react-router-dom"
 import SongList from "@/sections/SongList"
 import { setCurrentPlaylistSongs, setCurrentSong, setIsPlaying } from "@/redux/slices/music"
-import { getBaseUrl, roundPeopleAmount } from "@/lib/utils"
+import { getBaseUrl, formatPeopleNumber } from "@/lib/utils"
 import { useDispatch, useSelector } from "@/redux/store"
 import type { Song } from "@/@types/song"
-import { fDate } from "@/lib/formatTime"
-import { PlayCircle } from '@yukikaze/ui/icons'
+import { fDate } from "@/lib/format-time"
+import { PlayCircle } from '@yukikaze/ui'
 import ArtistCard from "@/sections/ArtistCard"
 import { Typography } from "@yukikaze/ui/typography"
 import { useIsMobile } from "@/hooks/useMobile"
@@ -77,7 +77,7 @@ const PlaylistPage: React.FC = () => {
                                 <NavLink to="artist" className="text-center">
                                     {data?.artistNames}
                                 </NavLink>
-                                <span>{roundPeopleAmount(data?.likes ?? 0)} người yêu thích</span>
+                                <span>{formatPeopleNumber(data?.likes ?? 0)} người yêu thích</span>
                             </div>
                         </div>
                         <div className="flex-1">

@@ -1,18 +1,18 @@
-import { useLocales } from '../locales'
+import { useLocales } from '../lib/locales'
 import { useNavigate } from 'react-router-dom'
 import { createContext, useEffect, useReducer, useCallback, useMemo, useRef } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useDispatch } from '@/redux/store'
 // types
-import type { ActionMapType, AuthStateType, JWTContextType } from './types'
+import type { ActionMapType, AuthStateType, JWTContextType } from '../lib/auth/types'
 import type { User } from '@/@types'
 // utils
-import { paths } from '../route/paths'
+import { paths } from '../lib/route/paths'
 import type { AuthValidators } from '@yukikaze/validator'
 import { setLastTokenRefresh } from '@/redux/slices/app'
 import { toast } from '@yukikaze/ui'
-import { userQueries } from '../queries/user'
-import { jwtDecode } from './utils'
+import { userQueries } from '../lib/queries/user'
+import { jwtDecode } from '../lib/auth/utils'
 
 enum Types {
   INITIAL = 'INITIAL',
@@ -186,28 +186,6 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
     window.location.href = `${apiUrl}/auth/provider/${provider}`
   }, [])
 
-  // Set up axios interceptor for automatic token refresh on 401
-  // useEffect(() => {
-  //   const interceptor = axios.interceptors.response.use((response) => response,
-  //     async (error) => {
-  //       const originalRequest = error.config
-  //       if (error.response?.status === 401 && !originalRequest._retry) {
-  //         originalRequest._retry = true
-  //         try {
-  //           await refreshToken()
-  //           return axios(originalRequest)
-  //         } catch (refreshError) {
-  //           return Promise.reject(refreshError)
-  //         }
-  //       }
-  //       return Promise.reject(error)
-  //     }
-  //   )
-  //   return () => {
-  //     axios.interceptors.response.eject(interceptor)
-  //   }
-  // }, [refreshToken])
-
   // Schedule token refresh before expiration. Refreshes 20 seconds before the token expires
   const scheduleTokenRefresh = useCallback(async () => {
     if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current)
@@ -228,10 +206,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
         },
         onSuccess(res) {
           const { exp } = jwtDecode(res.data?.accessToken!)
-          localStorage.setItem(
-            'accessTokenExpiration',
-            exp
-          )
+          localStorage.setItem('accessTokenExpiration', exp)
           // After successful refresh, schedule the next one
           scheduleTokenRefresh()
         },
@@ -250,10 +225,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
         },
         onSuccess(res) {
           const { exp } = jwtDecode(res.data?.accessToken!)
-          localStorage.setItem(
-            'accessTokenExpiration',
-            exp
-          )
+          localStorage.setItem('accessTokenExpiration', exp)
           // After successful refresh, schedule the next one
           scheduleTokenRefresh()
         },

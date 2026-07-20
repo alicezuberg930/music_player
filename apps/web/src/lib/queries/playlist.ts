@@ -4,7 +4,7 @@ import type {
     Playlist,
     QueryPlaylist
 } from '@/@types'
-import { getQueryClient } from '../queryClient'
+import { getQueryClient } from '../../providers/query-client-provider'
 import { httpClient } from '../repository/http-client'
 import { keys as userKeys } from './user'
 import type { PlaylistValidators } from '@yukikaze/validator'

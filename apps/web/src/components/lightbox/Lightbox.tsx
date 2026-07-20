@@ -7,7 +7,7 @@
 // import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails'
 // import { useLightboxState } from 'yet-another-react-lightbox/core'
 // import { LightBoxProps } from './types'
-// import { ChevronLeftIcon, ChevronRightIcon, ClosedCaptionIcon, FullscreenIcon, PauseCircleIcon, PlayCircleIcon, ZoomInIcon, ZoomOutIcon } from '@yukikaze/ui/icons'
+// import { ChevronLeftIcon, ChevronRightIcon, ClosedCaptionIcon, FullscreenIcon, PauseCircleIcon, PlayCircleIcon, ZoomInIcon, ZoomOutIcon } from '@yukikaze/ui'
 // import { Typography } from '../ui/Typography'
 // // lightbox styles
 // import 'yet-another-react-lightbox/styles.css';

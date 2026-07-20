@@ -10,7 +10,7 @@ import type {
     User
 } from '@/@types'
 import { httpClient } from '../repository/http-client'
-import { getQueryClient } from '../queryClient'
+import { getQueryClient } from '../../providers/query-client-provider'
 import { keys as homeKeys } from './home'
 import type { AuthValidators } from '@yukikaze/validator'
 

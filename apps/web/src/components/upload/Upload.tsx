@@ -3,7 +3,7 @@ import { useLocales } from '@/lib/locales'
 // assets
 import { UploadIllustration } from '@/lib/illustrations'
 //
-import { CircleX } from '@yukikaze/ui/icons'
+import { CircleX } from '@yukikaze/ui'
 //
 import { cn } from '@yukikaze/ui'
 import { type UploadProps } from './types'

@@ -136,12 +136,6 @@ interface MultiSelectProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonEle
     modalPopover?: boolean
 
     /**
-     * If true, renders the multi-select component as a child of another component.
-     * Optional, defaults to false.
-     */
-    asChild?: boolean
-
-    /**
      * Additional class names to apply custom styles to the multi-select component.
      * Optional, can be used to add custom styles.
      */
@@ -290,7 +284,6 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(({
     animationConfig,
     maxCount = 3,
     modalPopover = false,
-    asChild = false,
     className,
     hideSelectAll = false,
     searchable = true,
@@ -563,11 +556,6 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(({
         onValueChange([])
     }
 
-    const handleTogglePopover = () => {
-        if (disabled) return
-        setIsPopoverOpen((prev) => !prev)
-    }
-
     const clearExtraOptions = () => {
         if (disabled) return
         const newSelectedValues = selectedValues.slice(0, responsiveSettings.maxCount)
@@ -699,11 +687,10 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(({
                     )}
                 </div>
 
-                <PopoverTrigger asChild>
-                    <Button
+                <PopoverTrigger
+                    render={<Button
                         ref={buttonRef}
                         {...props}
-                        onClick={handleTogglePopover}
                         disabled={disabled}
                         role="combobox"
                         aria-expanded={isPopoverOpen}
@@ -723,7 +710,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(({
                             ...widthConstraints,
                             maxWidth: `min(${widthConstraints.maxWidth}, 100%)`,
                         }}
-                    >
+                    />}>
                         {selectedValues.length > 0 ? (
                             <div className="flex justify-between items-center w-full">
                                 <div
@@ -880,7 +867,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(({
                                 <ChevronDown className="h-4 cursor-pointer text-muted-foreground mx-2" />
                             </div>
                         )}
-                    </Button>
+                
                 </PopoverTrigger>
                 <PopoverContent
                     id={listboxId}
@@ -902,8 +889,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(({
                         maxHeight: screenSize === "mobile" ? "70vh" : "60vh",
                         touchAction: "manipulation",
                     }}
-                    align="start"
-                    onEscapeKeyDown={() => setIsPopoverOpen(false)}>
+                    align="start">
                     <Command>
                         {searchable && (
                             <CommandInput

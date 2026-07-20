@@ -8,8 +8,6 @@ type Props = {
 }
 
 const VideoCard = ({ video, variant = 'horizontal' }: Props) => {
-    // const { BsPlayFill } = icons
-
     return (
         variant === 'horizontal' ? (
             <NavLink to={`/video/${video.id}`} className='relative group' key={video?.id}>

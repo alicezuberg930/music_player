@@ -1,4 +1,4 @@
-import { MoveLeft, MoveRight } from '@yukikaze/ui/icons'
+import { MoveLeft, MoveRight } from '@yukikaze/ui'
 import { memo, useCallback, useEffect, useState } from "react"
 import { LazyLoadImage } from '@/components/lazy-load-image'
 import { useIsMobile } from '@/hooks/useMobile'

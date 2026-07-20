@@ -1,20 +1,43 @@
 import { toast } from "@yukikaze/ui"
 import { HttpError } from "./repository/http-error"
+// import { useNavigate } from "react-router-dom"
 
-export const formatDuration = (duration: number): string => {
+const showResponseError = (error: unknown) => {
+  const httpError = error instanceof HttpError ? error : undefined
+
+  if (httpError) {
+    if (httpError.status === 401) {
+      // const navigate = useNavigate()
+      // navigate({ to: '/sign-in' })
+    }
+    const data = httpError.data as { message?: unknown } | undefined
+    const err = data?.message ?? httpError.message
+    if (Array.isArray(err)) {
+      err.forEach((e) => toast.error(String(e)))
+    } else {
+      toast.error(String(err))
+    }
+  } else if (error instanceof Error) {
+    toast.error(error.message)
+  } else {
+    toast.error('Lỗi không xác định')
+  }
+}
+
+const formatDuration = (duration: number): string => {
   const hour = duration >= 3600 ? `${(Math.floor(duration / 3600)).toString()}:` : ''
   const minute = ((Math.floor(duration / 60) % 60)).toString().padStart(2, '0')
   const second = (duration % 60).toString().padStart(2, '0')
   return `${hour}${minute}:${second}`
 }
 
-export const roundPeopleAmount = (number: number): string => {
+const formatPeopleNumber = (number: number): string => {
   if (number > 1000 && number < 1000000) return `${(number / 1000).toFixed(1)}K`
   if (number > 1000000) return `${(number / 1000000).toFixed(1)}M`
   return number.toString()
 }
 
-export const deepObjectComparison = (obj1: any, obj2: any): boolean => {
+const deepObjectComparison = (obj1: any, obj2: any): boolean => {
   if (obj1 === obj2) return true;
   if (typeof obj1 !== 'object' || obj1 === null || typeof obj2 !== 'object' || obj2 === null) {
     return false;
@@ -36,7 +59,7 @@ export const getBaseUrl = (): string => {
   return `http://localhost:${import.meta.env.PORT ?? 3000}`
 }
 
-export const alpha = (color: string, opacity: number): string => {
+const alpha = (color: string, opacity: number): string => {
   // Handle hex colors
   if (color.startsWith('#')) {
     const hex = color.replace('#', '')
@@ -56,7 +79,7 @@ export const alpha = (color: string, opacity: number): string => {
 }
 
 // Source - https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
-export const shuffle = <T>(array: T[]): T[] => {
+const shuffle = <T>(array: T[]): T[] => {
   let currentIndex = array.length
   // While there remain elements to shuffle...
   while (currentIndex !== 0) {
@@ -69,24 +92,4 @@ export const shuffle = <T>(array: T[]): T[] => {
   return array
 }
 
-export function handleServerError(error: unknown) {
-  // eslint-disable-next-line no-console
-  console.log(error)
-
-  let errMsg = 'Something went wrong!'
-
-  if (
-    error &&
-    typeof error === 'object' &&
-    'status' in error &&
-    Number(error.status) === 204
-  ) {
-    errMsg = 'Content not found.'
-  }
-
-  if (error instanceof HttpError) {
-    errMsg = error.message
-  }
-
-  toast.error(errMsg)
-}
+export { showResponseError, shuffle, alpha, deepObjectComparison, formatPeopleNumber, formatDuration }

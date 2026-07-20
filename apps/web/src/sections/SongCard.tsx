@@ -3,7 +3,7 @@ import { formatDuration } from "@/lib/utils"
 import { useDispatch } from "react-redux"
 import { setIsPlaying, addRecentSong, setCurrentSong, setCurrentPlaylistName } from "@/redux/slices/music"
 import type { Song } from "@/@types/song"
-import { HeartIcon, MusicIcon } from '@yukikaze/ui/icons'
+import { HeartIcon, MusicIcon } from '@yukikaze/ui'
 import { LazyLoadImage } from "@/components/lazy-load-image"
 import { useMutation } from "@tanstack/react-query"
 import { userQueries } from "@/lib/queries/user"

@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 //
-import { AuthContext } from './AuthProvider'
+import { AuthContext } from '../../providers/auth-provider'
 // import { AuthContext } from './Auth0Context'
 // import { AuthContext } from './FirebaseContext'
 // import { AuthContext } from './AwsCognitoContext'

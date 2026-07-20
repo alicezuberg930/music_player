@@ -20,7 +20,6 @@
     "@tanstack/react-query-persist-client": "^5.90.14",
     "@yukikaze/ui": "workspace:*",
     "@yukikaze/validator": "workspace:*",
-    "axios": "^1.13.2",
     "compression": "^1.8.1",
     "dayjs": "^1.11.19",
     "dotenv": "^17.2.3",

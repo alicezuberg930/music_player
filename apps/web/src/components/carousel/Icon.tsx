@@ -1,4 +1,4 @@
-// import { ChevronLeft, ChevronRight, LucideProps } from '@yukikaze/ui/icons'
+// import { ChevronLeft, ChevronRight, LucideProps } from '@yukikaze/ui'
 
 // export function LeftIcon({ ...props }: LucideProps) {
 //   return (

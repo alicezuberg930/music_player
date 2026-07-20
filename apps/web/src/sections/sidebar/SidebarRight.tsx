@@ -2,7 +2,7 @@ import { memo, useCallback } from "react"
 import { useDispatch, useSelector } from "@/redux/store"
 import SongItem from "../SongItem"
 import type { Song } from '@/@types/song'
-import { Trash } from '@yukikaze/ui/icons'
+import { Trash } from '@yukikaze/ui'
 import { Typography } from "@yukikaze/ui/typography"
 import { deleteCurrentSongs } from "@/redux/slices/music"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@yukikaze/ui/tabs"

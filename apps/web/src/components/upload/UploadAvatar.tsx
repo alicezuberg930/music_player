@@ -3,7 +3,7 @@ import { useDropzone } from 'react-dropzone';
 import { type UploadProps } from './types';
 import RejectionFiles from './errors/RejectionFiles';
 import AvatarPreview from './preview/AvatarPreview';
-import { ImagePlus } from '@yukikaze/ui/icons';
+import { ImagePlus } from '@yukikaze/ui';
 import { Typography } from '@yukikaze/ui/typography';
 import { cn } from '@yukikaze/ui';
 

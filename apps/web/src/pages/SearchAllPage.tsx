@@ -1,4 +1,4 @@
-import { roundPeopleAmount } from '@/lib/utils'
+import { formatPeopleNumber } from '@/lib/utils'
 import SongItem from '../sections/SongItem'
 import SongCard from '../sections/SongCard'
 import PlaylistCard from '../sections/PlaylistCard'
@@ -30,7 +30,7 @@ const SearchAllPage = () => {
                                     <span className='mb-1'>{searchData?.top?.objectType === 'artist' ? 'Nghệ sĩ' : ''}</span>
                                     <span className='text-sm font-semibold'>{searchData?.top?.title || searchData?.top?.name}</span>
                                     {searchData?.top?.objectType === 'artist' && (
-                                        <span>{roundPeopleAmount(searchData?.artists[0]?.totalFollow)} quan tâm</span>
+                                        <span>{formatPeopleNumber(searchData?.artists[0]?.totalFollow)} quan tâm</span>
                                     )}
                                 </div>
                             </div>

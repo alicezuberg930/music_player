@@ -6,7 +6,7 @@ import type {
 } from '@/@types'
 import { httpClient } from '../repository/http-client'
 import type { VideoValidators } from '@yukikaze/validator'
-import { getQueryClient } from '../queryClient'
+import { getQueryClient } from '../../providers/query-client-provider'
 
 export const keys = {
   all: (opts: QueryVideo) => ['videos', opts],

@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom"
 import type { Playlist } from "@/@types/playlist"
-import { Ellipsis, Heart, PlayCircle } from '@yukikaze/ui/icons'
+import { Ellipsis, Heart, PlayCircle } from '@yukikaze/ui'
 import { Typography } from "@yukikaze/ui/typography"
 import LazyLoadImage from "@/components/lazy-load-image/LazyLoadImage"
 import { useMutation } from "@tanstack/react-query"

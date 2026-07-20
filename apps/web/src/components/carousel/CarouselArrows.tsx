@@ -2,7 +2,7 @@
 // import { cn } from '@yukikaze/ui'
 // import { LeftIcon, RightIcon } from './Icon'
 // import { Button, ButtonProps } from '../ui/Button'
-// import { LucideProps } from '@yukikaze/ui/icons'
+// import { LucideProps } from '@yukikaze/ui'
 
 
 // interface Props {

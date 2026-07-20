@@ -1,6 +1,6 @@
 // utils
-import { bgBlur } from '@/lib/cssStyles'
-import { Download } from '@yukikaze/ui/icons'
+import { bgBlur } from '@/lib/css-styles'
+import { Download } from '@yukikaze/ui'
 import { Button } from '@yukikaze/ui/button'
 
 type Props = {

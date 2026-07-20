@@ -1,16 +1,16 @@
-import { fileData, fileFormat, fileThumb } from './utils'
-import DownloadButton from './DownloadButton'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@yukikaze/ui/tooltip'
-import { cn } from '@yukikaze/ui'
+import { fileData, fileFormat, fileThumb } from "./utils";
+import DownloadButton from "./DownloadButton";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@yukikaze/ui/tooltip";
+import { cn } from "@yukikaze/ui";
 
 type FileIconProps = {
-  file: File | string
-  tooltip?: boolean
-  imageView?: boolean
-  onDownload?: VoidFunction
-  imageProps?: React.ImgHTMLAttributes<HTMLImageElement>
-  fileProps?: React.ImgHTMLAttributes<HTMLImageElement>
-}
+  file: File | string;
+  tooltip?: boolean;
+  imageView?: boolean;
+  onDownload?: VoidFunction;
+  imageProps?: React.ImgHTMLAttributes<HTMLImageElement>;
+  fileProps?: React.ImgHTMLAttributes<HTMLImageElement>;
+};
 
 export default function FileThumbnail({
   file,
@@ -18,41 +18,44 @@ export default function FileThumbnail({
   imageView,
   onDownload,
   imageProps,
-  fileProps
+  fileProps,
 }: Readonly<FileIconProps>) {
-  const { name = '', path = '', preview = '' } = fileData(file)
+  const { name = "", path = "", preview = "" } = fileData(file);
 
-  const format = fileFormat(path || preview)
+  const format = fileFormat(path || preview);
 
   const renderContent =
-    format === 'image' && imageView ? (
+    format === "image" && imageView ? (
       <img
         src={preview}
         {...imageProps}
-        className={cn('shrink-0 w-full h-full object-cover', imageProps?.className)}
+        className={cn(
+          "shrink-0 w-full h-full object-cover",
+          imageProps?.className,
+        )}
       />
     ) : (
       <img
         src={fileThumb(format)}
         {...fileProps}
-        className={cn('w-8 h-8 shrink-0', fileProps?.className)}
+        className={cn("w-8 h-8 shrink-0", fileProps?.className)}
       />
-    )
+    );
 
   if (tooltip) {
     return (
       <Tooltip>
-        <TooltipTrigger asChild>
-          <div className='shrink-0 items-center flex flex-col justify-center w-fit'>
-            {renderContent}
-            {onDownload && <DownloadButton onDownload={onDownload} />}
-          </div>
+        <TooltipTrigger
+          render={
+            <div className="shrink-0 items-center flex flex-col justify-center w-fit" />
+          }
+        >
+          {renderContent}
+          {onDownload && <DownloadButton onDownload={onDownload} />}
         </TooltipTrigger>
-        <TooltipContent>
-          {name}
-        </TooltipContent>
+        <TooltipContent>{name}</TooltipContent>
       </Tooltip>
-    )
+    );
   }
 
   return (
@@ -60,5 +63,5 @@ export default function FileThumbnail({
       {renderContent}
       {onDownload && <DownloadButton onDownload={onDownload} />}
     </>
-  )
+  );
 }

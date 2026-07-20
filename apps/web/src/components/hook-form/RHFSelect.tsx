@@ -1,70 +1,69 @@
-import { useFormContext, Controller } from 'react-hook-form';
-import { Field, FieldError, FieldLabel } from '@yukikaze/ui/field';
-import { NativeSelect } from '@yukikaze/ui/native-select';
-import { MultiSelect, type MultiSelectProps } from '@yukikaze/ui/multi-select';
+import { useFormContext, Controller } from "react-hook-form";
+import { Field, FieldError, FieldLabel } from "@yukikaze/ui/field";
+import { NativeSelect } from "@yukikaze/ui/native-select";
+import { MultiSelect, type MultiSelectProps } from "@yukikaze/ui/multi-select";
 
-type RHFSelectProps = React.ComponentProps<"select"> & {
-    name: string;
-    fieldLabel: string,
-    children: React.ReactNode;
+type RHFSelectProps = Omit<React.ComponentProps<"select">, "size"> & {
+  name: string;
+  fieldLabel: string;
+  children: React.ReactNode;
 };
 
 export function RHFSelect({
-    name,
-    fieldLabel,
-    children,
-    ...other
+  name,
+  fieldLabel,
+  children,
+  ...other
 }: RHFSelectProps) {
-    const { control } = useFormContext();
+  const { control } = useFormContext();
 
-    return (
-        <Controller
-            name={name}
-            control={control}
-            render={({ field, fieldState: { error, invalid } }) => (
-                <Field data-invalid={invalid}>
-                    <FieldLabel htmlFor={field.name}>{fieldLabel}</FieldLabel>
-                    <NativeSelect {...other} {...field} aria-invalid={invalid}>
-                        {/* render NativeSelectOptions  */}
-                        {children}
-                    </NativeSelect>
-                    {invalid && <FieldError errors={[error]} />}
-                </Field>
-            )}
-        />
-    );
+  return (
+    <Controller
+      name={name}
+      control={control}
+      render={({ field, fieldState: { error, invalid } }) => (
+        <Field data-invalid={invalid}>
+          <FieldLabel htmlFor={field.name}>{fieldLabel}</FieldLabel>
+          <NativeSelect {...other} {...field} aria-invalid={invalid}>
+            {/* render NativeSelectOptions  */}
+            {children}
+          </NativeSelect>
+          {invalid && <FieldError errors={[error]} />}
+        </Field>
+      )}
+    />
+  );
 }
 
-type RHFMultiSelectProps = Omit<MultiSelectProps, 'onValueChange'> & {
-    name: string;
-    fieldLabel: string,
+type RHFMultiSelectProps = Omit<MultiSelectProps, "onValueChange"> & {
+  name: string;
+  fieldLabel: string;
 };
 
 export function RHFMultiSelect({
-    name,
-    fieldLabel,
-    children,
-    ...other
+  name,
+  fieldLabel,
+  ...other
 }: RHFMultiSelectProps) {
-    const { control } = useFormContext()
+  const { control } = useFormContext();
 
-    return (
-        <Controller
-            name={name}
-            control={control}
-            render={({ field, fieldState: { error, invalid } }) => (
-                <Field data-invalid={invalid}>
-                    <FieldLabel htmlFor={field.name}>{fieldLabel}</FieldLabel>
-                    <MultiSelect
-                        className='min-h-9'
-                        aria-invalid={invalid}
-                        {...other}
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                    />
-                    {invalid && <FieldError errors={[error]} />}
-                </Field>
-            )}
-        />
-    );
+  return (
+    <Controller
+      name={name}
+      control={control}
+      render={({ field, fieldState: { error, invalid } }) => (
+        <Field data-invalid={invalid}>
+          <FieldLabel htmlFor={field.name}>{fieldLabel}</FieldLabel>
+          <MultiSelect
+            className="min-h-9"
+            aria-invalid={invalid}
+            {...other}
+            onValueChange={field.onChange}
+            defaultValue={field.value}
+          />
+          {invalid && <FieldError errors={[error]} />}
+        </Field>
+      )}
+    />
+  );
 }

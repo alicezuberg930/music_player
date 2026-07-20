@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useSearchParams } from 'react-router-dom'
-import { searchMenu } from '@/lib/menu'
+import { searchMenu } from '@/lib/menu-items'
 import { cn } from '@yukikaze/ui'
 import { Typography } from '@yukikaze/ui/typography'
 

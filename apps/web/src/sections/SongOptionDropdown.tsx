@@ -1,89 +1,98 @@
+import type { Playlist, Song } from "@/@types"
+import { playlistQueries } from "@/lib/queries/playlist"
+import { useLocales } from "@/lib/locales"
+import { useMutation } from "@tanstack/react-query"
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "@yukikaze/ui/dropdown-menu";
-import { useLocales } from "@/lib/locales";
-import { Heart, ListFilterPlusIcon, ListMusic, Plus } from "@yukikaze/ui";
-import CreateNewPlaylistDialog from "./me/CreateNewPlaylist";
-import { useState } from "react";
-import { type Playlist } from "@/@types/playlist";
-import { Dialog, DialogTrigger } from "@yukikaze/ui/dialog";
+    Heart,
+    ListFilterPlusIcon,
+    ListMusic,
+    Plus,
+    toast,
+} from "@yukikaze/ui"
+import { Dialog } from "@yukikaze/ui/dialog"
+import {
+    createDropdownMenuHandle,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuPortal,
+    DropdownMenuSeparator,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+} from "@yukikaze/ui/dropdown-menu"
+import { useState } from "react"
+import CreateNewPlaylistDialog from "./me/CreateNewPlaylist"
 
-type Props = {
-  addToPlaylist: (playlistId: string) => void;
-  triggerElement: React.ReactElement;
-  playlists?: Playlist[];
-};
+export type SongOptionMenuPayload = {
+    song: Song
+    playlists?: Playlist[]
+}
 
-const SongOptionDropdown: React.FC<Props> = ({
-  addToPlaylist,
-  triggerElement,
-  playlists,
-}) => {
-  const { translate } = useLocales();
-  const [open, setOpen] = useState(false);
+export const songOptionMenuHandle = createDropdownMenuHandle<SongOptionMenuPayload>()
 
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DropdownMenu>
-        <DropdownMenuTrigger render={triggerElement} />
-        <DropdownMenuContent align="start" className="w-52">
-          <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <Heart />
-              Yêu Thích
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            {/* <DropdownMenuItem onClick={addToPlaylist}>
-                        <ListFilterPlusIcon />
-                        Thêm vào danh sách
-                    </DropdownMenuItem> */}
-            <DropdownMenuSub>
-              <DropdownMenuSubTrigger>
-                <ListFilterPlusIcon />
-                {translate("add_to_playlist")}
-              </DropdownMenuSubTrigger>
-              <DropdownMenuPortal>
-                <DropdownMenuSubContent>
-                  <DialogTrigger
-                    nativeButton={false}
-                    render={<DropdownMenuItem />}
-                  >
-                    <Plus />
-                    {translate("create_playlist")}
-                  </DialogTrigger>
-                  {playlists &&
-                    playlists.map((playlist) => (
-                      <DropdownMenuItem
-                        key={playlist.id}
-                        onClick={() => addToPlaylist(playlist.id)}
-                      >
-                        <ListMusic />
-                        {playlist.title}
-                      </DropdownMenuItem>
-                    ))}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>More...</DropdownMenuItem>
-                </DropdownMenuSubContent>
-              </DropdownMenuPortal>
-            </DropdownMenuSub>
-          </DropdownMenuGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
-      {/* create playlist dialog */}
-      <CreateNewPlaylistDialog onOpenChange={setOpen} />
-    </Dialog>
-  );
-};
+const SongOptionDropdown = () => {
+    const { translate } = useLocales()
+    const [createPlaylistOpen, setCreatePlaylistOpen] = useState(false)
+    const { mutate: addToPlaylist } = useMutation(playlistQueries().addToPlaylist.mutationOptions())
 
-export default SongOptionDropdown;
+    const handleAddToPlaylist = (songId: string, playlistId: string) => {
+        addToPlaylist(
+            { id: playlistId, songIds: [songId] },
+            { onSuccess: (response) => toast.success(response.message) }
+        )
+    }
+
+    return (
+        <Dialog open={createPlaylistOpen} onOpenChange={setCreatePlaylistOpen}>
+            <DropdownMenu handle={songOptionMenuHandle}>
+                {({ payload }) => payload ? (
+                    <DropdownMenuContent align="start" className="w-52">
+                        <DropdownMenuGroup>
+                            <DropdownMenuItem>
+                                <Heart />
+                                Yêu Thích
+                            </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                            <DropdownMenuSub>
+                                <DropdownMenuSubTrigger>
+                                    <ListFilterPlusIcon />
+                                    {translate("add_to_playlist")}
+                                </DropdownMenuSubTrigger>
+                                <DropdownMenuPortal>
+                                    <DropdownMenuSubContent>
+                                        <DropdownMenuItem
+                                            onClick={() => setCreatePlaylistOpen(true)}
+                                        >
+                                            <Plus />
+                                            {translate("create_playlist")}
+                                        </DropdownMenuItem>
+                                        {payload.playlists?.map((playlist) => (
+                                            <DropdownMenuItem
+                                                key={playlist.id}
+                                                onClick={() =>
+                                                    handleAddToPlaylist(payload.song.id, playlist.id)
+                                                }
+                                            >
+                                                <ListMusic />
+                                                {playlist.title}
+                                            </DropdownMenuItem>
+                                        ))}
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem>More...</DropdownMenuItem>
+                                    </DropdownMenuSubContent>
+                                </DropdownMenuPortal>
+                            </DropdownMenuSub>
+                        </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                ) : null}
+            </DropdownMenu>
+            <CreateNewPlaylistDialog onOpenChange={setCreatePlaylistOpen} />
+        </Dialog>
+    )
+}
+
+export default SongOptionDropdown

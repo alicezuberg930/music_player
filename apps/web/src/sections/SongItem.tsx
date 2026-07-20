@@ -5,12 +5,11 @@ import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { HeartIcon, MoreHorizontalIcon } from "@yukikaze/ui";
-import SongOptionDropdown from "./SongOptionDropdown";
+import { songOptionMenuHandle } from "./SongOptionDropdown";
+import { DropdownMenuTrigger } from "@yukikaze/ui/dropdown-menu";
 import { LazyLoadImage } from "@/components/lazy-load-image";
-import { toast } from "@yukikaze/ui";
 import { useMutation } from "@tanstack/react-query";
 import { userQueries } from "@/lib/queries/user";
-import { playlistQueries } from "@/lib/queries/playlist";
 
 dayjs.extend(relativeTime);
 
@@ -37,9 +36,6 @@ const SongItem: React.FC<Props> = ({
   const { mutate: favoriteSong } = useMutation(
     userQueries().favoriteSong.mutationOptions(),
   );
-  const { mutate: addToPlaylist } = useMutation(
-    playlistQueries().addToPlaylist.mutationOptions(),
-  );
   const imageSizeCss = () => {
     if (imgSize === "xl") return "w-20 h-20";
     if (imgSize == "lg") return "w-14 h-14";
@@ -57,20 +53,6 @@ const SongItem: React.FC<Props> = ({
   const handlePlay = () => {
     dispatch(addRecentSong(song));
     dispatch(setCurrentSong(song));
-  };
-
-  const handleAddToPlaylist = async (playlistId: string) => {
-    addToPlaylist(
-      { id: playlistId, songIds: [song.id] },
-      {
-        onSuccess: (res) => {
-          toast.success(res.message);
-        },
-        onError: (err) => {
-          toast.error(err.message);
-        },
-      },
-    );
   };
 
   const handleFavorite = (e: MouseEvent<SVGSVGElement>) => {
@@ -118,8 +100,10 @@ const SongItem: React.FC<Props> = ({
               onClick={handleFavorite}
               aria-label="like/unlike song"
             />
-            <SongOptionDropdown
-              triggerElement={
+            <DropdownMenuTrigger
+              handle={songOptionMenuHandle}
+              payload={{ song, playlists }}
+              render={
                 <button
                   onClick={(e) => e.stopPropagation()}
                   className="group-hover:opacity-100 opacity-0"
@@ -128,8 +112,6 @@ const SongItem: React.FC<Props> = ({
                   <MoreHorizontalIcon aria-hidden="true" />
                 </button>
               }
-              playlists={playlists}
-              addToPlaylist={(playlistId) => handleAddToPlaylist(playlistId)}
             />
           </>
         )}

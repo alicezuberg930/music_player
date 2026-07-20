@@ -206,10 +206,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
         },
         onSuccess(res) {
           const { exp } = jwtDecode(res.data?.accessToken!)
-          localStorage.setItem(
-            'accessTokenExpiration',
-            exp
-          )
+          localStorage.setItem('accessTokenExpiration', exp)
           // After successful refresh, schedule the next one
           scheduleTokenRefresh()
         },
@@ -228,10 +225,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
         },
         onSuccess(res) {
           const { exp } = jwtDecode(res.data?.accessToken!)
-          localStorage.setItem(
-            'accessTokenExpiration',
-            exp
-          )
+          localStorage.setItem('accessTokenExpiration', exp)
           // After successful refresh, schedule the next one
           scheduleTokenRefresh()
         },

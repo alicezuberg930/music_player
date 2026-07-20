@@ -5,7 +5,6 @@ import type {
   Video
 } from '@/@types'
 import { httpClient } from '../repository/http-client'
-import type { VideoValidators } from '@yukikaze/validator'
 import { getQueryClient } from '../queryClient'
 
 export const keys = {
@@ -16,7 +15,7 @@ export const keys = {
   delete: () => ['videos', 'delete'],
 } as const
 
-export const video = () => ({
+export const videoQueries = () => ({
   all: {
     queryOptions: (opts: QueryVideo = {}) =>
       infiniteQueryOptions({
@@ -52,7 +51,7 @@ export const video = () => ({
     mutationOptions: () =>
       mutationOptions({
         mutationKey: keys.create(),
-        mutationFn: async (input: VideoValidators.CreateVideoInput) => {
+        mutationFn: async (input: FormData) => {
           return await httpClient.post<Response<Video>>(
             '/videos',
             input

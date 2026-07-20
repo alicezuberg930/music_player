@@ -59,6 +59,8 @@ export const env = {
     USER_SERVICE_PORT: process.env.USER_SERVICE_PORT,
     GENRE_SERVICE_HOST: process.env.GENRE_SERVICE_HOST || 'localhost',
     GENRE_SERVICE_PORT: process.env.GENRE_SERVICE_PORT,
+    VIDEO_SERVICE_HOST: process.env.VIDEO_SERVICE_HOST || 'localhost',
+    VIDEO_SERVICE_PORT: process.env.VIDEO_SERVICE_PORT,
     REDIS_URL: process.env.REDIS_URL,
     REDIS_HOST: process.env.REDIS_HOST || 'localhost',
     REDIS_PORT: Number.parseInt(process.env.REDIS_PORT || '6379'),

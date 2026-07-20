@@ -1,0 +1,1 @@
+export { videoRouter } from './songs/video.route'

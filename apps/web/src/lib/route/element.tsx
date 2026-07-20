@@ -20,6 +20,7 @@ export const VideoClipPage = Loadable(lazy(() => import('@/pages/VideoClipPage')
 export const WeeklyZingChartPage = Loadable(lazy(() => import('@/pages/WeeklyZingChartPage')));
 export const ZingChartPage = Loadable(lazy(() => import('@/pages/ZingChartPage')));
 export const UploadMusicPage = Loadable(lazy(() => import('@/pages/UploadMusicPage')));
+export const UploadVideoPage = Loadable(lazy(() => import('@/pages/UploadVideoPage')));
 export const MyMusicPage = Loadable(lazy(() => import('@/pages/MyMusicPage')));
 export const VerifyPage = Loadable(lazy(() => import('@/pages/VerifyPage')));
 export const AddArtistPage = Loadable(lazy(() => import('@/pages/AddArtistPage')));

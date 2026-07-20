@@ -58,6 +58,12 @@ const UserDropdown: React.FC = () => {
                         </DropdownMenuShortcut>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
+                        <Link to={paths.UPLOAD_VIDEO}>{translate('upload_video')}</Link>
+                        <DropdownMenuShortcut>
+                            <Upload />
+                        </DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
                         <Link to={paths.ADD_ARTIST}>{translate('add_artist')}</Link>
                         <DropdownMenuShortcut>
                             <Spotlight />

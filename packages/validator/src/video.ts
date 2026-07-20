@@ -2,7 +2,7 @@ import * as z from 'zod'
 
 export namespace VideoValidators {
     export const createVideoInput = z.object({
-        stream: z.string('Video file is required'),
+        // stream: z.string('Video file is required'),
         title: z
             .string('Title cannot be empty')
             .min(3, 'Title must be between 3 and 50 characters')
@@ -13,16 +13,16 @@ export namespace VideoValidators {
     })
     export type CreateVideoInput = z.infer<typeof createVideoInput>
 
-    // export const updateSongInput = createVideoInput.partial()
+    export const updateVideoInput = createVideoInput.partial()
 
-    // export type UpdateSongInput = z.infer<typeof updateSongInput>
+    export type UpdateVideoInput = z.infer<typeof updateVideoInput>
 
-    // export const querySongParams = z.object({
-    //     search: z.string().optional(),
-    //     page: z.string().optional(),
-    //     limit: z.string().optional(),
-    //     sortBy: z.string().optional(),
-    //     sortOrder: z.enum(['asc', 'desc']).optional(),
-    // })
-    // export type QuerySongParams = z.infer<typeof querySongParams>
+    export const queryVideoParams = z.object({
+        search: z.string().optional(),
+        page: z.string().optional(),
+        limit: z.string().optional(),
+        sortBy: z.string().optional(),
+        sortOrder: z.enum(['asc', 'desc']).optional(),
+    })
+    export type QueryVideoParams = z.infer<typeof queryVideoParams>
 }

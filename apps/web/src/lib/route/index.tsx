@@ -12,6 +12,7 @@ import {
     WeeklyZingChartPage,
     ZingChartPage,
     UploadMusicPage,
+    UploadVideoPage,
     MyMusicPage,
     HomePage,
     PublicPage,
@@ -56,6 +57,7 @@ export default function Router() {
                             index: true
                         },
                         { path: 'upload-music', element: <UploadMusicPage /> },
+                        { path: 'upload-video', element: <UploadVideoPage /> },
                         { path: 'profile', element: <></> },
                         { path: 'settings', element: <></> },
                         { path: 'add-artist', element: <AddArtistPage /> },

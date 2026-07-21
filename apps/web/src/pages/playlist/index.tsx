@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { NavLink, useLocation, useParams } from "react-router-dom"
+import { Link, useLocation, useNavigate, useParams } from "@tanstack/react-router"
 import SongList from "@/layout/song-list"
 import { setCurrentPlaylistSongs, setCurrentSong, setIsPlaying } from "@/redux/slices/music"
 import { getBaseUrl, formatPeopleNumber } from "@/lib/utils"
@@ -9,8 +9,8 @@ import { fDate } from "@/lib/format-time"
 import { PlayCircle } from '@yukikaze/ui'
 import ArtistCard from "@/layout/artist-card"
 import { Typography } from "@yukikaze/ui/typography"
-import { useIsMobile } from "@/hooks/useMobile"
-import { useMetaTags } from "@/hooks/useMetaTags"
+import { useMobile } from "@/hooks/use-mobile"
+import { useMetaTags } from "@/hooks/use-seo"
 import { LazyLoadImage } from "@/components/lazy-load-image"
 import { PlaylistDetailsShimmer } from "@/components/loading-placeholder"
 import { Spinner } from "@yukikaze/ui/spinner"
@@ -18,13 +18,15 @@ import { useQuery } from "@tanstack/react-query"
 import { playlistQueries } from "@/lib/queries/playlist"
 
 const PlaylistPage: React.FC = () => {
-    const { id } = useParams()
+    const { id } = useParams({ strict: false })
     const dispatch = useDispatch()
-    const isMobile = useIsMobile()
+    const isMobile = useMobile()
     const { currentSong, isPlaying, currentPlaylistSongs } = useSelector(state => state.music)
     const [inPlaylist, setInPlaylist] = useState<boolean>(false)
     const location = useLocation()
     const { data, isLoading } = useQuery(playlistQueries().one.queryOptions(id!))
+    const navigate = useNavigate()
+    const playAlbum = new URLSearchParams(location.search).get("playAlbum") === "true"
 
     useMetaTags({
         title: `Playlist - ${data?.title ?? 'Yukikaze Music Player'}`,
@@ -34,14 +36,13 @@ const PlaylistPage: React.FC = () => {
     })
 
     useEffect(() => {
-        if (location.state?.playAlbum && data?.songs) {
+        if (playAlbum && data?.songs) {
             dispatch(setCurrentPlaylistSongs(data?.songs))
             dispatch(setCurrentSong(data?.songs[0]))
             dispatch(setIsPlaying(true))
-            // Clear the state so it doesn't auto-play on subsequent visits
-            globalThis.history.replaceState({}, document.title)
+            navigate({ to: `/playlist/${id}`, replace: true })
         }
-    }, [data])
+    }, [data, id, playAlbum, navigate])
 
     useEffect(() => {
         if (currentSong) setInPlaylist(currentPlaylistSongs.some((song: Song) => song.id === currentSong.id))
@@ -74,9 +75,16 @@ const PlaylistPage: React.FC = () => {
                             <Typography className="text-center" variant={'h5'}>{data?.title}</Typography>
                             <div className="flex flex-col items-center gap-2 text-gray-700 text-xs">
                                 <span>Cập nhật: {fDate(data?.updatedAt!, 'DD-MM-YYYY')}</span>
-                                <NavLink to="artist" className="text-center">
-                                    {data?.artistNames}
-                                </NavLink>
+                                {data?.artists?.[0]?.alias ? (
+                                    <Link
+                                        to={`/artist/${data.artists[0].alias}`}
+                                        className="text-center"
+                                    >
+                                        {data?.artistNames}
+                                    </Link>
+                                ) : (
+                                    <span className="text-center">{data?.artistNames}</span>
+                                )}
                                 <span>{formatPeopleNumber(data?.likes ?? 0)} người yêu thích</span>
                             </div>
                         </div>

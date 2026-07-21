@@ -1,4 +1,4 @@
-import { useIsMobile } from "@/hooks/useMobile"
+import { useMobile } from "@/hooks/use-mobile"
 import PlaylistCard from "@/layout/playlist-card"
 import type { Playlist } from "@/@types/playlist"
 import { Typography } from "@yukikaze/ui/typography"
@@ -10,7 +10,7 @@ type Props = {
 }
 
 const PlaylistSection: React.FC<Props> = ({ playlists }) => {
-    const isMobile = useIsMobile()
+    const isMobile = useMobile()
     const { translate } = useLocales()
     const displayAmount = isMobile ? 2 : 5
 

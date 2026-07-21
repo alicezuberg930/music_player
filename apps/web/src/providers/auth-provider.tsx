@@ -1,5 +1,5 @@
 import { useLocales } from '../lib/locales'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '@tanstack/react-router'
 import { createContext, useEffect, useReducer, useCallback, useMemo, useRef, useContext } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useDispatch } from '@/redux/store'
@@ -7,7 +7,7 @@ import { useDispatch } from '@/redux/store'
 import type { ActionMapType, AuthStateType, JWTContextType } from '../lib/auth/types'
 import type { User } from '@/@types'
 // utils
-import { paths } from '@/routes/paths'
+import { paths } from '@/lib/paths'
 import type { AuthValidators } from '@yukikaze/validator'
 import { setLastTokenRefresh } from '@/redux/slices/app'
 import { toast } from '@yukikaze/ui'
@@ -160,7 +160,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
           },
         })
         toast.success(res.message)
-        navigate('/sign-up', { replace: true })
+        navigate(paths.SIGNUP, { replace: true })
       },
       onError: (err) => {
         toast.error(err.message ?? translate('unknown_error'))

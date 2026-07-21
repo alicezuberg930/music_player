@@ -4,7 +4,7 @@ import type {
   QuerySong,
   Song
 } from '@/@types'
-import { getQueryClient } from '../../providers/query-client-provider'
+import { queryClient } from '../../providers/query-client-provider'
 import { httpClient } from '../repository/http-client'
 import { keys as userKeys } from './user'
 
@@ -60,9 +60,9 @@ export const songQueries = () => ({
         },
         onSuccess: () => {
           // invalidates all songs
-          getQueryClient().invalidateQueries({ queryKey: keys.all({}) })
+          queryClient().invalidateQueries({ queryKey: keys.all({}) })
           // invalidates my uploaded songs
-          getQueryClient().invalidateQueries({ queryKey: userKeys.song('uploaded') })
+          queryClient().invalidateQueries({ queryKey: userKeys.song('uploaded') })
         },
       }),
   },
@@ -91,7 +91,7 @@ export const songQueries = () => ({
   //         )
   //       },
   //       onSuccess: () => {
-  //         getQueryClient().invalidateQueries({ queryKey: keys.all({}) })
+  //         queryClient().invalidateQueries({ queryKey: keys.all({}) })
   //       },
   //     }),
   // },
@@ -106,7 +106,7 @@ export const songQueries = () => ({
   //         )
   //       },
   //       onSuccess: () => {
-  //         getQueryClient().invalidateQueries({ queryKey: keys.all({}) })
+  //         queryClient().invalidateQueries({ queryKey: keys.all({}) })
   //       },
   //     }),
   // },

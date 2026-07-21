@@ -1,13 +1,14 @@
 import { useEffect } from "react"
-import { useParams, useSearchParams } from "react-router-dom"
+import { useLocation, useParams } from "@tanstack/react-router"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@yukikaze/ui/card"
 import { Typography } from "@yukikaze/ui/typography"
 import { useMutation } from "@tanstack/react-query"
 import { userQueries } from "@/lib/queries/user"
 
 const VerifyPage: React.FC = () => {
-    const { id } = useParams()
-    const [searchParams] = useSearchParams()
+    const { id } = useParams({ strict: false })
+    const location = useLocation()
+    const searchParams = new URLSearchParams(location.search)
     const token = searchParams.get('token')
     const { mutate, status, data } = useMutation(userQueries().verify.mutationOptions())
 

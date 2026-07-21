@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 // components
 import { FormProvider, RHFTextArea, RHFTextField } from '@/components/hook-form'
-import { RHFUpload } from '@/components/hook-form/RHFUpload'
+import { RHFUpload } from '@/components/hook-form/rhf-upload'
 import { Button } from '@yukikaze/ui/button'
 import { Card, CardContent } from '@yukikaze/ui/card'
 import { Spinner } from "@yukikaze/ui/spinner"

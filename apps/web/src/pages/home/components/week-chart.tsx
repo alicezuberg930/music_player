@@ -1,8 +1,8 @@
 import { memo, useState } from 'react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from 'recharts'
 import SongItem from '@/layout/song-item'
-import { Link } from 'react-router-dom'
-import { paths } from '@/routes/paths'
+import { Link } from '@tanstack/react-router'
+import { paths } from '@/lib/paths'
 import type { Song } from '@/@types/song'
 import { a } from './chart-data'
 
@@ -96,7 +96,7 @@ const WeekChart: React.FC = () => {
                                 style='text-white hover:bg-[#A874B8] bg-[#ffffff12]'
                             />
                         ))}
-                        <Link to='' className='w-fit mx-auto bg-transparent text-white border border-white rounded-2xl py-1 px-5 text-sm'>
+                        <Link to='/chart' className='w-fit mx-auto bg-transparent text-white border border-white rounded-2xl py-1 px-5 text-sm'>
                             Xem thêm
                         </Link>
                     </div>

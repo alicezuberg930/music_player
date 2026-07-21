@@ -38,9 +38,9 @@ export const banner = () => ({
     //             },
     //             onSuccess: () => {
     //                 // invalidates all playlists
-    //                 getQueryClient().invalidateQueries({ queryKey: keys.all({}) })
+    //                 queryClient().invalidateQueries({ queryKey: keys.all({}) })
     //                 // invalidates my playlists
-    //                 getQueryClient().invalidateQueries({ queryKey: userKeys.playlist('created') })
+    //                 queryClient().invalidateQueries({ queryKey: userKeys.playlist('created') })
     //             },
     //         }),
     // },
@@ -60,7 +60,7 @@ export const banner = () => ({
     //         )
     //       },
     //       onSuccess: () => {
-    //         getQueryClient().invalidateQueries({ queryKey: keys.all({}) })
+    //         queryClient().invalidateQueries({ queryKey: keys.all({}) })
     //       },
     //     }),
     // },
@@ -76,7 +76,7 @@ export const banner = () => ({
     //         )
     //       },
     //       onSuccess: () => {
-    //         getQueryClient().invalidateQueries({ queryKey: keys.all({}) })
+    //         queryClient().invalidateQueries({ queryKey: keys.all({}) })
     //       },
     //     }),
     // },

@@ -1,8 +1,8 @@
-import { useIsMobile } from '@/hooks/useMobile'
+import { useMobile } from '@/hooks/use-mobile'
 import { memo } from 'react'
 
 const PlaylistListShimmer: React.FC = () => {
-    const isMobile = useIsMobile()
+    const isMobile = useMobile()
     const visibleSlides = isMobile ? 2 : 5
 
     return (

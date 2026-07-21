@@ -4,7 +4,7 @@ import type {
   Artist,
   QueryArtist
 } from '@/@types'
-import { getQueryClient } from '../../providers/query-client-provider'
+import { queryClient } from '../../providers/query-client-provider'
 import { httpClient } from '../repository/http-client'
 import { keys as userKeys } from './user'
 
@@ -56,9 +56,9 @@ export const artistQueries = () => ({
         },
         onSuccess: () => {
           // invalidates all artists
-          getQueryClient().invalidateQueries({ queryKey: keys.all({}) })
+          queryClient().invalidateQueries({ queryKey: keys.all({}) })
           // invalidates my artists
-          getQueryClient().invalidateQueries({ queryKey: userKeys.artist() })
+          queryClient().invalidateQueries({ queryKey: userKeys.artist() })
         },
       }),
   },
@@ -78,7 +78,7 @@ export const artistQueries = () => ({
   //         )
   //       },
   //       onSuccess: () => {
-  //         getQueryClient().invalidateQueries({ queryKey: keys.all({}) })
+  //         queryClient().invalidateQueries({ queryKey: keys.all({}) })
   //       },
   //     }),
   // },
@@ -94,7 +94,7 @@ export const artistQueries = () => ({
   //         )
   //       },
   //       onSuccess: () => {
-  //         getQueryClient().invalidateQueries({ queryKey: keys.all({}) })
+  //         queryClient().invalidateQueries({ queryKey: keys.all({}) })
   //       },
   //     }),
   // },

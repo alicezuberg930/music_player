@@ -5,11 +5,10 @@ import { useCallback } from 'react'
 import type { Video } from '@/@types'
 import { type CustomFile } from '@/components/upload'
 // form
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm, type Resolver } from 'react-hook-form'
 // components
 import { FormProvider, RHFMultiSelect, RHFTextField } from '@/components/hook-form'
-import { RHFUpload } from '@/components/hook-form/RHFUpload'
+import { RHFUpload } from '@/components/hook-form/rhf-upload'
 import { Button } from '@yukikaze/ui/button'
 import { Card, CardContent } from '@yukikaze/ui/card'
 import { Spinner } from '@yukikaze/ui/spinner'
@@ -18,12 +17,7 @@ import { videoQueries } from '@/lib/queries/video'
 import { toast } from '@yukikaze/ui'
 import { artistQueries } from '@/lib/queries/artist'
 
-type FormValuesProps = VideoValidators.CreateVideoInput & {
-    stream: CustomFile | string | null
-    thumbnail: CustomFile | string | null
-}
-
-const UploadVideoPage: React.FC<{ editVideo?: Video, id?: string }> = ({ editVideo, id }) => {
+const UploadVideoPage: React.FC<{ video?: Video, id?: string }> = ({ video, id }) => {
     console.log(id)
     const { translate } = useLocales()
     const { data } = useQuery(artistQueries().all.queryOptions({}))
@@ -32,7 +26,7 @@ const UploadVideoPage: React.FC<{ editVideo?: Video, id?: string }> = ({ editVid
     // video_name_is_required
     // video_stream_file_is_required
     // at_least_one_artist_required
-    const VideoSchema = VideoValidators.createVideoInput.extend({
+    const videoSchema = VideoValidators.createVideoInput.extend({
         stream: z.custom<CustomFile | string | null>((val) => val !== null && val !== '', {
             message: translate('video_stream_file_is_required'),
         }),
@@ -41,15 +35,38 @@ const UploadVideoPage: React.FC<{ editVideo?: Video, id?: string }> = ({ editVid
         }),
     })
 
+    type FormValuesProps = z.infer<typeof videoSchema>
+
     const defaultValues: FormValuesProps = {
-        stream: editVideo?.stream || null,
-        thumbnail: editVideo?.thumbnail || null,
-        title: editVideo?.title || '',
-        artistIds: editVideo?.artists?.map(artist => artist.id) || []
+        stream: video?.stream || null,
+        thumbnail: video?.thumbnail || null,
+        title: video?.title || '',
+        artistIds: video?.artists?.map(artist => artist.id) || []
+    }
+
+    const zodResolver: Resolver<FormValuesProps> = async (values: FormValuesProps) => {
+        const result = videoSchema.safeParse(values)
+        if (result.success) {
+            return { values: result.data, errors: {} }
+        }
+
+        return {
+            values: {},
+            errors: result.error.issues.reduce<Record<string, { type: string; message: string }>>((errors, issue) => {
+                const fieldName = issue.path[0]
+                if (typeof fieldName === 'string') {
+                    errors[fieldName] = {
+                        type: issue.code,
+                        message: issue.message,
+                    }
+                }
+                return errors
+            }, {}),
+        }
     }
 
     const methods = useForm<FormValuesProps>({
-        resolver: zodResolver(VideoSchema),
+        resolver: zodResolver,
         defaultValues,
     })
 

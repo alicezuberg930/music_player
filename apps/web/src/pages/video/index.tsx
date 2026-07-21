@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from "react"
-import { Link, NavLink, useParams } from "react-router-dom"
+import { Link, useParams } from "@tanstack/react-router"
 // import Hls from "hls.js"
 import { formatDuration } from "@/lib/utils"
 import type { Video } from "@/@types/video"
-// import { useIsMobile } from "@/hooks/useMobile"
+// import { useMobile } from "@/hooks/useMobile"
 
 // var hls: Hls | null = null
 
 const VideoPage = () => {
-    const { id } = useParams()
+    const { id } = useParams({ strict: false })
     console.log(id)
     // local states
     const [video, setVideo] = useState<Video | null>(null)
@@ -20,7 +20,7 @@ const VideoPage = () => {
     // icons
     // const { BsPlayFill, BsPauseFill, LuRectangleHorizontal, MdFullscreen, MdOutlineFullscreenExit, MdPictureInPicture, SlVolume1, SlVolume2, SlVolumeOff, IoMdSettings } = icons
     let isScrubbing = false
-    // const isMobile = useIsMobile()
+    // const isMobile = useMobile()
     // const displayAmount = isTheater ? (isMobile ? 4 : 7) : video?.recommends?.length
 
     const settings = useRef<HTMLDivElement | null>(null)
@@ -293,7 +293,7 @@ const VideoPage = () => {
                 <div className={`${isTheater && 'overflow-x-auto whitespace-nowrap thin-scrollbar'} mx-4`}>
                     {video?.recommends?.map(item => (
                         <div key={item?.id} className={`${isTheater && 'last:mr-0 mr-4 w-[330px] inline-block'} py-2`}>
-                            <NavLink to={`/video/${item.id}`} className={`${isTheater && 'flex-col'} flex gap-2 items-center hover:bg-[#ffffff0d]`}>
+                            <Link to={`/video/${item.id}`} className={`${isTheater && 'flex-col'} flex gap-2 items-center hover:bg-[#ffffff0d]`}>
                                 <img src={item?.thumbnail} className={`${isTheater ? 'aspect-video w-full' : 'w-32 h-16'} object-cover rounded-md`} />
                                 <div className="w-full">
                                     <span className="line-clamp-1 font-bold text-sm">{item?.title}</span>
@@ -305,7 +305,7 @@ const VideoPage = () => {
                                         ))}
                                     </span>
                                 </div>
-                            </NavLink>
+                            </Link>
                         </div>
                     ))}
                 </div>

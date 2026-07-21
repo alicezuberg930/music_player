@@ -1,15 +1,15 @@
 import { useDispatch } from 'react-redux'
-import { useSearchParams } from 'react-router-dom'
+import { useLocation } from '@tanstack/react-router'
 import React from 'react'
-import ArtistCard from '../layout/artist-card'
-import type { Artist } from '@/@types/artist'
+import ArtistCard from '@/layout/artist-card'
+import type { Artist } from '@/@types'
 import { Typography } from '@yukikaze/ui/typography'
 import { useLocales } from '@/lib/locales'
 
 const SearchArtistPage = () => {
     const dispatch = useDispatch()
-    const [searchParams] = useSearchParams()
-    const q = searchParams.get('q')
+    const location = useLocation()
+    const q = new URLSearchParams(location.search).get('q')
     const [artists, setArtists] = React.useState<Artist[]>([])
     const { translate } = useLocales()
 

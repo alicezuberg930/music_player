@@ -1,6 +1,6 @@
 import { memo, useEffect, useState } from "react"
 import SongCard from "./song-card"
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "@tanstack/react-router"
 import type { Song } from "@/@types/song"
 
 type Props = {

@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@yukikaze/ui/tabs"
 import PlaylistCard from "@/layout/playlist-card"
-import { useIsMobile } from "@/hooks/useMobile"
+import { useMobile } from "@/hooks/use-mobile"
 import { PlaylistListShimmer } from "@/components/loading-placeholder"
 import { memo, useState } from "react"
 import { useLocales } from "@/lib/locales"
@@ -11,7 +11,7 @@ import type { PlaylistType } from "@/@types"
 export const MyPlaylistTab: React.FC = () => {
     const [type, setType] = useState<PlaylistType>('created')
     const { data, isLoading } = useQuery(userQueries().playlist.queryOptions(type))
-    const isMobile = useIsMobile()
+    const isMobile = useMobile()
     const { translate } = useLocales()
 
     return (

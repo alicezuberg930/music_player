@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux'
-import { useSearchParams } from 'react-router-dom'
+import { useLocation } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import PlaylistCard from '@/layout/playlist-card'
 import type { Playlist } from '@/@types/playlist'
@@ -8,8 +8,8 @@ import { useLocales } from '@/lib/locales'
 
 const SearchPlaylistPage = () => {
     const dispatch = useDispatch()
-    const [searchParams] = useSearchParams()
-    const q = searchParams.get('q')
+    const location = useLocation()
+    const q = new URLSearchParams(location.search).get('q')
     const [playlists, setPlaylists] = useState<Playlist[]>([])
     const { translate } = useLocales()
 

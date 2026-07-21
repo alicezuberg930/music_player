@@ -1,21 +1,17 @@
 import { useFormContext, Controller } from "react-hook-form";
 import { Field, FieldError, FieldLabel } from "@yukikaze/ui/field";
-import {
-  DayPicker,
-  type DateRange,
-  type DayPickerProps,
-} from "react-day-picker";
+import { Calendar } from "@yukikaze/ui/calendar";
+import type { ComponentProps } from "react";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@yukikaze/ui/popover";
 import { Button } from "@yukikaze/ui/button";
 import { CalendarIcon } from "@yukikaze/ui";
-import "react-day-picker/style.css";
 
 dayjs.extend(customParseFormat);
 
-type RHFDatePickerProps = Omit<DayPickerProps, "mode"> & {
+type RHFDatePickerProps = Omit<ComponentProps<typeof Calendar>, "mode"> & {
   name: string;
   fieldLabel: string;
   placeholder: string;
@@ -54,7 +50,7 @@ export function RHFSingleDatePicker({
               )}
             </PopoverTrigger>
             <PopoverContent className="min-w-fit" align="start">
-              <DayPicker
+              <Calendar
                 {...other}
                 captionLayout="dropdown"
                 startMonth={new Date(1900, 0)}
@@ -105,7 +101,7 @@ export function RHFRangeDatePicker({
       render={({ field, fieldState: { error, invalid } }) => {
         const [start, end] = field.value || [undefined, undefined];
         const displayValue = displayValueStr(start, end);
-        const selected: DateRange = {
+        const selected = {
           from: start ? dayjs(start, "YYYY-MM-DD").toDate() : undefined,
           to: end ? dayjs(end, "YYYY-MM-DD").toDate() : undefined,
         };
@@ -129,7 +125,7 @@ export function RHFRangeDatePicker({
                 )}
               </PopoverTrigger>
               <PopoverContent className="min-w-fit" align="start">
-                <DayPicker
+                <Calendar
                   {...other}
                   mode="range"
                   selected={selected}

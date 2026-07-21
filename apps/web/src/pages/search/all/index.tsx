@@ -1,16 +1,16 @@
 import { formatPeopleNumber } from '@/lib/utils'
-import SongItem from '../layout/song-item'
-import SongCard from '../layout/song-card'
-import PlaylistCard from '../layout/playlist-card'
-import ArtistCard from '../layout/artist-card'
+import SongItem from '@/layout/song-item'
+import SongCard from '@/layout/song-card'
+import PlaylistCard from '@/layout/playlist-card'
+import ArtistCard from '@/layout/artist-card'
 import { useDispatch } from 'react-redux'
-import { useSearchParams } from 'react-router-dom'
+import { useLocation } from '@tanstack/react-router'
 import { useEffect } from 'react'
 
 const SearchAllPage = () => {
     const dispatch = useDispatch()
-    const [searchParams] = useSearchParams()
-    const q = searchParams.get('q')
+    const location = useLocation()
+    const q = new URLSearchParams(location.search).get('q')
     const searchData: any = {}
 
     useEffect(() => {

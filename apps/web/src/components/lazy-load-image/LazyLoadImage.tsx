@@ -1,7 +1,7 @@
 import React from "react"
 import type { LazyLoadImageProps } from "./types"
 import { cn } from "@yukikaze/ui"
-import { useInView } from "@/hooks/useInView"
+import { useInView } from "@/hooks/use-in-view"
 
 export default function LazyLoadImage({ placeholderSrc, effect, wrapperClassName, responsiveSizes, widths, ...props }: LazyLoadImageProps) {
     const [isLoaded, setIsLoaded] = React.useState(false)

@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom"
+import { Outlet } from "@tanstack/react-router"
 import SidebarLeft from "./sidebar/sidebar-left"
 import SidebarRight from "./sidebar/sidebar-right"
 import Player from "./player"
@@ -6,7 +6,7 @@ import Header from "./header/header"
 import { useDispatch, useSelector } from "@/redux/store"
 import { setScrollTop } from "@/redux/slices/app"
 
-const PublicLayout: React.FC = () => {
+export const PublicLayout: React.FC = () => {
     const { showSideBarRight, scrollTop } = useSelector(state => state.app)
     const { currentSong } = useSelector(state => state.music)
     const dispatch = useDispatch()
@@ -37,5 +37,3 @@ const PublicLayout: React.FC = () => {
         </div>
     )
 }
-
-export default PublicLayout

@@ -1,14 +1,12 @@
 import { toast } from "@yukikaze/ui"
 import { HttpError } from "./repository/http-error"
-// import { useNavigate } from "react-router-dom"
 
 const showResponseError = (error: unknown) => {
   const httpError = error instanceof HttpError ? error : undefined
 
   if (httpError) {
     if (httpError.status === 401) {
-      // const navigate = useNavigate()
-      // navigate({ to: '/sign-in' })
+      // Keep centralized toast flow for auth errors.
     }
     const data = httpError.data as { message?: unknown } | undefined
     const err = data?.message ?? httpError.message

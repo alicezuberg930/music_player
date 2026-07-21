@@ -1,10 +1,11 @@
-import { NavLink, useParams } from "react-router-dom"
+import { Link, useLocation } from "@tanstack/react-router"
 import { useCallback, useEffect, useState } from "react"
 import RankListCard from "@/layout/rank-list-card"
 import type { Song } from "@/@types/song"
 
 const WeeklyZingChartPage = () => {
-    const { id } = useParams()
+    const location = useLocation()
+    const id = location.pathname.split('/').filter(Boolean).at(-1)
     const normalStyle = "mr-4 py-3 font-semibold text-2xl cursor-pointer h-full relative flex items-center"
     const activeStyle = " search-tab-item after:w-full text-main-500"
     const [songs, setSongs] = useState<Song[]>([])
@@ -47,11 +48,11 @@ const WeeklyZingChartPage = () => {
                             weekChartLinks && weekChartLinks?.map((link: any) => {
                                 let temp = link.split('/')[2];
                                 return (
-                                    <NavLink to={link.split('.')[0]} key={link}
-                                        className={({ isActive }) => isActive ? normalStyle + activeStyle : normalStyle}
+                                    <Link to={link.split('.')[0]} key={link}
+                                        className={location.pathname === link.split('.')[0] ? `${normalStyle}${activeStyle}` : normalStyle}
                                     >
                                         {temp?.includes("Viet-Nam") ? 'Việt Nam' : temp?.includes("US-UK") ? 'US-UK' : 'K-Pop'}
-                                    </NavLink>
+                                    </Link>
                                 )
                             })
                         }

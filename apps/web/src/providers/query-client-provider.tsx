@@ -1,6 +1,6 @@
 import { defaultShouldDehydrateQuery, QueryCache, QueryClient } from '@tanstack/react-query'
 import type { PersistedClient, Persister } from '@tanstack/react-query-persist-client'
-import { persistReactQueryClient, removeReactQueryClient, restoreReactQueryClient } from '../lib/index-db'
+import { persistReactQueryClient, removeReactQueryClient, restoreReactQueryClient } from '../lib/idb'
 import { HttpError } from '../lib/repository/http-error'
 import { toast } from '@yukikaze/ui'
 import { showResponseError } from '../lib/utils'
@@ -70,18 +70,19 @@ const createQueryClient = () => new QueryClient({
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined
 
-const getQueryClient = () => {
+const queryClient = () => {
     // Server: always return a new query client
     if (typeof globalThis === 'undefined') return createQueryClient()
     // Browser: reuse singleton to avoid creating new clients on every request
     clientQueryClientSingleton ??= createQueryClient();
     return clientQueryClientSingleton
 }
+const getQueryClient = () => queryClient()
 
 const QueryClientProvider = ({ children }: { children: React.ReactNode }) => {
     return (
         <PersistQueryClientProvider
-            client={getQueryClient()}
+            client={queryClient()}
             persistOptions={{
                 persister: createIDBPersister(),
                 maxAge: 1000 * 60 * 60 * 1, // 1 hours
@@ -92,4 +93,4 @@ const QueryClientProvider = ({ children }: { children: React.ReactNode }) => {
     )
 }
 
-export { QueryClientProvider, getQueryClient, createIDBPersister }
+export { QueryClientProvider, queryClient, getQueryClient, createIDBPersister }

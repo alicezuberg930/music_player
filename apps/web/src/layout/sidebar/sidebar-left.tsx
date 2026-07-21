@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom"
+import { Link, useLocation } from "@tanstack/react-router"
 import { sidebarMenu } from "@/lib/menu-items"
 import { Typography } from "@yukikaze/ui/typography"
 import { Plus } from "@yukikaze/ui"
@@ -6,7 +6,7 @@ import { cn } from "@yukikaze/ui"
 import CreateNewPlaylistDialog from "../../pages/me/music/components/create-playlist-dialog"
 import { useLocales } from "@/lib/locales"
 import { memo, useState } from "react"
-import { paths } from "@/routes/paths"
+import { paths } from "@/lib/paths"
 import { Dialog, DialogTrigger } from "@yukikaze/ui/dialog"
 import { useAuthContext } from "@/providers/auth-provider"
 
@@ -14,6 +14,15 @@ const SidebarLeft: React.FC = () => {
   const { isAuthenticated } = useAuthContext()
   const { translate } = useLocales()
   const [open, setOpen] = useState(false)
+  const location = useLocation()
+
+  const isActivePath = (path: string) => {
+    const normalized = path.startsWith("/") ? path : `/${path}`
+    return (
+      location.pathname === normalized ||
+      location.pathname.startsWith(`${normalized}/`)
+    )
+  }
 
   return (
     <aside className="sm:block hidden lg:w-48 w-20 flex-none border text-sidebar-foreground transition-all duration-500 ease-in-out bg-sidebar">
@@ -31,22 +40,19 @@ const SidebarLeft: React.FC = () => {
         <div className="flex flex-col">
           {sidebarMenu.map((value) =>
             !isAuthenticated && value.path === paths.MY_MUSIC ? null : (
-              <NavLink
-                to={value.path}
+              <Link
+                to={value.path.startsWith("/") ? value.path : `/${value.path}`}
                 key={value.path}
-                className={({ isActive }) =>
-                  cn(
-                    "text-sm px-6 py-2 font-bold flex gap-3 justify-start items-center ring-sidebar-ring [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                    isActive &&
-                      "bg-sidebar-accent text-sidebar-accent-foreground font-medium",
-                  )
-                }
+                className={cn(
+                  "text-sm px-6 py-2 font-bold flex gap-3 justify-start items-center ring-sidebar-ring [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                  isActivePath(value.path) && "bg-sidebar-accent text-sidebar-accent-foreground font-medium",
+                )}
               >
                 {value.icon}
                 <Typography className="hidden lg:inline m-0">
                   {translate(value.text)}
                 </Typography>
-              </NavLink>
+              </Link>
             ),
           )}
         </div>

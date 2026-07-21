@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "@tanstack/react-router"
 import type { Playlist } from "@/@types/playlist"
 import { Ellipsis, Heart, PlayCircle } from '@yukikaze/ui'
 import { Typography } from "@yukikaze/ui/typography"
@@ -32,7 +32,7 @@ const PlaylistCard: React.FC<Props> = ({ playlist, sectionId, isSearch, visibleS
             <div className="relative w-full group overflow-hidden rounded-lg aspect-square">
                 <div className="z-1 text-white absolute w-full h-full gap-3 bg-overlay invisible group-hover:visible flex items-center justify-center">
                     <Heart onClick={handleFavorite} className={`${playlist.liked && 'fill-primary/80 stroke-primary/80'}`} />
-                    <Link to={`/playlist/${playlist.id}`} state={{ playAlbum: true }} aria-label={`Play ${playlist.title}`}>
+            <Link to={`/playlist/${playlist.id}?playAlbum=true`} aria-label={`Play ${playlist.title}`}>
                         <PlayCircle size={56} />
                     </Link>
                     <Ellipsis />

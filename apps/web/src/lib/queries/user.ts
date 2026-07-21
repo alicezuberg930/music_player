@@ -10,7 +10,7 @@ import type {
     User
 } from '@/@types'
 import { httpClient } from '../repository/http-client'
-import { getQueryClient } from '../../providers/query-client-provider'
+import { queryClient } from '../../providers/query-client-provider'
 import { keys as homeKeys } from './home'
 import type { AuthValidators } from '@yukikaze/validator'
 
@@ -97,7 +97,7 @@ export const userQueries = () => ({
                     )
                 },
                 onSuccess: () => {
-                    getQueryClient().invalidateQueries({ queryKey: keys.profile() })
+                    queryClient().invalidateQueries({ queryKey: keys.profile() })
                 },
             }),
     },
@@ -153,18 +153,18 @@ export const userQueries = () => ({
                 },
                 onMutate: async (id: string) => {
                     // Cancel ongoing queries to prevent overwriting optimistic update
-                    await getQueryClient().cancelQueries({ queryKey: homeKeys.all() })
-                    await getQueryClient().cancelQueries({ queryKey: keys.song('favorite') })
-                    await getQueryClient().cancelQueries({ queryKey: keys.song('uploaded') })
+                    await queryClient().cancelQueries({ queryKey: homeKeys.all() })
+                    await queryClient().cancelQueries({ queryKey: keys.song('favorite') })
+                    await queryClient().cancelQueries({ queryKey: keys.song('uploaded') })
 
                     // Snapshot previous data
-                    const previousHome = getQueryClient().getQueryData(homeKeys.all())
-                    const previousFavorite = getQueryClient().getQueryData(keys.song('favorite'))
-                    const previousUploaded = getQueryClient().getQueryData(keys.song('uploaded'))
+                    const previousHome = queryClient().getQueryData(homeKeys.all())
+                    const previousFavorite = queryClient().getQueryData(keys.song('favorite'))
+                    const previousUploaded = queryClient().getQueryData(keys.song('uploaded'))
 
                     // Optimistic update for home data
                     if (previousHome) {
-                        getQueryClient().setQueryData<Response<HomeData>>(homeKeys.all(), (old) => {
+                        queryClient().setQueryData<Response<HomeData>>(homeKeys.all(), (old) => {
                             if (!old?.data) return old
                             return {
                                 ...old,
@@ -180,7 +180,7 @@ export const userQueries = () => ({
 
                     // Optimistic update for favorite songs list
                     if (previousFavorite) {
-                        getQueryClient().setQueryData<Response<Song[]>>(keys.song('favorite'), (old) => {
+                        queryClient().setQueryData<Response<Song[]>>(keys.song('favorite'), (old) => {
                             if (!old?.data) return old
                             return {
                                 ...old,
@@ -192,7 +192,7 @@ export const userQueries = () => ({
                     }
 
                     if (previousUploaded) {
-                        getQueryClient().setQueryData<Response<Song[]>>(keys.song('uploaded'), (old) => {
+                        queryClient().setQueryData<Response<Song[]>>(keys.song('uploaded'), (old) => {
                             if (!old?.data) return old
                             return {
                                 ...old,
@@ -206,20 +206,20 @@ export const userQueries = () => ({
                     return { previousHome, previousFavorite, previousUploaded }
                 },
                 onSuccess: () => {
-                    // getQueryClient().invalidateQueries({ queryKey: keys.song('favorite') })
-                    // getQueryClient().invalidateQueries({ queryKey: keys.song('uploaded') })
-                    // getQueryClient().invalidateQueries({ queryKey: homeKeys.all() })
+                    // queryClient().invalidateQueries({ queryKey: keys.song('favorite') })
+                    // queryClient().invalidateQueries({ queryKey: keys.song('uploaded') })
+                    // queryClient().invalidateQueries({ queryKey: homeKeys.all() })
                 },
                 onError: (_err, _id, context) => {
                     // Revert to previous data on error
                     if (context?.previousHome) {
-                        getQueryClient().setQueryData(homeKeys.all(), context.previousHome)
+                        queryClient().setQueryData(homeKeys.all(), context.previousHome)
                     }
                     if (context?.previousFavorite) {
-                        getQueryClient().setQueryData(keys.song('favorite'), context.previousFavorite)
+                        queryClient().setQueryData(keys.song('favorite'), context.previousFavorite)
                     }
                     if (context?.previousUploaded) {
-                        getQueryClient().setQueryData(keys.song('favorite'), context.previousUploaded)
+                        queryClient().setQueryData(keys.song('favorite'), context.previousUploaded)
                     }
                 },
             }),
@@ -234,18 +234,18 @@ export const userQueries = () => ({
                 },
                 onMutate: async (id: string) => {
                     // Cancel ongoing queries to prevent overwriting optimistic update
-                    await getQueryClient().cancelQueries({ queryKey: homeKeys.all() })
-                    await getQueryClient().cancelQueries({ queryKey: keys.playlist('favorite') })
-                    await getQueryClient().cancelQueries({ queryKey: keys.playlist('created') })
+                    await queryClient().cancelQueries({ queryKey: homeKeys.all() })
+                    await queryClient().cancelQueries({ queryKey: keys.playlist('favorite') })
+                    await queryClient().cancelQueries({ queryKey: keys.playlist('created') })
 
                     // Snapshot previous data
-                    const previousHome = getQueryClient().getQueryData(homeKeys.all())
-                    const previousFavorite = getQueryClient().getQueryData(keys.playlist('favorite'))
-                    const previousCreated = getQueryClient().getQueryData(keys.playlist('created'))
+                    const previousHome = queryClient().getQueryData(homeKeys.all())
+                    const previousFavorite = queryClient().getQueryData(keys.playlist('favorite'))
+                    const previousCreated = queryClient().getQueryData(keys.playlist('created'))
 
                     // Optimistic update for home data
                     if (previousHome) {
-                        getQueryClient().setQueryData<Response<HomeData>>(homeKeys.all(), (old) => {
+                        queryClient().setQueryData<Response<HomeData>>(homeKeys.all(), (old) => {
                             if (!old?.data) return old
                             return {
                                 ...old,
@@ -261,7 +261,7 @@ export const userQueries = () => ({
 
                     // Optimistic update for favorite songs list
                     if (previousFavorite) {
-                        getQueryClient().setQueryData<Response<Playlist[]>>(keys.playlist('favorite'), (old) => {
+                        queryClient().setQueryData<Response<Playlist[]>>(keys.playlist('favorite'), (old) => {
                             if (!old?.data) return old
                             return {
                                 ...old,
@@ -273,7 +273,7 @@ export const userQueries = () => ({
                     }
 
                     if (previousCreated) {
-                        getQueryClient().setQueryData<Response<Playlist[]>>(keys.playlist('favorite'), (old) => {
+                        queryClient().setQueryData<Response<Playlist[]>>(keys.playlist('favorite'), (old) => {
                             if (!old?.data) return old
                             return {
                                 ...old,
@@ -287,20 +287,20 @@ export const userQueries = () => ({
                     return { previousHome, previousFavorite, previousCreated }
                 },
                 onSuccess: () => {
-                    // getQueryClient().invalidateQueries({ queryKey: keys.song('favorite') })
-                    // getQueryClient().invalidateQueries({ queryKey: keys.song('uploaded') })
-                    // getQueryClient().invalidateQueries({ queryKey: homeKeys.all() })
+                    // queryClient().invalidateQueries({ queryKey: keys.song('favorite') })
+                    // queryClient().invalidateQueries({ queryKey: keys.song('uploaded') })
+                    // queryClient().invalidateQueries({ queryKey: homeKeys.all() })
                 },
                 onError: (_err, _id, context) => {
                     // Revert to previous data on error
                     if (context?.previousHome) {
-                        getQueryClient().setQueryData(homeKeys.all(), context.previousHome)
+                        queryClient().setQueryData(homeKeys.all(), context.previousHome)
                     }
                     if (context?.previousFavorite) {
-                        getQueryClient().setQueryData(keys.playlist('favorite'), context.previousFavorite)
+                        queryClient().setQueryData(keys.playlist('favorite'), context.previousFavorite)
                     }
                     if (context?.previousCreated) {
-                        getQueryClient().setQueryData(keys.playlist('created'), context.previousCreated)
+                        queryClient().setQueryData(keys.playlist('created'), context.previousCreated)
                     }
                 },
             }),
@@ -316,7 +316,7 @@ export const userQueries = () => ({
                     )
                 },
                 onSuccess: () => {
-                    getQueryClient().invalidateQueries({ queryKey: homeKeys.all() })
+                    queryClient().invalidateQueries({ queryKey: homeKeys.all() })
                 },
             }),
     }

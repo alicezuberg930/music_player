@@ -46,7 +46,6 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
           manualChunks: {
             'react-query-chunk': ['@tanstack/react-query', '@tanstack/react-query-persist-client'],
             'react-chunk': ['react', 'react-dom', 'react-router-dom'],
-            'react-day-picker-chunk': ['react-day-picker'],
             'react-dropzone-chunk': ['react-dropzone'],
             'react-lrc-chunk': ['react-lrc'],
             'redux-chunk': ['@reduxjs/toolkit', 'react-redux', 'redux-persist', 'redux-thunk'],

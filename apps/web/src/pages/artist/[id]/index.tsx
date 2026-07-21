@@ -1,10 +1,10 @@
 import { useRef } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams } from "@tanstack/react-router"
 import SongItem from '@/layout/song-item'
 import PlaylistSection from '@/pages/home/components/playlist-section'
 import ArtistCard from '@/layout/artist-card'
 import MVSection from '@/pages/artist/[id]/components/mv-section'
-import { useMetaTags } from '@/hooks/useMetaTags'
+import { useMetaTags } from '@/hooks/use-seo'
 import { getBaseUrl } from '@/lib/utils'
 import { PlayCircle, UserPlus } from '@yukikaze/ui'
 import { Button } from '@yukikaze/ui/button'
@@ -12,8 +12,8 @@ import { useQuery } from '@tanstack/react-query'
 import { artistQueries } from '@/lib/queries/artist'
 
 const ArtistPage = () => {
-    const { id } = useParams()
-    const { data } = useQuery(artistQueries().one.queryOptions(id!))
+    const { id: artistName } = useParams({ strict: false })
+    const { data } = useQuery(artistQueries().one.queryOptions(artistName))
     const ref = useRef<HTMLDivElement | null>(null)
     const displayAmount = 5
 
@@ -21,7 +21,7 @@ const ArtistPage = () => {
         title: data?.name ? `${data.name} - Yukikaze Music Player` : 'Artist - Yukikaze Music Player',
         description: data?.description || `${data?.name || 'Artist'} - Yukikaze Music Player.`,
         image: data?.thumbnail || `${getBaseUrl()}/web-app-manifest-512x512.png`,
-        url: `${getBaseUrl()}/artist/${id}`
+        url: `${getBaseUrl()}/artist/${artistName}`
     })
 
     return (

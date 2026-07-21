@@ -6,11 +6,10 @@ import { useCallback } from 'react'
 import type { Song } from '@/@types/song'
 import { type CustomFile } from '@/components/upload'
 // form
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm, type Resolver } from 'react-hook-form'
 // components
 import { FormProvider, RHFMultiSelect, RHFSingleDatePicker, RHFTextField } from '@/components/hook-form'
-import { RHFUpload } from '@/components/hook-form/RHFUpload'
+import { RHFUpload } from '@/components/hook-form/rhf-upload'
 import { Button } from '@yukikaze/ui/button'
 import { Card, CardContent } from '@yukikaze/ui/card'
 import { Spinner } from '@yukikaze/ui/spinner'
@@ -19,13 +18,7 @@ import { artistQueries } from '@/lib/queries/artist'
 import { songQueries } from '@/lib/queries/song'
 import { toast } from '@yukikaze/ui'
 
-type FormValuesProps = SongValidators.CreateSongInput & {
-    audio: CustomFile | string | null
-    lyrics?: CustomFile | string
-    thumbnail?: CustomFile | string
-}
-
-const UploadMusicPage: React.FC<{ editSong?: Song, id?: string }> = ({ editSong, id }) => {
+const UploadSongPage: React.FC<{ editSong?: Song, id?: string }> = ({ editSong, id }) => {
     console.log(id)
     const { translate } = useLocales()
     const { data } = useQuery(artistQueries().all.queryOptions({}))
@@ -34,13 +27,15 @@ const UploadMusicPage: React.FC<{ editSong?: Song, id?: string }> = ({ editSong,
     // song_name_is_required
     // song_release_date_is_required
     // at_least_one_artist_required
-    const SongSchema = SongValidators.createSongInput.extend({
+    const songSchema = SongValidators.createSongInput.extend({
         audio: z.custom<CustomFile | string | null>((val) => val !== null && val !== '', {
             message: translate('song_audio_file_is_required'),
         }),
         thumbnail: z.union([z.instanceof(File), z.string()]).optional(),
         lyrics: z.union([z.instanceof(File), z.string()]).optional(),
     })
+
+    type FormValuesProps = z.infer<typeof songSchema>
 
     const defaultValues = {
         lyrics: editSong?.lyricsFile || undefined,
@@ -50,8 +45,29 @@ const UploadMusicPage: React.FC<{ editSong?: Song, id?: string }> = ({ editSong,
         artistIds: editSong?.artists?.map(artist => artist.id) || []
     }
 
+    const zodResolver: Resolver<FormValuesProps> = async (values: FormValuesProps) => {
+        const result = songSchema.safeParse(values)
+        if (result.success) {
+            return { values: result.data, errors: {} }
+        }
+
+        return {
+            values: {},
+            errors: result.error.issues.reduce<Record<string, { type: string; message: string }>>((errors, issue) => {
+                const fieldName = issue.path[0]
+                if (typeof fieldName === 'string') {
+                    errors[fieldName] = {
+                        type: issue.code,
+                        message: issue.message,
+                    }
+                }
+                return errors
+            }, {}),
+        }
+    }
+
     const methods = useForm<FormValuesProps>({
-        resolver: zodResolver(SongSchema),
+        resolver: zodResolver,
         defaultValues,
     })
 
@@ -216,4 +232,4 @@ const UploadMusicPage: React.FC<{ editSong?: Song, id?: string }> = ({ editSong,
     )
 }
 
-export default UploadMusicPage
+export default UploadSongPage

@@ -38,5 +38,5 @@
   "include": [
     "src",
     "server.js"
-  ]
+, "public/notification-sw.js"  ]
 }

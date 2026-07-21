@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { Link } from '@tanstack/react-router'
 import { formatDuration } from '@/lib/utils'
 import type { Video } from '@/@types/video'
 import { memo } from 'react'
@@ -11,7 +11,7 @@ type Props = {
 const VideoCard = ({ video, variant = 'horizontal' }: Props) => {
     return (
         variant === 'horizontal' ? (
-            <NavLink to={`/video/${video.id}`} className='relative group' key={video?.id}>
+            <Link to={`/video/${video.id}`} className='relative group' key={video?.id}>
                 <div className='relative aspect-video rounded-md overflow-hidden mb-3'>
                     <img src={video?.thumbnail} alt={video?.title} className='w-full h-full object-cover rounded-md mb-2 group-hover:scale-110 transition-all' />
                     {/* Duration */}
@@ -28,13 +28,13 @@ const VideoCard = ({ video, variant = 'horizontal' }: Props) => {
                     <div className='flex-1'>
                         <h4 className='text-sm font-semibold'>{video?.title}</h4>
                         {video?.artists?.map((artist, i) => (
-                            <NavLink className='text-xs text-gray-500' to={`/artist/${artist?.id}`} key={artist?.id}>
-                                {artist?.name + (i < video?.artists?.length - 1 ? ', ' : '')}
-                            </NavLink>
+                            <Link className='text-xs text-gray-500' to={`/artist/${artist?.id}`} key={artist?.id}>
+                                {artist?.name + (i < video?.artists.length - 1 ? ', ' : '')}
+                            </Link>
                         ))}
                     </div>
                 </div>
-            </NavLink>
+            </Link>
         ) : (
             // <div className={`flex ${isTheater ? 'flex-col flex-1' : 'hover:bg-[#ffffff0d]'} py-1 items-center gap-2 px-4`}>
             //     <img src={item?.thumbnail} className={`${isTheater ? 'w-full h-28' : 'w-32 h-16'} object-cover rounded-md`} />

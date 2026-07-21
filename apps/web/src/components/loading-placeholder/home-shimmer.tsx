@@ -1,8 +1,8 @@
-import { useIsMobile } from "@/hooks/useMobile"
+import { useMobile } from "@/hooks/use-mobile"
 import { memo } from "react"
 
 const HomeShimmer: React.FC = () => {
-    const isMobile = useIsMobile()
+    const isMobile = useMobile()
     const bannerCount = isMobile ? 2 : 3
     const playlistCount = isMobile ? 2 : 5
     const artistCount = isMobile ? 2 : 5

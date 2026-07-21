@@ -6,7 +6,7 @@ import type {
 } from '@/@types'
 import { httpClient } from '../repository/http-client'
 // import type { VideoValidators } from '@yukikaze/validator'
-import { getQueryClient } from '@/providers/query-client-provider'
+import { queryClient } from '@/providers/query-client-provider'
 
 export const keys = {
   all: (opts: QueryVideo) => ['videos', opts],
@@ -60,7 +60,7 @@ export const videoQueries = () => ({
         },
         onSuccess: () => {
           // invalidates all videos
-          getQueryClient().invalidateQueries({ queryKey: keys.all({}) })
+          queryClient().invalidateQueries({ queryKey: keys.all({}) })
         },
       }),
   },
@@ -79,7 +79,7 @@ export const videoQueries = () => ({
   //         )
   //       },
   //       onSuccess: () => {
-  //         getQueryClient().invalidateQueries({ queryKey: keys.all({}) })
+  //         queryClient().invalidateQueries({ queryKey: keys.all({}) })
   //       },
   //     }),
   // },
@@ -94,7 +94,7 @@ export const videoQueries = () => ({
   //         )
   //       },
   //       onSuccess: () => {
-  //         getQueryClient().invalidateQueries({ queryKey: keys.all({}) })
+  //         queryClient().invalidateQueries({ queryKey: keys.all({}) })
   //       },
   //     }),
   // },

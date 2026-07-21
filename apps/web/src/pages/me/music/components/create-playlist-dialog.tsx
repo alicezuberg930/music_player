@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@yukikaze/ui/dialog"
-import RHFSwitch from "@/components/hook-form/RHFSwitch"
+import RHFSwitch from "@/components/hook-form/rhf-switch"
 import { useLocales } from "@/lib/locales"
 import { Spinner } from "@yukikaze/ui/spinner"
 import { PlaylistValidators } from "@yukikaze/validator"

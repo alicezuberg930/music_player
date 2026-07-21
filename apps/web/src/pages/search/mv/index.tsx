@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux'
-import { useSearchParams } from 'react-router-dom'
+import { useLocation } from '@tanstack/react-router'
 import { useEffect } from 'react'
 import VideoCard from '@/layout/video-card'
 import { Typography } from '@yukikaze/ui/typography'
@@ -7,8 +7,8 @@ import { useLocales } from '@/lib/locales'
 
 const SearchMVPage = () => {
     const dispatch = useDispatch()
-    const [searchParams] = useSearchParams()
-    const q = searchParams.get('q')
+    const location = useLocation()
+    const q = new URLSearchParams(location.search).get('q')
     const searchTypeData: any = {}
     const { translate } = useLocales()
     

@@ -1,16 +1,16 @@
-import SongList from '../layout/song-list'
-import { useSearchParams } from 'react-router-dom'
+import SongList from '../../../layout/song-list'
+import { useLocation } from '@tanstack/react-router'
 import { SongListShimmer } from '@/components/loading-placeholder'
 import { useEffect, useRef } from 'react'
-import { useInView } from '@/hooks/useInView'
+import { useInView } from '@/hooks/use-in-view'
 import { Typography } from '@yukikaze/ui/typography'
 import { useLocales } from '@/lib/locales'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { songQueries } from '@/lib/queries/song'
 
 const SearchSongPage = () => {
-    const [searchParams] = useSearchParams()
-    const q = searchParams.get('q')
+    const location = useLocation()
+    const q = new URLSearchParams(location.search).get('q')
     const ref = useRef<HTMLDivElement>(null)
     const isInView = useInView(ref, { once: false, margin: '10px' })
     const { data, status, fetchNextPage, isFetchingNextPage, hasNextPage } = useInfiniteQuery(songQueries().all.queryOptions({ search: q ?? '', limit: 15 }))

@@ -1,0 +1,2 @@
+// notifications -> id, title, content, type, time, is_read, from_user_id, to_user_id, unique_key, created_at, updated_at
+// push_notifications -> id, user_id, end_point, p256dh, auth, ip, created_date, token  

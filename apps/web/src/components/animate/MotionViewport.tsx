@@ -1,6 +1,6 @@
 import { m, type MotionProps } from 'framer-motion';
 // hooks
-import { useIsMobile } from '@/hooks/useMobile';
+import { useMobile } from '@/hooks/use-mobile';
 //
 import { varContainer } from './variants';
 
@@ -16,7 +16,7 @@ export default function MotionViewport({
   disableAnimatedMobile = true,
   ...other
 }: Props) {
-  const isMobile = useIsMobile()
+  const isMobile = useMobile()
 
   if (isMobile && disableAnimatedMobile) {
     return <div {...other}>{children}</div>;

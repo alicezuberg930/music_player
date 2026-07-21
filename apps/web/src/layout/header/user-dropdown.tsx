@@ -14,9 +14,9 @@ import {
   DropdownMenuTrigger,
 } from "@yukikaze/ui/dropdown-menu"
 import { useLocales } from "@/lib/locales"
-import { paths } from "@/routes/paths"
+import { paths } from "@/lib/paths"
 import { LogOut, Settings, Spotlight, Upload, User } from "@yukikaze/ui"
-import { Link } from "react-router-dom"
+import { Link } from "@tanstack/react-router"
 import { useTheme } from "@yukikaze/ui"
 import { memo } from "react"
 import { useAuthContext } from "@/providers/auth-provider"
@@ -38,20 +38,20 @@ const UserDropdown: React.FC = () => {
       <DropdownMenuContent className="w-56 z-100" align="end">
         <DropdownMenuLabel>{translate("my_account")}</DropdownMenuLabel>
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <Link to={paths.UPLOAD_MUSIC}>{translate("profile")}</Link>
+            <DropdownMenuItem>
+              <Link to={paths.UPLOAD_MUSIC}>{translate("profile")}</Link>
             <DropdownMenuShortcut>
               <User />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Link to={paths.UPLOAD_MUSIC}>{translate("settings")}</Link>
+            <DropdownMenuItem>
+              <Link to={paths.UPLOAD_MUSIC}>{translate("settings")}</Link>
             <DropdownMenuShortcut>
               <Settings />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Link to={paths.UPLOAD_MUSIC}>{translate("upload_music")}</Link>
+            <DropdownMenuItem>
+              <Link to={paths.UPLOAD_MUSIC}>{translate("upload_music")}</Link>
             <DropdownMenuShortcut>
               <Upload />
             </DropdownMenuShortcut>

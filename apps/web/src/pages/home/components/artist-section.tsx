@@ -1,6 +1,6 @@
 import type { Artist } from "@/@types/artist"
 import ArtistCard from "@/layout/artist-card"
-import { useIsMobile } from "@/hooks/useMobile"
+import { useMobile } from "@/hooks/use-mobile"
 import { Typography } from "@yukikaze/ui/typography"
 import { useLocales } from "@/lib/locales"
 import { memo } from "react"
@@ -116,7 +116,7 @@ type Props = {
 }
 
 const ArtistSection: React.FC<Props> = ({ artists }) => {
-    const isMobile = useIsMobile()
+    const isMobile = useMobile()
     const { translate } = useLocales()
 
     return (

@@ -4,7 +4,7 @@ import type {
     Playlist,
     QueryPlaylist
 } from '@/@types'
-import { getQueryClient } from '../../providers/query-client-provider'
+import { queryClient } from '../../providers/query-client-provider'
 import { httpClient } from '../repository/http-client'
 import { keys as userKeys } from './user'
 import type { PlaylistValidators } from '@yukikaze/validator'
@@ -60,9 +60,9 @@ export const playlistQueries = () => ({
                 },
                 onSuccess: () => {
                     // invalidates all playlists
-                    getQueryClient().invalidateQueries({ queryKey: keys.all({}) })
+                    queryClient().invalidateQueries({ queryKey: keys.all({}) })
                     // invalidates my playlists
-                    getQueryClient().invalidateQueries({ queryKey: userKeys.playlist('created') })
+                    queryClient().invalidateQueries({ queryKey: userKeys.playlist('created') })
                 },
             }),
     },
@@ -81,9 +81,9 @@ export const playlistQueries = () => ({
                     )
                 },
                 onSuccess: (_, input) => {
-                    getQueryClient().invalidateQueries({ queryKey: keys.one(input.id!) })
-                    getQueryClient().invalidateQueries({ queryKey: keys.all({}) })
-                    getQueryClient().invalidateQueries({ queryKey: userKeys.playlist('created') })
+                    queryClient().invalidateQueries({ queryKey: keys.one(input.id!) })
+                    queryClient().invalidateQueries({ queryKey: keys.all({}) })
+                    queryClient().invalidateQueries({ queryKey: userKeys.playlist('created') })
                 },
             }),
     },
@@ -99,7 +99,7 @@ export const playlistQueries = () => ({
                 },
                 onSuccess: (_, input) => {
                     // invalidates current playlist
-                    getQueryClient().invalidateQueries({ queryKey: keys.one(input.id) })
+                    queryClient().invalidateQueries({ queryKey: keys.one(input.id) })
                 },
             }),
     },
@@ -115,7 +115,7 @@ export const playlistQueries = () => ({
                 },
                 onSuccess: (_, input) => {
                     // invalidates current playlist
-                    getQueryClient().invalidateQueries({ queryKey: keys.one(input.id) })
+                    queryClient().invalidateQueries({ queryKey: keys.one(input.id) })
                 },
             }),
     },
@@ -132,7 +132,7 @@ export const playlistQueries = () => ({
     //         )
     //       },
     //       onSuccess: () => {
-    //         getQueryClient().invalidateQueries({ queryKey: keys.all({}) })
+    //         queryClient().invalidateQueries({ queryKey: keys.all({}) })
     //       },
     //     }),
     // },

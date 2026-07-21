@@ -1,6 +1,6 @@
 import { memo } from "react"
 import { formatPeopleNumber } from "@/lib/utils"
-import { Link } from "react-router-dom"
+import { Link } from "@tanstack/react-router"
 import type { Artist } from "@/@types/artist"
 import { UserRoundPlus } from '@yukikaze/ui'
 import { Button } from "@yukikaze/ui/button"

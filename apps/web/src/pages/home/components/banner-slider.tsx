@@ -1,19 +1,18 @@
 import { MoveLeft, MoveRight } from '@yukikaze/ui'
-import { memo, useCallback, useEffect, useState } from "react"
+import { memo, useCallback, useEffect, useRef, useState } from "react"
 import { LazyLoadImage } from '@/components/lazy-load-image'
-import { useIsMobile } from '@/hooks/useMobile'
+import { useMobile } from '@/hooks/use-mobile'
 import type { Banner } from '@/@types/banner'
 
 type Props = {
     banners: Banner[]
 }
 
-let interval: ReturnType<typeof setTimeout> | undefined = undefined
-
 const BannerSlider: React.FC<Props> = ({ banners }) => {
     const [currentIndex, setCurrentIndex] = useState(0)
     const [isAuto, setIsAuto] = useState(true)
-    const isMobile = useIsMobile()
+    const isMobile = useMobile()
+    const interval = useRef<ReturnType<typeof setTimeout> | null>(null)
 
     const totalBanners = banners?.length || 0
     const displayCount = isMobile ? 2 : 3
@@ -41,25 +40,25 @@ const BannerSlider: React.FC<Props> = ({ banners }) => {
     }, [totalBanners, displayCount])
 
     const clickNextBanner = useCallback(() => {
-        if (interval) clearInterval(interval)
+        if (interval.current) clearInterval(interval.current)
         setIsAuto(false)
         handleNext()
     }, [handleNext])
 
     const clickPreviousBanner = useCallback(() => {
-        if (interval) clearInterval(interval)
+        if (interval.current) clearInterval(interval.current)
         setIsAuto(false)
         handlePrevious()
     }, [handlePrevious])
 
     useEffect(() => {
         if (isAuto && totalBanners > displayCount) {
-            interval = setInterval(() => {
+            interval.current = setInterval(() => {
                 handleNext()
             }, 4000)
         }
         return () => {
-            if (interval) clearInterval(interval)
+            if (interval.current) clearInterval(interval.current)
         }
     }, [isAuto, totalBanners, handleNext, displayCount])
 

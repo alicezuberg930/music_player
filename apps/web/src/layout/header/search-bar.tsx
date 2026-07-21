@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '@tanstack/react-router'
 import { memo, useState } from 'react'
 import { Search, X } from '@yukikaze/ui'
 import { useLocales } from '@/lib/locales'
@@ -11,8 +11,8 @@ const SearchBar = () => {
     const handleSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.code === 'Enter' && e.currentTarget.value.length > 2) {
             navigate({
-                pathname: 'search/all',
-                search: '?q=' + e.currentTarget.value
+                to: '/search/all',
+                search: { q: e.currentTarget.value },
             })
         }
     }

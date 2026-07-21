@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import { Navigate, useLocation } from 'react-router-dom'
+import { Navigate, useLocation } from '@tanstack/react-router'
 // components
 import SignInForm from '@/layout/header/sign-in-form'
 import { HomeShimmer } from '@/components/loading-placeholder'
 import { useAuthContext } from '@/providers/auth-provider'
 
-const AuthGuard = ({ children }: { children: React.ReactNode }) => {
+export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
     const { isAuthenticated, isInitialized } = useAuthContext()
     const { pathname } = useLocation()
     const [requestedLocation, setRequestedLocation] = useState<string | null>(null)
@@ -28,4 +28,3 @@ const AuthGuard = ({ children }: { children: React.ReactNode }) => {
 
     return children
 }
-export default AuthGuard

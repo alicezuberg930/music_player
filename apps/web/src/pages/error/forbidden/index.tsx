@@ -1,5 +1,5 @@
 import { m } from 'framer-motion'
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink } from '@tanstack/react-router'
 // 
 import { Typography } from '@yukikaze/ui/typography'
 import { Button } from '@yukikaze/ui/button'

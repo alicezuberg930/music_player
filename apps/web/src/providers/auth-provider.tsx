@@ -133,7 +133,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
   const signIn = useCallback(async (data: AuthValidators.SignInInput) => {
     await m2(data, {
       onSuccess: (res) => {
-        navigate(paths.HOME, { replace: true })
+        navigate({ to: paths.HOME, replace: true })
         toast.success(res.message)
         const { exp } = jwtDecode(res.data?.accessToken!)
         localStorage.setItem('accessTokenExpiration', exp)
@@ -160,7 +160,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
           },
         })
         toast.success(res.message)
-        navigate(paths.SIGNUP, { replace: true })
+        navigate({ to: paths.SIGNUP, replace: true })
       },
       onError: (err) => {
         toast.error(err.message ?? translate('unknown_error'))
@@ -172,7 +172,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
     await m4(undefined, {
       onSuccess: (_res) => {
         dispatch({ type: Types.LOGOUT })
-        navigate(paths.HOME, { replace: true })
+        navigate({ to: paths.HOME, replace: true })
         dispatchRedux(setLastTokenRefresh(null))
       },
       onError: (err) => {
@@ -202,7 +202,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
       await m1(undefined, {
         onError(_err) {
           dispatch({ type: Types.LOGOUT })
-          navigate(paths.HOME, { replace: true })
+          navigate({ to: paths.HOME, replace: true })
         },
         onSuccess(res) {
           const { exp } = jwtDecode(res.data?.accessToken!)
@@ -221,7 +221,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
         onError(_err) {
           // If refresh fails, log out the user
           dispatch({ type: Types.LOGOUT })
-          navigate(paths.HOME, { replace: true })
+          navigate({ to: paths.HOME, replace: true })
         },
         onSuccess(res) {
           const { exp } = jwtDecode(res.data?.accessToken!)

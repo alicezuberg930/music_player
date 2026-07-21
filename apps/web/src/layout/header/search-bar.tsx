@@ -23,6 +23,7 @@ const SearchBar = () => {
                 <div className='flex w-full'>
                     <Search className='ml-4' />
                     <input
+                        autoComplete="off"
                         type='text' className='outline-none px-2 flex-1 bg-transparent'
                         placeholder={translate('search_placeholder')} name='search'
                         onKeyUp={(e) => handleSubmit(e)}

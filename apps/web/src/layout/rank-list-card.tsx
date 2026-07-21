@@ -35,7 +35,7 @@ const RankListCard: React.FC<Props> = ({ songs, hideAlbum, initialAmount, link }
             {
                 initialAmount < Infinity &&
                 <div className="mx-auto my-4 w-fit">
-                    <button onClick={() => link ? navigate(link.split('.')[0]) : setIsShowAll(!isShowAll)}
+                    <button onClick={() => link ? navigate({ to: link.split('.')[0] }) : setIsShowAll(!isShowAll)}
                         className="hover:bg-main-200 bg-transparent text-main-500 border border-[#0e8080] rounded-3xl py-2 px-5 text-sm font-semibold"
                     >
                         {isShowAll ? 'Ẩn bớt' : 'Xem tất cả'}

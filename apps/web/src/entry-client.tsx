@@ -15,7 +15,8 @@ import { Toaster } from '@yukikaze/ui/sonner'
 // 
 import { StrictMode } from 'react'
 import { hydrateRoot } from 'react-dom/client'
-import App from './App.tsx'
+import SongOptionsDropdown from './layout/song-options-dropdown.tsx'
+import { Router } from './routes'
 
 hydrateRoot(document.getElementById('root') as HTMLElement,
   <StrictMode>
@@ -27,14 +28,15 @@ hydrateRoot(document.getElementById('root') as HTMLElement,
         disableTransitionOnChange
       >
         <ReduxProvider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
+          <PersistGate persistor={persistor}>
             <AuthProvider>
-              <App />
+              <Router />
               <Toaster />
             </AuthProvider>
           </PersistGate>
         </ReduxProvider>
       </ThemeProvider>
+      <SongOptionsDropdown />
     </QueryClientProvider>
   </StrictMode>
 )

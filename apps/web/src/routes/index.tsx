@@ -1,16 +1,8 @@
 import { createRootRoute, createRoute, createRouter, Navigate, Outlet, RouterProvider } from "@tanstack/react-router"
 import { queryClient } from "@/providers/query-client-provider"
 import { AuthGuard } from "@/lib/auth/auth-guard"
-
 import { PublicLayout } from "@/layout/public-layout"
 import { SearchLayout } from "@/layout/search-layout"
-
-import NotFoundPage from "@/pages/error/not-found"
-import ComingSoonPage from "@/pages/error/coming-soon"
-import ForbiddenPage from "@/pages/error/forbidden"
-import InternalServerErrorPage from "@/pages/error/internal-server-error"
-import MaintenancePage from "@/pages/error/maintenance"
-
 import {
   HomePage,
   ZingChartPage,
@@ -28,11 +20,17 @@ import {
   MyMusicPage,
   CreateArtistPage,
   VerifyPage,
+  MaintenancePage,
+  InternalServerErrorPage,
+  ForbiddenPage,
+  ComingSoonPage,
+  NotFoundPage
 } from "@/pages"
 
 const rootRoute = createRootRoute({
   component: Outlet,
   notFoundComponent: NotFoundPage,
+  errorComponent: InternalServerErrorPage
 })
 
 const publicRoute = createRoute({
@@ -45,18 +43,15 @@ const searchLayoutRoute = createRoute({
   getParentRoute: () => publicRoute,
   path: "search",
   component: SearchLayout,
-}).addChildren([
-  createRoute({
-    getParentRoute: () => searchLayoutRoute,
-    path: "",
-    component: () => <Navigate to="/search/all" replace />,
-  }),
+})
+
+const searchChildRoutes = [
   createRoute({ getParentRoute: () => searchLayoutRoute, path: "all", component: SearchAllPage }),
   createRoute({ getParentRoute: () => searchLayoutRoute, path: "song", component: SearchSongPage }),
   createRoute({ getParentRoute: () => searchLayoutRoute, path: "playlist", component: SearchPlaylistPage }),
   createRoute({ getParentRoute: () => searchLayoutRoute, path: "artist", component: SearchArtistPage }),
   createRoute({ getParentRoute: () => searchLayoutRoute, path: "video", component: SearchMVPage }),
-])
+]
 
 const meRoute = createRoute({
   getParentRoute: () => publicRoute,
@@ -66,12 +61,10 @@ const meRoute = createRoute({
       <Outlet />
     </AuthGuard>
   ),
-}).addChildren([
-  createRoute({
-    getParentRoute: () => meRoute,
-    path: "",
-    component: () => <Navigate to="/me/upload-music" replace />,
-  }),
+})
+
+
+const meChildRoutes = [
   createRoute({ getParentRoute: () => meRoute, path: "upload-song", component: UploadSongPage }),
   createRoute({ getParentRoute: () => meRoute, path: "upload-music", component: UploadSongPage }),
   createRoute({ getParentRoute: () => meRoute, path: "upload-video", component: UploadVideoPage }),
@@ -80,11 +73,11 @@ const meRoute = createRoute({
   createRoute({ getParentRoute: () => meRoute, path: "profile", component: () => <></> }),
   createRoute({ getParentRoute: () => meRoute, path: "settings", component: () => <></> }),
   createRoute({ getParentRoute: () => meRoute, path: "music", component: MyMusicPage }),
-])
+]
 
 const publicChildren = [
-  createRoute({ getParentRoute: () => publicRoute, path: "", component: () => <Navigate to="/home" replace /> }),
-  createRoute({ getParentRoute: () => publicRoute, path: "home", component: HomePage }),
+  createRoute({ getParentRoute: () => publicRoute, path: "/", component: () => <Navigate to="/home" replace /> }),
+  createRoute({ getParentRoute: () => publicRoute, path: "/home", component: HomePage }),
   createRoute({ getParentRoute: () => publicRoute, path: "playlist/$id", component: PlaylistPage }),
   createRoute({ getParentRoute: () => publicRoute, path: "album/$id", component: PlaylistPage }),
   createRoute({ getParentRoute: () => publicRoute, path: "artist/$name", component: ArtistPage }),
@@ -103,13 +96,12 @@ const errorRoutes = [
   createRoute({ getParentRoute: () => rootRoute, path: "internal-server-error", component: InternalServerErrorPage }),
   createRoute({ getParentRoute: () => rootRoute, path: "not-found", component: NotFoundPage }),
   createRoute({ getParentRoute: () => rootRoute, path: "forbidden", component: ForbiddenPage }),
-  createRoute({ getParentRoute: () => rootRoute, path: "*", component: () => <Navigate to="/not-found" replace /> }),
 ]
 
 const routeTree = rootRoute.addChildren([
   publicRoute.addChildren(publicChildren),
-  searchLayoutRoute,
-  meRoute,
+  searchLayoutRoute.addChildren(searchChildRoutes),
+  meRoute.addChildren(meChildRoutes),
   verifyRoute,
   videoRoute,
   videoClipRoute,

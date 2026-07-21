@@ -3,12 +3,12 @@ import { sidebarMenu } from "@/lib/menu-items"
 import { Typography } from "@yukikaze/ui/typography"
 import { Plus } from "@yukikaze/ui"
 import { cn } from "@yukikaze/ui"
-import CreateNewPlaylistDialog from "../../sections/me/CreateNewPlaylist"
-import { useAuthContext } from "@/lib/auth/useAuthContext"
+import CreateNewPlaylistDialog from "../../pages/me/music/components/create-playlist-dialog"
 import { useLocales } from "@/lib/locales"
 import { memo, useState } from "react"
 import { paths } from "@/routes/paths"
 import { Dialog, DialogTrigger } from "@yukikaze/ui/dialog"
+import { useAuthContext } from "@/providers/auth-provider"
 
 const SidebarLeft: React.FC = () => {
   const { isAuthenticated } = useAuthContext()

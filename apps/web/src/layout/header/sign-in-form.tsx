@@ -2,7 +2,6 @@ import { FormProvider, RHFTextField } from "@/components/hook-form"
 import { memo, useMemo } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useAuthContext } from "@/lib/auth/useAuthContext"
 import { Button } from "@yukikaze/ui/button"
 import { Field, FieldGroup } from "@yukikaze/ui/field"
 import { AuthValidators } from "@yukikaze/validator"
@@ -14,6 +13,7 @@ import {
 } from "@yukikaze/ui/dialog"
 import { useLocales } from "@/lib/locales"
 import { Spinner } from "@yukikaze/ui/spinner"
+import { useAuthContext } from "@/providers/auth-provider"
 
 const SignInForm: React.FC = () => {
   const { signIn, signInWithProvider } = useAuthContext()

@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import { formatDuration } from '@/lib/utils'
 import type { Video } from '@/@types/video'
+import { memo } from 'react'
 
 type Props = {
     video: Video
@@ -53,4 +54,4 @@ const VideoCard = ({ video, variant = 'horizontal' }: Props) => {
     )
 }
 
-export default VideoCard
+export default memo(VideoCard)

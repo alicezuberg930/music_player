@@ -39,16 +39,6 @@ app.get('/*splat', async (req, res) => {
                 description: 'Listen to your favorite music online. Stream songs, create playlists, and discover new artists on Yukikaze Music Player.',
                 image: `${currentBaseUrl}/web-app-manifest-512x512.png`,
             },
-            '/sign-in': {
-                title: 'Đăng nhập',
-                description: 'Đăng nhập tài khoản để trải nghiệm thêm tính năng của Yukikaze Music Player.',
-                image: `${currentBaseUrl}/web-app-manifest-512x512.png`,
-            },
-            '/sign-up': {
-                title: 'Đăng ký',
-                description: 'Tạo tài khoản mới để upload nhạc và tạo playlist của riêng bạn.',
-                image: `${currentBaseUrl}/web-app-manifest-512x512.png`,
-            },
         }
 
         if (staticMeta[req.path]) {

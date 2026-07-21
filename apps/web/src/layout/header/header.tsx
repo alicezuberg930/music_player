@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom"
 import SearchBar from "./search-bar"
 import { ArrowLeft, ArrowRight } from '@yukikaze/ui'
-import { useAuthContext } from "@/lib/auth/useAuthContext"
 import UserDropdown from "./user-dropdown"
 import LanguageDropdown from "./language-dropdown"
 import AuthPopover from "./auth-popover"
 import { memo } from "react"
+import { useAuthContext } from "@/providers/auth-provider"
 
 const Header = () => {
     const navigate = useNavigate()

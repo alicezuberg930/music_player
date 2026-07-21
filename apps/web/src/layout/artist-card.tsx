@@ -14,7 +14,7 @@ type Props = {
     visibleSlides?: number
 }
 
-const ArtistCard = ({ artist, visibleSlides = 5 }: Props) => {
+const ArtistCard: React.FC<Props> = ({ artist, visibleSlides = 5 }) => {
     const { translate } = useLocales()
     const { mutate } = useMutation(userQueries().followArtist.mutationOptions())
 

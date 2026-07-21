@@ -1,6 +1,6 @@
 import { getBaseUrl } from "@/lib/utils";
 import type { OAuth2Token, OauthAccount } from "../types";
-import { generateCodeChallenge } from "@/lib/crypto";
+import { generateCodeChallenge } from "@/lib/utils";
 
 export default abstract class BaseProvider {
     public abstract client: OAuthClient

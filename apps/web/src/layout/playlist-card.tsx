@@ -5,6 +5,7 @@ import { Typography } from "@yukikaze/ui/typography"
 import LazyLoadImage from "@/components/lazy-load-image/LazyLoadImage"
 import { useMutation } from "@tanstack/react-query"
 import { userQueries } from "@/lib/queries/user"
+import { memo } from "react"
 
 type Props = {
     playlist: Playlist
@@ -53,4 +54,4 @@ const PlaylistCard: React.FC<Props> = ({ playlist, sectionId, isSearch, visibleS
     )
 }
 
-export default PlaylistCard
+export default memo(PlaylistCard)

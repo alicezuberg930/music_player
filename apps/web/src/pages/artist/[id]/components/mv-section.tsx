@@ -1,11 +1,11 @@
 import type { Video } from "@/@types/video"
-import VideoCard from "./VideoCard"
+import VideoCard from "../../../../layout/video-card"
 
 type Props = {
     videos: Video[]
 }
 
-const MVSection = ({ videos }: Props) => {
+const MVSection: React.FC<Props> = ({ videos }) => {
     return (
         <div className="mt-12">
             <div className="flex items-center justify-between mb-5">

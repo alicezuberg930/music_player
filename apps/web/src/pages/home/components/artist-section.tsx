@@ -1,5 +1,5 @@
 import type { Artist } from "@/@types/artist"
-import ArtistCard from "@/sections/ArtistCard"
+import ArtistCard from "@/layout/artist-card"
 import { useIsMobile } from "@/hooks/useMobile"
 import { Typography } from "@yukikaze/ui/typography"
 import { useLocales } from "@/lib/locales"

@@ -1,6 +1,6 @@
 import { memo, useCallback } from "react"
 import { useDispatch, useSelector } from "@/redux/store"
-import SongItem from "../../sections/SongItem"
+import SongItem from "../song-item"
 import type { Song } from '@/@types/song'
 import { cn, Trash } from '@yukikaze/ui'
 import { Typography } from "@yukikaze/ui/typography"

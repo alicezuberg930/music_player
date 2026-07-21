@@ -1,5 +1,5 @@
 import { memo, useEffect, useState } from "react"
-import SongCard from "./SongCard"
+import SongCard from "./song-card"
 import { useNavigate } from "react-router-dom"
 import type { Song } from "@/@types/song"
 
@@ -10,7 +10,7 @@ type Props = {
     link?: string
 }
 
-const RankListCard = ({ songs, hideAlbum, initialAmount, link }: Props) => {
+const RankListCard: React.FC<Props> = ({ songs, hideAlbum, initialAmount, link }) => {
     const [isShowAll, setIsShowAll] = useState(false)
     const [currentSongs, setCurrentSongs] = useState<any[] | null>(null)
     const navigate = useNavigate()

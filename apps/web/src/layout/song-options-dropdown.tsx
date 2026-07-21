@@ -17,7 +17,7 @@ import {
     DropdownMenuSubTrigger,
 } from "@yukikaze/ui/dropdown-menu"
 import { memo, useState } from "react"
-import CreateNewPlaylistDialog from "../sections/me/CreateNewPlaylist"
+import CreateNewPlaylistDialog from "../pages/me/music/components/create-playlist-dialog"
 
 export type SongOptionMenuPayload = {
     song: Song

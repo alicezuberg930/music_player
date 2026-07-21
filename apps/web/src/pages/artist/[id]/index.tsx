@@ -1,9 +1,9 @@
 import { useRef } from 'react'
 import { useParams } from 'react-router-dom'
-import SongItem from '@/sections/SongItem'
+import SongItem from '@/layout/song-item'
 import PlaylistSection from '@/pages/home/components/playlist-section'
-import ArtistCard from '@/sections/ArtistCard'
-import MVSection from '@/sections/MVSection'
+import ArtistCard from '@/layout/artist-card'
+import MVSection from '@/pages/artist/[id]/components/mv-section'
 import { useMetaTags } from '@/hooks/useMetaTags'
 import { getBaseUrl } from '@/lib/utils'
 import { PlayCircle, UserPlus } from '@yukikaze/ui'
@@ -26,7 +26,7 @@ const ArtistPage = () => {
 
     return (
         <div className='flex flex-col w-full'>
-            <div ref={ref} className='h-[300px] relative -mx-2 md:-mx-6 -mt-20'>
+            <div ref={ref} className='h-75 relative -mx-2 md:-mx-6 -mt-20'>
                 <div className='absolute w-full h-full bg-no-repeat bg-cover bg-center blur-xl' style={{ backgroundImage: `url(${data?.thumbnail})` }}></div>
                 <div className='px-2 sm:px-10 absolute w-full h-full bg-[#291547b3] text-white'>
                     <div className='absolute bottom-0 pb-6 flex flex-col sm:flex-row gap-4'>

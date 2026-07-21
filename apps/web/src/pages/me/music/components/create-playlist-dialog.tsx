@@ -1,9 +1,9 @@
 // form
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 // components
-import { FormProvider, RHFTextField } from "@/components/hook-form";
-import { Button } from "@yukikaze/ui/button";
+import { FormProvider, RHFTextField } from "@/components/hook-form"
+import { Button } from "@yukikaze/ui/button"
 import {
   DialogClose,
   DialogContent,
@@ -11,56 +11,52 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@yukikaze/ui/dialog";
-import RHFSwitch from "@/components/hook-form/RHFSwitch";
-import { useLocales } from "@/lib/locales";
-import { Spinner } from "@yukikaze/ui/spinner";
-import { PlaylistValidators } from "@yukikaze/validator";
-import { toast } from "@yukikaze/ui";
-import { useMutation } from "@tanstack/react-query";
-import { playlistQueries } from "@/lib/queries/playlist";
+} from "@yukikaze/ui/dialog"
+import RHFSwitch from "@/components/hook-form/RHFSwitch"
+import { useLocales } from "@/lib/locales"
+import { Spinner } from "@yukikaze/ui/spinner"
+import { PlaylistValidators } from "@yukikaze/validator"
+import { toast } from "@yukikaze/ui"
+import { useMutation } from "@tanstack/react-query"
+import { playlistQueries } from "@/lib/queries/playlist"
 
 type Props = {
-  onOpenChange?: (open: boolean) => void;
-};
+  onOpenChange?: (open: boolean) => void
+}
 
-const CreateNewPlaylistDialog: React.FC<Props> = ({ onOpenChange }) => {
-  const { translate } = useLocales();
-  const { mutateAsync } = useMutation(
-    playlistQueries().create.mutationOptions(),
-  );
+const CreatePlaylistDialog: React.FC<Props> = ({ onOpenChange }) => {
+  const { translate } = useLocales()
+  const { mutateAsync } = useMutation(playlistQueries().create.mutationOptions())
 
-  // privacy_setting_required
-  // playlist_title_required
   const defaultValues = {
     isPrivate: true,
     title: "",
     description: "",
-  };
+  }
 
   const methods = useForm<PlaylistValidators.CreatePlaylistInput>({
     resolver: zodResolver(PlaylistValidators.createPlaylistInput),
     defaultValues,
-  });
+  })
 
   const {
     handleSubmit,
     reset,
     formState: { isSubmitting },
-  } = methods;
+  } = methods
 
   const onSubmit = async (data: PlaylistValidators.CreatePlaylistInput) => {
     await mutateAsync(data, {
       onSuccess: (response) => {
-        onOpenChange?.(false);
-        reset();
-        toast.success(response.message);
+        onOpenChange?.(false)
+        reset()
+        toast.success(response.message)
       },
       onError: (error) => {
-        toast.error(translate(error.message ?? "unknown_error"));
+        toast.error(translate(error.message ?? "unknown_error"))
       },
-    });
-  };
+    })
+  }
 
   return (
     <DialogContent className="sm:max-w-md">
@@ -102,7 +98,7 @@ const CreateNewPlaylistDialog: React.FC<Props> = ({ onOpenChange }) => {
         </DialogFooter>
       </FormProvider>
     </DialogContent>
-  );
-};
+  )
+}
 
-export default CreateNewPlaylistDialog;
+export default CreatePlaylistDialog

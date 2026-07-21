@@ -1,6 +1,6 @@
 import { NavLink, useParams } from "react-router-dom"
 import { useCallback, useEffect, useState } from "react"
-import RankListCard from "@/sections/RankListCard"
+import RankListCard from "@/layout/rank-list-card"
 import type { Song } from "@/@types/song"
 
 const WeeklyZingChartPage = () => {

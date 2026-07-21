@@ -1,6 +1,5 @@
-import * as z from 'zod'
 import { useLocales } from '@/lib/locales'
-import { VideoValidators } from '@yukikaze/validator'
+import { VideoValidators, z } from '@yukikaze/validator'
 import { useCallback } from 'react'
 // types
 import type { Video } from '@/@types'
@@ -9,7 +8,7 @@ import { type CustomFile } from '@/components/upload'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 // components
-import { FormProvider, RHFMultiSelect, RHFSingleDatePicker, RHFTextField } from '@/components/hook-form'
+import { FormProvider, RHFMultiSelect, RHFTextField } from '@/components/hook-form'
 import { RHFUpload } from '@/components/hook-form/RHFUpload'
 import { Button } from '@yukikaze/ui/button'
 import { Card, CardContent } from '@yukikaze/ui/card'
@@ -42,8 +41,9 @@ const UploadVideoPage: React.FC<{ editVideo?: Video, id?: string }> = ({ editVid
         }),
     })
 
-    const defaultValues = {
-        stream: editVideo?.thumbnail || undefined,
+    const defaultValues: FormValuesProps = {
+        stream: editVideo?.stream || null,
+        thumbnail: editVideo?.thumbnail || null,
         title: editVideo?.title || '',
         artistIds: editVideo?.artists?.map(artist => artist.id) || []
     }

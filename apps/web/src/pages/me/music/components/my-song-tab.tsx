@@ -1,8 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@yukikaze/ui/tabs"
 import { SongListShimmer } from "@/components/loading-placeholder"
-import SongList from "../SongList"
+import SongList from "@/layout/song-list"
 import { useLocales } from "@/lib/locales"
-import { useState } from "react"
+import { memo, useState } from "react"
 import type { SongType } from "@/@types"
 import { useQuery } from "@tanstack/react-query"
 import { userQueries } from "@/lib/queries/user"
@@ -14,7 +14,7 @@ export const MySongTab: React.FC = () => {
 
     return (
         <>
-            <Tabs defaultValue="uploaded" onValueChange={val => setType(val as SongType)}>
+            <Tabs defaultValue="uploaded" onValueChange={(val: SongType) => setType(val)}>
                 <TabsList>
                     <TabsTrigger value="uploaded">{translate('uploaded')}</TabsTrigger>
                     <TabsTrigger value="favorite">{translate('favorite')}</TabsTrigger>
@@ -38,4 +38,4 @@ export const MySongTab: React.FC = () => {
     )
 }
 
-export default MySongTab
+export default memo(MySongTab)

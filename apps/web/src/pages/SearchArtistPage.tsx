@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
 import React from 'react'
-import ArtistCard from '../sections/ArtistCard'
+import ArtistCard from '../layout/artist-card'
 import type { Artist } from '@/@types/artist'
 import { Typography } from '@yukikaze/ui/typography'
 import { useLocales } from '@/lib/locales'

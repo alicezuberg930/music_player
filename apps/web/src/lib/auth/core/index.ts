@@ -1,4 +1,4 @@
-import { generateStateOrCode } from '@/lib/crypto'
+import { generateStateOrCode } from '@/lib/utils'
 import type { AuthOptions } from '../types'
 import Cookies from './cookies'
 import { isValidToken, jwtDecode } from '../utils'

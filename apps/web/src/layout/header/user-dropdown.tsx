@@ -13,13 +13,13 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@yukikaze/ui/dropdown-menu"
-import { useAuthContext } from "@/lib/auth/useAuthContext"
 import { useLocales } from "@/lib/locales"
 import { paths } from "@/routes/paths"
 import { LogOut, Settings, Spotlight, Upload, User } from "@yukikaze/ui"
 import { Link } from "react-router-dom"
 import { useTheme } from "@yukikaze/ui"
 import { memo } from "react"
+import { useAuthContext } from "@/providers/auth-provider"
 
 const UserDropdown: React.FC = () => {
   const { user, signOut } = useAuthContext()

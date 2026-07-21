@@ -1,5 +1,5 @@
 import { memo } from "react"
-import SongCard from "./SongCard"
+import SongCard from "./song-card"
 import { formatDuration } from "@/lib/utils"
 import type { Song } from "@/@types/song"
 import { Dot } from '@yukikaze/ui'

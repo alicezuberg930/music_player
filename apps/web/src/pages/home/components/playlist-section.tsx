@@ -1,5 +1,5 @@
 import { useIsMobile } from "@/hooks/useMobile"
-import PlaylistCard from "@/sections/PlaylistCard"
+import PlaylistCard from "@/layout/playlist-card"
 import type { Playlist } from "@/@types/playlist"
 import { Typography } from "@yukikaze/ui/typography"
 import { useLocales } from "@/lib/locales"

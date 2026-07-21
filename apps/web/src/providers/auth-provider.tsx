@@ -1,6 +1,6 @@
 import { useLocales } from '../lib/locales'
 import { useNavigate } from 'react-router-dom'
-import { createContext, useEffect, useReducer, useCallback, useMemo, useRef } from 'react'
+import { createContext, useEffect, useReducer, useCallback, useMemo, useRef, useContext } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useDispatch } from '@/redux/store'
 // types
@@ -256,4 +256,10 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
   }), [state, signIn, signUp, signOut, signInWithProvider])
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>
+}
+
+export const useAuthContext = () => {
+  const context = useContext(AuthContext)
+  if (!context) throw new Error('useAuthContext context must be use inside AuthProvider')
+  return context
 }

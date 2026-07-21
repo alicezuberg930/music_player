@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { zingChartDataHC } from "@/assets/dummy_data"
-import RankListCard from "@/sections/RankListCard"
+import RankListCard from "@/layout/rank-list-card"
 import { useDispatch } from "react-redux"
 
 const ZingChartPage = () => {

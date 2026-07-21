@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom"
 import SidebarLeft from "./sidebar/sidebar-left"
 import SidebarRight from "./sidebar/sidebar-right"
-import Player from "../sections/Player"
+import Player from "./player"
 import Header from "./header/header"
 import { useDispatch, useSelector } from "@/redux/store"
 import { setScrollTop } from "@/redux/slices/app"
@@ -24,10 +24,10 @@ const PublicLayout: React.FC = () => {
             <div className="w-full h-full flex">
                 <SidebarLeft />
                 <div className="flex-1 flex flex-col relative">
-                    <header className={`fixed top-0 right-0 left-0 z-4 transition-all duration-500 ease-in-out sm:left-20 lg:left-48 flex-none px-4 md:px-8 ${showSideBarRight && 'xl:right-[330px]'} ${scrollTop ? 'bg-primary' : 'bg-primary/80'} border-b shadow-down`}>
+                    <header className={`fixed top-0 right-0 left-0 z-4 transition-all duration-500 ease-in-out sm:left-20 lg:left-48 flex-none px-4 md:px-8 ${showSideBarRight && 'xl:right-82.5'} ${scrollTop ? 'bg-primary' : 'bg-primary/80'} border-b shadow-down`}>
                         <Header />
                     </header>
-                    <main className={`px-4 md:px-8 mt-14 pb-12 flex-auto overflow-y-scroll scroll-smooth transition-all duration-600 ease-in-out ${showSideBarRight && 'xl:mr-[330px] mr-0'}`} onScroll={handleScrollTop}>
+                    <main className={`px-4 md:px-8 mt-14 pb-12 flex-auto overflow-y-scroll scroll-smooth transition-all duration-600 ease-in-out ${showSideBarRight && 'xl:mr-82.5 mr-0'}`} onScroll={handleScrollTop}>
                         <Outlet />
                     </main>
                 </div>

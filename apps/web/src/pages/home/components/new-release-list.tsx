@@ -1,5 +1,5 @@
 import { memo, useMemo, useState } from "react"
-import SongItem from "@/sections/SongItem"
+import SongItem from "@/layout/song-item"
 import type { Song } from "@/@types/song"
 import { Button } from "@yukikaze/ui/button"
 import { Typography } from "@yukikaze/ui/typography"

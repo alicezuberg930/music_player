@@ -11,7 +11,7 @@ export { default as WeeklyZingChartPage } from './WeeklyZingChartPage'
 export { default as ZingChartPage } from './ZingChartPage'
 export { default as UploadMusicPage } from './UploadMusicPage'
 export { default as UploadVideoPage } from './UploadVideoPage'
-export { default as MyMusicPage } from './MyMusicPage'
+export { default as MyMusicPage } from './me/music'
 
 // artist pages
 export { default as ArtistPage } from './artist/[id]'

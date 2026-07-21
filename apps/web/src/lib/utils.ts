@@ -92,4 +92,21 @@ const shuffle = <T>(array: T[]): T[] => {
   return array
 }
 
-export { showResponseError, shuffle, alpha, deepObjectComparison, formatPeopleNumber, formatDuration }
+const generateCodeChallenge = async (codeVerifier: string): Promise<string> => {
+  const encoder = new TextEncoder()
+  const data = encoder.encode(codeVerifier)
+  const digest = await crypto.subtle.digest('SHA-256', data)
+  const base64String = btoa(String.fromCodePoint(...new Uint8Array(digest)))
+  return base64String.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '')
+}
+
+const generateStateOrCode = (): string => {
+  const randomValues = new Uint8Array(32)
+  crypto.getRandomValues(randomValues)
+  return btoa(String.fromCodePoint(...randomValues))
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=/g, '')
+}
+
+export { showResponseError, shuffle, alpha, deepObjectComparison, formatPeopleNumber, formatDuration, generateCodeChallenge, generateStateOrCode }

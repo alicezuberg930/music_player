@@ -1,4 +1,4 @@
-export { default as ArtistSection } from './ArtistSection'
+export { default as ArtistSection } from './artist-section'
 export { default as BannerSlider } from './banner-slider'
 export { default as WeekChart } from './week-chart'
 export { default as NewReleaseList } from './new-release-list'

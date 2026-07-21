@@ -25,7 +25,7 @@ import {
     InternalServerErrorPage,
     ForbiddenPage
 } from './element'
-import AuthGuard from '../lib/auth/AuthGuard'
+import AuthGuard from '../lib/auth/auth-guard'
 
 export default function Router() {
     return useRoutes([

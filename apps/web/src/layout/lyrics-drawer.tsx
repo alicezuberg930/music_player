@@ -1,60 +1,59 @@
-import React from "react";
-import { Lrc } from "react-lrc";
+import React, { memo } from "react"
+import { Lrc } from "react-lrc"
 import {
   Drawer,
-  // DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@yukikaze/ui/drawer";
-import { useSelector } from "@/redux/store";
-import { Typography } from "@yukikaze/ui/typography";
-import { Button } from "@yukikaze/ui/button";
+} from "@yukikaze/ui/drawer"
+import { useSelector } from "@/redux/store"
+import { Typography } from "@yukikaze/ui/typography"
+import { Button } from "@yukikaze/ui/button"
 
 type Props = {
-  drawerTrigger: React.ReactNode;
-  audioRef: React.RefObject<HTMLAudioElement | null>;
-};
+  drawerTrigger: React.ReactNode
+  audioRef: React.RefObject<HTMLAudioElement | null>
+}
 
 const LyricsDrawer: React.FC<Props> = ({ drawerTrigger, audioRef }) => {
-  const { currentSong } = useSelector((state) => state.music);
-  const [lyrics, setLyrics] = React.useState<string>("");
-  const [currentTime, setCurrentTime] = React.useState(0);
-  const activeLyricRef = React.useRef<HTMLDivElement | null>(null);
-  const scrollContainerRef = React.useRef<HTMLDivElement | null>(null);
+  const { currentSong } = useSelector((state) => state.music)
+  const [lyrics, setLyrics] = React.useState<string>("")
+  const [currentTime, setCurrentTime] = React.useState(0)
+  const activeLyricRef = React.useRef<HTMLDivElement | null>(null)
+  const scrollContainerRef = React.useRef<HTMLDivElement | null>(null)
 
   React.useEffect(() => {
     const downloadLyrics = async () => {
       if (currentSong?.lyricsFile) {
-        const res = await fetch(currentSong.lyricsFile);
-        const lyrics = await res.text();
-        setLyrics(lyrics.replaceAll("\r\n", "\n"));
+        const res = await fetch(currentSong.lyricsFile)
+        const lyrics = await res.text()
+        setLyrics(lyrics.replaceAll("\r\n", "\n"))
       }
-    };
-    downloadLyrics();
+    }
+    downloadLyrics()
     if (audioRef.current) {
       const interval = setInterval(() => {
         if (audioRef.current)
-          setCurrentTime(audioRef.current.currentTime * 1000);
-      }, 1500);
-      return () => clearInterval(interval);
+          setCurrentTime(audioRef.current.currentTime * 1000)
+      }, 1500)
+      return () => clearInterval(interval)
     }
-  }, [audioRef.current]);
+  }, [audioRef.current])
 
   React.useEffect(() => {
     if (activeLyricRef.current && scrollContainerRef.current) {
-      const containerHeight = activeLyricRef.current.clientHeight;
-      const lineTop = activeLyricRef.current.offsetTop;
+      const containerHeight = activeLyricRef.current.clientHeight
+      const lineTop = activeLyricRef.current.offsetTop
       // automatically scroll with enough height so that the active line is centered in the parent container
-      const scrollTo = lineTop - containerHeight * 10;
+      const scrollTo = lineTop - containerHeight * 10
       scrollContainerRef.current.scrollTo({
         top: scrollTo,
         behavior: "smooth",
-      });
+      })
     }
-  }, [currentTime]);
+  }, [currentTime])
 
   return (
     <Drawer>
@@ -98,7 +97,7 @@ const LyricsDrawer: React.FC<Props> = ({ drawerTrigger, audioRef }) => {
         </div>
       </DrawerContent>
     </Drawer>
-  );
-};
+  )
+}
 
-export default LyricsDrawer;
+export default memo(LyricsDrawer)

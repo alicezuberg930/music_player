@@ -1,17 +1,18 @@
 import {
+  memo,
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
   type ChangeEvent,
-} from "react";
+} from "react"
 // components
-import { Spinner } from "@yukikaze/ui/spinner";
-import { Typography } from "@yukikaze/ui/typography";
-import { Button } from "@yukikaze/ui/button";
-import LazyLoadImage from "@/components/lazy-load-image/LazyLoadImage";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@yukikaze/ui/tooltip";
+import { Spinner } from "@yukikaze/ui/spinner"
+import { Typography } from "@yukikaze/ui/typography"
+import { Button } from "@yukikaze/ui/button"
+import LazyLoadImage from "@/components/lazy-load-image/LazyLoadImage"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@yukikaze/ui/tooltip"
 // icons
 import {
   Ellipsis,
@@ -28,182 +29,182 @@ import {
   Volume1,
   Volume2,
   VolumeX,
-} from "@yukikaze/ui";
+} from "@yukikaze/ui"
 // utils
-import { formatDuration } from "@/lib/utils";
+import { formatDuration } from "@/lib/utils"
 // redux
-import { setCurrentSong, setIsPlaying } from "@/redux/slices/music";
-import { setShowSidebarRight } from "@/redux/slices/app";
-import { useDispatch, useSelector } from "@/redux/store";
+import { setCurrentSong, setIsPlaying } from "@/redux/slices/music"
+import { setShowSidebarRight } from "@/redux/slices/app"
+import { useDispatch, useSelector } from "@/redux/store"
 // sections
-import LyricsDrawer from "./LyricsDrawer";
-import { useMutation } from "@tanstack/react-query";
-import { songQueries } from "@/lib/queries/song";
+import LyricsDrawer from "./lyrics-drawer"
+import { useMutation } from "@tanstack/react-query"
+import { songQueries } from "@/lib/queries/song"
 
 const Player: React.FC = () => {
-  const dispatch = useDispatch();
-  const { mutate } = useMutation(songQueries().addListens.mutationOptions());
+  const dispatch = useDispatch()
+  const { mutate } = useMutation(songQueries().addListens.mutationOptions())
   // redux states
-  const { showSideBarRight } = useSelector((state) => state.app);
+  const { showSideBarRight } = useSelector((state) => state.app)
   const { currentSong, isPlaying, currentPlaylistSongs } = useSelector(
     (state) => state.music,
-  );
+  )
   // local states
-  const [shuffle, setShuffle] = useState<boolean>(false);
-  const [repeatMode, setRepeatMode] = useState<number>(0);
-  const [volume, setVolume] = useState<number>(50);
-  const [isLoadingAudio, setIsLoadingAudio] = useState<boolean>(true);
+  const [shuffle, setShuffle] = useState<boolean>(false)
+  const [repeatMode, setRepeatMode] = useState<number>(0)
+  const [volume, setVolume] = useState<number>(50)
+  const [isLoadingAudio, setIsLoadingAudio] = useState<boolean>(true)
   // refs for mutable values
-  const shuffleRef = useRef<boolean>(false);
-  const repeatModeRef = useRef<number>(0);
-  const thumbRef = useRef<HTMLDivElement | null>(null);
-  const trackRef = useRef<HTMLButtonElement | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const currentTimeRef = useRef<HTMLElement | null>(null);
-  const isDraggingRef = useRef<boolean>(false);
+  const shuffleRef = useRef<boolean>(false)
+  const repeatModeRef = useRef<number>(0)
+  const thumbRef = useRef<HTMLDivElement | null>(null)
+  const trackRef = useRef<HTMLButtonElement | null>(null)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+  const currentTimeRef = useRef<HTMLElement | null>(null)
+  const isDraggingRef = useRef<boolean>(false)
   // memoized next song
   const nextSong = useMemo(() => {
-    if (!currentSong) return undefined;
+    if (!currentSong) return undefined
     const index = currentPlaylistSongs.findIndex(
       (item) => item.id === currentSong.id,
-    );
-    return index === -1 ? undefined : currentPlaylistSongs[index + 1];
-  }, [currentSong, currentPlaylistSongs]);
+    )
+    return index === -1 ? undefined : currentPlaylistSongs[index + 1]
+  }, [currentSong, currentPlaylistSongs])
 
   const seekBar = (clientX: number) => {
-    if (!trackRef.current || !audioRef.current || !thumbRef.current) return;
-    const trackRect = trackRef.current.getBoundingClientRect();
-    const rawPercent = ((clientX - trackRect.left) / trackRect.width) * 100;
-    const percent = Math.max(0, Math.min(100, Math.round(rawPercent)));
-    thumbRef.current.style.cssText = `right: ${100 - percent}%`;
+    if (!trackRef.current || !audioRef.current || !thumbRef.current) return
+    const trackRect = trackRef.current.getBoundingClientRect()
+    const rawPercent = ((clientX - trackRect.left) / trackRect.width) * 100
+    const percent = Math.max(0, Math.min(100, Math.round(rawPercent)))
+    thumbRef.current.style.cssText = `right: ${100 - percent}%`
     if (currentSong?.duration)
-      audioRef.current.currentTime = (currentSong.duration * percent) / 100;
-  };
+      audioRef.current.currentTime = (currentSong.duration * percent) / 100
+  }
 
   // handle click on progress bar
   const handleClickProgressBar = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
-    seekBar(e.clientX);
-  };
+    seekBar(e.clientX)
+  }
 
   // handle mouse down on progress bar
   const handleMouseDownProgressBar = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
-    isDraggingRef.current = true;
-    seekBar(e.clientX);
-  };
+    isDraggingRef.current = true
+    seekBar(e.clientX)
+  }
 
   // handle drag on progress bar
   const handleMouseMoveProgressBar = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
-    if (!isDraggingRef.current) return;
-    seekBar(e.clientX);
-  };
+    if (!isDraggingRef.current) return
+    seekBar(e.clientX)
+  }
 
   // handle mouse up on progress bar
   const handleMouseUpProgressBar = () => {
-    isDraggingRef.current = false;
-  };
+    isDraggingRef.current = false
+  }
 
   const handleNext = useCallback(() => {
     if (currentPlaylistSongs.length > 0) {
       for (let index = 0; index < currentPlaylistSongs.length; index++) {
         if (currentPlaylistSongs[index].id === currentSong?.id) {
           if (currentPlaylistSongs[index + 1]) {
-            dispatch(setCurrentSong(currentPlaylistSongs[index + 1]));
-            audioRef.current?.play();
+            dispatch(setCurrentSong(currentPlaylistSongs[index + 1]))
+            audioRef.current?.play()
           }
-          break;
+          break
         }
       }
     }
-  }, [currentPlaylistSongs, currentSong, dispatch]);
+  }, [currentPlaylistSongs, currentSong, dispatch])
 
   const handlePrevious = useCallback(() => {
     if (currentPlaylistSongs.length > 0) {
       for (let index = 0; index < currentPlaylistSongs.length; index++) {
         if (currentPlaylistSongs[index].id === currentSong?.id) {
           if (currentPlaylistSongs[index - 1]) {
-            dispatch(setCurrentSong(currentPlaylistSongs[index - 1]));
-            audioRef.current?.play();
+            dispatch(setCurrentSong(currentPlaylistSongs[index - 1]))
+            audioRef.current?.play()
           }
-          break;
+          break
         }
       }
     }
-  }, [currentPlaylistSongs, currentSong, dispatch]);
+  }, [currentPlaylistSongs, currentSong, dispatch])
 
   const handleTogglePlay = useCallback(async () => {
-    if (!audioRef.current) return;
+    if (!audioRef.current) return
     if (isPlaying && !audioRef.current.paused) {
-      dispatch(setIsPlaying(false));
-      audioRef.current.pause();
+      dispatch(setIsPlaying(false))
+      audioRef.current.pause()
     } else if (!isPlaying && audioRef.current.paused) {
-      dispatch(setIsPlaying(true));
-      await audioRef.current.play();
+      dispatch(setIsPlaying(true))
+      await audioRef.current.play()
     }
-  }, [isPlaying, dispatch]);
+  }, [isPlaying, dispatch])
 
   const handleShuffle = () => {
-    if (!audioRef.current) return;
-    audioRef.current.play();
-  };
+    if (!audioRef.current) return
+    audioRef.current.play()
+  }
 
   const handleRepeat = () => {
-    if (!audioRef.current) return;
-    audioRef.current.currentTime = 0;
-    audioRef.current.play();
-  };
+    if (!audioRef.current) return
+    audioRef.current.currentTime = 0
+    audioRef.current.play()
+  }
 
   const updatePlayerUI = () => {
-    let animationFrame: number;
-    const audio = audioRef.current;
-    if (!audio?.src) return;
+    let animationFrame: number
+    const audio = audioRef.current
+    if (!audio?.src) return
 
     const updateTime = () => {
       currentTimeRef.current!.innerText = formatDuration(
         Math.floor(audio.currentTime),
-      );
+      )
       const percent =
-        Math.round((audio.currentTime / currentSong!.duration) * 10000) / 100;
+        Math.round((audio.currentTime / currentSong!.duration) * 10000) / 100
       thumbRef.current &&
-        (thumbRef.current.style.cssText = `right: ${100 - percent}%`);
-      animationFrame = requestAnimationFrame(updateTime);
-    };
+        (thumbRef.current.style.cssText = `right: ${100 - percent}%`)
+      animationFrame = requestAnimationFrame(updateTime)
+    }
 
     const handlePlay = () =>
-      (animationFrame = requestAnimationFrame(updateTime));
+      (animationFrame = requestAnimationFrame(updateTime))
 
-    const handlePause = () => cancelAnimationFrame(animationFrame);
+    const handlePause = () => cancelAnimationFrame(animationFrame)
 
     const handleEnd = () => {
-      handlePause();
+      handlePause()
       if (shuffleRef.current) {
-        handleShuffle();
+        handleShuffle()
       } else if (repeatModeRef.current > 0) {
-        repeatModeRef.current === 1 ? handleRepeat() : handleNext();
+        repeatModeRef.current === 1 ? handleRepeat() : handleNext()
       } else {
-        dispatch(setIsPlaying(false));
-        audio.pause();
+        dispatch(setIsPlaying(false))
+        audio.pause()
       }
-    };
-    audio.addEventListener("play", handlePlay);
-    audio.addEventListener("pause", handlePause);
-    audio.addEventListener("ended", handleEnd);
+    }
+    audio.addEventListener("play", handlePlay)
+    audio.addEventListener("pause", handlePause)
+    audio.addEventListener("ended", handleEnd)
     // cleanup event listeners and cancel updating progress bar on unmount
     return () => {
-      audio.removeEventListener("play", handlePlay);
-      audio.removeEventListener("pause", handlePause);
-      audio.removeEventListener("ended", handleEnd);
-      cancelAnimationFrame(animationFrame);
-    };
-  };
+      audio.removeEventListener("play", handlePlay)
+      audio.removeEventListener("pause", handlePause)
+      audio.removeEventListener("ended", handleEnd)
+      cancelAnimationFrame(animationFrame)
+    }
+  }
 
   const onCanPlayThrough = () => {
-    setIsLoadingAudio(false);
+    setIsLoadingAudio(false)
     audioRef.current
       ?.play()
       .then((_) => dispatch(setIsPlaying(true)))
@@ -211,112 +212,112 @@ const Player: React.FC = () => {
         console.log(
           "Auto play was prevented because user didnt interact with the document",
         ),
-      );
-  };
+      )
+  }
 
   const initializePlayer = async () => {
-    dispatch(setIsPlaying(false));
+    dispatch(setIsPlaying(false))
     if (currentSong?.id) {
-      audioRef.current = null;
-      currentTimeRef.current!.innerText = "00:00";
-      thumbRef.current!.style.cssText = `right: 100%`;
-      setIsLoadingAudio(true);
+      audioRef.current = null
+      currentTimeRef.current!.innerText = "00:00"
+      thumbRef.current!.style.cssText = `right: 100%`
+      setIsLoadingAudio(true)
 
       // Use streaming endpoint with HTTP caching
-      const streamingUrl = `${import.meta.env.VITE_API_URL}/songs/stream/${currentSong.id}`;
-      console.log(`Streaming with HTTP cache: ${currentSong.title}`);
+      const streamingUrl = `${import.meta.env.VITE_API_URL}/songs/stream/${currentSong.id}`
+      console.log(`Streaming with HTTP cache: ${currentSong.title}`)
 
-      audioRef.current = new Audio(streamingUrl);
-      audioRef.current.load();
-      audioRef.current.volume = volume / 100;
-      audioRef.current.oncanplaythrough = onCanPlayThrough;
-      updatePlayerUI();
+      audioRef.current = new Audio(streamingUrl)
+      audioRef.current.load()
+      audioRef.current.volume = volume / 100
+      audioRef.current.oncanplaythrough = onCanPlayThrough
+      updatePlayerUI()
     }
-  };
+  }
 
   const handleSetVolume = (e: ChangeEvent<HTMLInputElement>) =>
-    setVolume(Number(e.target.value));
+    setVolume(Number(e.target.value))
 
   // initialize player when current song changes and update player UI
   useEffect(() => {
-    initializePlayer();
-    if (currentSong) mutate(currentSong.id);
+    initializePlayer()
+    if (currentSong) mutate(currentSong.id)
     // Cleanup function runs when song changes or component unmounts
     return () => {
       if (audioRef.current) {
-        audioRef.current.oncanplaythrough = null;
-        audioRef.current.pause();
-        audioRef.current = null;
+        audioRef.current.oncanplaythrough = null
+        audioRef.current.pause()
+        audioRef.current = null
       }
-    };
-  }, [currentSong]);
+    }
+  }, [currentSong])
 
   useEffect(() => {
     const handleSpaceKeyPress = (e: KeyboardEvent) => {
       // Prevent space bar from triggering if user is typing in an input/textarea
       if (e.code === "Space" && e.target instanceof HTMLElement) {
-        const tagName = e.target.tagName.toLowerCase();
+        const tagName = e.target.tagName.toLowerCase()
         if (
           tagName === "input" ||
           tagName === "textarea" ||
           e.target.isContentEditable
         )
-          return;
-        e.preventDefault();
-        handleTogglePlay();
+          return
+        e.preventDefault()
+        handleTogglePlay()
       }
-    };
+    }
     const handleArrowKeyPress = (e: KeyboardEvent) => {
       // Prevent arrow keys from triggering if user is typing in an input/textarea
       if (
         (e.code === "ArrowLeft" || e.code === "ArrowRight") &&
         e.target instanceof HTMLElement
       ) {
-        const tagName = e.target.tagName.toLowerCase();
+        const tagName = e.target.tagName.toLowerCase()
         if (
           tagName === "input" ||
           tagName === "textarea" ||
           e.target.isContentEditable
         )
-          return;
-        e.preventDefault();
-        if (e.code === "ArrowLeft") handlePrevious();
-        if (e.code === "ArrowRight") handleNext();
+          return
+        e.preventDefault()
+        if (e.code === "ArrowLeft") handlePrevious()
+        if (e.code === "ArrowRight") handleNext()
       }
-    };
+    }
     // keyboard event for space bar to play/pause
-    globalThis.addEventListener("keydown", handleSpaceKeyPress);
+    globalThis.addEventListener("keydown", handleSpaceKeyPress)
     // keyboard event for left/right arrow to previous/next song
-    globalThis.addEventListener("keydown", handleArrowKeyPress);
+    globalThis.addEventListener("keydown", handleArrowKeyPress)
     return () => {
-      globalThis.removeEventListener("keydown", handleSpaceKeyPress);
-      globalThis.removeEventListener("keydown", handleArrowKeyPress);
-    };
-  }, [isPlaying, handleTogglePlay, handlePrevious, handleNext]);
+      globalThis.removeEventListener("keydown", handleSpaceKeyPress)
+      globalThis.removeEventListener("keydown", handleArrowKeyPress)
+    }
+  }, [isPlaying, handleTogglePlay, handlePrevious, handleNext])
 
   // change audio during song playing
   useEffect(() => {
-    if (!audioRef.current) return;
-    audioRef.current.volume = volume / 100;
-  }, [volume]);
+    if (!audioRef.current) return
+    audioRef.current.volume = volume / 100
+  }, [volume])
 
   // change shuffle mode during song playing
   useEffect(() => {
-    shuffleRef.current = shuffle;
-  }, [shuffle]);
+    shuffleRef.current = shuffle
+  }, [shuffle])
 
   // change repeat mode during song playing
   useEffect(() => {
-    repeatModeRef.current = repeatMode;
-  }, [repeatMode]);
+    repeatModeRef.current = repeatMode
+  }, [repeatMode])
 
   // for cases when you want to play/pause the song outside the player component
   useEffect(() => {
     if (audioRef.current && audioRef.current.paused && isPlaying)
-      audioRef.current.play();
+      audioRef.current.play()
     if (audioRef.current && !audioRef.current.paused && !isPlaying)
-      audioRef.current.pause();
-  }, [isPlaying]);
+      audioRef.current.pause()
+  }, [isPlaying])
 
   return (
     <div
@@ -505,7 +506,7 @@ const Player: React.FC = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Player;
+export default memo(Player)

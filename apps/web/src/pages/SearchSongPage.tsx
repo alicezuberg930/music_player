@@ -1,4 +1,4 @@
-import SongList from '../sections/SongList'
+import SongList from '../layout/song-list'
 import { useSearchParams } from 'react-router-dom'
 import { SongListShimmer } from '@/components/loading-placeholder'
 import { useEffect, useRef } from 'react'

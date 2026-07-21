@@ -1,64 +1,54 @@
-import type { Playlist, Song } from "@/@types";
-import { addRecentSong, setCurrentSong } from "@/redux/slices/music";
-import { memo, type MouseEvent } from "react";
-import { useDispatch } from "react-redux";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import { HeartIcon, MoreHorizontalIcon } from "@yukikaze/ui";
-import { songOptionMenuHandle } from "../layout/song-options-dropdown";
-import { DropdownMenuTrigger } from "@yukikaze/ui/dropdown-menu";
-import { LazyLoadImage } from "@/components/lazy-load-image";
-import { useMutation } from "@tanstack/react-query";
-import { userQueries } from "@/lib/queries/user";
+import type { Playlist, Song } from "@/@types"
+import { addRecentSong, setCurrentSong } from "@/redux/slices/music"
+import { memo, type MouseEvent } from "react"
+import { useDispatch } from "react-redux"
+import dayjs from "dayjs"
+import relativeTime from "dayjs/plugin/relativeTime"
+import { HeartIcon, MoreHorizontalIcon } from "@yukikaze/ui"
+import { songOptionMenuHandle } from "./song-options-dropdown"
+import { DropdownMenuTrigger } from "@yukikaze/ui/dropdown-menu"
+import { LazyLoadImage } from "@/components/lazy-load-image"
+import { useMutation } from "@tanstack/react-query"
+import { userQueries } from "@/lib/queries/user"
 
-dayjs.extend(relativeTime);
+dayjs.extend(relativeTime)
 
 type Props = {
-  song: Song;
-  playlists?: Playlist[];
-  order?: number;
-  percent?: number;
-  imgSize?: "sm" | "md" | "lg" | "xl";
-  style?: string;
-  showTime?: boolean;
-};
+  song: Song
+  playlists?: Playlist[]
+  order?: number
+  percent?: number
+  imgSize?: "sm" | "md" | "lg" | "xl"
+  style?: string
+  showTime?: boolean
+}
 
-const SongItem: React.FC<Props> = ({
-  song,
-  playlists,
-  order,
-  percent,
-  imgSize,
-  style,
-  showTime,
-}) => {
-  const dispatch = useDispatch();
-  const { mutate: favoriteSong } = useMutation(
-    userQueries().favoriteSong.mutationOptions(),
-  );
+const SongItem: React.FC<Props> = ({ song, playlists, order, percent, imgSize, style, showTime }) => {
+  const dispatch = useDispatch()
+  const { mutate: favoriteSong } = useMutation(userQueries().favoriteSong.mutationOptions())
   const imageSizeCss = () => {
-    if (imgSize === "xl") return "w-20 h-20";
-    if (imgSize == "lg") return "w-14 h-14";
-    if (imgSize == "md") return "w-12 h-12";
-    if (imgSize == "sm") return "w-10 h-10";
-    return "w-10 h-10";
-  };
+    if (imgSize === "xl") return "w-20 h-20"
+    if (imgSize == "lg") return "w-14 h-14"
+    if (imgSize == "md") return "w-12 h-12"
+    if (imgSize == "sm") return "w-10 h-10"
+    return "w-10 h-10"
+  }
   const textColor = () => {
-    if (order === 1) return "text-shadow-1";
-    if (order === 2) return "text-shadow-2";
-    if (order === 3) return "text-shadow-3";
-    return "text-shadow-3";
-  };
+    if (order === 1) return "text-shadow-1"
+    if (order === 2) return "text-shadow-2"
+    if (order === 3) return "text-shadow-3"
+    return "text-shadow-3"
+  }
 
   const handlePlay = () => {
-    dispatch(addRecentSong(song));
-    dispatch(setCurrentSong(song));
-  };
+    dispatch(addRecentSong(song))
+    dispatch(setCurrentSong(song))
+  }
 
   const handleFavorite = (e: MouseEvent<SVGSVGElement>) => {
-    e.stopPropagation();
-    favoriteSong(song.id);
-  };
+    e.stopPropagation()
+    favoriteSong(song.id)
+  }
 
   return (
     <div
@@ -117,7 +107,7 @@ const SongItem: React.FC<Props> = ({
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default memo(SongItem);
+export default memo(SongItem)

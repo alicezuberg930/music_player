@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import PlaylistCard from '@/sections/PlaylistCard'
+import PlaylistCard from '@/layout/playlist-card'
 import type { Playlist } from '@/@types/playlist'
 import { Typography } from '@yukikaze/ui/typography'
 import { useLocales } from '@/lib/locales'

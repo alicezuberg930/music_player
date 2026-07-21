@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@yukikaze/ui/tabs"
 import { useLocales } from "@/lib/locales"
-import MySongTab from "@/sections/me/MySongTab"
-import MyPlaylistTab from "@/sections/me/MyPlaylistTab"
+import MySongTab from "@/pages/me/music/components/my-song-tab"
+import MyPlaylistTab from "@/pages/me/music/components/my-playlist-tab"
 
 const MyMusicPage: React.FC = () => {
     const { translate } = useLocales()

@@ -1,6 +1,6 @@
 import { memo, useState } from 'react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from 'recharts'
-import SongItem from '@/sections/SongItem'
+import SongItem from '@/layout/song-item'
 import { Link } from 'react-router-dom'
 import { paths } from '@/routes/paths'
 import type { Song } from '@/@types/song'

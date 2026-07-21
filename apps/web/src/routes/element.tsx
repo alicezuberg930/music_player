@@ -21,7 +21,7 @@ export const WeeklyZingChartPage = Loadable(lazy(() => import('@/pages/WeeklyZin
 export const ZingChartPage = Loadable(lazy(() => import('@/pages/ZingChartPage')))
 export const UploadMusicPage = Loadable(lazy(() => import('@/pages/UploadMusicPage')))
 export const UploadVideoPage = Loadable(lazy(() => import('@/pages/UploadVideoPage')))
-export const MyMusicPage = Loadable(lazy(() => import('@/pages/MyMusicPage')))
+export const MyMusicPage = Loadable(lazy(() => import('@/pages/me/music')))
 export const VerifyPage = Loadable(lazy(() => import('@/pages/VerifyPage')))
 export const CreateArtistPage = Loadable(lazy(() => import('@/pages/artist/create')))
 export const NotFoundPage = Loadable(lazy(() => import('@/pages/error/not-found')))

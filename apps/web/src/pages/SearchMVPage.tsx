@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
 import { useEffect } from 'react'
-import VideoCard from '@/sections/VideoCard'
+import VideoCard from '@/layout/video-card'
 import { Typography } from '@yukikaze/ui/typography'
 import { useLocales } from '@/lib/locales'
 

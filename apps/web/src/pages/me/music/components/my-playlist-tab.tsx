@@ -1,5 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@yukikaze/ui/tabs"
-import PlaylistCard from "@/sections/PlaylistCard"
+import PlaylistCard from "@/layout/playlist-card"
 import { useIsMobile } from "@/hooks/useMobile"
 import { PlaylistListShimmer } from "@/components/loading-placeholder"
 import { memo, useState } from "react"

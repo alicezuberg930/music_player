@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { HeartIcon, MoreHorizontalIcon } from "@yukikaze/ui";
-import { songOptionMenuHandle } from "./SongOptionDropdown";
+import { songOptionMenuHandle } from "../layout/song-options-dropdown";
 import { DropdownMenuTrigger } from "@yukikaze/ui/dropdown-menu";
 import { LazyLoadImage } from "@/components/lazy-load-image";
 import { useMutation } from "@tanstack/react-query";

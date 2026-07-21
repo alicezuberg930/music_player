@@ -31,7 +31,7 @@ const WeeklyZingChartPage = () => {
 
     return (
         <div className="">
-            <div className='relative h-[450px]'>
+            <div className='relative h-112.5'>
                 <img src='./bg-week-chart.jpg' alt="bg-chart" className='w-full h-full block object-cover grayscale' />
                 <div className='absolute top-0 left-0 right-0 bottom-0 bg-[rgba(206,217,217,0.7)]'></div>
                 <div className='absolute top-0 left-0 right-0 bottom-0 bg-linear-to-t from-main-300 to-transparent'></div>

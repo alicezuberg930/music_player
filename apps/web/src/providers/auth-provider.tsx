@@ -7,7 +7,7 @@ import { useDispatch } from '@/redux/store'
 import type { ActionMapType, AuthStateType, JWTContextType } from '../lib/auth/types'
 import type { User } from '@/@types'
 // utils
-import { paths } from '../lib/route/paths'
+import { paths } from '@/routes/paths'
 import type { AuthValidators } from '@yukikaze/validator'
 import { setLastTokenRefresh } from '@/redux/slices/app'
 import { toast } from '@yukikaze/ui'

@@ -1,11 +1,11 @@
-import Router from "./lib/route"
-import SongOptionDropdown from "./sections/SongOptionDropdown"
+import Router from "./routes"
+import SongOptionsDropdown from "./layout/song-options-dropdown"
 
 export default function App() {
   return (
     <>
       <Router />
-      <SongOptionDropdown />
+      <SongOptionsDropdown />
     </>
   )
 }

@@ -1,4 +1,4 @@
-import { paths } from "./route/paths"
+import { paths } from "@/routes/paths"
 import { ChartPie, Newspaper, Telescope, User } from "@yukikaze/ui"
 
 export const sidebarMenu = [

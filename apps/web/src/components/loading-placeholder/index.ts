@@ -1,4 +1,4 @@
-export { default as HomeShimmer } from './HomeShimmer'
-export { default as SongListShimmer } from './SongListShimmer'
-export { default as PlaylistListShimmer } from './PlaylistListShimmer'
-export { default as PlaylistDetailsShimmer } from './PlaylistDetailsShimmer'
+export { default as HomeShimmer } from './home-shimmer'
+export { default as SongListShimmer } from './song-list-shimmer'
+export { default as PlaylistListShimmer } from './playlist-list-shimmer'
+export { default as PlaylistDetailsShimmer } from './playlist-details-shimmer'

@@ -3,7 +3,7 @@ import { Navigate, useLocation } from 'react-router-dom'
 // components
 // import LoadingScreen from '../components/loading-screen'
 //
-import SigninPage from '@/pages/SigninPage'
+import SigninPage from '@/layout/header/sign-in-form'
 import { useAuthContext } from './useAuthContext'
 
 // ----------------------------------------------------------------------

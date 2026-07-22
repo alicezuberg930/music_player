@@ -15,6 +15,7 @@
     "url": "https://github.com/alicezuberg930/music_player/issues"
   },
   "catalog": {
+    "zod": "catalog:",
     "@tanstack/react-query": "^5.90.11",
     "typescript": "5.9.2",
     "tsdown": "^0.17.2",

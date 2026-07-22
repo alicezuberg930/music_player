@@ -11,16 +11,16 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
   const hostname = mode === 'production' ? 'https://tien-music-player.site' : 'http://localhost:5173'
 
   // Fetch dynamic routes from API sitemap
-  const dynamicRoutes: string[] = []
-  try {
-    const response = await fetch('http://localhost:5001/sitemap-urls')
-    const data = await response.json() as { data: string[] }
-    for (const url of data.data) {
-      dynamicRoutes.push(url)
-    }
-  } catch (error) {
-    console.warn('Failed to fetch sitemap from API:', error)
-  }
+  // const dynamicRoutes: string[] = []
+  // try {
+  //   const response = await fetch('http://localhost:5001/sitemap-urls')
+  //   const data = await response.json() as { data: string[] }
+  //   for (const url of data.data) {
+  //     dynamicRoutes.push(url)
+  //   }
+  // } catch (error) {
+  //   console.warn('Failed to fetch sitemap from API:', error)
+  // }
 
   return {
     plugins: [
@@ -28,7 +28,7 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
       tailwindcss(),
       ViteSitemap({
         hostname,
-        dynamicRoutes,
+        // dynamicRoutes,
         generateRobotsTxt: true,
         robots: [
           {

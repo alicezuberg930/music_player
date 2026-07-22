@@ -1,5 +1,5 @@
+import { LazyLoadImage } from "@/components/lazy-load-image"
 import useLocales from "@/lib/locales/useLocales"
-import { Avatar, AvatarImage } from "@yukikaze/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,10 +18,8 @@ const LanguageDropdown: React.FC = () => {
     <DropdownMenu>
       <DropdownMenuTrigger
         nativeButton={false}
-        render={<Avatar />}
-      >
-        <AvatarImage src={currentLang.icon} alt={currentLang.value} />
-      </DropdownMenuTrigger>
+        render={<LazyLoadImage src={currentLang.icon} alt={currentLang.value} />}
+      />
       <DropdownMenuContent className="w-56 z-100" align="end">
         <DropdownMenuGroup>
           {allLangs.map((lang) => (

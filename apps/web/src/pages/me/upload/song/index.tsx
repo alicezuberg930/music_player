@@ -1,6 +1,5 @@
-import * as z from 'zod'
 import { useLocales } from '@/lib/locales'
-import { SongValidators } from '@yukikaze/validator'
+import { SongValidators, z } from '@yukikaze/validator'
 import { useCallback } from 'react'
 // types
 import type { Song } from '@/@types/song'
@@ -52,7 +51,7 @@ const UploadSongPage: React.FC<{ editSong?: Song, id?: string }> = ({ editSong, 
         }
 
         return {
-            values: {},
+            values: {} as any,
             errors: result.error.issues.reduce<Record<string, { type: string; message: string }>>((errors, issue) => {
                 const fieldName = issue.path[0]
                 if (typeof fieldName === 'string') {

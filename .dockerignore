@@ -1,0 +1,7 @@
+.turbo
+.git
+dist
+**/node_modules
+node_modules
+**/.turbo
+**/dist

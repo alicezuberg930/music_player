@@ -1,0 +1,24 @@
+FROM oven/bun:1-alpine
+
+WORKDIR /app
+
+RUN apk add --no-cache curl
+
+RUN bun install -g turbo
+
+COPY . .
+
+RUN bun install --frozen-lockfile
+RUN bun run build:services
+
+RUN mkdir -p services/*/uploads
+
+RUN addgroup --system --gid 1001 yukikaze && \
+    adduser --system --uid 1001 web && \
+    chown -R web:yukikaze /app
+
+USER web
+
+EXPOSE 5000
+
+CMD ["bun", "run", "start:services"]

@@ -1,6 +1,7 @@
 import { useLocales } from '@/lib/locales'
-import { SongValidators, z } from '@yukikaze/validator'
+import { SongValidators } from '@yukikaze/validator'
 import { useCallback } from 'react'
+import * as z from 'zod'
 // types
 import type { Song } from '@/@types/song'
 import { type CustomFile } from '@/components/upload'

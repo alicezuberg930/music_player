@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import { useLocales } from '@/lib/locales'
-import { ArtistValidators, z } from '@yukikaze/validator'
+import { ArtistValidators } from '@yukikaze/validator'
+import * as z from 'zod'
 // types
 import type { CustomFile } from '@/components/upload'
 // form

@@ -1,6 +1,7 @@
 import { useLocales } from '@/lib/locales'
-import { VideoValidators, z } from '@yukikaze/validator'
+import { VideoValidators } from '@yukikaze/validator'
 import { useCallback } from 'react'
+import * as z from 'zod'
 // types
 import type { Video } from '@/@types'
 import { type CustomFile } from '@/components/upload'
@@ -51,7 +52,7 @@ const UploadVideoPage: React.FC<{ video?: Video, id?: string }> = ({ video, id }
         }
 
         return {
-            values: {},
+            values: {} as any,
             errors: result.error.issues.reduce<Record<string, { type: string; message: string }>>((errors, issue) => {
                 const fieldName = issue.path[0]
                 if (typeof fieldName === 'string') {

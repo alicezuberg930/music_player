@@ -6,4 +6,4 @@ export { BannerValidators } from './banner'
 export { GenreValidators } from './genre'
 export { VideoValidators } from './video'
 
-export * from 'zod'
+export * as z from 'zod'

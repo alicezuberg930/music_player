@@ -1,0 +1,16 @@
+{
+  "name": "@yukikaze/player-services",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@yukikaze/artist-service": "workspace:*",
+    "@yukikaze/auth-service": "workspace:*",
+    "@yukikaze/banner-service": "workspace:*",
+    "@yukikaze/gateway-service": "workspace:*",
+    "@yukikaze/genre-service": "workspace:*",
+    "@yukikaze/home-service": "workspace:*",
+    "@yukikaze/playlist-service": "workspace:*",
+    "@yukikaze/song-service": "workspace:*",
+    "@yukikaze/user-service": "workspace:*"
+  }
+}

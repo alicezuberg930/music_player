@@ -23,7 +23,7 @@ services:
     # command: >
     #   bun run build:services && bun run start:services
     healthcheck:
-      test: ["CMD-SHELL", "bun -e \"const r = await fetch('http://127.0.0.1:5000/check'); process.exit(r.ok ? 0 : 1)\""]
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:5000/check').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))\""]
       interval: 30s
       timeout: 10s
       retries: 6

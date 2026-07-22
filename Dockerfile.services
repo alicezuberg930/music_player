@@ -1,24 +1,69 @@
-FROM oven/bun:1-alpine
+# syntax=docker/dockerfile:1.7
 
+ARG BUN_VERSION=1.3.4
+
+FROM oven/bun:${BUN_VERSION}-alpine AS base
 WORKDIR /app
 
-RUN apk add --no-cache curl
-
-RUN bun install -g turbo
-
+# Prune the monorepo to the nine services and their internal dependencies.
+FROM base AS pruner
+RUN bun install --global turbo@2.6.3
 COPY . .
+RUN turbo prune @yukikaze/player-services --docker
 
+# Install build dependencies and compile the selected services and packages.
+FROM base AS builder
+COPY --from=pruner /app/out/json/ ./
+COPY --from=pruner /app/out/bun.lock ./bun.lock
 RUN bun install --frozen-lockfile
+
+COPY --from=pruner /app/out/full/ ./
 RUN bun run build:services
 
-RUN mkdir -p services/*/uploads
+# Install runtime dependencies without TypeScript, Turbo, or other dev tools.
+FROM base AS production-dependencies
+ENV NODE_ENV=production
+COPY --from=pruner /app/out/json/ ./
+COPY --from=pruner /app/out/bun.lock ./bun.lock
+RUN bun install --production --frozen-lockfile
 
-RUN addgroup --system --gid 1001 yukikaze && \
-    adduser --system --uid 1001 web && \
-    chown -R web:yukikaze /app
+# Assemble only package manifests and compiled output.
+FROM alpine:3.22 AS runtime-files
+WORKDIR /runtime
 
-USER web
+COPY --from=builder /app/packages /source/packages
+COPY --from=builder /app/services /source/services
+
+RUN set -eux; \
+    for package in db email lib middleware redis upload validator; do \
+      mkdir -p "packages/${package}"; \
+      cp "/source/packages/${package}/package.json" "packages/${package}/package.json"; \
+      cp -R "/source/packages/${package}/dist" "packages/${package}/dist"; \
+    done; \
+    for service in artist-service auth-service banner-service gateway-service genre-service home-service playlist-service song-service user-service; do \
+      mkdir -p "services/${service}"; \
+      cp "/source/services/${service}/package.json" "services/${service}/package.json"; \
+      cp -R "/source/services/${service}/dist" "services/${service}/dist"; \
+    done
+
+FROM node:22-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+COPY --from=production-dependencies --chown=node:node /app/node_modules ./node_modules
+COPY --from=runtime-files --chown=node:node /runtime/ ./
+COPY --chown=node:node docker-start-services.mjs ./docker-start-services.mjs
+COPY --chown=node:node ca.pem ./ca.pem
+
+RUN set -eux; \
+    for service in artist-service auth-service banner-service gateway-service genre-service home-service playlist-service song-service user-service; do \
+      mkdir -p "services/${service}/uploads"; \
+      chown node:node "services/${service}/uploads"; \
+    done
+
+USER node
 
 EXPOSE 5000
 
-CMD ["bun", "run", "start:services"]
+CMD ["node", "docker-start-services.mjs"]

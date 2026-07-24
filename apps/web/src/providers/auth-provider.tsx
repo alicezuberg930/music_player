@@ -1,13 +1,13 @@
 import { useLocales } from '../lib/locales'
-import { useNavigate } from '@tanstack/react-router'
-import { createContext, useEffect, useReducer, useCallback, useMemo, useRef, useContext } from 'react'
+// import { useNavigate } from '@tanstack/react-router'
+import { createContext, useEffect, useReducer, useCallback, useMemo, useRef, useContext, useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useDispatch } from '@/redux/store'
 // types
 import type { ActionMapType, AuthStateType, JWTContextType } from '../lib/auth/types'
 import type { User } from '@/@types'
 // utils
-import { paths } from '@/lib/paths'
+// import { paths } from '@/lib/paths'
 import type { AuthValidators } from '@yukikaze/validator'
 import { setLastTokenRefresh } from '@/redux/slices/app'
 import { toast } from '@yukikaze/ui'
@@ -40,7 +40,7 @@ type ActionsType = ActionMapType<Payload>[keyof ActionMapType<Payload>]
 const initialState: AuthStateType = {
   isInitialized: false,
   isAuthenticated: false,
-  user: null
+  user: null,
 }
 
 const reducer = (state: AuthStateType, action: ActionsType) => {
@@ -80,8 +80,9 @@ export const AuthContext = createContext<JWTContextType | null>(null)
 export function AuthProvider({ children }: Readonly<{ children: React.ReactNode }>) {
   const { translate } = useLocales()
   const [state, dispatch] = useReducer(reducer, initialState)
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [openPopover, setOpenPopover] = useState<boolean>(false)
   const dispatchRedux = useDispatch()
   const interceptorRegisteredRef = useRef<boolean>(false)
   // tanstack query
@@ -133,10 +134,10 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
   const signIn = useCallback(async (data: AuthValidators.SignInInput) => {
     await m2(data, {
       onSuccess: (res) => {
-        navigate({ to: paths.HOME, replace: true })
         toast.success(res.message)
         const { exp } = jwtDecode(res.data?.accessToken!)
         localStorage.setItem('accessTokenExpiration', exp)
+        setOpenPopover(false)
         dispatch({
           type: Types.LOGIN,
           payload: {
@@ -148,7 +149,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
         toast.error(translate(err.message ?? translate('unknown_error')))
       }
     })
-  }, [navigate, translate])
+  }, [translate])
 
   const signUp = useCallback(async (data: AuthValidators.SignUpInput) => {
     await m3(data, {
@@ -160,26 +161,26 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
           },
         })
         toast.success(res.message)
-        navigate({ to: paths.SIGNUP, replace: true })
+        setOpenPopover(false)
       },
       onError: (err) => {
         toast.error(err.message ?? translate('unknown_error'))
       }
     })
-  }, [navigate, translate])
+  }, [translate])
 
   const signOut = useCallback(async () => {
     await m4(undefined, {
       onSuccess: (_res) => {
         dispatch({ type: Types.LOGOUT })
-        navigate({ to: paths.HOME, replace: true })
+        // navigate({ to: paths.HOME, replace: true })
         dispatchRedux(setLastTokenRefresh(null))
       },
       onError: (err) => {
         toast.error(err.message ?? translate('unknown_error'))
       }
     })
-  }, [navigate, translate])
+  }, [translate])
 
   const signInWithProvider = useCallback((provider: string) => {
     const apiUrl = import.meta.env.VITE_API_URL
@@ -202,7 +203,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
       await m1(undefined, {
         onError(_err) {
           dispatch({ type: Types.LOGOUT })
-          navigate({ to: paths.HOME, replace: true })
+          // navigate({ to: paths.HOME, replace: true })
         },
         onSuccess(res) {
           const { exp } = jwtDecode(res.data?.accessToken!)
@@ -221,7 +222,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
         onError(_err) {
           // If refresh fails, log out the user
           dispatch({ type: Types.LOGOUT })
-          navigate({ to: paths.HOME, replace: true })
+          // navigate({ to: paths.HOME, replace: true })
         },
         onSuccess(res) {
           const { exp } = jwtDecode(res.data?.accessToken!)
@@ -231,7 +232,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
         },
       })
     }, timeUntilRefresh)
-  }, [m4, navigate])
+  }, [m4])
 
   // Schedule token refresh when user logs in
   useEffect(() => {
@@ -249,11 +250,13 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
     isInitialized: state.isInitialized,
     isAuthenticated: state.isAuthenticated,
     user: state.user,
+    openPopover,
+    setOpenPopover,
     signIn,
     signUp,
     signOut,
     signInWithProvider,
-  }), [state, signIn, signUp, signOut, signInWithProvider])
+  }), [state, signIn, signUp, signOut, signInWithProvider, openPopover, setOpenPopover])
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>
 }

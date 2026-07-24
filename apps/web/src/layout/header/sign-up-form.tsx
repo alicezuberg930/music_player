@@ -20,15 +20,12 @@ const SignUpForm: React.FC = () => {
   const { signUp } = useAuthContext()
   const { translate } = useLocales()
 
-  const defaultValues = useMemo(
-    () => ({
-      fullname: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    }),
-    [],
-  )
+  const defaultValues = useMemo(() => ({
+    fullname: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  }), [])
 
   const methods = useForm<AuthValidators.SignUpInput>({
     resolver: zodResolver(AuthValidators.signUpInput),
@@ -40,8 +37,7 @@ const SignUpForm: React.FC = () => {
     formState: { isSubmitting },
   } = methods
 
-  const onSubmit = async (data: AuthValidators.SignUpInput) =>
-    await signUp(data)
+  const onSubmit = async (data: AuthValidators.SignUpInput) => await signUp(data)
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -87,12 +83,12 @@ const SignUpForm: React.FC = () => {
           <Field orientation={"horizontal"}>
             <DialogClose
               render={
-                <Button type="reset" variant="outline" className="flex-auto" />
+                <Button type="reset" size='lg' variant="outline" className="flex-auto" />
               }
             >
               Reset
             </DialogClose>
-            <Button type="submit" className="flex-auto" disabled={isSubmitting}>
+            <Button type="submit" size='lg' className="flex-auto" disabled={isSubmitting}>
               {isSubmitting ? (
                 <Spinner className="size-6" />
               ) : (

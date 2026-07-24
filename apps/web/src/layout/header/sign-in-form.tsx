@@ -40,7 +40,7 @@ const SignInForm: React.FC = () => {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <DialogHeader>
-        <DialogTitle></DialogTitle>
+        {/* <DialogTitle></DialogTitle> */}
         <DialogDescription>
           {translate("sign_in_description")}
         </DialogDescription>
@@ -64,8 +64,10 @@ const SignInForm: React.FC = () => {
 
       <div className="flex justify-around gap-4 mb-4">
         <Button
+          variant={'outline'}
           type="button"
-          className="flex-auto bg-white hover:bg-gray-200/50 drop-shadow-2xl shadow-gray-900 text-black"
+          size={'lg'}
+          className="flex-auto hover:bg-gray-200/50 "
           onClick={() => signInWithProvider("google")}
         >
           <img
@@ -76,8 +78,10 @@ const SignInForm: React.FC = () => {
           Google
         </Button>
         <Button
+          variant={'outline'}
           type="button"
-          className="flex-auto bg-white hover:bg-gray-200/50 drop-shadow-2xl shadow-gray-900 text-black"
+          size={'lg'}
+          className="flex-auto hover:bg-gray-200/50"
           onClick={() => signInWithProvider("facebook")}
         >
           <img
@@ -92,12 +96,7 @@ const SignInForm: React.FC = () => {
       <DialogFooter>
         <Field orientation="vertical">
           <Field orientation={"horizontal"}>
-            {/* <DialogClose
-                            render={<Button type="reset" variant="outline" className="flex-auto" />}
-                        >
-                            Reset
-                        </DialogClose> */}
-            <Button type="submit" className="flex-auto" disabled={isSubmitting}>
+            <Button type="submit" className="flex-auto" size='lg' disabled={isSubmitting}>
               {isSubmitting ? (
                 <Spinner className="size-6" />
               ) : (

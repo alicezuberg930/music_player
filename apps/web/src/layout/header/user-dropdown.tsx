@@ -36,22 +36,22 @@ const UserDropdown: React.FC = () => {
         )}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 z-100" align="end">
-        <DropdownMenuLabel>{translate("my_account")}</DropdownMenuLabel>
         <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <Link to={paths.UPLOAD_MUSIC}>{translate("profile")}</Link>
+          <DropdownMenuLabel>{translate("my_account")}</DropdownMenuLabel>
+          <DropdownMenuItem>
+            <Link to={paths.UPLOAD_MUSIC}>{translate("profile")}</Link>
             <DropdownMenuShortcut>
               <User />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link to={paths.UPLOAD_MUSIC}>{translate("settings")}</Link>
+          <DropdownMenuItem>
+            <Link to={paths.UPLOAD_MUSIC}>{translate("settings")}</Link>
             <DropdownMenuShortcut>
               <Settings />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link to={paths.UPLOAD_MUSIC}>{translate("upload_music")}</Link>
+          <DropdownMenuItem>
+            <Link to={paths.UPLOAD_MUSIC}>{translate("upload_music")}</Link>
             <DropdownMenuShortcut>
               <Upload />
             </DropdownMenuShortcut>

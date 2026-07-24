@@ -1,6 +1,7 @@
 import type { User } from "@/@types/user"
 import BaseProvider from "./providers/base"
 import type { AuthValidators } from "@yukikaze/validator"
+import type { Dispatch, SetStateAction } from "react"
 
 export type ActionMapType<M extends { [index: string]: any }> = {
   [Key in keyof M]: M[Key] extends undefined ? { type: Key } : { type: Key, payload: M[Key] }
@@ -20,6 +21,8 @@ export type JWTContextType = {
   signUp: (data: AuthValidators.SignUpInput) => Promise<void>
   signOut: () => void
   signInWithProvider: (provider: string) => void
+  openPopover: boolean
+  setOpenPopover: Dispatch<SetStateAction<boolean>>
   // refreshToken: () => Promise<void>
 }
 

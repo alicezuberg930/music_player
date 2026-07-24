@@ -119,7 +119,11 @@ export const userQueries = () => ({
             mutationOptions({
                 mutationKey: keys.signIn(),
                 mutationFn: async (input: AuthValidators.SignInInput) => {
-                    return await httpClient.post<Response<{ user: User, accessToken: string }>>(`/auth/sign-in`, input)
+                    return await httpClient.post<Response<{
+                        user: User,
+                        accessToken: string,
+                        refreshToken: string
+                    }>>(`/auth/sign-in`, input)
                 },
             }),
     },

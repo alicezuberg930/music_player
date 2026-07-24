@@ -10,12 +10,14 @@ import { useLocales } from "@/lib/locales"
 import SignInForm from "./sign-in-form"
 import SignUpForm from "./sign-up-form"
 import { memo } from "react"
+import { useAuthContext } from "@/providers/auth-provider"
 
 const AuthPopover: React.FC = () => {
   const { translate } = useLocales()
+  const { openPopover, setOpenPopover } = useAuthContext()
 
   return (
-    <Dialog>
+    <Dialog open={openPopover} onOpenChange={(v) => setOpenPopover(v)}>
       <DialogTrigger
         nativeButton={false}
         render={<Typography variant={"span"} className="text-white" />}

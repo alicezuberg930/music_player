@@ -9,7 +9,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
+  // DialogTitle,
 } from "@yukikaze/ui/dialog"
 import { useLocales } from "@/lib/locales"
 import { Spinner } from "@yukikaze/ui/spinner"

@@ -29,7 +29,7 @@ export const DEFAULT_OPTIONS = {
         path: '/',
         httpOnly: true,
         secure: true, // Required for SameSite=None
-        sameSite: env.NODE_ENV === 'production' ? 'lax' : 'strict', // Required for cross-domain cookies
-        domain: env.NODE_ENV === 'production' ? '/' : undefined, // Share cookie across subdomains
+        sameSite: env.NODE_ENV === 'production' ? 'none' : 'strict', // Required for cross-domain cookies
+        // domain: env.NODE_ENV === 'production' ? '.tien-music-player.site' : undefined, // Share cookie across subdomains
     },
 } as const satisfies Omit<Required<AuthOptions>, 'providers'>

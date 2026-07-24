@@ -18,10 +18,11 @@ const reconn_strategy = (retries: number): number | Error => {
 
 //Then we can create redis client which can interact with redis
 const redisClient: RedisClientType = createClient({
+    url: env.REDIS_URL,
     socket: {
-        host: env.REDIS_HOST,
-        port: env.REDIS_PORT,
-        // reconnectStrategy: reconn_strategy
+        // host: env.REDIS_HOST,
+        // port: env.REDIS_PORT,
+        reconnectStrategy: reconn_strategy
     }
 })
 

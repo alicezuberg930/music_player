@@ -1,2 +1,2 @@
-export { localAuthRoute } from './local-auth/local-auth.route'
+export { localAuthRoute } from './local/local-auth.route'
 export { oauthAuthRoute } from './oauth/oauth.route'

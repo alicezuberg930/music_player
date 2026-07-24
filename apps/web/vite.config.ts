@@ -28,7 +28,7 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
       tailwindcss(),
       ViteSitemap({
         hostname,
-        // dynamicRoutes,
+        dynamicRoutes,
         generateRobotsTxt: true,
         robots: [
           {
@@ -45,7 +45,7 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
           minifyInternalExports: true,
           manualChunks: {
             'react-query-chunk': ['@tanstack/react-query', '@tanstack/react-query-persist-client'],
-            'react-chunk': ['react', 'react-dom'],
+            // 'react-chunk': ['react', 'react-dom'],
             'react-dropzone-chunk': ['react-dropzone'],
             'react-lrc-chunk': ['react-lrc'],
             'redux-chunk': ['@reduxjs/toolkit', 'react-redux', 'redux-persist', 'redux-thunk'],
@@ -56,7 +56,6 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
             // 'hls-chunk': ['hls.js'],
             'chart': ['recharts'],
             'framer-motion-chunk': ['framer-motion'],
-            'yukikaze-ui-chunk': ['@yukikaze/ui']
           },
           chunkFileNames: 'chunks/[name]-[hash].js',
           entryFileNames: 'entries/[name]-[hash].js',
@@ -74,7 +73,7 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
         compress: {
           drop_console: true,
           drop_debugger: true,
-          pure_funcs: ['console.log', 'console.info', 'console.debug'],
+          // pure_funcs: ['console.log', 'console.info', 'console.debug'],
           passes: 2,
           unsafe_arrows: true,
           unsafe_methods: true,

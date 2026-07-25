@@ -9,6 +9,7 @@
     "@yukikaze/gateway-service": "workspace:*",
     "@yukikaze/genre-service": "workspace:*",
     "@yukikaze/home-service": "workspace:*",
+    "@yukikaze/notification-service": "workspace:*",
     "@yukikaze/playlist-service": "workspace:*",
     "@yukikaze/song-service": "workspace:*",
     "@yukikaze/user-service": "workspace:*"

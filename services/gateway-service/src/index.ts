@@ -3,7 +3,10 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 import { env } from '@yukikaze/lib/create-env'
 import { rateLimiter } from './middleware/rate.limiter'
-import { createProxyMiddleware } from 'http-proxy-middleware'
+import {
+    createProxyMiddleware,
+    type RequestHandler as ProxyRequestHandler,
+} from 'http-proxy-middleware'
 import { UnauthorizedException } from '@yukikaze/lib/exception'
 import http, { ClientRequest, IncomingMessage, ServerResponse } from 'node:http'
 import { Socket } from 'node:net'
@@ -64,6 +67,7 @@ app.use(rateLimiter)
 
 const routes: Map<string, string> = new Map([
     ['/api/v1/home', `http://${env.HOME_SERVICE_HOST}:${env.HOME_SERVICE_PORT}`],
+    ['/api/v1/notifications', `http://${env.NOTIFICATION_SERVICE_HOST}:${env.NOTIFICATION_SERVICE_PORT}`],
     ['/api/v1/auth', `http://${env.AUTH_SERVICE_HOST}:${env.AUTH_SERVICE_PORT}`],
     ['/api/v1/songs', `http://${env.SONG_SERVICE_HOST}:${env.SONG_SERVICE_PORT}`],
     ['/api/v1/banners', `http://${env.BANNER_SERVICE_HOST}:${env.BANNER_SERVICE_PORT}`],
@@ -124,8 +128,10 @@ const onError = (err: Error, req: IncomingMessage, res: ServerResponse<IncomingM
     }
 }
 
+let notificationServiceProxy: ProxyRequestHandler | undefined = undefined
+
 routes.forEach((target, path) => {
-    app.use(path, createProxyMiddleware({
+    const proxy = createProxyMiddleware({
         target,
         pathRewrite: { [`^${path}`]: '' },
         secure: env.NODE_ENV === 'production',
@@ -146,12 +152,22 @@ routes.forEach((target, path) => {
                 // }
             }
         }
-    }))
+    })
+    if (path === '/api/v1/notifications') notificationServiceProxy = proxy
+    app.use(path, proxy)
 })
 
 app.use([errorInterceptor])
 
 const server = http.createServer(app)
+
+server.on('upgrade', (request, socket, head) => {
+    if (!request.url?.startsWith('/api/v1/notifications/socket.io') || !notificationServiceProxy) {
+        socket.destroy()
+        return
+    }
+    notificationServiceProxy.upgrade(request, socket as Socket, head)
+})
 
 server.listen(port, () => {
     routes.forEach((target, path) => {

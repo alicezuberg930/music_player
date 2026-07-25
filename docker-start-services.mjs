@@ -7,6 +7,7 @@ const serviceNames = [
   "gateway-service",
   "genre-service",
   "home-service",
+  "notification-service",
   "playlist-service",
   "song-service",
   "user-service",

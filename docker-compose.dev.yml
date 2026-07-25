@@ -38,6 +38,8 @@ services:
         condition: service_healthy
       yukikaze_player_home_dev:
         condition: service_healthy
+      yukikaze_player_notification_dev:
+        condition: service_healthy
       yukikaze_player_gateway_dev:
         condition: service_healthy
       yukikaze_player_artist_dev:
@@ -137,6 +139,39 @@ services:
           ignore:
             - node_modules/
 
+  yukikaze_player_notification_dev:
+    build:
+      context: .
+      dockerfile: services/notification-service/Dockerfile.development
+    restart: unless-stopped
+    env_file: .env
+    container_name: yukikaze_player_notification
+    ports:
+      - "5009:5009"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5009/check || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    depends_on:
+      yukikaze_player_gateway_dev:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: sync
+          path: ./services/notification-service/src
+          target: /build/services/notification-service/src
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./services/notification-service/package.json
+        - action: sync
+          path: ./packages
+          target: /build/packages
+          ignore:
+            - node_modules/
+
   yukikaze_player_gateway_dev:
     build:
       context: .
@@ -145,6 +180,7 @@ services:
     env_file: .env
     environment:
       - HOME_SERVICE_HOST=yukikaze_player_home_dev
+      - NOTIFICATION_SERVICE_HOST=yukikaze_player_notification_dev
       - AUTH_SERVICE_HOST=yukikaze_player_auth_dev
       - SONG_SERVICE_HOST=yukikaze_player_song_dev
       - BANNER_SERVICE_HOST=yukikaze_player_banner_dev

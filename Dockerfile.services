@@ -5,7 +5,7 @@ ARG BUN_VERSION=1.3.4
 FROM oven/bun:${BUN_VERSION}-alpine AS base
 WORKDIR /app
 
-# Prune the monorepo to the nine services and their internal dependencies.
+# Prune the monorepo to the backend services and their internal dependencies.
 FROM base AS pruner
 RUN bun install --global turbo@2.6.3
 COPY . .
@@ -40,7 +40,7 @@ RUN set -eux; \
       cp "/source/packages/${package}/package.json" "packages/${package}/package.json"; \
       cp -R "/source/packages/${package}/dist" "packages/${package}/dist"; \
     done; \
-    for service in artist-service auth-service banner-service gateway-service genre-service home-service playlist-service song-service user-service; do \
+    for service in artist-service auth-service banner-service gateway-service genre-service home-service notification-service playlist-service song-service user-service; do \
       mkdir -p "services/${service}"; \
       cp "/source/services/${service}/package.json" "services/${service}/package.json"; \
       cp -R "/source/services/${service}/dist" "services/${service}/dist"; \
@@ -57,7 +57,7 @@ COPY --chown=node:node docker-start-services.mjs ./docker-start-services.mjs
 COPY --chown=node:node ca.pem ./ca.pem
 
 RUN set -eux; \
-    for service in artist-service auth-service banner-service gateway-service genre-service home-service playlist-service song-service user-service; do \
+    for service in artist-service auth-service banner-service gateway-service genre-service home-service notification-service playlist-service song-service user-service; do \
       mkdir -p "services/${service}/uploads"; \
       chown node:node "services/${service}/uploads"; \
     done

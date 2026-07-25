@@ -1,0 +1,41 @@
+ARG BUN_VERSION=1.3.4
+
+FROM oven/bun:${BUN_VERSION}-alpine AS base
+
+FROM base AS prepare
+WORKDIR /prune
+
+RUN bun install --global turbo
+
+COPY . .
+RUN turbo prune @yukikaze/notification-service --docker
+
+FROM base AS builder
+WORKDIR /build
+
+COPY --from=prepare /prune/out/json ./
+RUN bun install
+
+COPY --from=prepare /prune/out/full ./
+RUN bun run build
+
+RUN rm -rf node_modules && bun install --production
+
+FROM node:22-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+RUN apk add --no-cache curl
+RUN addgroup --system --gid 1001 yukikaze && \
+    adduser --system --uid 1001 notification
+
+COPY --from=builder --chown=notification:yukikaze /build/node_modules ./node_modules
+COPY --from=builder --chown=notification:yukikaze /build/packages ./packages
+COPY --from=builder --chown=notification:yukikaze /build/services/notification-service/dist ./dist
+
+USER notification
+
+EXPOSE 5009
+
+CMD ["node", "dist/index.js"]

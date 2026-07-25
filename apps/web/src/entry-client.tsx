@@ -17,6 +17,7 @@ import { StrictMode } from 'react'
 import { hydrateRoot } from 'react-dom/client'
 import SongOptionsDropdown from './layout/song-options-dropdown.tsx'
 import { Router } from './routes'
+import { SocketProvider } from './providers/socket-provider.tsx'
 
 hydrateRoot(document.getElementById('root') as HTMLElement,
   <StrictMode>
@@ -30,8 +31,10 @@ hydrateRoot(document.getElementById('root') as HTMLElement,
         <ReduxProvider store={store}>
           <PersistGate persistor={persistor}>
             <AuthProvider>
-              <Router />
-              <Toaster />
+              <SocketProvider>
+                <Router />
+                <Toaster />
+              </SocketProvider>
             </AuthProvider>
           </PersistGate>
         </ReduxProvider>

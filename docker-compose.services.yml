@@ -9,6 +9,7 @@ services:
     env_file: .env
     environment:
       HOME_SERVICE_HOST: 127.0.0.1
+      NOTIFICATION_SERVICE_HOST: 127.0.0.1
       AUTH_SERVICE_HOST: 127.0.0.1
       SONG_SERVICE_HOST: 127.0.0.1
       BANNER_SERVICE_HOST: 127.0.0.1

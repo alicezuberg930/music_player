@@ -45,6 +45,8 @@ export const env = {
     GATEWAY_PORT: process.env.GATEWAY_PORT,
     HOME_SERVICE_HOST: process.env.HOME_SERVICE_HOST || 'localhost',
     HOME_SERVICE_PORT: process.env.HOME_SERVICE_PORT,
+    NOTIFICATION_SERVICE_HOST: process.env.NOTIFICATION_SERVICE_HOST || 'localhost',
+    NOTIFICATION_SERVICE_PORT: process.env.NOTIFICATION_SERVICE_PORT || '5009',
     AUTH_SERVICE_HOST: process.env.AUTH_SERVICE_HOST || 'localhost',
     AUTH_SERVICE_PORT: process.env.AUTH_SERVICE_PORT,
     SONG_SERVICE_HOST: process.env.SONG_SERVICE_HOST || 'localhost',

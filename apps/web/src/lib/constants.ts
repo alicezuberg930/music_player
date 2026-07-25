@@ -1,6 +1,5 @@
 const vapidKey = import.meta.env.VITE_WEB_PUSH_PUBLIC_KEY
-// BPIOcoYd-_gZkDmTDHyJ9XHPCR0UtGxC9136JSHr5A7HyRkvRXQBGJCbQjCMd0argkzolL_cZJ_bl_uTxoNVGgw
-const pushNotificationKey = 'web_push_notification_key'
+const pushNotificationKey = 'web-push-notification-key'
 
 const notificationOptions = {
     url: "/notification-sw.js",

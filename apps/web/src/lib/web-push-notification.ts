@@ -60,7 +60,7 @@ const onMessageForeground = (callback: (data: any) => void) => {
                     uniqueKey: event.data.payload.uniqueKey,
                     title: event.data.payload.title || "",
                     body: event.data.payload.body || "",
-                    icon: event.data.payload.icon || "/icon-192.png",
+                    icon: event.data.payload.icon || "/web-app-manifest-192x192.png",
                     link: event.data.payload.url || event.data.payload.link || "/",
                     type: String(event.data.payload.type),
                 },
@@ -97,7 +97,7 @@ const isSameVapidSubscription = (subscription: PushSubscription) => {
     return arrayBufferToBase64Url(subscription.options.applicationServerKey) === vapidKey
 }
 
-const getOrCreatePushSubscription = async (registration: ServiceWorkerRegistration) => {
+const getOrCreatePushSubscription = async (registration: ServiceWorkerRegistration): Promise<PushSubscription> => {
     let subscription = await registration.pushManager.getSubscription()
     if (subscription && !isSameVapidSubscription(subscription)) {
         await subscription.unsubscribe()
@@ -112,13 +112,11 @@ const getOrCreatePushSubscription = async (registration: ServiceWorkerRegistrati
 const registerPushNotification = async () => {
     const permission = await requestNotificationPermission()
     if (permission !== "granted") return false
-
     const registration = await registerNotificationServiceWorker()
     if (!registration?.pushManager) return false
-
     const subscription = await getOrCreatePushSubscription(registration)
     try {
-        const response = await httpClient.post<Response<string>>("/api/push-notification/subscribe", JSON.stringify(subscription))
+        const response = await httpClient.post<Response<string>>("/notifications/push-notification/subscribe", subscription)
         if (!response?.data) return false
         localStorage.setItem(pushNotificationKey, response.data)
         notifyActiveServiceWorker()
@@ -132,7 +130,7 @@ const unRegisterPushNotification = async () => {
     if (!isSwAvailable()) return true
     const id = getWebPushNotificationKey()
     localStorage.removeItem(pushNotificationKey)
-    if (id) await httpClient.delete(`/api/push-notification/unsubscribe/${id}`)
+    if (id) await httpClient.delete(`/notifications/push-notification/unsubscribe/${id}`)
     try {
         const registration = await getNotificationServiceWorkerRegistration()
         const subscription = await registration?.pushManager?.getSubscription()

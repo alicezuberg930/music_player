@@ -44,7 +44,7 @@ export class UserService {
             })
             if (!data) throw new NotFoundException('User not found')
             // Cache privately (per-user), must revalidate on each request
-            response.set('Cache-Control', 'private, must-revalidate, max-age=3600')
+            // response.set('Cache-Control', 'private, must-revalidate, max-age=3600')
             return response.json({ message: 'User details fetched successfully', data })
         } catch (error) {
             if (error instanceof HttpException) throw error

@@ -79,3 +79,4 @@ expo-env.d.ts
 
 # Turborepo
 .turbo
+client_secret_*.json

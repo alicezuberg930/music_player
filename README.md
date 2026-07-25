@@ -115,6 +115,26 @@ Config files:
 
 The web app and dashboard can also be deployed to Vercel directly from the monorepo.
 
+### Env variables
+To generate VITE_WEB_PUSH_PUBLIC_KEY & WEB_PUSH_PUBLIC_KEY & WEB_PUSH_PRIVATE_KEY run 
+```js
+npx web-push generate-vapid-keys
+```
+
+```text
+=======================================
+
+Public Key:
+##############################-####-################
+
+Private Key:
+###################-#################
+
+=======================================
+```
+
+VITE_WEB_PUSH_PUBLIC_KEY & WEB_PUSH_PUBLIC_KEY share the same value
+
 ## Documentation
 
 Located in `/docs` folder:

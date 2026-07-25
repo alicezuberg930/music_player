@@ -64,7 +64,7 @@ const LyricsDrawer: React.FC<Props> = ({ drawerTrigger, audioRef }) => {
       >
         {drawerTrigger}
       </DrawerTrigger>
-      <DrawerContent className="bg-white/70 min-h-[calc(100vh-96px)] backdrop-blur-md">
+      <DrawerContent className="bg-white/70 backdrop-blur-lg">
         <div className="mx-auto w-full h-screen max-w-6xl relative">
           <DrawerHeader>
             <DrawerTitle>Lời bài hát</DrawerTitle>
@@ -72,9 +72,10 @@ const LyricsDrawer: React.FC<Props> = ({ drawerTrigger, audioRef }) => {
               {currentSong?.title} - {currentSong?.artistNames}
             </DrawerDescription>
           </DrawerHeader>
-          <div ref={scrollContainerRef} className="h-[65vh] overflow-auto px-4">
+          <div ref={scrollContainerRef} className="h-[calc(100%-10rem)] overflow-auto">
             {lyrics.length > 0 ? (
               <Lrc
+                className=''
                 lrc={lyrics}
                 currentMillisecond={currentTime}
                 lineRenderer={({ index, active, line }) => (

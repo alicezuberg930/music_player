@@ -18,6 +18,7 @@ import { hydrateRoot } from 'react-dom/client'
 import SongOptionsDropdown from './layout/song-options-dropdown.tsx'
 import { Router } from './routes'
 import { SocketProvider } from './providers/socket-provider.tsx'
+import { NotificationProvider } from './providers/notification-provider.tsx'
 
 hydrateRoot(document.getElementById('root') as HTMLElement,
   <StrictMode>
@@ -31,10 +32,14 @@ hydrateRoot(document.getElementById('root') as HTMLElement,
         <ReduxProvider store={store}>
           <PersistGate persistor={persistor}>
             <AuthProvider>
-              <SocketProvider>
-                <Router />
-                <Toaster />
-              </SocketProvider>
+              <NotificationProvider>
+                <SocketProvider>
+                  <NotificationProvider>
+                    <Router />
+                    <Toaster />
+                  </NotificationProvider>
+                </SocketProvider>
+              </NotificationProvider>
             </AuthProvider>
           </PersistGate>
         </ReduxProvider>

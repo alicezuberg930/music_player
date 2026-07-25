@@ -1,35 +1,14 @@
-import {
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type ChangeEvent,
-} from "react"
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
 // components
 import { Spinner } from "@yukikaze/ui/spinner"
 import { Typography } from "@yukikaze/ui/typography"
 import { Button } from "@yukikaze/ui/button"
 import LazyLoadImage from "@/components/lazy-load-image/LazyLoadImage"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@yukikaze/ui/tooltip"
+import VolumeSlider from "./volume-slider"
+import LyricsDrawer from "./lyrics-drawer"
 // icons
-import {
-  Ellipsis,
-  Heart,
-  MicVocal,
-  MusicIcon,
-  PauseCircle,
-  PlayCircle,
-  Repeat,
-  Repeat1,
-  Shuffle,
-  SkipBack,
-  SkipForward,
-  Volume1,
-  Volume2,
-  VolumeX,
-} from "@yukikaze/ui"
+import { Ellipsis, Heart, MicVocal, MusicIcon, PauseCircle, PlayCircle, Repeat, Repeat1, Shuffle, SkipBack, SkipForward } from "@yukikaze/ui"
 // utils
 import { formatDuration } from "@/lib/utils"
 // redux
@@ -37,7 +16,6 @@ import { setCurrentSong, setIsPlaying } from "@/redux/slices/music"
 import { setShowSidebarRight } from "@/redux/slices/app"
 import { useDispatch, useSelector } from "@/redux/store"
 // sections
-import LyricsDrawer from "./lyrics-drawer"
 import { useMutation } from "@tanstack/react-query"
 import { songQueries } from "@/lib/queries/song"
 
@@ -46,9 +24,7 @@ const Player: React.FC = () => {
   const { mutate } = useMutation(songQueries().addListens.mutationOptions())
   // redux states
   const { showSideBarRight } = useSelector((state) => state.app)
-  const { currentSong, isPlaying, currentPlaylistSongs } = useSelector(
-    (state) => state.music,
-  )
+  const { currentSong, isPlaying, currentPlaylistSongs } = useSelector((state) => state.music)
   // local states
   const [shuffle, setShuffle] = useState<boolean>(false)
   const [repeatMode, setRepeatMode] = useState<number>(0)
@@ -65,9 +41,7 @@ const Player: React.FC = () => {
   // memoized next song
   const nextSong = useMemo(() => {
     if (!currentSong) return undefined
-    const index = currentPlaylistSongs.findIndex(
-      (item) => item.id === currentSong.id,
-    )
+    const index = currentPlaylistSongs.findIndex((item) => item.id === currentSong.id)
     return index === -1 ? undefined : currentPlaylistSongs[index + 1]
   }, [currentSong, currentPlaylistSongs])
 
@@ -77,29 +51,20 @@ const Player: React.FC = () => {
     const rawPercent = ((clientX - trackRect.left) / trackRect.width) * 100
     const percent = Math.max(0, Math.min(100, Math.round(rawPercent)))
     thumbRef.current.style.cssText = `right: ${100 - percent}%`
-    if (currentSong?.duration)
-      audioRef.current.currentTime = (currentSong.duration * percent) / 100
+    if (currentSong?.duration) audioRef.current.currentTime = (currentSong.duration * percent) / 100
   }
 
   // handle click on progress bar
-  const handleClickProgressBar = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  ) => {
-    seekBar(e.clientX)
-  }
+  const handleClickProgressBar = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>,) => seekBar(e.clientX)
 
   // handle mouse down on progress bar
-  const handleMouseDownProgressBar = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  ) => {
+  const handleMouseDownProgressBar = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>,) => {
     isDraggingRef.current = true
     seekBar(e.clientX)
   }
 
   // handle drag on progress bar
-  const handleMouseMoveProgressBar = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  ) => {
+  const handleMouseMoveProgressBar = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>,) => {
     if (!isDraggingRef.current) return
     seekBar(e.clientX)
   }
@@ -165,18 +130,13 @@ const Player: React.FC = () => {
     if (!audio?.src) return
 
     const updateTime = () => {
-      currentTimeRef.current!.innerText = formatDuration(
-        Math.floor(audio.currentTime),
-      )
-      const percent =
-        Math.round((audio.currentTime / currentSong!.duration) * 10000) / 100
-      thumbRef.current &&
-        (thumbRef.current.style.cssText = `right: ${100 - percent}%`)
+      currentTimeRef.current!.innerText = formatDuration(Math.floor(audio.currentTime),)
+      const percent = Math.round((audio.currentTime / currentSong!.duration) * 10000) / 100
+      thumbRef.current && (thumbRef.current.style.cssText = `right: ${100 - percent}%`)
       animationFrame = requestAnimationFrame(updateTime)
     }
 
-    const handlePlay = () =>
-      (animationFrame = requestAnimationFrame(updateTime))
+    const handlePlay = () => (animationFrame = requestAnimationFrame(updateTime))
 
     const handlePause = () => cancelAnimationFrame(animationFrame)
 
@@ -205,13 +165,10 @@ const Player: React.FC = () => {
 
   const onCanPlayThrough = () => {
     setIsLoadingAudio(false)
-    audioRef.current
-      ?.play()
+    audioRef.current?.play()
       .then((_) => dispatch(setIsPlaying(true)))
       .catch((_) =>
-        console.log(
-          "Auto play was prevented because user didnt interact with the document",
-        ),
+        console.log("Auto play was prevented because user didnt interact with the document",),
       )
   }
 
@@ -225,7 +182,7 @@ const Player: React.FC = () => {
 
       // Use streaming endpoint with HTTP caching
       const streamingUrl = `${import.meta.env.VITE_API_URL}/songs/stream/${currentSong.id}`
-      console.log(`Streaming with HTTP cache: ${currentSong.title}`)
+      console.log(`Streaming: ${currentSong.title}`)
 
       audioRef.current = new Audio(streamingUrl)
       audioRef.current.load()
@@ -234,9 +191,6 @@ const Player: React.FC = () => {
       updatePlayerUI()
     }
   }
-
-  const handleSetVolume = (e: ChangeEvent<HTMLInputElement>) =>
-    setVolume(Number(e.target.value))
 
   // initialize player when current song changes and update player UI
   useEffect(() => {
@@ -257,29 +211,16 @@ const Player: React.FC = () => {
       // Prevent space bar from triggering if user is typing in an input/textarea
       if (e.code === "Space" && e.target instanceof HTMLElement) {
         const tagName = e.target.tagName.toLowerCase()
-        if (
-          tagName === "input" ||
-          tagName === "textarea" ||
-          e.target.isContentEditable
-        )
-          return
+        if (tagName === "input" || tagName === "textarea" || e.target.isContentEditable) return
         e.preventDefault()
         handleTogglePlay()
       }
     }
     const handleArrowKeyPress = (e: KeyboardEvent) => {
       // Prevent arrow keys from triggering if user is typing in an input/textarea
-      if (
-        (e.code === "ArrowLeft" || e.code === "ArrowRight") &&
-        e.target instanceof HTMLElement
-      ) {
+      if ((e.code === "ArrowLeft" || e.code === "ArrowRight") && e.target instanceof HTMLElement) {
         const tagName = e.target.tagName.toLowerCase()
-        if (
-          tagName === "input" ||
-          tagName === "textarea" ||
-          e.target.isContentEditable
-        )
-          return
+        if (tagName === "input" || tagName === "textarea" || e.target.isContentEditable) return
         e.preventDefault()
         if (e.code === "ArrowLeft") handlePrevious()
         if (e.code === "ArrowRight") handleNext()
@@ -320,9 +261,7 @@ const Player: React.FC = () => {
   }, [isPlaying])
 
   return (
-    <div
-      className={`fixed w-full z-20 h-24 content-center bg-background select-none border-t shadow-up`}
-    >
+    <div className={`fixed w-full z-20 h-24 content-center bg-background select-none border-t shadow-up`}>
       <div className="flex justify-between px-4">
         <div className="flex-1 items-center gap-4 hidden md:flex">
           <LazyLoadImage
@@ -471,30 +410,7 @@ const Player: React.FC = () => {
             drawerTrigger={<MicVocal size={20} />}
             audioRef={audioRef}
           />
-          <Button
-            size={"icon-lg"}
-            variant={"ghost"}
-            onClick={() => setVolume(volume === 0 ? 50 : 0)}
-            aria-label={volume === 0 ? "Unmute" : "Mute"}
-          >
-            {volume >= 50 ? (
-              <Volume2 />
-            ) : volume === 0 ? (
-              <VolumeX />
-            ) : (
-              <Volume1 />
-            )}
-          </Button>
-          <input
-            type="range"
-            step={1}
-            min={0}
-            max={100}
-            onChange={handleSetVolume}
-            value={volume}
-            className="h-1 hover:h-2"
-            aria-label="Volume control"
-          />
+          <VolumeSlider volume={volume} setVolume={setVolume} />
           <Button
             className="text-white"
             size={"lg"}

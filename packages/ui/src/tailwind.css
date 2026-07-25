@@ -7,6 +7,17 @@
 @custom-variant blue (&:where(.blue, .blue *));
 @custom-variant green (&:where(.green, .green *));
 
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
 @layer theme {
   :root {
     /* Default theme - applied by default and when .default class is present */

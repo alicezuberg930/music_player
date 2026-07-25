@@ -12,6 +12,7 @@ const normalizePayload = (rawPayload) => {
     const raw = safeJsonParse(rawPayload)
     const data = safeJsonParse(raw.data)
     const type = raw.type !== undefined && raw.type !== null ? String(raw.type) : ""
+    const icon = raw.icon ?? "/web-app-manifest-192x192.png"
 
     return {
         refID: data.refID,
@@ -20,7 +21,8 @@ const normalizePayload = (rawPayload) => {
         uniqueKey: data.uniqueKey,
         title: raw.title ?? "Thông báo",
         body: raw.body ?? "",
-        icon: raw.icon ?? "/icon-192.png",
+        icon: new URL(icon, self.location.origin).href,
+        badge: new URL(raw.badge ?? icon, self.location.origin).href,
         link: raw.link ?? "/",
         type,
         data,
@@ -68,6 +70,7 @@ self.addEventListener("push", (event) => {
         await self.registration.showNotification(payload.title, {
             body: payload.body,
             icon: payload.icon,
+            badge: payload.badge,
             data: {
                 ...payload,
                 link: targetUrlForNotification(payload),

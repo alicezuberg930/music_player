@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import { NotificationService } from "./notification.service"
 import { CreateNotificationInput } from "./notification.model"
+import { QuerySongParams } from "@yukikaze/validator"
 
 class NotificationController {
     private readonly notificationService: NotificationService
@@ -9,7 +10,7 @@ class NotificationController {
         this.notificationService = new NotificationService()
     }
 
-    public async getNotifications(request: Request, response: Response) {
+    public async getNotifications(request: Request<{}, {}, {}, QuerySongParams>, response: Response) {
         return await this.notificationService.getNotifications(request, response)
     }
 

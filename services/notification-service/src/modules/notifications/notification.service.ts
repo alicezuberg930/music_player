@@ -1,54 +1,42 @@
 import { Request, Response } from "express"
 import { and, db, desc, eq } from "@yukikaze/db"
 import { notifications, pushNotifications, users } from "@yukikaze/db/schemas"
-import { BadRequestException, HttpException, NotFoundException } from "@yukikaze/lib/exception"
+import { BadRequestException, HttpException, NotFoundException, UnauthorizedException } from "@yukikaze/lib/exception"
 import webpush from "web-push"
 import { CreateNotificationInput, PushNotification, WebPushSubscription } from "./notification.model"
-
-const vapidSubject = process.env.WEB_PUSH_SUBJECT!
-const vapidPublicKey = process.env.WEB_PUSH_PUBLIC_KEY 
-const vapidPrivateKey = process.env.WEB_PUSH_PRIVATE_KEY
-
-let isWebPushConfigured = false
-
-const configureWebPush = () => {
-    if (isWebPushConfigured) return
-    if (!vapidPublicKey || !vapidPrivateKey) {
-        throw new BadRequestException("Web push VAPID keys are not configured")
-    }
-    webpush.setVapidDetails(vapidSubject, vapidPublicKey, vapidPrivateKey)
-    isWebPushConfigured = true
-}
-
-const normalizeSubscription = (input: unknown): WebPushSubscription => {
-    const subscription = typeof input === "string" ? JSON.parse(input) : input
-    if (!subscription || typeof subscription !== "object") {
-        throw new BadRequestException("Invalid push subscription")
-    }
-    const { endpoint, keys } = subscription as WebPushSubscription
-    if (!endpoint || !keys?.p256dh || !keys.auth) {
-        throw new BadRequestException("Invalid push subscription keys")
-    }
-    return { endpoint, keys }
-}
-
-const toWebPushSubscription = (subscription: PushNotification) => ({
-    endpoint: subscription.endPoint,
-    keys: {
-        p256dh: subscription.p256dh,
-        auth: subscription.auth,
-    },
-})
+import { configureWebPush, normalizeSubscription, toWebPushSubscription } from "@/lib/utils"
+import { QuerySongParams } from "@yukikaze/validator"
 
 export class NotificationService {
-    public async getNotifications(request: Request, response: Response) {
+    public async getNotifications(request: Request<{}, {}, {}, QuerySongParams>, response: Response) {
         try {
+            if (!request.userId) throw new UnauthorizedException('User is not logged in')
+            let { page, limit } = request.query
+            let currentPage = 1
+            let currentLimit = 15
+            if (page) currentPage = Number(page)
+            if (limit) currentLimit = Number(limit)
+
+            const condition = eq(notifications.toUserId, request.userId)
+            const total = await db.$count(notifications, condition)
+            const totalPages = Math.ceil(total / currentLimit)
+
             if (!request.userId) throw new BadRequestException("User ID is missing in request")
             const data = await db.query.notifications.findMany({
-                where: eq(notifications.toUserId, request.userId),
+                limit: currentLimit,
+                offset: (currentPage - 1) * currentLimit,
+                where: condition,
                 orderBy: [desc(notifications.createdAt)],
             })
-            return response.json({ message: "Notifications fetched successfully", data })
+            return response.json({
+                message: "Notifications fetched successfully",
+                data,
+                paginate: {
+                    limit: currentLimit,
+                    currentPage,
+                    totalPages,
+                }
+            })
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)

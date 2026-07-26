@@ -58,7 +58,7 @@ export class SongService {
                 // artists: song.artists.map(a => a.artist),
                 // genres: song.genres.map(g => g.genre)
                 // })))
-                // If user is logged in, check which songs they've liked
+                // If user is logged in, check which songs they liked
                 let likedSongIds: Set<string> = new Set()
                 if (request.userId) {
                     const songIds = data.map(song => song.id)

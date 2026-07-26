@@ -17,8 +17,8 @@ const SearchSongPage = () => {
     const { translate } = useLocales()
 
     useEffect(() => {
-        if (isInView) fetchNextPage()
-    }, [isInView, fetchNextPage])
+        if (isInView && hasNextPage && !isFetchingNextPage) fetchNextPage()
+    }, [isInView, hasNextPage, isFetchingNextPage, fetchNextPage])
 
     return (
         <div className='w-full'>

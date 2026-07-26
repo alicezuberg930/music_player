@@ -1,27 +1,26 @@
-import { FormProvider, RHFTextField } from "@/components/hook-form"
-import { memo, useMemo } from "react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Button } from "@yukikaze/ui/button"
-import { Field, FieldGroup } from "@yukikaze/ui/field"
-import { AuthValidators } from "@yukikaze/validator"
+import { FormProvider, RHFTextField } from '@/components/hook-form'
+import { memo, useMemo } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Button } from '@yukikaze/ui/button'
+import { Field, FieldGroup } from '@yukikaze/ui/field'
+import { AuthValidators } from '@yukikaze/validator'
 import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  // DialogTitle,
-} from "@yukikaze/ui/dialog"
-import { useLocales } from "@/lib/locales"
-import { Spinner } from "@yukikaze/ui/spinner"
-import { useAuthContext } from "@/providers/auth-provider"
+} from '@yukikaze/ui/dialog'
+import { useLocales } from '@/lib/locales'
+import { Spinner } from '@yukikaze/ui/spinner'
+import { useAuthContext } from '@/providers/auth-provider'
 
 const SignInForm: React.FC = () => {
   const { signIn, signInWithProvider } = useAuthContext()
   const { translate } = useLocales()
 
   const defaultValues = useMemo(() => ({
-    email: "tien23851@gmail.com",
-    password: "V1nht1en1411@",
+    email: 'tien23851@gmail.com',
+    password: 'V1nht1en1411@',
   }), [])
 
   const methods = useForm<AuthValidators.SignInInput>({
@@ -42,36 +41,36 @@ const SignInForm: React.FC = () => {
       <DialogHeader>
         {/* <DialogTitle></DialogTitle> */}
         <DialogDescription>
-          {translate("sign_in_description")}
+          {translate('sign_in_description')}
         </DialogDescription>
       </DialogHeader>
 
-      <FieldGroup className="gap-4 my-6">
+      <FieldGroup className='gap-4 my-6'>
         <RHFTextField
-          name="email"
-          type="text"
-          fieldLabel="Email"
-          placeholder="Type your email"
+          name='email'
+          type='text'
+          fieldLabel='Email'
+          placeholder='Type your email'
         />
 
         <RHFTextField
-          name="password"
-          type="password"
-          fieldLabel="Password"
-          placeholder="Type your password"
+          name='password'
+          type='password'
+          fieldLabel='Password'
+          placeholder='Type your password'
         />
       </FieldGroup>
 
-      <div className="flex justify-around gap-4 mb-4">
+      <div className='flex justify-around gap-4 mb-4'>
         <Button
           variant={'outline'}
-          type="button"
+          type='button'
           size={'lg'}
-          className="flex-auto hover:bg-gray-200/50 "
-          onClick={() => signInWithProvider("google")}
+          className='flex-auto hover:bg-gray-200/50 '
+          onClick={() => signInWithProvider('google')}
         >
           <img
-            src="./assets/providers/google-icon.svg"
+            src='./assets/providers/google-icon.svg'
             width={24}
             height={24}
           />
@@ -79,13 +78,13 @@ const SignInForm: React.FC = () => {
         </Button>
         <Button
           variant={'outline'}
-          type="button"
+          type='button'
           size={'lg'}
-          className="flex-auto hover:bg-gray-200/50"
-          onClick={() => signInWithProvider("facebook")}
+          className='flex-auto hover:bg-gray-200/50'
+          onClick={() => signInWithProvider('facebook')}
         >
           <img
-            src="./assets/providers/facebook-icon.svg"
+            src='./assets/providers/facebook-icon.svg'
             width={24}
             height={24}
           />
@@ -94,13 +93,13 @@ const SignInForm: React.FC = () => {
       </div>
 
       <DialogFooter>
-        <Field orientation="vertical">
-          <Field orientation={"horizontal"}>
-            <Button type="submit" className="flex-auto" size='lg' disabled={isSubmitting}>
+        <Field orientation='vertical'>
+          <Field orientation={'horizontal'}>
+            <Button type='submit' className='flex-auto' size='lg' disabled={isSubmitting}>
               {isSubmitting ? (
-                <Spinner className="size-6" />
+                <Spinner className='size-6' />
               ) : (
-                <>{translate("login")}</>
+                <>{translate('login')}</>
               )}
             </Button>
           </Field>

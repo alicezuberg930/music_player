@@ -1,4 +1,5 @@
 import type { Artist } from "./artist"
+import type { Query } from '.'
 
 export type Song = {
     duration: number
@@ -36,8 +37,6 @@ export type IMusicState = {
     currentPlaylistName: string | null
 }
 
-export type QuerySong = {
+export type QuerySong = Query & {
     search?: string
-    page?: number
-    limit?: number
 }

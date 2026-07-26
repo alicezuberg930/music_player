@@ -25,7 +25,7 @@ export const songQueries = () => ({
         queryFn: async ({ pageParam }) => {
           return await httpClient.get<
             Response<Song[]>
-          >('/songs', { search: opts?.search ?? '', page: pageParam + 1, limit: 15 })
+          >('/songs', { search: opts?.search ?? '', page: pageParam + 1, limit: opts.limit ?? 15 })
         },
         initialPageParam: 0,
         getNextPageParam: (lastPage, _allPages, lastPageParam) => {

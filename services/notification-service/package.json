@@ -12,9 +12,11 @@
     "cookie-parser": "^1.4.7",
     "express": "catalog:express",
     "web-push": "^3.6.7",
-    "socket.io": "^4.8.3"
+    "socket.io": "^4.8.3",
+    "@yukikaze/validator": "workspace:*"
   },
   "devDependencies": {
+    "@types/web-push": "^3.6.4",
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "catalog:express",
     "@types/node": "catalog:",

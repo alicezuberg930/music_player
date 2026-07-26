@@ -1,30 +1,30 @@
-import { FormProvider, RHFTextField } from "@/components/hook-form"
-import { memo, useMemo } from "react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Button } from "@yukikaze/ui/button"
-import { Field, FieldGroup } from "@yukikaze/ui/field"
-import { AuthValidators } from "@yukikaze/validator"
+import { FormProvider, RHFTextField } from '@/components/hook-form'
+import { memo, useMemo } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Button } from '@yukikaze/ui/button'
+import { Field, FieldGroup } from '@yukikaze/ui/field'
+import { AuthValidators } from '@yukikaze/validator'
 import {
   DialogClose,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@yukikaze/ui/dialog"
-import { useLocales } from "@/lib/locales"
-import { Spinner } from "@yukikaze/ui/spinner"
-import { useAuthContext } from "@/providers/auth-provider"
+} from '@yukikaze/ui/dialog'
+import { useLocales } from '@/lib/locales'
+import { Spinner } from '@yukikaze/ui/spinner'
+import { useAuthContext } from '@/providers/auth-provider'
 
 const SignUpForm: React.FC = () => {
   const { signUp } = useAuthContext()
   const { translate } = useLocales()
 
   const defaultValues = useMemo(() => ({
-    fullname: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    fullname: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
   }), [])
 
   const methods = useForm<AuthValidators.SignUpInput>({
@@ -44,55 +44,55 @@ const SignUpForm: React.FC = () => {
       <DialogHeader>
         <DialogTitle></DialogTitle>
         <DialogDescription>
-          {translate("sign_up_description")}
+          {translate('sign_up_description')}
         </DialogDescription>
       </DialogHeader>
 
-      <FieldGroup className="gap-4 my-6">
+      <FieldGroup className='gap-4 my-6'>
         <RHFTextField
-          name="fullname"
-          type="text"
-          fieldLabel="Fullname"
-          placeholder="Type your full name"
+          name='fullname'
+          type='text'
+          fieldLabel='Fullname'
+          placeholder='Type your full name'
         />
 
         <RHFTextField
-          name="email"
-          type="text"
-          fieldLabel="Email"
-          placeholder="Type your email"
+          name='email'
+          type='text'
+          fieldLabel='Email'
+          placeholder='Type your email'
         />
 
         <RHFTextField
-          name="password"
-          type="password"
-          fieldLabel="Password"
-          placeholder="Type your password"
+          name='password'
+          type='password'
+          fieldLabel='Password'
+          placeholder='Type your password'
         />
 
         <RHFTextField
-          name="confirmPassword"
-          type="password"
-          fieldLabel="Confirm password"
-          placeholder="Confirm your password"
+          name='confirmPassword'
+          type='password'
+          fieldLabel='Confirm password'
+          placeholder='Confirm your password'
         />
       </FieldGroup>
 
       <DialogFooter>
-        <Field orientation="vertical">
-          <Field orientation={"horizontal"}>
+        <Field orientation='vertical'>
+          <Field orientation={'horizontal'}>
             <DialogClose
               render={
-                <Button type="reset" size='lg' variant="outline" className="flex-auto" />
+                <Button type='reset' size='lg' variant='outline' className='flex-auto' />
               }
             >
               Reset
             </DialogClose>
-            <Button type="submit" size='lg' className="flex-auto" disabled={isSubmitting}>
+            <Button type='submit' size='lg' className='flex-auto' disabled={isSubmitting}>
               {isSubmitting ? (
-                <Spinner className="size-6" />
+                <Spinner className='size-6' />
               ) : (
-                <>{translate("signup")}</>
+                <>{translate('signup')}</>
               )}
             </Button>
           </Field>

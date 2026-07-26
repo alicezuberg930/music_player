@@ -3,14 +3,14 @@ import {
   DialogContent,
   DialogTitle,
   DialogTrigger,
-} from "@yukikaze/ui/dialog"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@yukikaze/ui/tabs"
-import { Typography } from "@yukikaze/ui/typography"
-import { useLocales } from "@/lib/locales"
-import SignInForm from "./sign-in-form"
-import SignUpForm from "./sign-up-form"
-import { memo } from "react"
-import { useAuthContext } from "@/providers/auth-provider"
+} from '@yukikaze/ui/dialog'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@yukikaze/ui/tabs'
+import { Typography } from '@yukikaze/ui/typography'
+import { useLocales } from '@/lib/locales'
+import SignInForm from './sign-in-form'
+import SignUpForm from './sign-up-form'
+import { memo } from 'react'
+import { useAuthContext } from '@/providers/auth-provider'
 
 const AuthPopover: React.FC = () => {
   const { translate } = useLocales()
@@ -20,21 +20,21 @@ const AuthPopover: React.FC = () => {
     <Dialog open={openPopover} onOpenChange={(v) => setOpenPopover(v)}>
       <DialogTrigger
         nativeButton={false}
-        render={<Typography variant={"span"} className="text-white" />}
+        render={<Typography variant={'span'} className='text-white' />}
       >
-        {translate("sign_in")}
+        {translate('sign_in')}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className='sm:max-w-md'>
         <DialogTitle></DialogTitle>
-        <Tabs defaultValue="sign_in">
+        <Tabs defaultValue='sign_in'>
           <TabsList>
-            <TabsTrigger value="sign_in">{translate("sign_in")}</TabsTrigger>
-            <TabsTrigger value="sign_up">{translate("sign_up")}</TabsTrigger>
+            <TabsTrigger value='sign_in'>{translate('sign_in')}</TabsTrigger>
+            <TabsTrigger value='sign_up'>{translate('sign_up')}</TabsTrigger>
           </TabsList>
-          <TabsContent value="sign_in">
+          <TabsContent value='sign_in'>
             <SignInForm />
           </TabsContent>
-          <TabsContent value="sign_up">
+          <TabsContent value='sign_up'>
             <SignUpForm />
           </TabsContent>
         </Tabs>

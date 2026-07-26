@@ -1,5 +1,5 @@
-import { LazyLoadImage } from "@/components/lazy-load-image"
-import useLocales from "@/lib/locales/useLocales"
+import { LazyLoadImage } from '@/components/lazy-load-image'
+import useLocales from '@/lib/locales/useLocales'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,9 +7,9 @@ import {
   DropdownMenuItem,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@yukikaze/ui/dropdown-menu"
-import { Typography } from "@yukikaze/ui/typography"
-import { memo } from "react"
+} from '@yukikaze/ui/dropdown-menu'
+import { Typography } from '@yukikaze/ui/typography'
+import { memo } from 'react'
 
 const LanguageDropdown: React.FC = () => {
   const { onChangeLang, currentLang, allLangs } = useLocales()
@@ -20,7 +20,7 @@ const LanguageDropdown: React.FC = () => {
         nativeButton={false}
         render={<LazyLoadImage src={currentLang.icon} alt={currentLang.value} />}
       />
-      <DropdownMenuContent className="w-56 z-100" align="end">
+      <DropdownMenuContent className='w-56 z-100' align='end'>
         <DropdownMenuGroup>
           {allLangs.map((lang) => (
             <DropdownMenuItem

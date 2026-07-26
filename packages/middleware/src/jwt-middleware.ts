@@ -3,17 +3,39 @@ import { HttpException, UnauthorizedException } from '@yukikaze/lib/exception'
 import { env } from "@yukikaze/lib/create-env"
 import { JWT, type JWTHeader } from "@yukikaze/lib/jwt"
 
-export const JWTMiddleware = async (request: Request, _: Response, next: NextFunction) => {
-    let token: string | undefined = request.cookies?.["accessToken"]
-    if (!token && request.headers.authorization?.startsWith("Bearer")) {
-        token = request.headers.authorization.split(" ")[1]
+export const JWTMiddleware = async (request: Request, response: Response, next: NextFunction) => {
+    let accessToken: string | undefined = request.cookies?.["accessToken"]
+    let refreshToken: string | undefined = request.cookies?.["refreshToken"]
+    if (!accessToken) {
+        if (request.headers.authorization?.startsWith("Bearer")) {
+            accessToken = request.headers.authorization.split(" ")[1]
+        }
+        if (refreshToken) {
+            try {
+                const jwt = await new JWT(env.REFRESH_TOKEN_SECRET).verify(refreshToken) as { id: string } & JWTHeader
+                if (!jwt || !jwt.id) {
+                    throw new UnauthorizedException("Invalid or expired refresh token")
+                }
+                accessToken = await new JWT(env.ACCESS_TOKEN_SECRET).sign({ id: jwt.id }, { expiresIn: env.ACCESS_TOKEN_EXPIRES_IN })
+                response.cookie('accessToken', accessToken, {
+                    // ...this.cookieOptions,
+                    path: '/',
+                    httpOnly: true,
+                    secure: true, // Required for SameSite=None
+                    sameSite: env.NODE_ENV === 'production' ? 'none' : 'strict', // Required for cross-domain cookies
+                    maxAge: env.ACCESS_TOKEN_EXPIRES_IN * 1000
+                })
+            } catch (error) {
+                if (error instanceof HttpException) throw error
+            }
+        }
     }
-    if (!token) {
+    if (!accessToken) {
         throw new UnauthorizedException("Invalid credentials, please log in")
     }
     // Verify token signature annd expiration 
     try {
-        const jwt = await new JWT(env.ACCESS_TOKEN_SECRET).verify(token) as { id: string } & JWTHeader
+        const jwt = await new JWT(env.ACCESS_TOKEN_SECRET).verify(accessToken) as { id: string } & JWTHeader
         if (!jwt || !jwt.id) {
             throw new UnauthorizedException("Invalid or expired access token")
         }

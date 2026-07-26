@@ -1,11 +1,12 @@
-import SearchBar from "./search-bar"
+import SearchBar from './search-bar'
 import { ArrowLeft, ArrowRight, cn } from '@yukikaze/ui'
-import UserDropdown from "./user-dropdown"
-import LanguageDropdown from "./language-dropdown"
-import AuthPopover from "./auth-popover"
-import { memo } from "react"
-import { useAuthContext } from "@/providers/auth-provider"
-import { useSelector } from "@/redux/store"
+import UserDropdown from './user-dropdown'
+import LanguageDropdown from './language-dropdown'
+import AuthPopover from './auth-popover'
+import { memo } from 'react'
+import { useAuthContext } from '@/providers/auth-provider'
+import { useSelector } from '@/redux/store'
+import NotificationDropdown from './notification-dropdown'
 
 const Header = () => {
     const { showSideBarRight, scrollTop } = useSelector(state => state.app)
@@ -19,9 +20,9 @@ const Header = () => {
             showSideBarRight && 'xl:right-82.5',
             scrollTop ? '' : 'make bg transparent so that i can see the body'
         )}>
-            <div className="w-full flex items-center justify-between gap-2">
-                <div className="flex my-2 gap-2 flex-auto">
-                    <div className="flex items-center gap-2 text-white cursor-pointer">
+            <div className='w-full flex items-center justify-between gap-3'>
+                <div className='flex my-2 gap-2 flex-auto'>
+                    <div className='flex items-center gap-2 text-white cursor-pointer'>
                         <ArrowLeft onClick={goBack} />
                         <ArrowRight onClick={goForward} />
                     </div>
@@ -29,7 +30,10 @@ const Header = () => {
                 </div>
                 <LanguageDropdown />
                 {isAuthenticated ? (
-                    <UserDropdown />
+                    <>
+                        <NotificationDropdown />
+                        <UserDropdown />
+                    </>
                 ) : (
                     <AuthPopover />
                 )}

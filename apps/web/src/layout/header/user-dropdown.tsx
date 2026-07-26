@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@yukikaze/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from '@yukikaze/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,14 +12,14 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@yukikaze/ui/dropdown-menu"
-import { useLocales } from "@/lib/locales"
-import { paths } from "@/lib/paths"
-import { LogOut, Settings, Spotlight, Upload, User } from "@yukikaze/ui"
-import { Link } from "@tanstack/react-router"
-import { useTheme } from "@yukikaze/ui"
-import { memo } from "react"
-import { useAuthContext } from "@/providers/auth-provider"
+} from '@yukikaze/ui/dropdown-menu'
+import { useLocales } from '@/lib/locales'
+import { paths } from '@/lib/paths'
+import { LogOut, Settings, Spotlight, Upload, User } from '@yukikaze/ui'
+import { Link } from '@tanstack/react-router'
+import { useTheme } from '@yukikaze/ui'
+import { memo } from 'react'
+import { useAuthContext } from '@/providers/auth-provider'
 
 const UserDropdown: React.FC = () => {
   const { user, signOut } = useAuthContext()
@@ -35,36 +35,36 @@ const UserDropdown: React.FC = () => {
           <AvatarFallback>{user?.fullname.charAt(0)}</AvatarFallback>
         )}
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 z-100" align="end">
+      <DropdownMenuContent className='w-56 z-100' align='end'>
         <DropdownMenuGroup>
-          <DropdownMenuLabel>{translate("my_account")}</DropdownMenuLabel>
+          <DropdownMenuLabel>{translate('my_account')}</DropdownMenuLabel>
           <DropdownMenuItem>
-            <Link to={paths.UPLOAD_MUSIC}>{translate("profile")}</Link>
+            <Link to={paths.UPLOAD_MUSIC}>{translate('profile')}</Link>
             <DropdownMenuShortcut>
               <User />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link to={paths.UPLOAD_MUSIC}>{translate("settings")}</Link>
+            <Link to={paths.UPLOAD_MUSIC}>{translate('settings')}</Link>
             <DropdownMenuShortcut>
               <Settings />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link to={paths.UPLOAD_MUSIC}>{translate("upload_music")}</Link>
+            <Link to={paths.UPLOAD_MUSIC}>{translate('upload_music')}</Link>
             <DropdownMenuShortcut>
               <Upload />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link to={paths.ADD_ARTIST}>{translate("add_artist")}</Link>
+            <Link to={paths.ADD_ARTIST}>{translate('add_artist')}</Link>
             <DropdownMenuShortcut>
               <Spotlight />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
-              {translate("switch_theme")}
+              {translate('switch_theme')}
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
               <DropdownMenuSubContent>
@@ -79,7 +79,7 @@ const UserDropdown: React.FC = () => {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={signOut}>
-          {translate("logout")}
+          {translate('logout')}
           <DropdownMenuShortcut>
             <LogOut />
           </DropdownMenuShortcut>

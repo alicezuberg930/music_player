@@ -85,7 +85,7 @@ const QueryClientProvider = ({ children }: { children: React.ReactNode }) => {
             client={queryClient()}
             persistOptions={{
                 persister: createIDBPersister(),
-                maxAge: 1000 * 60 * 60 * 1, // 1 hours
+                maxAge:  1, // 1 hours
             }}
         >
             {children}

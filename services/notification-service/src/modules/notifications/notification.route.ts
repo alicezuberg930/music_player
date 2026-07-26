@@ -2,13 +2,14 @@ import express, { Request, Response } from "express"
 import { JWTMiddleware } from "@yukikaze/middleware"
 import notificationController from "./notification.controller"
 import { CreateNotificationInput } from "./notification.model"
+import { QuerySongParams } from "@yukikaze/validator"
 
 const notificationRouter = express.Router()
 
 notificationRouter.get(
     "/",
     JWTMiddleware,
-    (request: Request, response: Response) => notificationController.getNotifications(request, response),
+    (request: Request<{}, {}, {}, QuerySongParams>, response: Response) => notificationController.getNotifications(request, response),
 )
 
 notificationRouter.post(

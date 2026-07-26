@@ -1,7 +1,7 @@
 import React from "react"
 
 interface UseIsInViewOptions {
-    root?: React.RefObject<Element | null>
+    root?: React.RefObject<HTMLElement | null> | HTMLElement | null
     margin?: string
     amount?: "some" | "all" | number
     once?: boolean
@@ -15,6 +15,9 @@ export const useInView = (
 
     React.useEffect(() => {
         if (!ref.current) return
+
+        const rootElement = root && 'current' in root ? root.current : root
+
         // Convert amount to threshold
         let threshold: number | number[]
         if (amount === "some") {
@@ -24,20 +27,18 @@ export const useInView = (
         } else {
             threshold = amount
         }
+        const observer = new IntersectionObserver(([entry]) => {
+            const isIntersecting = entry.isIntersecting
+            setIsInView(isIntersecting)
+            if (once && isIntersecting) observer.disconnect()
+        }, {
+            root: rootElement ?? null,
+            rootMargin: margin ?? '50px',
+            threshold
+        })
 
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                const isIntersecting = entry.isIntersecting
-                setIsInView(isIntersecting)
-                if (once && isIntersecting) observer.disconnect()
-            },
-            {
-                root: root?.current ?? null,
-                rootMargin: margin ?? '50px',
-                threshold
-            }
-        )
         observer.observe(ref.current)
+
         return () => {
             observer.disconnect()
         }

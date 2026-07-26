@@ -389,6 +389,7 @@
         "@yukikaze/db": "workspace:*",
         "@yukikaze/lib": "workspace:*",
         "@yukikaze/middleware": "workspace:*",
+        "@yukikaze/validator": "workspace:*",
         "cookie-parser": "^1.4.7",
         "express": "catalog:express",
         "socket.io": "^4.8.3",
@@ -399,6 +400,7 @@
         "@types/cookie-parser": "^1.4.10",
         "@types/express": "catalog:express",
         "@types/node": "catalog:",
+        "@types/web-push": "^3.6.4",
         "@yukikaze/typescript-config": "workspace:*",
         "eslint": "catalog:",
         "typescript": "catalog:",
@@ -1169,6 +1171,8 @@
     "@types/use-sync-external-store": ["@types/use-sync-external-store@0.0.6", "", {}, "sha512-zFDAD+tlpf2r4asuHEj0XH6pY6i0g5NeAHPn+15wk3BV6JA69eERFXC1gyGThDkVa1zCyKr5jox1+2LbV/AMLg=="],
 
     "@types/validate-npm-package-name": ["@types/validate-npm-package-name@4.0.2", "", {}, "sha512-lrpDziQipxCEeK5kWxvljWYhUvOiB2A9izZd9B2AFarYAkqZshb4lPbRs7zKEic6eGtH8V/2qJW+dPp9OtF6bw=="],
+
+    "@types/web-push": ["@types/web-push@3.6.4", "", { "dependencies": { "@types/node": "*" } }, "sha512-GnJmSr40H3RAnj0s34FNTcJi1hmWFV5KXugE0mYWnYhgTAHLJ/dJKAwDmvPJYMke0RplY2XE9LnM4hqSqKIjhQ=="],
 
     "@types/ws": ["@types/ws@8.18.1", "", { "dependencies": { "@types/node": "*" } }, "sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg=="],
 

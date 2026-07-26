@@ -10,14 +10,12 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
   loadEnv(mode, path.resolve(__dirname, '../../'), '')
   const hostname = mode === 'production' ? 'https://tien-music-player.site' : 'http://localhost:5173'
 
-  // Fetch dynamic routes from API sitemap
+  // Fetch static & dynamic routes from sitemap API
   const dynamicRoutes: string[] = []
   try {
     const response = await fetch('https://yukikaze-music-api.onrender.com/api/v1/home/sitemap-urls')
     const data = await response.json() as { data: string[] }
-    for (const url of data.data) {
-      dynamicRoutes.push(url)
-    }
+    dynamicRoutes.push(...data.data)
   } catch (error) {
     console.warn('Failed to fetch sitemap from API:', error)
   }
@@ -45,7 +43,7 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
           minifyInternalExports: true,
           manualChunks: {
             'react-query-chunk': ['@tanstack/react-query', '@tanstack/react-query-persist-client'],
-            // 'react-chunk': ['react', 'react-dom'],
+            'react-chunk': ['react', 'react-dom'],
             'react-dropzone-chunk': ['react-dropzone'],
             'react-lrc-chunk': ['react-lrc'],
             'redux-chunk': ['@reduxjs/toolkit', 'react-redux', 'redux-persist', 'redux-thunk'],

@@ -30,21 +30,21 @@ const allowedOrigins = new Set([
 ])
 
 const skipCorsForPaths = [
-    /^\/api\/v1\/auth\/callback\/.+/,
-    /^\/api\/v1\/auth\/provider\/.+/,
-    /^\/api\/v1\/songs\/stream\/.+/,
+    /^\/api\/v1\/auth\/callback\/(?:google|facebook)$/,
+    /^\/api\/v1\/auth\/provider\/(?:google|facebook)$/,
+    /^\/api\/v1\/songs\/stream$/,
+    /^\/api\/v1\/home\/sitemap-urls$/,
 ]
-
 // setup cors 
 app.use((req, res, next) => {
     // Skip CORS for OAuth provider routes (they handle redirects) and song streaming
     if (skipCorsForPaths.some((pattern) => pattern.test(req.path))) {
         return next()
     }
-    // Apply CORS for all other routes
+    // Apply CORS for all other routes except the skip cors routes
     cors({
         origin: function (origin, callback) {
-            if (!origin && env.ALLOW_CORS_WITHOUT_ORIGIN === 'true') {
+            if (!origin && Boolean(env.ALLOW_CORS_WITHOUT_ORIGIN)) {
                 return callback(null, true)
             }
             if (origin && allowedOrigins.has(origin)) {
@@ -52,7 +52,7 @@ app.use((req, res, next) => {
             }
             return callback(new UnauthorizedException(`${origin} not allowed by our CORS Policy.`))
         },
-        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
         credentials: true,
     })(req, res, next)
 })

@@ -17,10 +17,13 @@ A modern music streaming platform that enables users to discover, search, upload
 
 ### Backend & Shared Services
 
-- **API**: Express
-- **ORM**: Drizzle ORM + MySQL
-- **Validation**: Class Validator (Back-end) & Yup (Front-end)
+- **Server & API**: Express
+- **ORM**: Drizzle 
+- **Database**: MySQL
+- **Validation**: Zod (Front-end & Back-end)
 - **Email Service**: Resend
+- **Notification**: Web Push API
+- **Real time**: Websocket (Socket.io), SSE
 
 ## Project Structure
 
@@ -117,7 +120,7 @@ The web app and dashboard can also be deployed to Vercel directly from the monor
 
 ### Env variables
 To generate VITE_WEB_PUSH_PUBLIC_KEY & WEB_PUSH_PUBLIC_KEY & WEB_PUSH_PRIVATE_KEY run 
-```js
+```bash
 npx web-push generate-vapid-keys
 ```
 
@@ -134,6 +137,15 @@ Private Key:
 ```
 
 VITE_WEB_PUSH_PUBLIC_KEY & WEB_PUSH_PUBLIC_KEY share the same value
+
+### To build docker images to host on render
+```bash
+docker build -t tien1411/yukikaze_music_api:latest -f Dockerfile.services .
+```
+
+```bash
+docker push tien1411/yukikaze_music_api:latest
+```
 
 ## Documentation
 

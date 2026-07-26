@@ -19,17 +19,21 @@ if (existsSync(envPath)) {
 }
 
 export const env = {
+    // mixed configs
     ALLOW_CORS_WITHOUT_ORIGIN: process.env.ALLOW_CORS_WITHOUT_ORIGIN,
     NODE_ENV: process.env.NODE_ENV,
+    // database configs
     MYSQL_SSL_MODE: process.env.MYSQL_SSL_MODE,
     MYSQL_DATABASE: process.env.MYSQL_DATABASE,
     MYSQL_PASSWORD: process.env.MYSQL_PASSWORD,
     MYSQL_USER: process.env.MYSQL_USER,
     MYSQL_HOST: process.env.MYSQL_HOST,
     MYSQL_PORT: Number.parseInt(process.env.MYSQL_PORT!),
+    // cloudinary storage configs
     CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
     CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
     CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
+    // oauth 2 configs
     GOOGLE_REFRESH_TOKEN: process.env.GOOGLE_REFRESH_TOKEN,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
@@ -37,16 +41,19 @@ export const env = {
     FACEBOOK_CLIENT_ID: process.env.FACEBOOK_CLIENT_ID,
     FACEBOOK_CLIENT_SECRET: process.env.FACEBOOK_CLIENT_SECRET,
     FACEBOOK_REDIRECT_URI: process.env.FACEBOOK_REDIRECT_URI,
+    // local authentication configs
     ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET,
     ACCESS_TOKEN_EXPIRES_IN: Number.parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN ?? '86400'),
     REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET,
     REFRESH_TOKEN_EXPIRES_IN: Number.parseInt(process.env.REFRESH_TOKEN_EXPIRES_IN ?? '2592000'),
+    // email
     RESEND_API_KEY: process.env.RESEND_API_KEY,
+    // host & port configs
     GATEWAY_PORT: process.env.GATEWAY_PORT,
     HOME_SERVICE_HOST: process.env.HOME_SERVICE_HOST || 'localhost',
     HOME_SERVICE_PORT: process.env.HOME_SERVICE_PORT,
     NOTIFICATION_SERVICE_HOST: process.env.NOTIFICATION_SERVICE_HOST || 'localhost',
-    NOTIFICATION_SERVICE_PORT: process.env.NOTIFICATION_SERVICE_PORT || '5009',
+    NOTIFICATION_SERVICE_PORT: process.env.NOTIFICATION_SERVICE_PORT,
     AUTH_SERVICE_HOST: process.env.AUTH_SERVICE_HOST || 'localhost',
     AUTH_SERVICE_PORT: process.env.AUTH_SERVICE_PORT,
     SONG_SERVICE_HOST: process.env.SONG_SERVICE_HOST || 'localhost',
@@ -63,10 +70,19 @@ export const env = {
     GENRE_SERVICE_PORT: process.env.GENRE_SERVICE_PORT,
     VIDEO_SERVICE_HOST: process.env.VIDEO_SERVICE_HOST || 'localhost',
     VIDEO_SERVICE_PORT: process.env.VIDEO_SERVICE_PORT,
+    // redis config
     REDIS_URL: process.env.REDIS_URL,
-    REDIS_HOST: process.env.REDIS_HOST || 'localhost',
-    REDIS_PORT: Number.parseInt(process.env.REDIS_PORT || '6379'),
-    REDIS_MAX_CONNECTION_RETRY: Number.parseInt(process.env.REDIS_MAX_CONNECTION_RETRY || '10'),
-    REDIS_MIN_CONNECTION_DELAY_IN_MS: Number.parseInt(process.env.REDIS_MIN_CONNECTION_DELAY_IN_MS || '1000'),
-    REDIS_MAX_CONNECTION_DELAY_IN_MS: Number.parseInt(process.env.REDIS_MAX_CONNECTION_DELAY_IN_MS || '30000'),
+    REDIS_HOST: process.env.REDIS_HOST,
+    REDIS_PORT: process.env.REDIS_PORT,
+    REDIS_MAX_CONNECTION_RETRY: process.env.REDIS_MAX_CONNECTION_RETRY,
+    REDIS_MIN_CONNECTION_DELAY_IN_MS: process.env.REDIS_MIN_CONNECTION_DELAY_IN_MS,
+    REDIS_MAX_CONNECTION_DELAY_IN_MS: process.env.REDIS_MAX_CONNECTION_DELAY_IN_MS,
+    // cors configs
+    // change to ALLOWED_ORIGINS in the future
+    NOTIFICATION_SERVICE_SOCKET_ORIGINS: process.env.NOTIFICATION_SERVICE_SOCKET_ORIGINS,
+    // push API configs
+    WEB_PUSH_SUBJECT: process.env.WEB_PUSH_SUBJECT,
+    WEB_PUSH_PUBLIC_KEY: process.env.WEB_PUSH_PUBLIC_KEY,
+    WEB_PUSH_PRIVATE_KEY: process.env.WEB_PUSH_PRIVATE_KEY,
+
 }

@@ -1,4 +1,4 @@
-import redisClient from "./redisClient"
+import redisClient from "./redis-client"
 
 /**
  * Cache wrapper for database queries

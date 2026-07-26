@@ -14,13 +14,13 @@ import { ThemeProvider } from '@yukikaze/ui'
 import { Toaster } from '@yukikaze/ui/sonner'
 // 
 import { StrictMode } from 'react'
-import { hydrateRoot } from 'react-dom/client'
+import { createRoot } from 'react-dom/client'
 import SongOptionsDropdown from './layout/song-options-dropdown.tsx'
 import { Router } from './routes'
 import { SocketProvider } from './providers/socket-provider.tsx'
 import { NotificationProvider } from './providers/notification-provider.tsx'
 
-hydrateRoot(document.getElementById('root') as HTMLElement,
+createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
     <QueryClientProvider>
       <ThemeProvider
@@ -34,10 +34,8 @@ hydrateRoot(document.getElementById('root') as HTMLElement,
             <AuthProvider>
               <NotificationProvider>
                 <SocketProvider>
-                  <NotificationProvider>
-                    <Router />
-                    <Toaster />
-                  </NotificationProvider>
+                  <Router />
+                  <Toaster />
                 </SocketProvider>
               </NotificationProvider>
             </AuthProvider>

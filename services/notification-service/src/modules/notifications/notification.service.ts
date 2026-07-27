@@ -1,14 +1,14 @@
 import { Request, Response } from "express"
-import { and, db, desc, eq } from "@yukikaze/db"
+import { and, db, desc, eq, inArray } from "@yukikaze/db"
 import { notifications, pushNotifications, users } from "@yukikaze/db/schemas"
 import { BadRequestException, HttpException, NotFoundException, UnauthorizedException } from "@yukikaze/lib/exception"
 import webpush from "web-push"
 import { CreateNotificationInput, PushNotification, WebPushSubscription } from "./notification.model"
 import { configureWebPush, normalizeSubscription, toWebPushSubscription } from "@/lib/utils"
-import { QuerySongParams } from "@yukikaze/validator"
+import { QueryNotificationParams, ReadNotificationParams } from "@yukikaze/validator"
 
 export class NotificationService {
-    public async getNotifications(request: Request<{}, {}, {}, QuerySongParams>, response: Response) {
+    public async getNotifications(request: Request<{}, {}, {}, QueryNotificationParams>, response: Response) {
         try {
             if (!request.userId) throw new UnauthorizedException('User is not logged in')
             let { page, limit } = request.query
@@ -173,5 +173,30 @@ export class NotificationService {
             }
             return acc
         }, { sent: 0, failed: 0 })
+    }
+
+    public async countUnreadNotifications(request: Request, response: Response) {
+        try {
+            if (!request.userId) throw new BadRequestException("User ID is missing in request")
+            const data = await db.$count(notifications,
+                and(eq(notifications.toUserId, request.userId), eq(notifications.isRead, false))
+            )
+            return response.json({ message: "Unred notifications counted", data })
+        } catch (error) {
+            if (error instanceof HttpException) throw error
+            throw new BadRequestException(error instanceof Error ? error.message : undefined)
+        }
+    }
+
+    public async readNotifications(request: Request<{}, {}, ReadNotificationParams>, response: Response) {
+        try {
+            if (!request.userId) throw new BadRequestException("User ID is missing in request")
+            const { ids } = request.body
+            await db.update(notifications).set({ isRead: true }).where(inArray(notifications.id, ids))
+            return response.json({ message: "Notification read successfully" })
+        } catch (error) {
+            if (error instanceof HttpException) throw error
+            throw new BadRequestException(error instanceof Error ? error.message : undefined)
+        }
     }
 }

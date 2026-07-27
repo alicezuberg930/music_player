@@ -9,8 +9,8 @@ import {
 } from '@yukikaze/ui/dropdown-menu'
 import { Bell, Check, cn } from '@yukikaze/ui'
 import { Badge } from '@yukikaze/ui/badge'
-import { memo, useEffect, useRef, useState } from 'react'
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { memo, useEffect, useMemo, useRef, useState } from 'react'
+import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query'
 import { notificationQueries } from '@/lib/queries/notification'
 import { useInView } from '@/hooks/use-in-view'
 import { Button } from '@yukikaze/ui/button'
@@ -18,14 +18,32 @@ import { ScrollArea } from '@yukikaze/ui/scroll-area'
 import type { Notification } from '@/@types'
 import { fDate } from '@/lib/format-time'
 import { Typography } from '@yukikaze/ui/typography'
+import { Spinner } from '@yukikaze/ui/spinner'
 
 const NotificationDropdown: React.FC = () => {
-    const { data, status, fetchNextPage, isFetchingNextPage, hasNextPage } = useInfiniteQuery(notificationQueries().all.queryOptions({ page: 1, limit: 5 }))
+    const {
+        data,
+        status,
+        fetchNextPage,
+        isFetchingNextPage,
+        hasNextPage
+    } = useInfiniteQuery(notificationQueries().all.queryOptions({ page: 1, limit: 5 }))
     const sentinelRef = useRef<HTMLDivElement>(null)
     const [viewportElement, setViewportElement] = useState<HTMLDivElement | null>(null)
-    const isInView = useInView(sentinelRef, { once: false, margin: '20px', root: viewportElement })
+    const isInView = useInView(sentinelRef, { once: false, margin: '5px', root: viewportElement })
+    const { data: unread } = useQuery(notificationQueries().unread.queryOptions())
+    const { mutate } = useMutation(notificationQueries().markAsRead.mutationOptions())
 
     console.log("notification status: " + status)
+
+    const handleMarkAsRead = (id: string) => {
+        mutate({ ids: [id] })
+    }
+
+    const a = useMemo(() => {
+        return data?.pages.map(page => page.data?.map(d => d.id))
+    }, [data])
+    console.log(a)
 
     useEffect(() => {
         if (isInView && hasNextPage && !isFetchingNextPage) fetchNextPage()
@@ -37,14 +55,16 @@ const NotificationDropdown: React.FC = () => {
                 nativeButton={false}
                 render={
                     <div className='relative'>
-                        <Bell className='text-white' />
-                        {true && (
-                            <Badge
-                                variant='destructive'
-                                className='absolute -top-2 -right-2 flex items-center justify-center h-5 w-5'
-                            >
-                                {12}
-                            </Badge>
+                        {unread && (
+                            <>
+                                <Bell className='text-white' />
+                                <Badge
+                                    variant='destructive'
+                                    className='bg-destructive/20 absolute -top-2 -right-2 flex items-center justify-center h-5 w-5'
+                                >
+                                    {unread}
+                                </Badge>
+                            </>
                         )}
                     </div>
                 }
@@ -76,23 +96,23 @@ const NotificationDropdown: React.FC = () => {
                             </div>
                         ) : (
                             data?.pages.map((page) => (
-                                page.data && <NotificationList key={page.timestamp} data={page.data} />
+                                page.data && <NotificationList key={page.timestamp} data={page.data} onMarkAsRead={handleMarkAsRead} />
                             ))
                         )}
-                        <div ref={sentinelRef}>
+                        <div ref={sentinelRef} className='py-3'>
                             {isFetchingNextPage && (
-                                <>loading</>
+                                <Spinner className='size-6 mx-auto' />
                             )}
                             {!hasNextPage && data?.pages[0]?.data && (
-                                <Typography className='text-muted-foreground m-0 py-3' variant='caption'>No notification left</Typography>
+                                <Typography className='text-muted-foreground m-0' variant='caption'>No notification left</Typography>
                             )}
                         </div>
                     </ScrollArea>
                     {true && (
                         <>
                             <DropdownMenuSeparator />
-                            <Button variant='ghost' size='sm' className='w-full text-muted-foreground'>
-                                View all notifications
+                            <Button onClick={() => mutate({ ids: [] })} variant='ghost' size='sm' className='w-full text-muted-foreground'>
+                                Mark all notifications as read
                             </Button>
                         </>
                     )}
@@ -119,7 +139,10 @@ const NotificationDropdown: React.FC = () => {
 //     }
 // }
 
-const NotificationList: React.FC<{ data: Notification[] }> = ({ data }) => {
+const NotificationList: React.FC<{
+    data: Notification[],
+    onMarkAsRead: (id: string) => void
+}> = ({ data, onMarkAsRead }) => {
     return (
         <>
             {
@@ -132,7 +155,7 @@ const NotificationList: React.FC<{ data: Notification[] }> = ({ data }) => {
                         )}
                         onClick={() => {
                             if (!notification.isRead) {
-                                // onMarkAsRead?.(notification.id)
+                                onMarkAsRead?.(notification.id)
                             }
                         }}
                     >

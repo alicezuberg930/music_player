@@ -1,4 +1,4 @@
-import SongList from '../../../layout/song-list'
+import SongList from '@/layout/song-list'
 import { useLocation } from '@tanstack/react-router'
 import { SongListShimmer } from '@/components/loading-placeholder'
 import { useEffect, useRef } from 'react'
@@ -13,7 +13,13 @@ const SearchSongPage = () => {
     const q = new URLSearchParams(location.search).get('q')
     const ref = useRef<HTMLDivElement>(null)
     const isInView = useInView(ref, { once: false, margin: '10px' })
-    const { data, status, fetchNextPage, isFetchingNextPage, hasNextPage } = useInfiniteQuery(songQueries().all.queryOptions({ search: q ?? '', limit: 15 }))
+    const {
+        data,
+        status,
+        fetchNextPage,
+        isFetchingNextPage,
+        hasNextPage
+    } = useInfiniteQuery(songQueries().all.queryOptions({ search: q ?? '', limit: 15 }))
     const { translate } = useLocales()
 
     useEffect(() => {
@@ -35,7 +41,7 @@ const SearchSongPage = () => {
                     <SongListShimmer showHeader={false} />
                 )}
                 {!hasNextPage && data?.pages[0]?.data && (
-                    <p className="text-center text-muted-foreground py-4"></p>
+                    <p className='text-center text-muted-foreground py-4'></p>
                 )}
             </div>
         </div>

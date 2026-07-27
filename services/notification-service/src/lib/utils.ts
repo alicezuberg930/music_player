@@ -37,4 +37,22 @@ const toWebPushSubscription = (subscription: PushNotification) => ({
     },
 })
 
-export { configureWebPush, normalizeSubscription, toWebPushSubscription }
+const notificationContents = [
+    {
+        type: 'song',
+        title: 'A new song has been released',
+        id: (id: string) => id
+    },
+    {
+        type: 'playlist',
+        title: 'A new playlist for you today',
+        id: (id: string) => id
+    },
+    {
+        type: 'artist',
+        title: 'Have you heard of this artist',
+        id: (id: string) => id
+    },
+]
+
+export { configureWebPush, normalizeSubscription, toWebPushSubscription, notificationContents }

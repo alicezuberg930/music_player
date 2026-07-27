@@ -2,14 +2,26 @@ import express, { Request, Response } from "express"
 import { JWTMiddleware } from "@yukikaze/middleware"
 import notificationController from "./notification.controller"
 import { CreateNotificationInput } from "./notification.model"
-import { QuerySongParams } from "@yukikaze/validator"
+import { QueryNotificationParams, ReadNotificationParams } from "@yukikaze/validator"
 
 const notificationRouter = express.Router()
 
 notificationRouter.get(
+    "/unread",
+    JWTMiddleware,
+    (request: Request, response: Response) => notificationController.countUnreadNotifications(request, response),
+)
+
+notificationRouter.put(
+    "/read",
+    JWTMiddleware,
+    (request: Request<{}, {}, ReadNotificationParams>, response: Response) => notificationController.readNotifications(request, response),
+)
+
+notificationRouter.get(
     "/",
     JWTMiddleware,
-    (request: Request<{}, {}, {}, QuerySongParams>, response: Response) => notificationController.getNotifications(request, response),
+    (request: Request<{}, {}, {}, QueryNotificationParams>, response: Response) => notificationController.getNotifications(request, response),
 )
 
 notificationRouter.post(

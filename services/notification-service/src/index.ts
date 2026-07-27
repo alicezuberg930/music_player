@@ -5,6 +5,8 @@ import { env } from '@yukikaze/lib/create-env'
 import { errorInterceptor, notFoundHandlerMiddleware, responseInterceptor } from '@yukikaze/middleware'
 import { notificationRouter } from './modules'
 import { createSocketServer } from './socket'
+import * as schedule from "node-schedule"
+import { periodicNotificationMessage } from './lib/utils'
 
 const port = env.NOTIFICATION_SERVICE_PORT
 const app = express()
@@ -15,6 +17,14 @@ app.use(responseInterceptor)
 app.use(cookieParser())
 app.use(express.urlencoded({ extended: true, limit: '1mb' }))
 app.use(express.json({ limit: '1mb' }))
+
+// Run every minute
+const job = schedule.scheduleJob('* * * * *', function () {
+    periodicNotificationMessage()
+});
+
+// Cancel when needed
+// job.cancel();
 
 app.get('/check', (_: Request, response: Response) => {
     response.json({ message: 'Welcome to YukikazeMP3 Notification Service!' })

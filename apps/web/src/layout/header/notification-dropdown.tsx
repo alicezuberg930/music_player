@@ -9,7 +9,7 @@ import {
 } from '@yukikaze/ui/dropdown-menu'
 import { Bell, Check, cn } from '@yukikaze/ui'
 import { Badge } from '@yukikaze/ui/badge'
-import { memo, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query'
 import { notificationQueries } from '@/lib/queries/notification'
 import { useInView } from '@/hooks/use-in-view'
@@ -23,7 +23,6 @@ import { Spinner } from '@yukikaze/ui/spinner'
 const NotificationDropdown: React.FC = () => {
     const {
         data,
-        status,
         fetchNextPage,
         isFetchingNextPage,
         hasNextPage
@@ -33,21 +32,19 @@ const NotificationDropdown: React.FC = () => {
     const isInView = useInView(sentinelRef, { once: false, margin: '5px', root: viewportElement })
     const { data: unread } = useQuery(notificationQueries().unread.queryOptions())
     const { mutate } = useMutation(notificationQueries().markAsRead.mutationOptions())
-
-    console.log("notification status: " + status)
-
-    const handleMarkAsRead = (id: string) => {
-        mutate({ ids: [id] })
-    }
-
-    const a = useMemo(() => {
-        return data?.pages.map(page => page.data?.map(d => d.id))
+    const unreadIds = useMemo(() => {
+        return data?.pages.flatMap(page => page.data?.filter(d => !d.isRead).map(d => d.id) ?? []) ?? []
     }, [data])
-    console.log(a)
 
     useEffect(() => {
         if (isInView && hasNextPage && !isFetchingNextPage) fetchNextPage()
     }, [isInView, hasNextPage, isFetchingNextPage, fetchNextPage])
+
+    const handleMarkAllAsRead = useCallback(() => {
+        if (unreadIds.length > 0) mutate({ ids: unreadIds })
+    }, [unreadIds, mutate])
+
+    const handleMarkAsRead = (id: string) => mutate({ ids: [id] })
 
     return (
         <DropdownMenu>
@@ -55,16 +52,14 @@ const NotificationDropdown: React.FC = () => {
                 nativeButton={false}
                 render={
                     <div className='relative'>
-                        {unread && (
-                            <>
-                                <Bell className='text-white' />
-                                <Badge
-                                    variant='destructive'
-                                    className='bg-destructive/20 absolute -top-2 -right-2 flex items-center justify-center h-5 w-5'
-                                >
-                                    {unread}
-                                </Badge>
-                            </>
+                        <Bell className='text-white' />
+                        {unread! > 0 && (
+                            <Badge
+                                variant='destructive'
+                                className='absolute -top-2 -right-2 flex items-center justify-center h-5 w-5'
+                            >
+                                {unread}
+                            </Badge>
                         )}
                     </div>
                 }
@@ -78,10 +73,7 @@ const NotificationDropdown: React.FC = () => {
                                 variant='ghost'
                                 size='sm'
                                 className='h-auto py-1 px-2 text-xs text-muted-foreground hover:text-foreground'
-                                onClick={(e) => {
-                                    e.stopPropagation()
-                                    // onMarkAllAsRead?.()
-                                }}
+                                onClick={handleMarkAllAsRead}
                             >
                                 <Check className='mr-1 h-3 w-3' />
                                 Mark all as read
@@ -111,7 +103,7 @@ const NotificationDropdown: React.FC = () => {
                     {true && (
                         <>
                             <DropdownMenuSeparator />
-                            <Button onClick={() => mutate({ ids: [] })} variant='ghost' size='sm' className='w-full text-muted-foreground'>
+                            <Button onClick={handleMarkAllAsRead} variant='ghost' size='sm' className='w-full text-muted-foreground'>
                                 Mark all notifications as read
                             </Button>
                         </>
@@ -153,7 +145,8 @@ const NotificationList: React.FC<{
                             'flex gap-3 px-4 py-3 cursor-pointer border-b last:border-b-0 focus:bg-accent',
                             !notification.isRead && 'bg-accent/50 hover:bg-accent'
                         )}
-                        onClick={() => {
+                        onClick={(e) => {
+                            e.stopPropagation()
                             if (!notification.isRead) {
                                 onMarkAsRead?.(notification.id)
                             }

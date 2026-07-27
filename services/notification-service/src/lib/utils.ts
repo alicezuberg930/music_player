@@ -1,6 +1,7 @@
 import { PushNotification, WebPushSubscription } from "@/modules/notifications/notification.model"
 import { BadRequestException } from "@yukikaze/lib/exception"
 import webpush from "web-push"
+import * as cron from 'node-cron'
 
 const vapidSubject = process.env.WEB_PUSH_SUBJECT!
 const vapidPublicKey = process.env.WEB_PUSH_PUBLIC_KEY
@@ -55,4 +56,16 @@ const notificationContents = [
     },
 ]
 
-export { configureWebPush, normalizeSubscription, toWebPushSubscription, notificationContents }
+// Your function to run every minute
+const periodicNotificationMessage = async () => {
+    const now = new Date().toISOString();
+    console.log(`[${now}] Cron job executed`);
+
+    try {
+        // Your logic here (e.g., database cleanup, sending emails, fetching data)
+    } catch (error) {
+        console.error('Cron job failed:', error);
+    }
+};
+
+export { configureWebPush, normalizeSubscription, toWebPushSubscription, notificationContents, periodicNotificationMessage }

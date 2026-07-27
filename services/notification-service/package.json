@@ -13,9 +13,11 @@
     "express": "catalog:express",
     "web-push": "^3.6.7",
     "socket.io": "^4.8.3",
-    "@yukikaze/validator": "workspace:*"
+    "@yukikaze/validator": "workspace:*",
+    "node-schedule": "^2.1.1"
   },
   "devDependencies": {
+    "@types/node-schedule": "^2.1.8",
     "@types/web-push": "^3.6.4",
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "catalog:express",

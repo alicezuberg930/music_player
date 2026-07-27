@@ -49,7 +49,7 @@ export const notificationQueries = () => ({
                 mutationFn: async (input: { ids: string[] }) => {
                     return await httpClient.put<Response<Response>>(
                         '/notifications/read',
-                        input
+                        { ...input }
                     )
                 },
                 onSuccess: () => {

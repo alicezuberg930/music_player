@@ -3,8 +3,8 @@ import { and, db, desc, eq, inArray } from "@yukikaze/db"
 import { notifications, pushNotifications, users } from "@yukikaze/db/schemas"
 import { BadRequestException, HttpException, NotFoundException, UnauthorizedException } from "@yukikaze/lib/exception"
 import webpush from "web-push"
-import { CreateNotificationInput, PushNotification, WebPushSubscription } from "./notification.model"
-import { configureWebPush, normalizeSubscription, toWebPushSubscription } from "@/lib/utils"
+import { CreateNotificationInput, PushNotification } from "./notification.model"
+import { configureWebPush, normalizeSubscription, toWebPushSubscription } from "../../lib/utils"
 import { QueryNotificationParams, ReadNotificationParams } from "@yukikaze/validator"
 
 export class NotificationService {

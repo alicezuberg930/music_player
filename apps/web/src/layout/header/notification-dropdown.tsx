@@ -26,7 +26,7 @@ const NotificationDropdown: React.FC = () => {
         fetchNextPage,
         isFetchingNextPage,
         hasNextPage
-    } = useInfiniteQuery(notificationQueries().all.queryOptions({ page: 1, limit: 5 }))
+    } = useInfiniteQuery(notificationQueries().all.queryOptions({ page: 1, limit: 10 }))
     const sentinelRef = useRef<HTMLDivElement>(null)
     const [viewportElement, setViewportElement] = useState<HTMLDivElement | null>(null)
     const isInView = useInView(sentinelRef, { once: false, margin: '5px', root: viewportElement })

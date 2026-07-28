@@ -2,7 +2,6 @@ import * as z from 'zod'
 
 export namespace VideoValidators {
     export const createVideoInput = z.object({
-        // stream: z.string('Video file is required'),
         title: z
             .string('Title cannot be empty')
             .min(3, 'Title must be between 3 and 50 characters')

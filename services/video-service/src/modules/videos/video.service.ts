@@ -7,8 +7,7 @@ import NodeID3 from 'node-id3'
 import { cached, invalidateCache } from "@yukikaze/redis"
 // database
 import { db, eq, inArray, and, like, or } from '@yukikaze/db'
-import { CreateSong, Song } from './song.model'
-import { artists, videos, artistsSongs, userFavoriteSongs } from '@yukikaze/db/schemas'
+import { artists, videos, artistsSongs, userFavoriteSongs, artistsVideos } from '@yukikaze/db/schemas'
 // utils
 import { HttpException, BadRequestException, NotFoundException } from '@yukikaze/lib/exception'
 import slugify from '@yukikaze/lib/slugify'
@@ -59,25 +58,25 @@ export class VideoService {
                 // genres: song.genres.map(g => g.genre)
                 // })))
                 // If user is logged in, check which songs they've liked
-                let likedSongIds: Set<string> = new Set()
-                if (request.userId) {
-                    const songIds = data.map(song => song.id)
-                    const likedSongs = await db.query.userFavoriteSongs.findMany({
-                        where: and(
-                            eq(userFavoriteSongs.userId, request.userId),
-                            inArray(userFavoriteSongs.songId, songIds)
-                        ),
-                        columns: { songId: true }
-                    })
-                    likedSongIds = new Set(likedSongs.map(ls => ls.songId))
-                }
-                const songsWithLikedStatus = data.map(song => ({
-                    ...song,
-                    liked: likedSongIds.has(song.id)
+                let likedVideoIds: Set<string> = new Set()
+                // if (request.userId) {
+                //     const songIds = data.map(song => song.id)
+                //     const likedSongs = await db.query.userFavoriteVideos.findMany({
+                //         where: and(
+                //             eq(userFavoriteSongs.userId, request.userId),
+                //             inArray(userFavoriteSongs.songId, songIds)
+                //         ),
+                //         columns: { songId: true }
+                //     })
+                //     likedVideoIds = new Set(likedSongs.map(ls => ls.songId))
+                // }
+                const videosWithLikedStatus = data.map(video => ({
+                    ...video,
+                    liked: likedVideoIds.has(video.id)
                 }))
 
                 return {
-                    data: songsWithLikedStatus,
+                    data: videosWithLikedStatus,
                     paginate: {
                         limit: currentLimit,
                         currentPage,
@@ -87,7 +86,7 @@ export class VideoService {
             })
 
             return response.json({
-                message: 'Song list fetched successfully',
+                message: 'Video list fetched successfully',
                 ...result
             })
         } catch (error) {
@@ -100,36 +99,17 @@ export class VideoService {
         try {
             const { title, artistIds } = request.body
             const files = request.files as { [fieldname: string]: Express.Multer.File[] }
-            const audioFile: Express.Multer.File | null = files['audio']?.[0] ?? null
-            if (!audioFile) throw new BadRequestException('Audio file is required')
-            const lyricsFile: Express.Multer.File | null = files['lyrics']?.[0] ?? null
+            const videoFile: Express.Multer.File | null = files['stream']?.[0] ?? null
+            if (!videoFile) throw new BadRequestException('Video file is required')
             const thumbnailFile: Express.Multer.File | null = files['thumbnail']?.[0] ?? null
             // initialize urls
-            let lyricsUrl: string | null = null
             let thumbnailUrl: string | null = null
             // find artist names from artistIds
             const findArtists = await db.query.artists.findMany({ columns: { name: true }, where: inArray(artists.id, artistIds) })
             // extract metadata from audio file
             const { parseFile } = await import('music-metadata')
-            const metadata = await parseFile(audioFile.path)
-            if (lyricsFile) {
-                lyricsUrl = (await uploadFile({ files: lyricsFile, subFolder: '/lyrics', publicId: createId() })) as string
-            }
+            const metadata = await parseFile(videoFile.path)
             if (thumbnailFile) {
-                // if the user uploaded a thumbnail file, embed it into the audio file's metadata
-                NodeID3.update({
-                    title,
-                    artist: findArtists.map(a => a.name).join("/"),
-                    // originalReleaseTime: releaseDate,
-                    // year: new Date(releaseDate).getFullYear().toString(),
-                    // originalYear: new Date(releaseDate).getFullYear().toString(),
-                    image: {
-                        mime: thumbnailFile.mimetype,
-                        type: { id: 3, name: 'Album cover' },
-                        description: 'Cover Art',
-                        imageBuffer: fs.readFileSync(thumbnailFile.path)
-                    }
-                }, audioFile.path)
                 // Read file into buffer first to release file handle
                 const originalBuffer = fs.readFileSync(thumbnailFile.path)
                 // Resize image from buffer
@@ -163,23 +143,22 @@ export class VideoService {
                 }
             }
             // upload audio file to cloud storage and get the url
-            const audioUrl = await uploadFile({ files: audioFile, subFolder: '/audio', publicId: createId() })
-            const song = {
-                title, releaseDate,
+            const videoUrl = await uploadFile({ files: videoFile, subFolder: '/video', publicId: createId() })
+            const video = {
+                title,
+                // releaseDate,
                 userId: request.userId!,
-                size: audioFile.size,
+                size: videoFile.size,
                 alias: slugify(title),
                 duration: Math.floor(metadata.format.duration ?? 0),
                 artistNames: findArtists.map(a => a.name).join(", "),
-                hasLyrics: !!lyricsFile,
-                stream: audioUrl as string,
-                lyricsFile: lyricsUrl,
-                thumbnail: thumbnailUrl ?? '/assets/default/default-song-thumbnail.png'
-            } as CreateSong
-            const insertSong = await db.insert(songs).values(song).$returningId()
-            await db.insert(artistsSongs).values(artistIds.map(artistId => ({ songId: insertSong[0]!.id, artistId })))
+                stream: videoUrl as string,
+                thumbnail: thumbnailUrl ?? '/assets/default/default-video-thumbnail.png'
+            }
+            const insertVideo = await db.insert(videos).values(video).$returningId()
+            await db.insert(artistsVideos).values(artistIds.map(artistId => ({ videoId: insertVideo[0]!.id, artistId })))
             await invalidateCache('songs:list:*')
-            return response.status(201).json({ message: 'Song created successfully' })
+            return response.status(201).json({ message: 'Video created successfully' })
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)
@@ -189,15 +168,14 @@ export class VideoService {
     public async updateVideo(request: Request<{ id: string }, {}, VideoValidators.UpdateVideoInput>, response: Response) {
         try {
             const { id } = request.params
-            const findSong = await db.query.songs.findFirst({
-                where: eq(songs.id, id),
-                columns: { thumbnail: true, stream: true, lyricsFile: true }
+            const findVideo = await db.query.videos.findFirst({
+                where: eq(videos.id, id),
+                columns: { thumbnail: true, stream: true }
             })
-            if (!findSong) throw new NotFoundException('Song not found')
+            if (!findVideo) throw new NotFoundException('Video not found')
             const { title, artistIds } = request.body
             const files = request.files as { [fieldname: string]: Express.Multer.File[] }
             // const audioFile: Express.Multer.File | null = files['audio']?.[0] ?? null
-            const lyricsFile: Express.Multer.File | null = files['lyrics']?.[0] ?? null
             const thumbnailFile: Express.Multer.File | null = files['thumbnail']?.[0] ?? null
             let thumbnail: string | null = null
             let lyrics: string | null = null
@@ -223,41 +201,30 @@ export class VideoService {
                     ))
                 }
             }
-            if (lyricsFile) {
-                if (findSong.lyricsFile) {
-                    await uploadFile({ files: lyricsFile, publicId: extractPublicId(findSong.lyricsFile) })
-                } else {
-                    lyrics = (await uploadFile({ files: lyricsFile, subFolder: '/lyrics', publicId: createId() })) as string
-                }
-            }
             if (thumbnailFile) {
                 // Read file into buffer first to release file handle
                 const originalBuffer = fs.readFileSync(thumbnailFile.path)
                 // Resize image from buffer
                 const resizedBuffer = await resizeImageToBuffer(originalBuffer, {
-                    height: 100, width: 100,
-                    aspectRatio: '1:1',
+                    height: 160, width: 90,
+                    aspectRatio: '16:9',
                     fit: 'cover',
                 })
                 fs.writeFileSync(thumbnailFile.path, resizedBuffer)
-                if (findSong.thumbnail.includes('/assets/')) {
+                if (findVideo.thumbnail.includes('/assets/')) {
                     thumbnail = (await uploadFile({ files: thumbnailFile, subFolder: '/cover', publicId: createId() })) as string
                 } else {
-                    await uploadFile({ files: thumbnailFile, publicId: extractPublicId(findSong.thumbnail) })
+                    await uploadFile({ files: thumbnailFile, publicId: extractPublicId(findVideo.thumbnail) })
                 }
             }
-            const song = {
+            const video = {
                 ...findArtists.length > 0 && { artistNames: findArtists.map(a => a.name).join(", ") },
                 ...title && ({ title }),
                 ...thumbnail && { thumbnail },
-                ...lyrics && {
-                    lyricsFile: lyrics,
-                    hasLyrics: true
-                },
-            } as CreateSong
-            if (Object.entries(song).length > 0) await db.update(songs).set(song).where(eq(songs.id, id))
-            await invalidateCache('songs:list:*')
-            return response.json({ message: 'Song updated successfully' })
+            }
+            if (Object.entries(video).length > 0) await db.update(videos).set(video).where(eq(videos.id, id))
+            await invalidateCache('videos:list:*')
+            return response.json({ message: 'Videos updated successfully' })
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)
@@ -267,28 +234,23 @@ export class VideoService {
     public async findVideo(request: Request<{ id: string }>, response: Response) {
         try {
             const { id } = request.params
-            const data: Song | undefined = await db.query.songs.findFirst({
-                where: eq(songs.id, id),
+            const data = await db.query.videos.findFirst({
+                where: eq(videos.id, id),
                 with: {
                     user: {
                         columns: { password: false, email: false }
                     },
-                    genres: {
-                        columns: { id: false, genreId: false, songId: false },
-                        with: { genre: true }
-                    },
                     artists: {
-                        columns: { id: false, artistId: false, songId: false },
+                        columns: { id: false, artistId: false, videoId: false },
                         with: { artist: true }
                     }
                 }
-            }).then(song => song ? ({
-                ...song,
-                artists: song.artists.map(s => s.artist),
-                genres: song.genres.map(g => g.genre)
+            }).then(video => video ? ({
+                ...video,
+                artists: video.artists.map(s => s.artist),
             }) : undefined)
-            if (!data) throw new NotFoundException('Song not found')
-            return response.json({ message: 'Song fetched successfully', data })
+            if (!data) throw new NotFoundException('Video not found')
+            return response.json({ message: 'Video fetched successfully', data })
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)
@@ -297,18 +259,17 @@ export class VideoService {
 
     public async deleteVideo(request: Request<{ id: string }, {}>, response: Response) {
         try {
-            const findSong = await db.query.songs.findFirst({
-                where: eq(songs.id, request.params.id),
-                columns: { stream: true, lyricsFile: true, thumbnail: true }
+            const findVideo = await db.query.videos.findFirst({
+                where: eq(videos.id, request.params.id),
+                columns: { stream: true, thumbnail: true }
             })
-            if (!findSong) throw new NotFoundException('Song not found')
+            if (!findVideo) throw new NotFoundException('Video not found')
             const deleteUrls = [
-                findSong.stream!,
-                ...(findSong.lyricsFile ? [findSong.lyricsFile] : []),
-                ...(findSong.thumbnail && !findSong.thumbnail.includes('/assets/') ? [findSong.thumbnail] : [])
+                findVideo.stream!,
+                ...(findVideo.thumbnail && !findVideo.thumbnail.includes('/assets/') ? [findVideo.thumbnail] : [])
             ]
             await deleteFile(deleteUrls)
-            await db.delete(songs).where(eq(songs.id, request.params.id))
+            await db.delete(videos).where(eq(videos.id, request.params.id))
             await invalidateCache('songs:list:*')
             return response.json({ message: 'Song deleted successfully' })
         } catch (error) {
@@ -320,13 +281,13 @@ export class VideoService {
     public async addVideoView(request: Request<{ id: string }, {}>, response: Response) {
         try {
             const { id } = request.params
-            const findSong = await db.query.songs.findFirst({
-                where: eq(songs.id, id),
-                columns: { id: true, listens: true }
+            const findVideo = await db.query.videos.findFirst({
+                where: eq(videos.id, id),
+                columns: { id: true, views: true }
             })
-            if (!findSong) throw new NotFoundException('Song not found')
-            await db.update(songs).set({ listens: (findSong.listens ?? 0) + 1 }).where(eq(songs.id, id))
-            return response.json({ message: 'Song view added successfully' })
+            if (!findVideo) throw new NotFoundException('Song not found')
+            await db.update(videos).set({ views: (findVideo.views ?? 0) + 1 }).where(eq(videos.id, id))
+            return response.json({ message: 'Video view added successfully' })
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)
@@ -336,24 +297,24 @@ export class VideoService {
     public async streamVideo(request: Request<{ id: string }>, response: Response) {
         try {
             const { id } = request.params
-            const findSong = await db.query.songs.findFirst({ where: eq(songs.id, id), columns: { stream: true, size: true } })
-            if (!findSong || !findSong.stream) throw new NotFoundException('Song not found')
+            const findVideo = await db.query.videos.findFirst({ where: eq(videos.id, id), columns: { stream: true, size: true } })
+            if (!findVideo || !findVideo.stream) throw new NotFoundException('Video not found')
 
             const range = request.headers.range
             const chunkSize = 1000 * 1024 // 1000KB
-            const audioSize = findSong.size || 0
+            const videoSize = findVideo.size || 0
             // define start and end of current chunk
             const start = Number(range?.replace(/\D/g, ''))
-            const end = Math.min(start + chunkSize, audioSize - 1)
+            const end = Math.min(start + chunkSize, videoSize - 1)
             const contentLength = end - start + 1
 
             // make request to Cloudinary to get file with range header
-            const audioResponse = await fetch(findSong.stream, { headers: { Range: `bytes=${start}-${end}` } })
-            if (!audioResponse.ok) throw new BadRequestException('Failed to fetch audio from storage')
-            console.log(`fetching chunk for song`, id, `(${start}-${end}/${audioSize})`)
+            const vidoeResponse = await fetch(findVideo.stream, { headers: { Range: `bytes=${start}-${end}` } })
+            if (!vidoeResponse.ok) throw new BadRequestException('Failed to fetch video from storage')
+            console.log(`fetching chunk for video`, id, `(${start}-${end}/${videoSize})`)
 
             const headers: OutgoingHttpHeaders = {
-                'Content-Range': `bytes ${start}-${end}/${audioSize}`,
+                'Content-Range': `bytes ${start}-${end}/${videoSize}`,
                 'Accept-Ranges': 'bytes',
                 'Content-Length': contentLength.toString(),
                 'Content-Type': 'audio/mpeg',
@@ -362,7 +323,7 @@ export class VideoService {
             }
             response.writeHead(206, headers)
 
-            const stream = audioResponse.body
+            const stream = vidoeResponse.body
             if (stream) {
                 const nodeStream = Readable.fromWeb(stream)
                 nodeStream.pipe(response)

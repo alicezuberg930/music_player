@@ -1,1 +1,1 @@
-export { videoRouter } from './songs/video.route'
+export { videoRouter } from './videos/video.route'

@@ -1,4 +1,4 @@
-import './index.css'
+import './styles/index.css'
 // i18n
 import './lib/locales/i18n.ts'
 // redux provider config

@@ -59,7 +59,7 @@ export default function LazyLoadImage({ placeholderSrc, effect, wrapperClassName
                     alt={props.alt}
                     className={cn(
                         props.className,
-                        "transition-opacity duration-500 ease-in-out",
+                        "transition-all duration-500 ease-in-out",
                         isLoaded ? "opacity-100" : "opacity-0",
                         effect === 'blur' && !isLoaded && "blur-sm",
                         effect === 'black-and-white' && !isLoaded && "grayscale"

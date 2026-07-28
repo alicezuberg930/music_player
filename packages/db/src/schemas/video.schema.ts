@@ -25,9 +25,9 @@ export const videos = mysqlTable("videos", {
     createdAt,
     updatedAt
 }, (t) => [
-    index('songs_user_id_idx').on(t.userId),
-    index('songs_title_idx').on(t.title),
-    index('songs_artist_names_idx').on(t.artistNames)
+    index('videos_user_id_idx').on(t.userId),
+    index('videos_title_idx').on(t.title),
+    index('videos_artist_names_idx').on(t.artistNames)
 ])
 
 export const videosRelations = relations(videos, ({ one, many }) => ({

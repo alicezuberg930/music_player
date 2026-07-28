@@ -1,21 +1,21 @@
-import { useFormContext, Controller } from "react-hook-form";
-import { Field, FieldError, FieldLabel } from "@yukikaze/ui/field";
-import { Calendar } from "@yukikaze/ui/calendar";
-import type { ComponentProps } from "react";
-import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
-import { useState } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "@yukikaze/ui/popover";
-import { Button } from "@yukikaze/ui/button";
-import { CalendarIcon } from "@yukikaze/ui";
+import { useFormContext, Controller } from 'react-hook-form'
+import { Field, FieldError, FieldLabel } from '@yukikaze/ui/field'
+import { Calendar } from '@yukikaze/ui/calendar'
+import type { ComponentProps } from 'react'
+import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import { useState } from 'react'
+import { Popover, PopoverContent, PopoverTrigger } from '@yukikaze/ui/popover'
+import { Button } from '@yukikaze/ui/button'
+import { CalendarIcon, cn } from '@yukikaze/ui'
 
-dayjs.extend(customParseFormat);
+dayjs.extend(customParseFormat)
 
-type RHFDatePickerProps = Omit<ComponentProps<typeof Calendar>, "mode"> & {
-  name: string;
-  fieldLabel: string;
-  placeholder: string;
-};
+type RHFDatePickerProps = Omit<ComponentProps<typeof Calendar>, 'mode'> & {
+  name: string
+  fieldLabel: string
+  placeholder: string
+}
 
 export function RHFSingleDatePicker({
   name,
@@ -23,8 +23,8 @@ export function RHFSingleDatePicker({
   placeholder,
   ...other
 }: RHFDatePickerProps) {
-  const { control } = useFormContext();
-  const [open, setOpen] = useState(false);
+  const { control } = useFormContext()
+  const [open, setOpen] = useState(false)
 
   return (
     <Controller
@@ -37,34 +37,34 @@ export function RHFSingleDatePicker({
             <PopoverTrigger
               render={
                 <Button
-                  variant="outline"
-                  className={`justify-start text-left font-normal w-full ${invalid ? "border-red-500" : ""}`}
+                  variant='outline'
+                  className={cn('h-10 justify-start text-left font-normal w-full', invalid && 'border-red-500')}
                 />
               }
             >
-              <CalendarIcon className="mr-2 h-4 w-4 opacity-50" />
+              <CalendarIcon className='mr-2 h-4 w-4 opacity-50' />
               {field.value ? (
                 field.value
               ) : (
-                <span className="text-muted-foreground">{placeholder}</span>
+                <span className='text-muted-foreground'>{placeholder}</span>
               )}
             </PopoverTrigger>
-            <PopoverContent className="min-w-fit" align="start">
+            <PopoverContent className='min-w-fit' align='start'>
               <Calendar
                 {...other}
-                captionLayout="dropdown"
+                captionLayout='dropdown'
                 startMonth={new Date(1900, 0)}
                 endMonth={new Date(new Date().getFullYear(), 0)}
-                mode="single"
+                mode='single'
                 selected={
                   field.value
-                    ? dayjs(field.value, "YYYY-MM-DD").toDate()
+                    ? dayjs(field.value, 'YYYY-MM-DD').toDate()
                     : undefined
                 }
                 onSelect={(day) => {
                   if (day) {
-                    field.onChange(dayjs(day).format("YYYY-MM-DD"));
-                    setOpen(false);
+                    field.onChange(dayjs(day).format('YYYY-MM-DD'))
+                    setOpen(false)
                   }
                 }}
                 defaultMonth={field.value}
@@ -75,7 +75,7 @@ export function RHFSingleDatePicker({
         </Field>
       )}
     />
-  );
+  )
 }
 
 export function RHFRangeDatePicker({
@@ -84,27 +84,27 @@ export function RHFRangeDatePicker({
   placeholder,
   ...other
 }: RHFDatePickerProps) {
-  const { control } = useFormContext();
-  const [open, setOpen] = useState(false);
+  const { control } = useFormContext()
+  const [open, setOpen] = useState(false)
 
   const displayValueStr = (start?: string, end?: string) => {
-    if (start && !end) return `${dayjs(start).format("YYYY-MM-DD")} - ...`;
+    if (start && !end) return `${dayjs(start).format('YYYY-MM-DD')} - ...`
     return start && end
-      ? `${dayjs(start).format("YYYY-MM-DD")} - ${dayjs(end).format("YYYY-MM-DD")} `
-      : "";
-  };
+      ? `${dayjs(start).format('YYYY-MM-DD')} - ${dayjs(end).format('YYYY-MM-DD')} `
+      : ''
+  }
 
   return (
     <Controller
       name={name}
       control={control}
       render={({ field, fieldState: { error, invalid } }) => {
-        const [start, end] = field.value || [undefined, undefined];
-        const displayValue = displayValueStr(start, end);
+        const [start, end] = field.value || [undefined, undefined]
+        const displayValue = displayValueStr(start, end)
         const selected = {
-          from: start ? dayjs(start, "YYYY-MM-DD").toDate() : undefined,
-          to: end ? dayjs(end, "YYYY-MM-DD").toDate() : undefined,
-        };
+          from: start ? dayjs(start, 'YYYY-MM-DD').toDate() : undefined,
+          to: end ? dayjs(end, 'YYYY-MM-DD').toDate() : undefined,
+        }
         return (
           <Field data-invalid={invalid}>
             <FieldLabel htmlFor={field.name}>{fieldLabel}</FieldLabel>
@@ -112,44 +112,44 @@ export function RHFRangeDatePicker({
               <PopoverTrigger
                 render={
                   <Button
-                    variant="outline"
-                    className={`justify - start text - left font - normal w - full ${invalid ? "border-red-500" : ""} `}
+                    variant='outline'
+                    className={cn('justify-start text-left font-normal w-full', invalid && 'border-red-500')}
                   />
                 }
               >
-                <CalendarIcon className="mr-2 h-4 w-4 opacity-50" />
+                <CalendarIcon className='mr-2 h-4 w-4 opacity-50' />
                 {displayValue.length ? (
                   displayValue
                 ) : (
-                  <span className="text-muted-foreground">{placeholder}</span>
+                  <span className='text-muted-foreground'>{placeholder}</span>
                 )}
               </PopoverTrigger>
-              <PopoverContent className="min-w-fit" align="start">
+              <PopoverContent className='min-w-fit' align='start'>
                 <Calendar
                   {...other}
-                  mode="range"
+                  mode='range'
                   selected={selected}
                   onSelect={(range) => {
                     if (range?.from && range.to) {
                       const arr = [
-                        dayjs(range.from).format("YYYY-MM-DD"),
-                        dayjs(range.to).format("YYYY-MM-DD"),
-                      ];
-                      field.onChange(arr);
+                        dayjs(range.from).format('YYYY-MM-DD'),
+                        dayjs(range.to).format('YYYY-MM-DD'),
+                      ]
+                      field.onChange(arr)
                     }
                   }}
                   defaultMonth={selected?.from}
                   numberOfMonths={2}
                 />
-                <Button variant={"outline"} onClick={() => setOpen(false)}>
+                <Button variant={'outline'} onClick={() => setOpen(false)}>
                   OK
                 </Button>
               </PopoverContent>
             </Popover>
             {invalid && <FieldError errors={[error]} />}
           </Field>
-        );
+        )
       }}
     />
-  );
+  )
 }

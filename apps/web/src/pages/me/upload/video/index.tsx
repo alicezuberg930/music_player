@@ -95,9 +95,6 @@ const UploadVideoPage: React.FC<{ video?: Video, id?: string }> = ({ video, id }
             onSuccess: (res) => {
                 toast.success(res.message)
                 reset()
-            },
-            onError: (err) => {
-                toast.error(translate(err.message ?? 'unknown_error'))
             }
         })
     }
@@ -117,8 +114,8 @@ const UploadVideoPage: React.FC<{ video?: Video, id?: string }> = ({ video, id }
         img.src = URL.createObjectURL(file)
         img.onload = () => {
             URL.revokeObjectURL(img.src)
-            if (img.naturalWidth / img.naturalHeight !== 1) {
-                setError('thumbnail', { type: 'manual', message: translate('thumbnail_must_be_square') })
+            if (Math.abs((img.naturalWidth / img.naturalHeight) - 16 / 9) > 0.01) {
+                setError('thumbnail', { type: 'manual', message: translate('thumbnail_must_be_16_9') })
             } else {
                 const newFile = Object.assign(file, {
                     preview: URL.createObjectURL(file),
@@ -177,7 +174,7 @@ const UploadVideoPage: React.FC<{ video?: Video, id?: string }> = ({ video, id }
                         <CardContent className="space-y-4">
                             <RHFUpload
                                 name='stream'
-                                maxSize={15728640}
+                                maxSize={Infinity}
                                 accept={{ 'video/*': [] }}
                                 onDrop={handleDropStream}
                                 onDelete={() => setValue('stream', null, { shouldValidate: true })}

@@ -53,10 +53,7 @@ export const videoQueries = () => ({
       mutationOptions({
         mutationKey: keys.create(),
         mutationFn: async (input: FormData) => {
-          return await httpClient.post<Response<Video>>(
-            '/videos',
-            input
-          )
+          return await httpClient.post<Response<Video>>('/videos', input)
         },
         onSuccess: () => {
           // invalidates all videos

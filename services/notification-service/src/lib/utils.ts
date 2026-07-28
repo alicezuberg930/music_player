@@ -170,6 +170,7 @@ const sendWebPushToSubscriptions = async (subscriptions: PushNotification[], pay
         return acc
     }, { sent: 0, failed: 0 } as { sent: number; failed: number })
 
+    // delete all subscriptions in database if it expires
     if (subscriptionsToDelete.size > 0) {
         const ids = [...subscriptionsToDelete]
         try {

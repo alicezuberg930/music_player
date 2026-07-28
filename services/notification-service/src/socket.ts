@@ -1,19 +1,7 @@
 import type { Server as HttpServer } from 'node:http'
 import { env } from '@yukikaze/lib/create-env'
 import { Server } from 'socket.io'
-
-interface ServerToClientEvents {
-    'notification:connected': (payload: {
-        socketId: string
-        connectedAt: string
-    }) => void
-}
-
-interface ClientToServerEvents {
-    'notification:ping': (
-        acknowledge: (payload: { timestamp: string }) => void
-    ) => void
-}
+import { ClientToServerEvents, ServerToClientEvents } from './lib/@types/socket'
 
 const defaultAllowedOrigins = [
     'http://192.168.2.100:5173',

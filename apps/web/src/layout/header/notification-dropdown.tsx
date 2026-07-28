@@ -44,7 +44,7 @@ const NotificationDropdown: React.FC = () => {
         if (unreadIds.length > 0) mutate({ ids: unreadIds })
     }, [unreadIds, mutate])
 
-    const handleMarkAsRead = (id: string) => mutate({ ids: [id] })
+    const handleMarkAsRead = useCallback((id: string) => mutate({ ids: [id] }), [mutate])
 
     return (
         <DropdownMenu>

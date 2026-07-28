@@ -35,7 +35,12 @@ export const pushNotifications = mysqlTable("push_notifications", {
     auth: varchar({ length: 255 }).notNull(),
     ip: varchar({ length: 45 }),
     createdDate: timestamp({ mode: "date" }).defaultNow().notNull(),
-    token: varchar({ length: 255 }).notNull().unique().$defaultFn(() => createId()),
+    browser: varchar({ length: 255 }),
+    device_type: varchar({ length: 255 }),
+    device_vendor: varchar({ length: 255 }),
+    device_model: varchar({ length: 255 }),
+    cpu: varchar({ length: 255 }),
+    os: varchar({ length: 255 }),
 }, (t) => [
     index("push_notifications_user_id_idx").on(t.userId),
 ])

@@ -178,6 +178,18 @@
         "typescript": "catalog:",
       },
     },
+    "packages/shared": {
+      "name": "@yukikaze/shared",
+      "version": "0.0.0",
+      "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@types/node": "catalog:",
+        "@yukikaze/typescript-config": "workspace:*",
+        "eslint": "catalog:",
+        "tsdown": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
     "packages/typescript-config": {
       "name": "@yukikaze/typescript-config",
       "version": "0.0.0",
@@ -1229,6 +1241,8 @@
     "@yukikaze/playlist-service": ["@yukikaze/playlist-service@workspace:services/playlist-service"],
 
     "@yukikaze/redis": ["@yukikaze/redis@workspace:packages/redis"],
+
+    "@yukikaze/shared": ["@yukikaze/shared@workspace:packages/shared"],
 
     "@yukikaze/song-service": ["@yukikaze/song-service@workspace:services/song-service"],
 

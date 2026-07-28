@@ -8,6 +8,7 @@
     "./create-env": "./dist/create-env.mjs",
     "./crypto": "./dist/crypto.mjs",
     "./exception": "./dist/exception.mjs",
+    "./extract-ua": "./dist/extract-ua.mjs",
     "./image-resize": "./dist/image-resize.mjs",
     "./jwt": "./dist/jwt.mjs",
     "./password": "./dist/password.mjs",

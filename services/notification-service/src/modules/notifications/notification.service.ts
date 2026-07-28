@@ -2,10 +2,10 @@ import { Request, Response } from "express"
 import { and, db, desc, eq, inArray } from "@yukikaze/db"
 import { notifications, pushNotifications, users } from "@yukikaze/db/schemas"
 import { BadRequestException, HttpException, NotFoundException, UnauthorizedException } from "@yukikaze/lib/exception"
-import webpush from "web-push"
-import { CreateNotificationInput, PushNotification } from "./notification.model"
-import { configureWebPush, normalizeSubscription, toWebPushSubscription } from "../../lib/utils"
+import { CreateNotificationInput } from "./notification.model"
+import { normalizeSubscription, sendWebPushToSubscriptions } from "../../lib/utils"
 import { QueryNotificationParams, ReadNotificationParams } from "@yukikaze/validator"
+import { extractUA } from "@yukikaze/lib/extract-ua"
 
 export class NotificationService {
     public async getNotifications(request: Request<{}, {}, {}, QueryNotificationParams>, response: Response) {
@@ -87,7 +87,7 @@ export class NotificationService {
                 }),
             })
 
-            const results = await this.sendWebPushToSubscriptions(subscriptions, payload)
+            const results = await sendWebPushToSubscriptions(subscriptions, payload)
 
             return response.json({
                 message: "Notification created and sent successfully",
@@ -106,18 +106,22 @@ export class NotificationService {
     public async subscribe(request: Request, response: Response) {
         try {
             if (!request.userId) throw new BadRequestException("User ID is missing in request")
+            const userAgent = extractUA(request.get('user-agent'))
             const subscription = normalizeSubscription(request.body)
             const existingSubscription = await db.query.pushNotifications.findFirst({
                 where: and(
                     eq(pushNotifications.userId, request.userId),
-                    eq(pushNotifications.endPoint, subscription.endpoint),
+                    eq(pushNotifications.ip, request.ip!),
+                    eq(pushNotifications.browser, userAgent.browser.name),
+                    eq(pushNotifications.device_type, userAgent.device.type),
+                    eq(pushNotifications.device_vendor, userAgent.device.vendor),
+                    eq(pushNotifications.device_model, userAgent.device.model),
                 ),
             })
             if (existingSubscription) {
                 await db.update(pushNotifications).set({
                     p256dh: subscription.keys!.p256dh!,
                     auth: subscription.keys!.auth!,
-                    ip: request.ip,
                 }).where(eq(pushNotifications.id, existingSubscription.id))
                 return response.json({ message: "Push notification subscription updated successfully", data: existingSubscription.id })
             }
@@ -128,9 +132,14 @@ export class NotificationService {
                 p256dh: subscription.keys!.p256dh!,
                 auth: subscription.keys!.auth!,
                 ip: request.ip,
+                browser: userAgent.browser.name,
+                cpu: userAgent.cpu.architecture,
+                os: `${userAgent.os.name} ${userAgent.os.version ?? ''}`.trim(),
+                device_type: userAgent.device.type,
+                device_model: userAgent.device.model,
+                device_vendor: userAgent.device.vendor,
             }).$returningId()
             if (!createdSubscription) throw new BadRequestException("Unable to create push notification subscription")
-
             return response.json({ message: "Push notification subscription created successfully", data: createdSubscription.id })
         } catch (error) {
             if (error instanceof HttpException) throw error
@@ -151,28 +160,6 @@ export class NotificationService {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)
         }
-    }
-
-    private async sendWebPushToSubscriptions(subscriptions: PushNotification[], payload: string) {
-        if (subscriptions.length === 0) return { sent: 0, failed: 0 }
-        configureWebPush()
-
-        const results = await Promise.allSettled(
-            subscriptions.map((subscription) => webpush.sendNotification(
-                toWebPushSubscription(subscription),
-                payload,
-                { TTL: 60 },
-            )),
-        )
-
-        return results.reduce((acc, result) => {
-            if (result.status === "fulfilled") acc.sent += 1
-            else {
-                acc.failed += 1
-                console.error("Failed to send web push notification:", result.reason)
-            }
-            return acc
-        }, { sent: 0, failed: 0 })
     }
 
     public async countUnreadNotifications(request: Request, response: Response) {

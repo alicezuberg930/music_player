@@ -23,6 +23,7 @@ app.get('/check', (_: Request, res: Response) => {
 })
 
 const allowedOrigins = new Set([
+    'http://192.168.1.210:5173',
     'http://192.168.2.100:5173',
     'http://localhost:5173',
     'https://tien-music-player.site',

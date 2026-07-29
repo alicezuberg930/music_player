@@ -6,9 +6,9 @@ import { Readable } from 'node:stream'
 import NodeID3 from 'node-id3'
 import { cached, invalidateCache } from "@yukikaze/redis"
 // database
-import { db, eq, inArray, and, like, or } from '@yukikaze/db'
+import { db, eq, inArray, and, like, or, sql } from '@yukikaze/db'
 import { CreateSong, Song } from './song.model'
-import { artists, songs, artistsSongs, userFavoriteSongs } from '@yukikaze/db/schemas'
+import { artists, songs, artistsSongs, song_listens, userFavoriteSongs } from '@yukikaze/db/schemas'
 // utils
 import { HttpException, BadRequestException, NotFoundException } from '@yukikaze/lib/exception'
 import slugify from '@yukikaze/lib/slugify'
@@ -322,12 +322,30 @@ export class SongService {
     public async addSongListen(request: Request<{ id: string }, {}>, response: Response) {
         try {
             const { id } = request.params
-            const findSong = await db.query.songs.findFirst({
-                where: eq(songs.id, id),
-                columns: { id: true, listens: true }
+            const today = new Date().toISOString().slice(0, 10)
+            await db.transaction(async tx => {
+                const findSong = await tx.query.songs.findFirst({
+                    where: eq(songs.id, id),
+                    columns: { id: true }
+                })
+                if (!findSong) throw new NotFoundException('Song not found')
+
+                await tx.update(songs).set({ listens: sql`${songs.listens} + 1` }).where(eq(songs.id, id))
+
+                const findSongListens = await tx.query.song_listens.findFirst({
+                    where: and(eq(song_listens.song_id, id), eq(song_listens.played_at, today)),
+                    columns: { listens: true }
+                })
+
+                if (findSongListens) {
+                    await tx.update(song_listens).set({ listens: sql`${song_listens.listens} + 1` }).where(
+                        and(eq(song_listens.song_id, id), eq(song_listens.played_at, today))
+                    )
+                } else {
+                    await tx.insert(song_listens).values({ song_id: id, played_at: today, listens: 1 })
+                }
+
             })
-            if (!findSong) throw new NotFoundException('Song not found')
-            await db.update(songs).set({ listens: (findSong.listens ?? 0) + 1 }).where(eq(songs.id, id))
             return response.json({ message: 'Song view added successfully' })
         } catch (error) {
             if (error instanceof HttpException) throw error

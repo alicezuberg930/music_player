@@ -33,7 +33,7 @@ const NotificationDropdown: React.FC = () => {
     const { data: unread } = useQuery(notificationQueries().unread.queryOptions())
     const { mutate } = useMutation(notificationQueries().markAsRead.mutationOptions())
     const unreadIds = useMemo(() => {
-        return data?.pages.flatMap(page => page.data?.filter(d => !d.isRead).map(d => d.id) ?? []) ?? []
+        return data?.pages?.flatMap(page => page?.data?.filter(d => !d.isRead).map(d => d.id) ?? []) ?? []
     }, [data])
 
     useEffect(() => {

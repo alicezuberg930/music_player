@@ -37,7 +37,7 @@ const SidebarRight: React.FC = () => {
                     </div>
                     <TabsContent value="playlist">
                         <div className='flex flex-col'>
-                            {currentSong && <SongItem song={currentSong} imgSize="sm" style="bg-primary text-white" />}
+                            {currentSong && <SongItem song={currentSong} imgSize="sm" wrapperClassName="bg-primary text-white" />}
                             <div className="py-3">
                                 <Typography variant={'span'} className="font-bold">Tiếp theo</Typography>
                                 <div className="flex items-center text-xs gap-1 overflow-hidden">

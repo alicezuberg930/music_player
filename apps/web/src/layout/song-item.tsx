@@ -4,7 +4,7 @@ import { memo, type MouseEvent } from "react"
 import { useDispatch } from "react-redux"
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
-import { HeartIcon, MoreHorizontalIcon } from "@yukikaze/ui"
+import { cn, HeartIcon, MoreHorizontalIcon } from "@yukikaze/ui"
 import { songOptionMenuHandle } from "./song-options-dropdown"
 import { DropdownMenuTrigger } from "@yukikaze/ui/dropdown-menu"
 import { LazyLoadImage } from "@/components/lazy-load-image"
@@ -19,11 +19,11 @@ type Props = {
   order?: number
   percent?: number
   imgSize?: "sm" | "md" | "lg" | "xl"
-  style?: string
+  wrapperClassName?: string
   showTime?: boolean
 }
 
-const SongItem: React.FC<Props> = ({ song, playlists, order, percent, imgSize, style, showTime }) => {
+const SongItem: React.FC<Props> = ({ song, playlists, order, percent, imgSize, wrapperClassName, showTime }) => {
   const dispatch = useDispatch()
   const { mutate: favoriteSong } = useMutation(userQueries().favoriteSong.mutationOptions())
   const imageSizeCss = () => {
@@ -52,7 +52,7 @@ const SongItem: React.FC<Props> = ({ song, playlists, order, percent, imgSize, s
 
   return (
     <div
-      className={`${style || "text-black hover:bg-sidebar-accent"} w-full p-2 h-auto rounded-md cursor-pointer`}
+      className={cn("w-full p-2 h-auto rounded-md cursor-pointer", wrapperClassName)}
       onClick={handlePlay}
     >
       <div className="flex items-center gap-2 group">

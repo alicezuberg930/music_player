@@ -7,17 +7,20 @@ import ViteSitemap from 'vite-plugin-sitemap'
 // https://vite.dev/config/
 export default defineConfig(async ({ mode }): Promise<UserConfig> => {
   // Load env from root folder
-  loadEnv(mode, path.resolve(__dirname, '../../'), '')
-  const hostname = mode === 'production' ? 'https://tien-music-player.site' : 'http://localhost:5173'
+  const env = loadEnv(mode, path.resolve(__dirname, '../../'), '')
+  const viteEnv = env.VITE_ENV || mode
+  const hostname = env.WEB_URL
 
-  // Fetch static & dynamic routes from sitemap API
+  // Fetch static & dynamic routes from backend API
   const dynamicRoutes: string[] = []
-  try {
-    const response = await fetch('https://yukikaze-music-api.onrender.com/api/v1/home/sitemap-urls')
-    const data = await response.json() as { data: string[] }
-    dynamicRoutes.push(...data.data)
-  } catch (error) {
-    console.warn('Failed to fetch sitemap from API:', error)
+  if (viteEnv === 'production') {
+    try {
+      const response = await fetch(`${env.VITE_API_URL}/api/v1/home/sitemap-urls`)
+      const data = await response.json() as { data: string[] }
+      dynamicRoutes.push(...data.data)
+    } catch (error) {
+      console.warn('Failed to fetch sitemap from API:', error)
+    }
   }
 
   return {

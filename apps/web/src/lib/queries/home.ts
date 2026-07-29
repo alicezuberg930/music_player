@@ -22,4 +22,31 @@ export const homeQueries = () => ({
                 },
             }),
     },
+
+    rankings: {
+        queryOptions: () =>
+            queryOptions({
+                queryKey: ["ranking"],
+                queryFn: async () => {
+                    const { data } = await httpClient.get<Response<WeekChartItem[]>>('/home/rankings')
+                    return data
+                },
+            }),
+    },
+
 })
+
+export type WeekChartView = {
+    date: string
+    listens: string | number
+}
+
+export type WeekChartItem = {
+    song: {
+        id: string
+        title: string
+        artistNames: string
+        cover: string
+    }
+    views: WeekChartView[]
+}

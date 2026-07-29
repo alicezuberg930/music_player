@@ -1,7 +1,7 @@
 // lib
 import { Request, Response } from 'express'
 // database
-import { db, eq, inArray, and } from '@yukikaze/db'
+import { db, eq, inArray, and, sql } from '@yukikaze/db'
 import { HomeData } from './home.model'
 import { artistFollowers, userFavoriteSongs, userFavoritePlaylists } from '@yukikaze/db/schemas'
 // utils
@@ -91,6 +91,107 @@ export class HomeService {
             } as HomeData
 
             return response.json({ message: 'Home data fetched successfully', data })
+        } catch (error) {
+            if (error instanceof HttpException) throw error
+            throw new BadRequestException(error instanceof Error ? error.message : undefined)
+        }
+    }
+
+    public async rankings(_request: Request, response: Response) {
+        try {
+            type RankingRow = {
+                song_id: string
+                title: string
+                artist_names: string
+                thumbnail: string
+                day: string
+                listens: string | number
+            }
+
+            type RankingSong = {
+                song: {
+                    id: string
+                    title: string
+                    artistNames: string
+                    cover: string
+                }
+                views: Array<{ date: string; listens: number }>
+            }
+
+            const result = (await db.execute(sql`
+                WITH ranked AS (
+                    SELECT
+                        sl.song_id,
+                        SUM(sl.listens) AS week_listens
+                    FROM song_listens sl
+                    WHERE sl.played_at >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
+                    GROUP BY sl.song_id
+                    ORDER BY week_listens DESC
+                    LIMIT 3
+                ),
+                days AS (
+                    SELECT DATE_SUB(CURDATE(), INTERVAL 6 DAY) AS day
+                    UNION ALL SELECT DATE_SUB(CURDATE(), INTERVAL 5 DAY)
+                    UNION ALL SELECT DATE_SUB(CURDATE(), INTERVAL 4 DAY)
+                    UNION ALL SELECT DATE_SUB(CURDATE(), INTERVAL 3 DAY)
+                    UNION ALL SELECT DATE_SUB(CURDATE(), INTERVAL 2 DAY)
+                    UNION ALL SELECT DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+                    UNION ALL SELECT CURDATE()
+                )
+                SELECT
+                    s.id AS song_id,
+                    s.title,
+                    s.artist_names,
+                    s.thumbnail,
+                    d.day,
+                    COALESCE(sl.listens, 0) AS listens
+                FROM ranked r
+                JOIN songs s ON s.id = r.song_id
+                CROSS JOIN days d
+                LEFT JOIN song_listens sl
+                    ON sl.song_id = r.song_id
+                    AND sl.played_at = d.day
+                ORDER BY r.week_listens DESC, r.song_id, d.day;
+            `)) as unknown
+
+            const rows = (Array.isArray(result)
+                ? (result as RankingRow[])
+                : (result as { 0?: RankingRow[]; rows?: RankingRow[] })[0] ?? (result as { rows?: RankingRow[] }).rows ?? []
+            )
+
+            const groupedRows = new Map<string, RankingSong>()
+
+            for (const row of rows) {
+                const existing = groupedRows.get(row.song_id)
+                if (existing) {
+                    existing.views.push({
+                        date: String(row.day),
+                        listens: Number(row.listens),
+                    })
+                } else {
+                    groupedRows.set(row.song_id, {
+                        song: {
+                            id: row.song_id,
+                            title: row.title,
+                            artistNames: row.artist_names,
+                            cover: row.thumbnail,
+                        },
+                        views: [
+                            {
+                                date: String(row.day),
+                                listens: Number(row.listens),
+                            },
+                        ],
+                    })
+                }
+            }
+
+            const rankings: RankingSong[] = [...groupedRows.values()]
+
+            return response.json({
+                message: 'Top ranks fetched successfully',
+                data: rankings,
+            })
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)

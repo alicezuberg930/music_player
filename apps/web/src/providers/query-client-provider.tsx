@@ -55,17 +55,16 @@ const createQueryClient = () => new QueryClient({
             },
         },
         dehydrate: {
-            shouldDehydrateQuery: (query) =>
-                defaultShouldDehydrateQuery(query) ||
-                query.state.status === 'pending',
+            shouldDehydrateQuery: (query) => query.state.status !== 'error' &&
+                (defaultShouldDehydrateQuery(query) || query.state.status === 'pending'),
         },
         hydrate: {},
     },
     queryCache: new QueryCache({
         onError: (error) => {
             showResponseError(error)
-        },
-    }),
+        }
+    })
 })
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined

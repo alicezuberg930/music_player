@@ -1,4 +1,4 @@
-import { index, mysqlTable, int, varchar, boolean, text, date } from "drizzle-orm/mysql-core"
+import { index, mysqlTable, int, varchar, boolean, text, date, primaryKey } from "drizzle-orm/mysql-core"
 import { createdAt, updatedAt } from "../utils"
 import { createId } from "@yukikaze/lib/create-cuid"
 import { relations } from "drizzle-orm"
@@ -31,6 +31,16 @@ export const songs = mysqlTable("songs", {
     index('songs_user_id_idx').on(t.userId),
     index('songs_title_idx').on(t.title),
     index('songs_artist_names_idx').on(t.artistNames)
+])
+
+export const song_listens = mysqlTable("song_listens", {
+    song_id: varchar({ length: 36 }).notNull().references(() => songs.id, { onDelete: "cascade" }),
+    played_at: date({ mode: 'string' }).notNull(),
+    listens: int().default(0),
+}, (t) => [
+    primaryKey({ columns: [t.song_id, t.played_at] }),
+    index('listen_song_id_idx').on(t.song_id),
+    index('listen_played_at_idx').on(t.played_at),
 ])
 
 export const songsRelations = relations(songs, ({ one, many }) => ({

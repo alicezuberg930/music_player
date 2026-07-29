@@ -9,4 +9,8 @@ homeRouter.get("/get",
     (request: Request, response: Response) => homeController.getHome(request, response)
 )
 
+homeRouter.get("/rankings",
+    (request: Request, response: Response) => homeController.rankings(request, response)
+)
+
 export { homeRouter }

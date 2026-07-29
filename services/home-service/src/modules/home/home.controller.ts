@@ -11,6 +11,10 @@ class HomeController {
     public async getHome(request: Request, response: Response) {
         return await this.homeService.getHome(request, response)
     }
+
+    public async rankings(request: Request, response: Response) {
+        return await this.homeService.rankings(request, response)
+    }
 }
 
 export default new HomeController()

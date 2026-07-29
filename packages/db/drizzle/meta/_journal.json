@@ -127,6 +127,13 @@
       "when": 1785230635512,
       "tag": "0018_colossal_darkstar",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "5",
+      "when": 1785306925480,
+      "tag": "0019_dazzling_gorilla_man",
+      "breakpoints": true
     }
   ]
 }

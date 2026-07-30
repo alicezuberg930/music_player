@@ -178,27 +178,25 @@ const WeekChart = () => {
             <Link to={paths.ZING_CHART} className='flex gap-2 items-center'>
                 <h3 className='text-2xl text-white font-bold zing-chart-section'>#yukikazechart</h3>
             </Link>
-            <div className='flex lg:flex-row flex-col gap-4 h-full'>
-                <div className='flex-3 flex flex-col gap-3'>
+            <div className='flex flex-col md:flex-row'>
+                <div className='flex-3 space-y-3'>
                     {topSongs.map((song, index) => (
                         <SongItem
-                            wrapperClassName='bg-primary/90 text-white'
+                            wrapperClassName='bg-white/30 text-white'
                             song={song} imgSize='lg'
-                            percent={Math.round(totalTopListens > 0 && totalsBySongId.get(song.id)
-                                ? (totalsBySongId.get(song.id)! / totalTopListens) * 100
-                                : 0)}
+                            percent={Math.round(totalTopListens > 0 && totalsBySongId.get(song.id) ? (totalsBySongId.get(song.id)! / totalTopListens) * 100 : 0)}
                             order={index + 1}
                             key={song?.id}
                         />
                     ))}
                     <Link
                         to='/chart'
-                        className='w-fit mx-auto bg-transparent text-white border border-white rounded-2xl py-1 px-5 text-sm'
+                        className='block w-fit mx-auto bg-transparent text-white border border-white rounded-2xl py-1 px-5 text-sm'
                     >
                         Xem them
                     </Link>
                 </div>
-                <div className='flex-7 relative w-full h-170 md:h-175'>
+                <div className='flex-7 relative w-full h-140 md:h-150'>
                     <ResponsiveContainer width='100%' height='100%'>
                         <LineChart
                             data={chartData}

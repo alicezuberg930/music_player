@@ -1,15 +1,15 @@
-import type { Playlist, Song } from "@/@types"
-import { addRecentSong, setCurrentSong } from "@/redux/slices/music"
-import { memo, type MouseEvent } from "react"
-import { useDispatch } from "react-redux"
-import dayjs from "dayjs"
-import relativeTime from "dayjs/plugin/relativeTime"
-import { cn, HeartIcon, MoreHorizontalIcon } from "@yukikaze/ui"
-import { songOptionMenuHandle } from "./song-options-dropdown"
-import { DropdownMenuTrigger } from "@yukikaze/ui/dropdown-menu"
-import { LazyLoadImage } from "@/components/lazy-load-image"
-import { useMutation } from "@tanstack/react-query"
-import { userQueries } from "@/lib/queries/user"
+import type { Playlist, Song } from '@/@types'
+import { addRecentSong, setCurrentSong } from '@/redux/slices/music'
+import { memo, type MouseEvent } from 'react'
+import { useDispatch } from 'react-redux'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import { cn, HeartIcon, MoreHorizontalIcon } from '@yukikaze/ui'
+import { songOptionMenuHandle } from './song-options-dropdown'
+import { DropdownMenuTrigger } from '@yukikaze/ui/dropdown-menu'
+import { LazyLoadImage } from '@/components/lazy-load-image'
+import { useMutation } from '@tanstack/react-query'
+import { userQueries } from '@/lib/queries/user'
 
 dayjs.extend(relativeTime)
 
@@ -18,27 +18,14 @@ type Props = {
   playlists?: Playlist[]
   order?: number
   percent?: number
-  imgSize?: "sm" | "md" | "lg" | "xl"
+  imgSize?: 'sm' | 'md' | 'lg' | 'xl'
   wrapperClassName?: string
   showTime?: boolean
 }
 
-const SongItem: React.FC<Props> = ({ song, playlists, order, percent, imgSize, wrapperClassName, showTime }) => {
+const SongItem: React.FC<Props> = ({ song, playlists, order, percent, imgSize = 'sm', wrapperClassName, showTime }) => {
   const dispatch = useDispatch()
   const { mutate: favoriteSong } = useMutation(userQueries().favoriteSong.mutationOptions())
-  const imageSizeCss = () => {
-    if (imgSize === "xl") return "w-20 h-20"
-    if (imgSize == "lg") return "w-14 h-14"
-    if (imgSize == "md") return "w-12 h-12"
-    if (imgSize == "sm") return "w-10 h-10"
-    return "w-10 h-10"
-  }
-  const textColor = () => {
-    if (order === 1) return "text-shadow-1"
-    if (order === 2) return "text-shadow-2"
-    if (order === 3) return "text-shadow-3"
-    return "text-shadow-3"
-  }
 
   const handlePlay = () => {
     dispatch(addRecentSong(song))
@@ -52,12 +39,19 @@ const SongItem: React.FC<Props> = ({ song, playlists, order, percent, imgSize, w
 
   return (
     <div
-      className={cn("w-full p-2 h-auto rounded-md cursor-pointer", wrapperClassName)}
+      className={cn('w-full p-2 h-auto rounded-md cursor-pointer hover:bg-black/10', wrapperClassName)}
       onClick={handlePlay}
     >
-      <div className="flex items-center gap-2 group">
+      <div className='flex items-center gap-2 group'>
         {order && (
-          <span className={`text-3xl px-1 text-[#33104cf2] ${textColor()}`}>
+          <span className={
+            cn(
+              'text-3xl px-1 text-[#33104cf2]',
+              order === 1 && 'text-shadow-1',
+              order === 2 && 'text-shadow-2',
+              order === 3 && 'text-shadow-3'
+            )}
+          >
             {order}
           </span>
         )}
@@ -66,29 +60,36 @@ const SongItem: React.FC<Props> = ({ song, playlists, order, percent, imgSize, w
             { screenWidth: 1024, imageWidth: 60 }, // Tablet & Phone
             { screenWidth: 1920, imageWidth: 100 }, // Desktop and larger
           ]}
-          className={`${imageSizeCss()} object-cover rounded-md`}
+          className={cn('object-cover rounded-md',
+            imgSize === 'xl' && 'w-20 h-20',
+            imgSize === 'lg' && 'w-14 h-14',
+            imgSize === 'md' && 'w-12 h-12',
+            imgSize === 'sm' && 'w-10 h-10',
+          )}
           alt={song.id}
           src={song.thumbnail}
-          effect="blur"
+          effect='blur'
         />
-        <div className="flex flex-col flex-auto text-start">
-          <span className="text-sm font-semibold line-clamp-1">
+        <div className='flex flex-col flex-auto text-start'>
+          <span className='text-sm font-semibold line-clamp-1'>
             {song.title}
           </span>
-          <span className="text-xs line-clamp-1">{song.artistNames}</span>
+          <span className='text-xs line-clamp-1'>{song.artistNames}</span>
           {showTime && (
-            <span className="text-xs text-gray-600">
+            <span className='text-xs text-gray-600'>
               {dayjs(song.createdAt).fromNow()}
             </span>
           )}
         </div>
-        {percent && <span className="pr-1 font-bold">{percent}%</span>}
+        {percent && <span className='pr-1 font-bold'>{percent}%</span>}
         {!percent && (
           <>
             <HeartIcon
-              className={`group-hover:opacity-100 opacity-0 stroke-primary/80 ${song.liked && "fill-primary/80"}`}
+              className={cn('group-hover:opacity-100 opacity-0 stroke-primary/80',
+                song.liked && 'fill-primary/80'
+              )}
               onClick={handleFavorite}
-              aria-label="like/unlike song"
+              aria-label='like/unlike song'
             />
             <DropdownMenuTrigger
               handle={songOptionMenuHandle}
@@ -96,10 +97,10 @@ const SongItem: React.FC<Props> = ({ song, playlists, order, percent, imgSize, w
               render={
                 <button
                   onClick={(e) => e.stopPropagation()}
-                  className="group-hover:opacity-100 opacity-0"
-                  aria-label="More song options"
+                  className='group-hover:opacity-100 opacity-0'
+                  aria-label='More song options'
                 >
-                  <MoreHorizontalIcon aria-hidden="true" />
+                  <MoreHorizontalIcon aria-hidden='true' />
                 </button>
               }
             />

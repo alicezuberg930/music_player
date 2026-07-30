@@ -5,6 +5,7 @@ import { notifications, pushNotifications } from '@yukikaze/db/schemas'
 import { Server } from 'socket.io'
 import { sendWebPushToSubscriptions } from './utils'
 import { SocialNotification } from './@types/notification'
+import { readFileSync } from 'node:fs'
 
 type CommentReplyEvent = {
     type: "comment.reply.created"
@@ -169,6 +170,14 @@ const createConsumer = (groupId: string): ReturnType<Kafka['consumer']> | null =
     const kafka = new Kafka({
         clientId: env.KAFKA_CLIENT_ID || "notification-service",
         brokers,
+        ssl: {
+            ca: [readFileSync("./ca.pem", "utf8")]
+        },
+        sasl: {
+            mechanism: "plain",
+            username: env.KAFKA_SASL_USERNAME!,
+            password: env.KAFKA_SASL_PASSWORD!,
+        },
     })
 
     return kafka.consumer({ groupId })

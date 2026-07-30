@@ -91,16 +91,18 @@ const onProxyRequest = (proxyReq: ClientRequest, req: IncomingMessage, target: s
     const now = new Date()
     const timestamp = `${String(now.getDate()).padStart(2, '0')}-${String(now.getMonth() + 1).padStart(2, '0')}-${now.getFullYear()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`
     const message = `[${timestamp}] [${proxyReq.path}] Proxying ${req.method} request from ${req.url} to ${target}${proxyReq.path}`
-    db.insert(logs).values({
-        message,
-        environment: env.NODE_ENV === "production" ? 'production' : 'development',
-        level: 'info',
-        ipAddress: req.socket.remoteAddress || ''
-    }).then(() => {
-        // Successfully logged to database
-    }).catch((error) => {
-        console.error('Failed to log to database:', error)
-    })
+    if (!['::1', '::ffff:127.0.0.1'].includes(req.socket.remoteAddress!)) {
+        db.insert(logs).values({
+            message,
+            environment: env.NODE_ENV === "production" ? 'production' : 'development',
+            level: 'info',
+            ipAddress: req.socket.remoteAddress || ''
+        }).then(() => {
+            // Successfully logged to database
+        }).catch((error) => {
+            console.error('Failed to log to database:', error)
+        })
+    }
     console.info(message)
 }
 

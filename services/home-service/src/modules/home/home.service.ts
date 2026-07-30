@@ -2,7 +2,7 @@
 import { Request, Response } from 'express'
 // database
 import { db, eq, inArray, and, sql } from '@yukikaze/db'
-import { HomeData } from './home.model'
+import { HomeData, RankingRow, RankingSong } from './home.model'
 import { artistFollowers, userFavoriteSongs, userFavoritePlaylists } from '@yukikaze/db/schemas'
 // utils
 import { HttpException, BadRequestException } from '@yukikaze/lib/exception'
@@ -97,27 +97,8 @@ export class HomeService {
         }
     }
 
-    public async rankings(_request: Request, response: Response) {
+    public async rankings(_: Request, response: Response) {
         try {
-            type RankingRow = {
-                song_id: string
-                title: string
-                artist_names: string
-                thumbnail: string
-                day: string
-                listens: string | number
-            }
-
-            type RankingSong = {
-                song: {
-                    id: string
-                    title: string
-                    artistNames: string
-                    cover: string
-                }
-                views: Array<{ date: string; listens: number }>
-            }
-
             const result = (await db.execute(sql`
                 WITH ranked AS (
                     SELECT
@@ -154,10 +135,7 @@ export class HomeService {
                 ORDER BY r.week_listens DESC, r.song_id, d.day;
             `)) as unknown
 
-            const rows = (Array.isArray(result)
-                ? (result as RankingRow[])
-                : (result as { 0?: RankingRow[]; rows?: RankingRow[] })[0] ?? (result as { rows?: RankingRow[] }).rows ?? []
-            )
+            const rows = (Array.isArray(result) ? (result as RankingRow[]) : (result as { 0?: RankingRow[] })[0] ?? [])
 
             const groupedRows = new Map<string, RankingSong>()
 
@@ -190,7 +168,7 @@ export class HomeService {
 
             return response.json({
                 message: 'Top ranks fetched successfully',
-                data: rankings,
+                data: rankings
             })
         } catch (error) {
             if (error instanceof HttpException) throw error

@@ -14,3 +14,22 @@ export type HomeData = {
     weeklyTopArtists: Artist[]
     newPlaylists: Playlist[]
 }
+
+export type RankingRow = {
+    song_id: string
+    title: string
+    artist_names: string
+    thumbnail: string
+    day: string
+    listens: number
+}
+
+export type RankingSong = {
+    song: {
+        id: string
+        title: string
+        artistNames: string
+        cover: string
+    }
+    views: Array<{ date: string; listens: number }>
+}

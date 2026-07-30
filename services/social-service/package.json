@@ -1,5 +1,5 @@
 {
-  "name": "@yukikaze/song-service",
+  "name": "@yukikaze/social-service",
   "scripts": {
     "dev": "tsx watch --no-cache src/index.ts",
     "build": "tsc",

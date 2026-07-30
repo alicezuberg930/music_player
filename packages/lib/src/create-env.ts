@@ -70,6 +70,15 @@ export const env = {
     GENRE_SERVICE_PORT: process.env.GENRE_SERVICE_PORT,
     VIDEO_SERVICE_HOST: process.env.VIDEO_SERVICE_HOST || 'localhost',
     VIDEO_SERVICE_PORT: process.env.VIDEO_SERVICE_PORT,
+    SOCIAL_SERVICE_HOST: process.env.SOCIAL_SERVICE_HOST || 'localhost',
+    SOCIAL_SERVICE_PORT: process.env.SOCIAL_SERVICE_PORT,
+    // kafka congis
+    KAFKA_BROKERS: process.env.KAFKA_BROKERS,
+    KAFKA_CLIENT_ID: process.env.KAFKA_CLIENT_ID,
+    KAFKA_COMMENT_REPLY_TOPIC: process.env.KAFKA_COMMENT_REPLY_TOPIC,
+    KAFKA_COMMENT_REPLY_GROUP_ID: process.env.KAFKA_COMMENT_REPLY_GROUP_ID,
+    KAFKA_CHAT_EVENTS_TOPIC: process.env.KAFKA_CHAT_EVENTS_TOPIC,
+    KAFKA_CHAT_EVENTS_GROUP_ID: process.env.KAFKA_CHAT_EVENTS_GROUP_ID,
     // redis config
     REDIS_URL: process.env.REDIS_URL,
     REDIS_HOST: process.env.REDIS_HOST,

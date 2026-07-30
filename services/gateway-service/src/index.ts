@@ -77,6 +77,7 @@ const routes: Map<string, string> = new Map([
     ['/api/v1/users', `http://${env.USER_SERVICE_HOST}:${env.USER_SERVICE_PORT}`],
     ['/api/v1/genres', `http://${env.GENRE_SERVICE_HOST}:${env.GENRE_SERVICE_PORT}`],
     ['/api/v1/videos', `http://${env.VIDEO_SERVICE_HOST}:${env.VIDEO_SERVICE_PORT}`],
+    ['/api/v1/social', `http://${env.SOCIAL_SERVICE_HOST}:${env.SOCIAL_SERVICE_PORT}`],
 ])
 
 const onProxyRequest = (proxyReq: ClientRequest, req: IncomingMessage, target: string) => {

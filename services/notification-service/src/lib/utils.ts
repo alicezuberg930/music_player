@@ -78,7 +78,7 @@ const getRandomItemByType = async (type: NotificationType) => {
                 db.select({
                     id: songs.id,
                     name: songs.title,
-                    meta: songs.artistNames,
+                    by: songs.artistNames,
                     thumbnail: songs.thumbnail,
                 }).from(songs).orderBy(sql`RAND()`).limit(1)
             )
@@ -87,7 +87,7 @@ const getRandomItemByType = async (type: NotificationType) => {
                 db.select({
                     id: playlists.id,
                     name: playlists.title,
-                    meta: playlists.artistNames,
+                    by: playlists.artistNames,
                     thumbnail: playlists.thumbnail,
                 }).from(playlists).orderBy(sql`RAND()`).limit(1)
             )
@@ -96,7 +96,7 @@ const getRandomItemByType = async (type: NotificationType) => {
                 db.select({
                     id: artists.id,
                     name: artists.name,
-                    meta: artists.alias,
+                    by: artists.alias,
                     thumbnail: artists.thumbnail,
                 }).from(artists).orderBy(sql`RAND()`).limit(1)
             )
@@ -120,10 +120,9 @@ const periodicNotificationMessage = async (): Promise<ScheduledNotification | nu
         const payload: ScheduledNotification = {
             type: scheduledItem.type as NotificationType,
             title: scheduledItem.title,
-            content: scheduledItem.content(media.name, media.meta || ""),
+            content: scheduledItem.content(media.name, media.by || ""),
             refId: scheduledItem.resolveId(media.id),
             refName: media.name,
-            refMeta: media.meta ?? undefined,
             link: scheduledItem.link(scheduledItem.resolveId(media.id)),
             thumbnail: media.thumbnail,
             emittedAt: now,
@@ -226,7 +225,6 @@ const emitRealtimeNotification = async (io: Server<ClientToServerEvents, ServerT
             data: JSON.stringify({
                 refId: payload.refId,
                 refName: payload.refName,
-                refMeta: payload.refMeta,
                 emittedAt: payload.emittedAt,
             }),
         }),

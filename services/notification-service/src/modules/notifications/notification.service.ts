@@ -45,7 +45,7 @@ export class NotificationService {
 
     public async sendNotification(request: Request<{}, {}, CreateNotificationInput>, response: Response) {
         try {
-            const { title, content, type, toUserId, uniqueKey, link, icon, refID, metaData } = request.body
+            const { title, content, type, toUserId, uniqueKey, link, icon, refID } = request.body
             if (!title || !content || !type || !toUserId) {
                 throw new BadRequestException("title, content, type and toUserId are required")
             }
@@ -81,7 +81,6 @@ export class NotificationService {
                 type: savedNotification.type,
                 data: JSON.stringify({
                     refID: refID || savedNotification.id,
-                    metaData,
                     time: savedNotification.time.toISOString(),
                     uniqueKey: savedNotification.uniqueKey,
                 }),

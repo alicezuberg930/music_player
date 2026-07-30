@@ -1,12 +1,14 @@
 import { queryOptions } from '@tanstack/react-query'
 import type {
     Response,
-    HomeData
+    HomeData,
+    WeekChartItem
 } from '@/@types'
 import { httpClient } from '../repository/http-client'
 
 export const keys = {
-    all: () => ['home', 'all']
+    all: () => ['home', 'all'],
+    rankings: () => ['home', 'rankings'],
 } as const
 
 export const homeQueries = () => ({
@@ -26,27 +28,12 @@ export const homeQueries = () => ({
     rankings: {
         queryOptions: () =>
             queryOptions({
-                queryKey: ["ranking"],
+                queryKey: keys.rankings(),
                 queryFn: async () => {
-                    const { data } = await httpClient.get<Response<WeekChartItem[]>>('/home/rankings')
-                    return data
+                    const response = await httpClient.get<Response<WeekChartItem[]>>('/home/rankings')
+                    return response.data ?? []
                 },
             }),
     },
 
 })
-
-export type WeekChartView = {
-    date: string
-    listens: string | number
-}
-
-export type WeekChartItem = {
-    song: {
-        id: string
-        title: string
-        artistNames: string
-        cover: string
-    }
-    views: WeekChartView[]
-}

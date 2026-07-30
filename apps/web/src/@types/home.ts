@@ -8,4 +8,18 @@ export type HomeData = {
     newReleaseSongs: Song[],
     weeklyTopArtists: Artist[]
     newPlaylists: Playlist[]
+    weekChart: WeekChartItem[]
+}
+
+export type WeekChartItem = {
+    song: {
+        id: string
+        title: string
+        artistNames: string
+        cover: string
+    }
+    views: {
+        date: string
+        listens: number
+    }[]
 }

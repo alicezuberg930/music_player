@@ -135,7 +135,7 @@ export class HomeService {
                 ORDER BY r.week_listens DESC, r.song_id, d.day;
             `)) as unknown
 
-            const rows = (Array.isArray(result) ? (result as RankingRow[]) : (result as { 0?: RankingRow[] })[0] ?? [])
+            const rows = (Array.isArray(result) ? (result[0] as RankingRow[]) : (result as { 0?: RankingRow[] })[0] ?? [])
 
             const groupedRows = new Map<string, RankingSong>()
 

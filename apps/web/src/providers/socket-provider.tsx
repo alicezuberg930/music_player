@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react"
 import { io, type Socket } from 'socket.io-client'
 import { toast } from "@yukikaze/ui"
 import { getQueryClient } from "./query-client-provider"
+import { useAuthContext } from "./auth-provider"
 
 interface ServerToClientEvents {
     'notification:connected': (payload: {
@@ -18,6 +19,22 @@ interface ServerToClientEvents {
         link: string
         thumbnail?: string | null
         emittedAt: string
+    }) => void
+    'notification:comment': (payload: {
+        toUserId: string
+        type: 'comment'
+        actorFullName: string
+        actorAvatar?: string
+        title: string
+        content: string
+    }) => void
+    'notification:chat': (payload: {
+        toUserId: string
+        type: 'chat'
+        actorFullName: string
+        actorAvatar?: string
+        title: string
+        content: string
     }) => void
 }
 
@@ -37,6 +54,7 @@ const SocketContext = createContext<SocketContextType | null>(null)
 const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     const [socket, setSocket] = useState<Socket<ServerToClientEvents, ClientToServerEvents> | null>(null)
     const queryClient = getQueryClient()
+    const { user } = useAuthContext()
 
     useEffect(() => {
         const notificationSocket = io(apiUrl.origin, {
@@ -65,8 +83,38 @@ const SocketProvider = ({ children }: { children: React.ReactNode }) => {
             queryClient.invalidateQueries({ queryKey: ['notifications'] })
         }
 
+        const handleCommentNotification = (payload: {
+            toUserId: string
+            type: 'comment'
+            actorFullName: string
+            actorAvatar?: string
+            title: string
+            content: string
+        }) => {
+            if (user?.id && payload.toUserId !== user.id) return
+            toast.success(payload.title, { description: payload.content })
+            queryClient.invalidateQueries({ queryKey: ['notifications', 'unread'] })
+            queryClient.invalidateQueries({ queryKey: ['notifications'] })
+        }
+
+        const handleChatNotification = (payload: {
+            toUserId: string
+            type: 'chat'
+            actorFullName: string
+            actorAvatar?: string
+            title: string
+            content: string
+        }) => {
+            if (user?.id && payload.toUserId !== user.id) return
+            toast.info(payload.title, { description: payload.content })
+            queryClient.invalidateQueries({ queryKey: ['notifications', 'unread'] })
+            queryClient.invalidateQueries({ queryKey: ['notifications'] })
+        }
+
         notificationSocket.on('notification:connected', handleConnected)
         notificationSocket.on('notification:scheduled', handleScheduledNotification)
+        notificationSocket.on('notification:comment', handleCommentNotification)
+        notificationSocket.on('notification:chat', handleChatNotification)
         notificationSocket.on('connect_error', handleError)
         notificationSocket.connect()
         setSocket(notificationSocket)
@@ -74,6 +122,8 @@ const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         return () => {
             notificationSocket.off('notification:connected', handleConnected)
             notificationSocket.off('notification:scheduled', handleScheduledNotification)
+            notificationSocket.off('notification:comment', handleCommentNotification)
+            notificationSocket.off('notification:chat', handleChatNotification)
             notificationSocket.off('connect_error', handleError)
             notificationSocket.disconnect()
         }

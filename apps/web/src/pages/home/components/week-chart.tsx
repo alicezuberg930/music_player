@@ -5,7 +5,8 @@ import { Link } from '@tanstack/react-router'
 import { paths } from '@/lib/paths'
 import type { Song } from '@/@types/song'
 import { useQuery } from '@tanstack/react-query'
-import { homeQueries, type WeekChartItem } from '@/lib/queries/home'
+import { homeQueries } from '@/lib/queries/home'
+import type { WeekChartItem } from '@/@types'
 
 const DEFAULT_LINES = [
     { dataKey: 'song0', stroke: '#4a90e2' },
@@ -16,14 +17,10 @@ const DEFAULT_LINES = [
 interface LegendFormatterProps {
     value: string
     songNames: Record<string, string>
-    defaultName: string
 }
 
-const LegendFormatter = ({ value, songNames, defaultName }: LegendFormatterProps) => {
-    const index = Number(value.replace('song', ''))
-    const songId = Object.keys(songNames)[index]
-    const songName = songId ? songNames[songId] : ''
-    return <span style={{ color: 'white' }}>{songName || defaultName}</span>
+const LegendFormatter = ({ value, songNames }: LegendFormatterProps) => {
+    return <span style={{ color: 'white' }}>{songNames[value] ?? value}</span>
 }
 
 const safeNumber = (value: string | number | null | undefined): number => {
@@ -67,44 +64,30 @@ const createSongFromRanking = (item: WeekChartItem, listens = 0): Song => ({
     size: 0,
 })
 
-const resolveRankingItems = (payload: unknown): WeekChartItem[] => {
-    if (Array.isArray(payload)) return payload as WeekChartItem[]
-    if (!payload || typeof payload !== 'object') return []
-
-    const nested = (payload as { data?: unknown }).data
-    if (Array.isArray(nested)) return nested as WeekChartItem[]
-    return []
-}
-
 const WeekChart = () => {
-    const { data: rankingResponse } = useQuery(homeQueries().rankings.queryOptions())
+    const { data: rankings = [] } = useQuery(homeQueries().rankings.queryOptions())
     const [selectedSong, setSelectedSong] = useState<Song | null>(null)
     const [tooltipPosition, setTooltipPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
 
-    const rankingRows = useMemo(
-        () => resolveRankingItems(rankingResponse).slice(0, 3),
-        [rankingResponse]
-    )
-
     const dayLabels = useMemo(() => {
-        if (rankingRows.length === 0) return [] as string[]
+        if (rankings.length === 0) return [] as string[]
         const dates = new Set<string>()
-        rankingRows.forEach((item) => {
+        rankings.forEach((item) => {
             item.views.forEach((view) => {
                 dates.add(String(view.date))
             })
         })
         return [...dates].sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
-    }, [rankingRows])
+    }, [rankings])
 
     const totalsBySongId = useMemo(() => {
         const map = new Map<string, number>()
-        rankingRows.forEach((item) => {
+        rankings.forEach((item) => {
             const total = item.views.reduce((acc, view) => acc + safeNumber(view.listens), 0)
             map.set(item.song.id, total)
         })
         return map
-    }, [rankingRows])
+    }, [rankings])
 
     const totalTopListens = useMemo(
         () => [...totalsBySongId.values()].reduce((acc, listens) => acc + listens, 0),
@@ -112,19 +95,19 @@ const WeekChart = () => {
     )
 
     const chartData = useMemo(() => {
-        if (rankingRows.length === 0 || dayLabels.length === 0) {
+        if (rankings.length === 0 || dayLabels.length === 0) {
             return [] as Array<Record<string, string | number>>
         }
 
         return dayLabels.map((date) => {
-            const point: Record<string, string | number> = { day: toDayLabel(date) }
-            rankingRows.forEach((item, index) => {
+            const point: Record<string, string | number> = { date, day: toDayLabel(date) }
+            rankings.forEach((item, index) => {
                 const target = item.views.find((view) => String(view.date) === date)
                 point[`song${index}`] = safeNumber(target?.listens)
             })
             return point
         })
-    }, [rankingRows, dayLabels])
+    }, [rankings, dayLabels])
 
     const maxScore = useMemo(() => {
         let max = 0
@@ -139,18 +122,18 @@ const WeekChart = () => {
     }, [chartData])
 
     const lines = useMemo(() =>
-        rankingRows.map((_, index) => ({
+        rankings.map((_, index) => ({
             dataKey: `song${index}`,
             stroke: DEFAULT_LINES[index]?.stroke ?? '#fff',
         })),
-        [rankingRows]
+        [rankings]
     )
 
     const topSongs = useMemo(() => {
-        return rankingRows.map((item) =>
+        return rankings.map((item) =>
             createSongFromRanking(item, totalsBySongId.get(item.song.id) ?? 0)
         )
-    }, [rankingRows, totalsBySongId])
+    }, [rankings, totalsBySongId])
 
     const topSongNames = useMemo(() => {
         const values: Record<string, string> = {}
@@ -162,9 +145,7 @@ const WeekChart = () => {
 
     const renderTooltip = () => {
         if (!selectedSong) return null
-        const percent = totalTopListens > 0
-            ? Math.round((safeNumber(selectedSong.listens) / totalTopListens) * 100)
-            : 0
+        const percent = totalTopListens > 0 ? Math.round((safeNumber(selectedSong.listens) / totalTopListens) * 100) : 0
 
         return (
             <div
@@ -192,98 +173,90 @@ const WeekChart = () => {
         }
     }
 
-    const handleMouseLeave = () => {
-        setSelectedSong(null)
-    }
-
     return (
-        <div className='mt-12 relative h-175 md:h-150'>
-            <div className='absolute top-0 bottom-0 w-full bg-linear-to-t from-primary/40 to-primary rounded-lg'></div>
-            <div className='absolute top-0 bottom-0 w-full flex flex-col gap-4 p-2 lg:p-4'>
-                <Link to={paths.ZING_CHART} className='flex gap-2 items-center'>
-                    <h3 className='text-2xl text-white font-bold zing-chart-section'>#yukikazechart</h3>
-                </Link>
-                <div className='flex lg:flex-row flex-col gap-4 h-full'>
-                    <div className='flex-3 flex flex-col gap-3'>
-                        {topSongs.map((song, index) => (
-                            <SongItem
-                                wrapperClassName='bg-primary/70 text-white'
-                                song={song} imgSize='lg'
-                                percent={Math.round(totalTopListens > 0 && totalsBySongId.get(song.id)
-                                    ? (totalsBySongId.get(song.id)! / totalTopListens) * 100
-                                    : 0)}
-                                order={index + 1}
-                                key={song?.id}
-                            />
-                        ))}
-                        <Link
-                            to='/chart'
-                            className='w-fit mx-auto bg-transparent text-white border border-white rounded-2xl py-1 px-5 text-sm'
+        <div className='mt-12 relative h-auto bg-linear-to-t from-primary/30 to-primary/60 p-2 lg:p-4 rounded-xl'>
+            <Link to={paths.ZING_CHART} className='flex gap-2 items-center'>
+                <h3 className='text-2xl text-white font-bold zing-chart-section'>#yukikazechart</h3>
+            </Link>
+            <div className='flex lg:flex-row flex-col gap-4 h-full'>
+                <div className='flex-3 flex flex-col gap-3'>
+                    {topSongs.map((song, index) => (
+                        <SongItem
+                            wrapperClassName='bg-primary/90 text-white'
+                            song={song} imgSize='lg'
+                            percent={Math.round(totalTopListens > 0 && totalsBySongId.get(song.id)
+                                ? (totalsBySongId.get(song.id)! / totalTopListens) * 100
+                                : 0)}
+                            order={index + 1}
+                            key={song?.id}
+                        />
+                    ))}
+                    <Link
+                        to='/chart'
+                        className='w-fit mx-auto bg-transparent text-white border border-white rounded-2xl py-1 px-5 text-sm'
+                    >
+                        Xem them
+                    </Link>
+                </div>
+                <div className='flex-7 relative w-full h-170 md:h-175'>
+                    <ResponsiveContainer width='100%' height='100%'>
+                        <LineChart
+                            data={chartData}
+                            onMouseLeave={() => setSelectedSong(null)}
                         >
-                            Xem them
-                        </Link>
-                    </div>
-                    <div className='flex-7 relative w-full h-full'>
-                        <ResponsiveContainer width='100%' height='100%'>
-                            <LineChart
-                                data={chartData}
-                                onMouseLeave={handleMouseLeave}
-                            >
-                                <CartesianGrid
-                                    strokeDasharray='3 4'
-                                    stroke='rgba(255,255,255,0.3)'
-                                />
-                                <XAxis
-                                    dataKey='day'
-                                    stroke='rgba(255,255,255,0.5)'
-                                    tick={{ fill: 'rgba(255,255,255,0.5)' }}
-                                />
-                                <YAxis
-                                    domain={[0, maxScore]}
-                                    stroke='rgba(255,255,255,0.3)'
-                                    tick={false}
-                                    strokeDasharray='3 4'
-                                />
-                                <Legend
-                                    verticalAlign='top'
-                                    height={32}
-                                    iconType='line'
-                                    formatter={(value) => (
-                                        <LegendFormatter
-                                            value={value}
-                                            songNames={topSongNames}
-                                            defaultName={value}
-                                        />
-                                    )}
-                                />
-                                {lines.map((line, i) => {
-                                    const key = line.dataKey
-                                    return (
-                                        <Line
-                                            key={key}
-                                            type='monotone'
-                                            dataKey={key}
-                                            name={key}
-                                            stroke={line.stroke}
-                                            strokeWidth={2}
-                                            dot={{ fill: 'white', stroke: '#4a90e2', strokeWidth: 2, r: 3 }}
-                                            isAnimationActive={false}
-                                            activeDot={{
-                                                r: 5,
-                                                onMouseOver: (_event, payload) => {
-                                                    const point = payload as { cx?: number; cy?: number }
-                                                    if (!point || point.cx === undefined || point.cy === undefined) return
-                                                    handleMouseOver(i, { x: point.cx, y: point.cy })
-                                                },
-                                                onMouseLeave: handleMouseLeave,
-                                            }}
-                                        />
-                                    )
-                                })}
-                            </LineChart>
-                        </ResponsiveContainer>
-                        {renderTooltip()}
-                    </div>
+                            <CartesianGrid
+                                strokeDasharray='3 4'
+                                stroke='rgba(255,255,255,0.3)'
+                            />
+                            <XAxis
+                                dataKey='day'
+                                stroke='rgba(255,255,255,0.5)'
+                                tick={{ fill: 'rgba(255,255,255,0.5)' }}
+                            />
+                            <YAxis
+                                domain={[0, maxScore]}
+                                stroke='rgba(255,255,255,0.3)'
+                                tick={false}
+                                strokeDasharray='3 4'
+                            />
+                            <Legend
+                                verticalAlign='top'
+                                height={32}
+                                iconType='line'
+                                formatter={(value) => (
+                                    <LegendFormatter
+                                        value={value}
+                                        songNames={topSongNames}
+                                    />
+                                )}
+                            />
+                            {lines.map((line, i) => {
+                                const key = line.dataKey
+                                return (
+                                    <Line
+                                        key={key}
+                                        type='monotone'
+                                        dataKey={key}
+                                        name={key}
+                                        stroke={line.stroke}
+                                        strokeWidth={2}
+                                        dot={{ fill: 'white', stroke: '#4a90e2', strokeWidth: 2, r: 3 }}
+                                        isAnimationActive={false}
+                                        activeDot={{
+                                            r: 5,
+                                            onMouseOver: (_event, payload) => {
+                                                const point = payload as { cx?: number; cy?: number }
+                                                if (!point || point.cx === undefined || point.cy === undefined) return
+                                                handleMouseOver(i, { x: point.cx, y: point.cy })
+                                            },
+                                            onMouseLeave: () => setSelectedSong(null),
+                                        }}
+                                    />
+                                )
+                            })}
+                        </LineChart>
+                    </ResponsiveContainer>
+                    {renderTooltip()}
                 </div>
             </div>
         </div>

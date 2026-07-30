@@ -1,1 +1,2 @@
-export { songRouter } from './comments/song.route'
+export { commentRouter } from "./comments/comment.route"
+export { chatRouter } from "./chats/chat.route"

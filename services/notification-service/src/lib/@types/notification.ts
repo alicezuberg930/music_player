@@ -1,13 +1,22 @@
-export type NotificationType = "song" | "playlist" | "artist"
+export type NotificationType = "song" | "playlist" | "artist" | "comment" | "chat"
 
-export type ScheduledNotification = {
+export type Notification = {
     type: NotificationType
     title: string
     content: string
     refId: string
     refName: string
-    refMeta?: string
     link: string
-    thumbnail?: string | null
     emittedAt: string
+}
+
+export type ScheduledNotification = Notification & {
+    thumbnail?: string | null
+}
+
+export type SocialNotification = Notification & {
+    toUserId: string
+    actorUserId: string
+    actorFullName: string
+    actorAvatar?: string
 }

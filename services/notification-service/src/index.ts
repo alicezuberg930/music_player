@@ -7,6 +7,7 @@ import { notificationRouter } from './modules'
 import { createSocketServer } from './socket'
 import * as schedule from "node-schedule"
 import { emitRealtimeNotification, periodicNotificationMessage } from './lib/utils'
+import { startKafkaConsumer } from './lib/kafka'
 
 const port = env.NOTIFICATION_SERVICE_PORT
 const app = express()
@@ -27,6 +28,10 @@ app.use([notFoundHandlerMiddleware, errorInterceptor])
 
 const server = http.createServer(app)
 const io = createSocketServer(server)
+
+startKafkaConsumer(io).catch((error) => {
+    console.error('[Kafka] Failed to initialize consumers:', error)
+})
 
 // Run every 2 hours
 const job = schedule.scheduleJob('0 */2 * * *', async () => {

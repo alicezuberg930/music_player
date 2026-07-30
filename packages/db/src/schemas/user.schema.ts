@@ -2,7 +2,7 @@ import { createdAt, updatedAt } from "../utils"
 import { createId } from "@yukikaze/lib/create-cuid"
 import { mysqlTable, varchar, date, boolean, timestamp, index, primaryKey, mysqlEnum } from "drizzle-orm/mysql-core"
 import { relations } from "drizzle-orm"
-import { songs, playlists } from "./"
+import { songs, playlists, comments, chats } from "./"
 
 // users table
 export const users = mysqlTable("users", {
@@ -29,6 +29,9 @@ export const usersRelations = relations(users, ({ many }) => ({
     playlists: many(playlists),
     favoriteSongs: many(userFavoriteSongs),
     favoritePlaylists: many(userFavoritePlaylists),
+    comments: many(comments),
+    chatsFrom: many(chats),
+    chatsTo: many(chats),
 }))
 
 // user_favorite_songs table

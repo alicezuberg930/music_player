@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express'
 import cookieParser from "cookie-parser"
 import { env } from '@yukikaze/lib/create-env'
 import { errorInterceptor, notFoundHandlerMiddleware, responseInterceptor } from '@yukikaze/middleware'
-import { songRouter } from './modules'
+import { commentRouter, chatRouter } from './modules'
 const app = express()
 
 app.set('trust proxy', 1);
@@ -18,14 +18,14 @@ app.use(cookieParser())
 app.use(express.urlencoded({ extended: true, limit: '21mb' }))
 app.use(express.json({ limit: '21mb' }))
 
-const port = env.SONG_SERVICE_PORT
+const port = env.SOCIAL_SERVICE_PORT
 
 app.get('/check', (_: Request, res: Response) => {
     res.json({ message: 'Welcome to YukikazeMP3 Express Server!' })
 })
 
 // map routers to express server
-app.use('/', [songRouter])
+app.use('/', [commentRouter, chatRouter])
 
 // assign global middlewares to express server
 app.use([notFoundHandlerMiddleware, errorInterceptor])

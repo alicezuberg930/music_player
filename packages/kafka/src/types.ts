@@ -1,3 +1,12 @@
+import type { pushNotifications } from "@yukikaze/db/schemas"
+
+type PushNotification = typeof pushNotifications.$inferSelect
+
+export type SendWebPushToSubscriptions = (
+    subscriptions: PushNotification[],
+    payload: string,
+) => Promise<unknown>
+
 export type CommentReplyEvent = {
     type: "comment.reply.created"
     commentId: string

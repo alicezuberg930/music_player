@@ -4,22 +4,8 @@ import { notifications, pushNotifications } from '@yukikaze/db/schemas'
 import { env } from '@yukikaze/lib/create-env'
 import { Kafka, type EachMessagePayload } from 'kafkajs'
 import type { Server } from 'socket.io'
-import type { ChatMessageEvent, CommentReplyEvent, SocialNotification } from './events'
-
-type PushNotification = typeof pushNotifications.$inferSelect
-
-export type SendWebPushToSubscriptions = (
-    subscriptions: PushNotification[],
-    payload: string,
-) => Promise<unknown>
-
-const isCommentKafkaEnabled = Boolean(env.KAFKA_BROKERS && env.KAFKA_COMMENT_REPLY_TOPIC)
-const isChatKafkaEnabled = Boolean(env.KAFKA_BROKERS && env.KAFKA_CHAT_EVENTS_TOPIC)
-
-const getBrokers = () =>
-    (env.KAFKA_BROKERS?.split(',') ?? [])
-        .map((broker) => broker.trim())
-        .filter(Boolean)
+import type { ChatMessageEvent, CommentReplyEvent, SendWebPushToSubscriptions, SocialNotification } from './types'
+import { getKafkaBrokers, isChatKafkaEnabled, isCommentKafkaEnabled, kafkaCaPem } from './utils'
 
 let commentConsumer: ReturnType<Kafka['consumer']> | null = null
 let chatConsumer: ReturnType<Kafka['consumer']> | null = null
@@ -159,14 +145,14 @@ const handleChatMessageEvent = async (
 }
 
 const createConsumer = (groupId: string): ReturnType<Kafka['consumer']> | null => {
-    const brokers = getBrokers()
+    const brokers = getKafkaBrokers()
     if (brokers.length === 0) return null
 
     const kafka = new Kafka({
         clientId: env.KAFKA_CLIENT_ID || "notification-service",
         brokers,
         ssl: {
-            ca: [readFileSync("./ca.pem", "utf8")]
+            ca: [kafkaCaPem]
         },
         sasl: {
             mechanism: "plain",
@@ -183,7 +169,7 @@ const runCommentConsumer = async (
     sendWebPushToSubscriptions: SendWebPushToSubscriptions,
 ) => {
     if (!isCommentKafkaEnabled || commentConsumer || isStartingCommentConsumer) return
-    const brokers = getBrokers()
+    const brokers = getKafkaBrokers()
     if (brokers.length === 0) {
         console.warn("[Kafka] Comment reply consumer skipped (no brokers configured)")
         return
@@ -224,7 +210,7 @@ const runChatConsumer = async (
     sendWebPushToSubscriptions: SendWebPushToSubscriptions,
 ) => {
     if (!isChatKafkaEnabled || chatConsumer || isStartingChatConsumer) return
-    const brokers = getBrokers()
+    const brokers = getKafkaBrokers()
     if (brokers.length === 0) {
         console.warn("[Kafka] Chat message consumer skipped (no brokers configured)")
         return
@@ -269,7 +255,7 @@ export const startKafkaConsumer = async (
         return
     }
 
-    const brokers = getBrokers()
+    const brokers = getKafkaBrokers()
     if (brokers.length === 0) {
         console.warn("[Kafka] Consumers skipped (no brokers configured)")
         return

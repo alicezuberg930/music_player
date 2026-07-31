@@ -1,6 +1,6 @@
 import { promises as fs } from "node:fs"
 import type { Request, Response, NextFunction } from "express"
-import type { Options, PerFieldRule } from "./helpers/multer.options"
+import type { Options, PerFieldRule } from "./helpers/multer-config"
 import { BadRequestException } from '@yukikaze/lib/exception'
 import { fileTypeFromBuffer } from 'file-type'
 

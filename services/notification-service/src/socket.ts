@@ -83,9 +83,7 @@ export const createSocketServer = (httpServer: HttpServer) => {
         })
 
         socket.on('disconnect', (reason) => {
-            console.info(
-                `[Socket.IO] Web client disconnected: ${socket.id} (${reason})`,
-            )
+            console.info(`[Socket.IO] Web client disconnected: ${socket.id} (${reason})`,)
         })
     })
 

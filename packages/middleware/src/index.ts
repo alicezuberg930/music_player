@@ -6,4 +6,4 @@ export { responseInterceptor } from './response-interceptor'
 export { rateLimiter } from './rate-limiter'
 export { validateRequest } from './validate-request'
 
-export { type Options, type PerFieldRule, multerOptions } from '@/helpers/multer.options'
+export { type Options, type PerFieldRule, multerOptions } from '@/helpers/multer-config'

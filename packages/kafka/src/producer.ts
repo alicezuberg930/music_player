@@ -1,19 +1,9 @@
 import { env } from '@yukikaze/lib/create-env'
 import { Kafka } from 'kafkajs'
-import type { ChatMessageEvent, CommentReplyEvent } from './events'
+import type { ChatMessageEvent, CommentReplyEvent } from './types'
+import { getKafkaBrokers, isKafkaEnabled, kafkaCaPem } from './utils'
 
 let producer: ReturnType<Kafka['producer']> | null = null
-const isKafkaEnabled = Boolean(
-    env.KAFKA_BROKERS && (
-        env.KAFKA_COMMENT_REPLY_TOPIC ||
-        env.KAFKA_CHAT_EVENTS_TOPIC
-    ),
-)
-
-const getKafkaBrokers = () =>
-    (env.KAFKA_BROKERS?.split(',') ?? [])
-        .map((broker) => broker.trim())
-        .filter(Boolean)
 
 const createProducer = () => {
     if (!isKafkaEnabled || producer) return
@@ -22,8 +12,16 @@ const createProducer = () => {
     if (brokers.length === 0) return
 
     const kafka = new Kafka({
-        clientId: env.KAFKA_CLIENT_ID || "social-service",
+        clientId: env.KAFKA_CLIENT_ID,
         brokers,
+        ssl: {
+            ca: [kafkaCaPem]
+        },
+        sasl: {
+            mechanism: "plain",
+            username: env.KAFKA_SASL_USERNAME!,
+            password: env.KAFKA_SASL_PASSWORD!,
+        },
     })
     producer = kafka.producer()
 }

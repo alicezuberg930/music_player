@@ -2,10 +2,10 @@ import type { Request, Response } from 'express'
 import { and, asc, eq, or } from '@yukikaze/db'
 import { db } from '@yukikaze/db'
 import { chats, users } from '@yukikaze/db/schemas'
+import type { ChatMessageEvent } from '@yukikaze/kafka/events'
+import { emitChatMessageEvent } from '@yukikaze/kafka/producer'
 import { HttpException, BadRequestException, NotFoundException } from '@yukikaze/lib/exception'
 import { SocialValidators } from '@yukikaze/validator'
-import { emitChatMessageEvent } from '../../lib/kafka'
-import type { ChatMessageEvent } from '../../lib/events'
 
 type ConversationQuery = SocialValidators.GetConversationsInput
 

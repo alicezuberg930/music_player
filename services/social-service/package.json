@@ -11,10 +11,10 @@
     "@yukikaze/middleware": "workspace:*",
     "@yukikaze/lib": "workspace:*",
     "@yukikaze/db": "workspace:*",
+    "@yukikaze/kafka": "workspace:*",
     "cookie-parser": "^1.4.7",
     "express": "catalog:express",
-    "multer": "catalog:multer",
-    "kafkajs": "^2.2.4"
+    "multer": "catalog:multer"
   },
   "devDependencies": {
     "@types/multer": "catalog:multer",

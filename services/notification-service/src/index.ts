@@ -6,8 +6,8 @@ import { errorInterceptor, notFoundHandlerMiddleware, responseInterceptor } from
 import { notificationRouter } from './modules'
 import { createSocketServer } from './socket'
 import * as schedule from "node-schedule"
-import { emitRealtimeNotification, periodicNotificationMessage } from './lib/utils'
-import { startKafkaConsumer } from './lib/kafka'
+import { emitRealtimeNotification, periodicNotificationMessage, sendWebPushToSubscriptions } from './lib/utils'
+import { startKafkaConsumer } from '@yukikaze/kafka/consumer'
 
 const port = env.NOTIFICATION_SERVICE_PORT
 const app = express()
@@ -29,7 +29,7 @@ app.use([notFoundHandlerMiddleware, errorInterceptor])
 const server = http.createServer(app)
 const io = createSocketServer(server)
 
-startKafkaConsumer(io).catch((error) => {
+startKafkaConsumer(io, sendWebPushToSubscriptions).catch((error) => {
     console.error('[Kafka] Failed to initialize consumers:', error)
 })
 

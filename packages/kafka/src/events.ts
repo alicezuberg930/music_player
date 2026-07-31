@@ -1,5 +1,3 @@
-import type { Comment } from "../modules/comments/comment.model"
-
 export type CommentReplyEvent = {
     type: "comment.reply.created"
     commentId: string
@@ -8,7 +6,7 @@ export type CommentReplyEvent = {
     actorUserId: string
     actorFullName: string
     actorAvatar?: string
-    content: Comment["content"]
+    content: string
     threadUserIds: string[]
     occurredAt: string
 }
@@ -20,6 +18,20 @@ export type ChatMessageEvent = {
     toUserId: string
     actorFullName: string
     actorAvatar?: string
-    content: Comment["content"]
+    content: string
     occurredAt: string
+}
+
+export type SocialNotification = {
+    type: "comment" | "chat"
+    title: string
+    content: string
+    refId: string
+    refName: string
+    link: string
+    emittedAt: string
+    toUserId: string
+    actorUserId: string
+    actorFullName: string
+    actorAvatar?: string
 }

@@ -7,10 +7,10 @@ import {
     BadRequestException,
     NotFoundException
 } from '@yukikaze/lib/exception'
+import type { CommentReplyEvent } from '@yukikaze/kafka/events'
+import { emitCommentReplyEvent } from '@yukikaze/kafka/producer'
 import { SocialValidators } from '@yukikaze/validator'
 import { CommentWithChildren, PublicUser } from './comment.model'
-import { emitCommentReplyEvent } from '../../lib/kafka'
-import { CommentReplyEvent } from '../../lib/events'
 
 const collectThreadUserIds = async (parentCommentId: string): Promise<string[]> => {
     const [rawRows] = await db.execute(sql`
@@ -58,7 +58,7 @@ export class CommentService {
                 where: and(eq(comments.id, parent_comment_id), eq(comments.songId, songId)),
                 columns: { id: true },
             })
-            
+
             if (parent_comment_id && !parent) {
                 throw new BadRequestException("Parent comment not found")
             }

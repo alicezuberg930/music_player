@@ -1,0 +1,32 @@
+{
+  "name": "@yukikaze/kafka",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./consumer": "./dist/consumer.mjs",
+    "./events": "./dist/events.mjs",
+    "./producer": "./dist/producer.mjs",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "~dev": "tsdown --watch ./src",
+    "lint": "eslint . --max-warnings 0",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@yukikaze/db": "workspace:*",
+    "@yukikaze/lib": "workspace:*",
+    "kafkajs": "^2.2.4",
+    "socket.io": "^4.8.3"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@yukikaze/typescript-config": "workspace:*",
+    "eslint": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:"
+  }
+}

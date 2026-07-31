@@ -121,6 +121,24 @@
         "typescript-eslint": "^8.48.1",
       },
     },
+    "packages/kafka": {
+      "name": "@yukikaze/kafka",
+      "version": "0.0.0",
+      "dependencies": {
+        "@yukikaze/db": "workspace:*",
+        "@yukikaze/lib": "workspace:*",
+        "kafkajs": "^2.2.4",
+        "socket.io": "^4.8.3",
+      },
+      "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@types/node": "catalog:",
+        "@yukikaze/typescript-config": "workspace:*",
+        "eslint": "catalog:",
+        "tsdown": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
     "packages/lib": {
       "name": "@yukikaze/lib",
       "version": "0.0.0",
@@ -399,12 +417,12 @@
       "name": "@yukikaze/notification-service",
       "dependencies": {
         "@yukikaze/db": "workspace:*",
+        "@yukikaze/kafka": "workspace:*",
         "@yukikaze/lib": "workspace:*",
         "@yukikaze/middleware": "workspace:*",
         "@yukikaze/validator": "workspace:*",
         "cookie-parser": "^1.4.7",
         "express": "catalog:express",
-        "kafkajs": "^2.2.4",
         "node-schedule": "^2.1.1",
         "socket.io": "^4.8.3",
         "web-push": "^3.6.7",
@@ -464,17 +482,14 @@
       "name": "@yukikaze/social-service",
       "dependencies": {
         "@yukikaze/db": "workspace:*",
+        "@yukikaze/kafka": "workspace:*",
         "@yukikaze/lib": "workspace:*",
         "@yukikaze/middleware": "workspace:*",
-        "@yukikaze/redis": "workspace:*",
         "@yukikaze/upload": "workspace:*",
         "@yukikaze/validator": "workspace:*",
         "cookie-parser": "^1.4.7",
         "express": "catalog:express",
-        "kafkajs": "^2.2.4",
         "multer": "catalog:multer",
-        "music-metadata": "^11.9.0",
-        "node-id3": "^0.2.9",
       },
       "devDependencies": {
         "@repo/eslint-config": "workspace:*",
@@ -1257,6 +1272,8 @@
     "@yukikaze/genre-service": ["@yukikaze/genre-service@workspace:services/genre-service"],
 
     "@yukikaze/home-service": ["@yukikaze/home-service@workspace:services/home-service"],
+
+    "@yukikaze/kafka": ["@yukikaze/kafka@workspace:packages/kafka"],
 
     "@yukikaze/lib": ["@yukikaze/lib@workspace:packages/lib"],
 

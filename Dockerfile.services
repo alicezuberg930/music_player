@@ -35,7 +35,7 @@ COPY --from=builder /app/packages /source/packages
 COPY --from=builder /app/services /source/services
 
 RUN set -eux; \
-    for package in db email lib middleware redis upload validator; do \
+    for package in db email kafka lib middleware redis upload validator; do \
       mkdir -p "packages/${package}"; \
       cp "/source/packages/${package}/package.json" "packages/${package}/package.json"; \
       cp -R "/source/packages/${package}/dist" "packages/${package}/dist"; \

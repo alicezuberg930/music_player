@@ -1,6 +1,6 @@
 import { env } from '@yukikaze/lib/create-env'
 import { Kafka } from 'kafkajs'
-import { type ChatMessageEvent, type CommentReplyEvent } from './events'
+import type { ChatMessageEvent, CommentReplyEvent } from './events'
 
 let producer: ReturnType<Kafka['producer']> | null = null
 const isKafkaEnabled = Boolean(
@@ -36,7 +36,7 @@ export const emitCommentReplyEvent = async (payload: CommentReplyEvent) => {
     try {
         await producer.connect()
         await producer.send({
-            topic: env.KAFKA_COMMENT_REPLY_TOPIC!,
+            topic: env.KAFKA_COMMENT_REPLY_TOPIC,
             messages: [
                 {
                     key: payload.commentId,

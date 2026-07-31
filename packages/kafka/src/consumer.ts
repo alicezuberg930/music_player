@@ -1,35 +1,17 @@
-import { Kafka, type EachMessagePayload } from 'kafkajs'
-import { env } from '@yukikaze/lib/create-env'
+import { readFileSync } from 'node:fs'
 import { db, inArray } from '@yukikaze/db'
 import { notifications, pushNotifications } from '@yukikaze/db/schemas'
-import { Server } from 'socket.io'
-import { sendWebPushToSubscriptions } from './utils'
-import { SocialNotification } from './@types/notification'
-import { readFileSync } from 'node:fs'
+import { env } from '@yukikaze/lib/create-env'
+import { Kafka, type EachMessagePayload } from 'kafkajs'
+import type { Server } from 'socket.io'
+import type { ChatMessageEvent, CommentReplyEvent, SocialNotification } from './events'
 
-type CommentReplyEvent = {
-    type: "comment.reply.created"
-    commentId: string
-    songId: string
-    parentCommentId: string
-    actorUserId: string
-    actorFullName: string
-    actorAvatar?: string
-    content: string
-    threadUserIds: string[]
-    occurredAt: string
-}
+type PushNotification = typeof pushNotifications.$inferSelect
 
-type ChatMessageEvent = {
-    type: "chat.message.created"
-    chatId: string
-    fromUserId: string
-    toUserId: string
-    actorFullName: string
-    actorAvatar?: string
-    content: string
-    occurredAt: string
-}
+export type SendWebPushToSubscriptions = (
+    subscriptions: PushNotification[],
+    payload: string,
+) => Promise<unknown>
 
 const isCommentKafkaEnabled = Boolean(env.KAFKA_BROKERS && env.KAFKA_COMMENT_REPLY_TOPIC)
 const isChatKafkaEnabled = Boolean(env.KAFKA_BROKERS && env.KAFKA_CHAT_EVENTS_TOPIC)
@@ -92,6 +74,7 @@ const buildChatNotificationPayload = (event: ChatMessageEvent): SocialNotificati
 const sendPushNotificationToRecipients = async (
     recipients: string[],
     payload: Omit<SocialNotification, 'toUserId'>,
+    sendWebPushToSubscriptions: SendWebPushToSubscriptions,
 ) => {
     if (recipients.length === 0) return
 
@@ -125,7 +108,11 @@ const emitNotificationToRecipient = (
     io.to(`user:${payload.toUserId}`).emit(event, payload)
 }
 
-const handleCommentReplyEvent = async (io: Server, rawEvent: CommentReplyEvent) => {
+const handleCommentReplyEvent = async (
+    io: Server,
+    rawEvent: CommentReplyEvent,
+    sendWebPushToSubscriptions: SendWebPushToSubscriptions,
+) => {
     const recipientUserIds = [...new Set(rawEvent.threadUserIds.filter((id) => id !== rawEvent.actorUserId))]
     if (recipientUserIds.length === 0) return
 
@@ -145,10 +132,18 @@ const handleCommentReplyEvent = async (io: Server, rawEvent: CommentReplyEvent) 
         emitNotificationToRecipient(io, payload, 'notification:comment')
     })
 
-    await sendPushNotificationToRecipients(recipientUserIds, buildCommentNotificationPayload(rawEvent, recipientUserIds[0] ?? ''))
+    await sendPushNotificationToRecipients(
+        recipientUserIds,
+        buildCommentNotificationPayload(rawEvent, recipientUserIds[0] ?? ''),
+        sendWebPushToSubscriptions,
+    )
 }
 
-const handleChatMessageEvent = async (io: Server, event: ChatMessageEvent) => {
+const handleChatMessageEvent = async (
+    io: Server,
+    event: ChatMessageEvent,
+    sendWebPushToSubscriptions: SendWebPushToSubscriptions,
+) => {
     if (event.fromUserId === event.toUserId) return
     const payload = buildChatNotificationPayload(event)
 
@@ -160,7 +155,7 @@ const handleChatMessageEvent = async (io: Server, event: ChatMessageEvent) => {
         uniqueKey: `chat:${event.chatId}:${event.toUserId}`,
     })
     emitNotificationToRecipient(io, payload, 'notification:chat')
-    await sendPushNotificationToRecipients([event.toUserId], payload)
+    await sendPushNotificationToRecipients([event.toUserId], payload, sendWebPushToSubscriptions)
 }
 
 const createConsumer = (groupId: string): ReturnType<Kafka['consumer']> | null => {
@@ -183,7 +178,10 @@ const createConsumer = (groupId: string): ReturnType<Kafka['consumer']> | null =
     return kafka.consumer({ groupId })
 }
 
-const runCommentConsumer = async (io: Server) => {
+const runCommentConsumer = async (
+    io: Server,
+    sendWebPushToSubscriptions: SendWebPushToSubscriptions,
+) => {
     if (!isCommentKafkaEnabled || commentConsumer || isStartingCommentConsumer) return
     const brokers = getBrokers()
     if (brokers.length === 0) {
@@ -207,7 +205,7 @@ const runCommentConsumer = async (io: Server) => {
                 try {
                     const event = parseCommentReplyEvent(message.value.toString())
                     if (!event) return
-                    await handleCommentReplyEvent(io, event)
+                    await handleCommentReplyEvent(io, event, sendWebPushToSubscriptions)
                 } catch (error) {
                     console.error('[Kafka] Failed to process comment.reply event:', error)
                 }
@@ -221,7 +219,10 @@ const runCommentConsumer = async (io: Server) => {
     }
 }
 
-const runChatConsumer = async (io: Server) => {
+const runChatConsumer = async (
+    io: Server,
+    sendWebPushToSubscriptions: SendWebPushToSubscriptions,
+) => {
     if (!isChatKafkaEnabled || chatConsumer || isStartingChatConsumer) return
     const brokers = getBrokers()
     if (brokers.length === 0) {
@@ -245,7 +246,7 @@ const runChatConsumer = async (io: Server) => {
                 try {
                     const event = parseChatMessageEvent(message.value.toString())
                     if (!event) return
-                    await handleChatMessageEvent(io, event)
+                    await handleChatMessageEvent(io, event, sendWebPushToSubscriptions)
                 } catch (error) {
                     console.error('[Kafka] Failed to process chat.message event:', error)
                 }
@@ -259,7 +260,10 @@ const runChatConsumer = async (io: Server) => {
     }
 }
 
-export const startKafkaConsumer = async (io: Server) => {
+export const startKafkaConsumer = async (
+    io: Server,
+    sendWebPushToSubscriptions: SendWebPushToSubscriptions,
+) => {
     if (!env.KAFKA_BROKERS) {
         console.warn("[Kafka] Consumers skipped (missing broker config)")
         return
@@ -276,6 +280,6 @@ export const startKafkaConsumer = async (io: Server) => {
         return
     }
 
-    if (isCommentKafkaEnabled) await runCommentConsumer(io)
-    if (isChatKafkaEnabled) await runChatConsumer(io)
+    if (isCommentKafkaEnabled) await runCommentConsumer(io, sendWebPushToSubscriptions)
+    if (isChatKafkaEnabled) await runChatConsumer(io, sendWebPushToSubscriptions)
 }

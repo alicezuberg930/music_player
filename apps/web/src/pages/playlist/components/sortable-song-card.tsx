@@ -6,10 +6,9 @@ import { CSS } from "@dnd-kit/utilities"
 type SortableSongProps = {
     song: Song
     playlistTitle?: string
-    order?: number
 }
 
-const SortableSongCard: React.FC<SortableSongProps> = ({ song, playlistTitle, order }) => {
+const SortableSongCard: React.FC<SortableSongProps> = ({ song, playlistTitle }) => {
     const {
         attributes,
         listeners,
@@ -36,7 +35,6 @@ const SortableSongCard: React.FC<SortableSongProps> = ({ song, playlistTitle, or
             <SongCard
                 song={song}
                 playlistTitle={playlistTitle}
-                order={order}
             />
         </div>
     )

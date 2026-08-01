@@ -190,7 +190,6 @@ const PlaylistPage: React.FC = () => {
                                                 <SongCard
                                                     song={activeSong}
                                                     playlistTitle={data?.title}
-                                                    order={activeOrder}
                                                 />
                                             </div>
                                         ) : null}

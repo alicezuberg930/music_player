@@ -9,7 +9,7 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
   // Load env from root folder
   const env = loadEnv(mode, path.resolve(__dirname, '../../'), '')
   const viteEnv = env.VITE_ENV
-  const hostname = env.WEB_URL
+  const hostname = 'https://www.tien-music-player.site'
 
   // // Fetch static & dynamic routes from backend API
   const dynamicRoutes: string[] = []
@@ -19,7 +19,6 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
       const data = await response.json() as { data: string[] }
       dynamicRoutes.push(...data.data)
     } catch (error) {
-      
       console.warn('Failed to fetch sitemap from API:', error)
     }
   }

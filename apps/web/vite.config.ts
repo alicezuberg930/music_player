@@ -8,20 +8,21 @@ import ViteSitemap from 'vite-plugin-sitemap'
 export default defineConfig(async ({ mode }): Promise<UserConfig> => {
   // Load env from root folder
   const env = loadEnv(mode, path.resolve(__dirname, '../../'), '')
-  // const viteEnv = env.VITE_ENV || mode
+  const viteEnv = env.VITE_ENV
   const hostname = env.WEB_URL
 
   // // Fetch static & dynamic routes from backend API
-  // const dynamicRoutes: string[] = []
-  // if (viteEnv === 'production') {
-  //   try {
-  //     const response = await fetch(`${env.VITE_API_URL}/home/sitemap-urls`)
-  //     const data = await response.json() as { data: string[] }
-  //     dynamicRoutes.push(...data.data)
-  //   } catch (error) {
-  //     console.warn('Failed to fetch sitemap from API:', error)
-  //   }
-  // }
+  const dynamicRoutes: string[] = []
+  if (viteEnv === 'production') {
+    try {
+      const response = await fetch(`${env.VITE_API_URL}/home/sitemap-urls`)
+      const data = await response.json() as { data: string[] }
+      dynamicRoutes.push(...data.data)
+    } catch (error) {
+      
+      console.warn('Failed to fetch sitemap from API:', error)
+    }
+  }
 
   return {
     plugins: [
@@ -29,7 +30,7 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
       tailwindcss(),
       ViteSitemap({
         hostname,
-        // dynamicRoutes,
+        dynamicRoutes,
         generateRobotsTxt: true,
         robots: [
           {

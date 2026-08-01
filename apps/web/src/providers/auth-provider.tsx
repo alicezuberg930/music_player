@@ -77,7 +77,7 @@ const reducer = (state: AuthStateType, action: ActionsType) => {
 
 export const AuthContext = createContext<JWTContextType | null>(null)
 
-export function AuthProvider({ children }: Readonly<{ children: React.ReactNode }>) {
+const AuthProvider = ({ children }: Readonly<{ children: React.ReactNode }>) => {
   const { translate } = useLocales()
   const [state, dispatch] = useReducer(reducer, initialState)
   // const navigate = useNavigate()
@@ -261,8 +261,10 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>
 }
 
-export const useAuthContext = () => {
+const useAuthContext = () => {
   const context = useContext(AuthContext)
   if (!context) throw new Error('useAuthContext context must be use inside AuthProvider')
   return context
 }
+
+export { AuthProvider, useAuthContext }

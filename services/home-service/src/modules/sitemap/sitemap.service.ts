@@ -1,8 +1,9 @@
 import { db, eq } from "@yukikaze/db"
 import { artists, playlists } from "@yukikaze/db/schemas"
+import { env } from "@yukikaze/lib/create-env"
 
 export class SitemapService {
-    private readonly baseUrl = 'https://tien-music-player.site'
+    private readonly baseUrl = env.WEB_URL
 
     public async generateSitemapURLs(): Promise<string[]> {
         const urls: string[] = [

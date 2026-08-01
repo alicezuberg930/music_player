@@ -15,7 +15,7 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
   const dynamicRoutes: string[] = []
   if (viteEnv === 'production') {
     try {
-      const response = await fetch(`${env.VITE_API_URL}/api/v1/home/sitemap-urls`)
+      const response = await fetch(`${env.VITE_API_URL}/home/sitemap-urls`)
       const data = await response.json() as { data: string[] }
       dynamicRoutes.push(...data.data)
     } catch (error) {

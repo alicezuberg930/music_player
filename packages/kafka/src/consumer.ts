@@ -1,4 +1,3 @@
-import { readFileSync } from 'node:fs'
 import { db, inArray } from '@yukikaze/db'
 import { notifications, pushNotifications } from '@yukikaze/db/schemas'
 import { env } from '@yukikaze/lib/create-env'

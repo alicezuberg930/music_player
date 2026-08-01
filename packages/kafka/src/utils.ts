@@ -6,7 +6,7 @@ import fs from "node:fs"
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const kafkaCaPem = fs.readFileSync(path.resolve(__dirname, '../../../kafka-ca.pem'))
+const kafkaCaPem = fs.readFileSync(path.resolve(__dirname, '../../../kafka-ca.pem'), 'utf-8')
 
 const isCommentKafkaEnabled = env.KAFKA_BROKERS && env.KAFKA_COMMENT_REPLY_TOPIC
 

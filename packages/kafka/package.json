@@ -5,8 +5,9 @@
   "type": "module",
   "exports": {
     "./consumer": "./dist/consumer.mjs",
-    "./events": "./dist/events.mjs",
     "./producer": "./dist/producer.mjs",
+    "./types": "./dist/types.mjs",
+    "./utils": "./dist/utils.mjs",
     "./package.json": "./package.json"
   },
   "scripts": {

@@ -9,8 +9,10 @@ const serviceNames = [
   "home-service",
   "notification-service",
   "playlist-service",
+  "social-service",
   "song-service",
   "user-service",
+  "video-service",
 ]
 
 const services = serviceNames.map((name) => {

@@ -56,6 +56,7 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
             'dayjs-chunk': ['dayjs'],
             // 'hls-chunk': ['hls.js'],
             'chart': ['recharts'],
+            ['dnd']: ['@dnd-kit/core', '@dnd-kit/sortable', '@dnd-kit/utilities'],
             'framer-motion-chunk': ['framer-motion'],
           },
           chunkFileNames: 'chunks/[name]-[hash].js',

@@ -8,11 +8,11 @@ const __dirname = path.dirname(__filename)
 
 const kafkaCaPem = fs.readFileSync(path.resolve(__dirname, '../../../kafka-ca.pem'))
 
-const isCommentKafkaEnabled = Boolean(env.KAFKA_BROKERS && env.KAFKA_COMMENT_REPLY_TOPIC)
+const isCommentKafkaEnabled = env.KAFKA_BROKERS && env.KAFKA_COMMENT_REPLY_TOPIC
 
-const isChatKafkaEnabled = Boolean(env.KAFKA_BROKERS && env.KAFKA_CHAT_EVENTS_TOPIC)
+const isChatKafkaEnabled = env.KAFKA_BROKERS && env.KAFKA_CHAT_EVENTS_TOPIC
 
-const isKafkaEnabled = Boolean(env.KAFKA_BROKERS && (env.KAFKA_COMMENT_REPLY_TOPIC || env.KAFKA_CHAT_EVENTS_TOPIC))
+const isKafkaEnabled = env.KAFKA_BROKERS && (env.KAFKA_COMMENT_REPLY_TOPIC || env.KAFKA_CHAT_EVENTS_TOPIC)
 
 const getKafkaBrokers = () => (env.KAFKA_BROKERS?.split(',') ?? []).map((broker) => broker.trim()).filter(Boolean)
 

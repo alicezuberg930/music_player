@@ -40,7 +40,7 @@ RUN set -eux; \
       cp "/source/packages/${package}/package.json" "packages/${package}/package.json"; \
       cp -R "/source/packages/${package}/dist" "packages/${package}/dist"; \
     done; \
-    for service in artist-service auth-service banner-service gateway-service genre-service home-service notification-service playlist-service song-service user-service; do \
+    for service in artist-service auth-service banner-service gateway-service genre-service home-service notification-service playlist-service social-service song-service user-service video-service; do \
       mkdir -p "services/${service}"; \
       cp "/source/services/${service}/package.json" "services/${service}/package.json"; \
       cp -R "/source/services/${service}/dist" "services/${service}/dist"; \
@@ -55,15 +55,16 @@ COPY --from=production-dependencies --chown=node:node /app/node_modules ./node_m
 COPY --from=runtime-files --chown=node:node /runtime/ ./
 COPY --chown=node:node docker-start-services.mjs ./docker-start-services.mjs
 COPY --chown=node:node ca.pem ./ca.pem
+COPY --chown=node:node kafka-ca.pem ./kafka-ca.pem
 
 RUN set -eux; \
-    for service in artist-service auth-service banner-service gateway-service genre-service home-service notification-service playlist-service song-service user-service; do \
+    for service in artist-service auth-service banner-service gateway-service genre-service home-service notification-service playlist-service social-service song-service user-service video-service; do \
       mkdir -p "services/${service}/uploads"; \
       chown node:node "services/${service}/uploads"; \
     done
 
 USER node
 
-EXPOSE 5000
+EXPOSE 5000 5009 5010 5011
 
 CMD ["node", "docker-start-services.mjs"]

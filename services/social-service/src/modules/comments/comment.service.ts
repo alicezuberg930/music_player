@@ -7,7 +7,7 @@ import {
     BadRequestException,
     NotFoundException
 } from '@yukikaze/lib/exception'
-import type { CommentReplyEvent } from '@yukikaze/kafka/events'
+import type { CommentReplyEvent } from '@yukikaze/kafka/types'
 import { emitCommentReplyEvent } from '@yukikaze/kafka/producer'
 import { SocialValidators } from '@yukikaze/validator'
 import { CommentWithChildren, PublicUser } from './comment.model'

@@ -17,7 +17,7 @@ export class HttpClient {
     >(),
   }
 
-  private async fetchJson<T>(
+  private async fetchJson<T = unknown>(
     url: string,
     options: RequestInit = {}
   ): Promise<T> {
@@ -71,7 +71,7 @@ export class HttpClient {
     }
   }
 
-  get<T>(
+  get<T = unknown>(
     endpoint: string,
     params: Record<string, unknown> = {},
     options?: RequestInit
@@ -97,7 +97,7 @@ export class HttpClient {
     )
   }
 
-  post<T>(endpoint: string, body?: unknown, options?: RequestInit) {
+  post<T = unknown>(endpoint: string, body?: unknown, options?: RequestInit) {
     return this.fetchJson<T>(`${BASE_URL}${endpoint}`, {
       method: 'POST',
       credentials: 'include',
@@ -110,7 +110,7 @@ export class HttpClient {
     })
   }
 
-  put<T>(endpoint: string, body?: unknown, options?: RequestInit) {
+  put<T = unknown>(endpoint: string, body?: unknown, options?: RequestInit) {
     return this.fetchJson<T>(`${BASE_URL}${endpoint}`, {
       method: 'PUT',
       credentials: 'include',
@@ -123,7 +123,7 @@ export class HttpClient {
     })
   }
 
-  patch<T>(endpoint: string, body?: unknown, options?: RequestInit) {
+  patch<T = unknown>(endpoint: string, body?: unknown, options?: RequestInit) {
     return this.fetchJson<T>(`${BASE_URL}${endpoint}`, {
       method: 'PATCH',
       credentials: 'include',
@@ -136,7 +136,7 @@ export class HttpClient {
     })
   }
 
-  delete<T>(endpoint: string, options?: RequestInit) {
+  delete<T = unknown>(endpoint: string, options?: RequestInit) {
     return this.fetchJson<T>(`${BASE_URL}${endpoint}`, {
       method: 'DELETE',
       credentials: 'include',

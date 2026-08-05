@@ -12,8 +12,9 @@ import { emitCommentReplyEvent } from '@yukikaze/kafka/producer'
 import { SocialValidators } from '@yukikaze/validator'
 import { CommentWithChildren, PublicUser } from './comment.model'
 
-const collectThreadUserIds = async (parentCommentId: string): Promise<string[]> => {
-    const [rawRows] = await db.execute(sql`
+export class CommentService {
+    private async collectThreadUserIds(parentCommentId: string): Promise<string[]> {
+        const [rawRows] = await db.execute(sql`
         WITH RECURSIVE comment_thread AS (
             SELECT id, user_id, parent_comment_id
             FROM comments
@@ -27,27 +28,22 @@ const collectThreadUserIds = async (parentCommentId: string): Promise<string[]> 
         FROM comment_thread
     `)
 
-    const rows: unknown = rawRows
-    if (!Array.isArray(rows)) return []
+        const rows: unknown = rawRows
+        if (!Array.isArray(rows)) return []
 
-    const userIds = rows
-        .map((row: unknown) => {
-            if (
-                typeof row !== 'object'
-                || row === null
-                || !('user_id' in row)
-            ) {
-                return null
-            }
+        const userIds = rows
+            .map((row: unknown) => {
+                if (typeof row !== 'object' || row === null || !('user_id' in row)) {
+                    return null
+                }
 
-            return row.user_id
-        })
-        .filter((id): id is string => typeof id === 'string' && id.length > 0)
+                return row.user_id
+            })
+            .filter((id): id is string => typeof id === 'string' && id.length > 0)
 
-    return [...new Set(userIds)]
-}
+        return [...new Set(userIds)]
+    }
 
-export class CommentService {
     public async createComment(request: Request<{}, {}, SocialValidators.CreateCommentInput>, response: Response) {
         try {
             const { songId, content, parent_comment_id } = request.body
@@ -90,7 +86,7 @@ export class CommentService {
             await db.update(songs).set({ comments: sql`${songs.comments} + 1` }).where(eq(songs.id, songId))
 
             if (parent_comment_id) {
-                const participantIds = await collectThreadUserIds(parent_comment_id)
+                const participantIds = await this.collectThreadUserIds(parent_comment_id)
                 const recipients = participantIds.filter((id) => id !== userId)
                 if (recipients.length > 0) {
                     const payload: CommentReplyEvent = {

@@ -1,4 +1,3 @@
-import { useDispatch } from 'react-redux'
 import { useLocation } from '@tanstack/react-router'
 import { useEffect, useRef } from 'react'
 import VideoCard from '@/layout/video-card'

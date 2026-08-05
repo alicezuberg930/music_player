@@ -16,6 +16,7 @@ export class HomeService {
                     limit: 5
                 }),
                 db.query.songs.findMany({
+                    columns: { stream: false },
                     orderBy: (songs, { desc }) => [desc(songs.createdAt)],
                     limit: 9
                 }),

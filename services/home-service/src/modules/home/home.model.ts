@@ -10,7 +10,7 @@ export type Playlist = typeof playlists.$inferSelect
 
 export type HomeData = {
     banners: Banner[],
-    newReleaseSongs: Song[],
+    newReleaseSongs: Omit<Song, 'stream'>[],
     weeklyTopArtists: Artist[]
     newPlaylists: Playlist[]
 }

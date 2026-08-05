@@ -175,12 +175,11 @@ const PlaylistPage: React.FC = () => {
                                         strategy={verticalListSortingStrategy}
                                     >
                                         <div className="flex flex-col">
-                                            {playlistSongs.map((song, index) => (
+                                            {playlistSongs.map(song => (
                                                 <SortableSongCard
                                                     key={song.id}
                                                     song={song}
                                                     playlistTitle={data?.title}
-                                                    order={index + 1}
                                                 />
                                             ))}
                                         </div>
@@ -191,7 +190,6 @@ const PlaylistPage: React.FC = () => {
                                                 <SongCard
                                                     song={activeSong}
                                                     playlistTitle={data?.title}
-                                                    order={activeOrder}
                                                 />
                                             </div>
                                         ) : null}

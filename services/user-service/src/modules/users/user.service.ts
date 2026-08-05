@@ -84,9 +84,10 @@ export class UserService {
         try {
             let { type } = request.query
             if (!type) type = 'uploaded'
-            let data: Song[] = []
+            let data: Omit<Song, 'stream'>[] = []
             if (type === 'uploaded') {
                 data = await db.query.songs.findMany({
+                    columns: { stream: false },
                     where: eq(songs.userId, request.userId!),
                     orderBy: (songs, { desc }) => [desc(songs.createdAt)],
                 })

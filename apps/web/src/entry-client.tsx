@@ -1,11 +1,8 @@
 import './styles/index.css'
 // i18n
 import './lib/locales/i18n'
-// redux configs
-import { PersistGate } from 'redux-persist/integration/react'
-import { persistor, store } from './redux/store'
 // providers
-import { Provider as ReduxProvider } from 'react-redux'
+import { ReduxProvider } from '@/providers/redux-provider'
 import { Router } from './routes'
 import { ThemeProvider } from '@yukikaze/ui'
 import { SocketProvider } from './providers/socket-provider'
@@ -28,8 +25,7 @@ createRoot(document.getElementById('root') as HTMLElement).render(
         themes={['default', 'red', 'blue', 'green']}
         disableTransitionOnChange
       >
-        <ReduxProvider store={store}>
-          <PersistGate persistor={persistor}>
+        <ReduxProvider>
             <AuthProvider>
               <NotificationProvider>
                 <SocketProvider>
@@ -38,7 +34,6 @@ createRoot(document.getElementById('root') as HTMLElement).render(
                 </SocketProvider>
               </NotificationProvider>
             </AuthProvider>
-          </PersistGate>
         </ReduxProvider>
       </ThemeProvider>
       <SongOptionsDropdown />

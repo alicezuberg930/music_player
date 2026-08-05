@@ -1,8 +1,6 @@
 // lib
 import type { Request, Response } from 'express'
 import fs from 'node:fs'
-import { OutgoingHttpHeaders } from 'node:http'
-import { Readable } from 'node:stream'
 import NodeID3 from 'node-id3'
 import { cached, invalidateCache } from "@yukikaze/redis"
 // database
@@ -15,6 +13,7 @@ import { deleteFile, extractPublicId, uploadFile } from "@yukikaze/upload"
 import { createId } from "@yukikaze/lib/create-cuid"
 import { resizeImageToBuffer } from '@yukikaze/lib/image-resize'
 import { VideoValidators } from '@yukikaze/validator'
+import { resolveQuality, resolveAdaptiveStream } from '../../lib/adaptive-streaming'
 
 export class VideoService {
     public async getVideos(request: Request<{}, {}, {}, VideoValidators.QueryVideoParams>, response: Response) {
@@ -297,37 +296,21 @@ export class VideoService {
     public async streamVideo(request: Request<{ id: string }>, response: Response) {
         try {
             const { id } = request.params
-            const findVideo = await db.query.videos.findFirst({ where: eq(videos.id, id), columns: { stream: true, size: true } })
+            const findVideo = await db.query.videos.findFirst({ where: eq(videos.id, id), columns: { stream: true } })
             if (!findVideo || !findVideo.stream) throw new NotFoundException('Video not found')
-
-            const range = request.headers.range
-            const chunkSize = 1000 * 1024 // 1000KB
-            const videoSize = findVideo.size || 0
-            // define start and end of current chunk
-            const start = Number(range?.replace(/\D/g, ''))
-            const end = Math.min(start + chunkSize, videoSize - 1)
-            const contentLength = end - start + 1
-
-            // make request to Cloudinary to get file with range header
-            const vidoeResponse = await fetch(findVideo.stream, { headers: { Range: `bytes=${start}-${end}` } })
-            if (!vidoeResponse.ok) throw new BadRequestException('Failed to fetch video from storage')
-            console.log(`fetching chunk for video`, id, `(${start}-${end}/${videoSize})`)
-
-            const headers: OutgoingHttpHeaders = {
-                'Content-Range': `bytes ${start}-${end}/${videoSize}`,
-                'Accept-Ranges': 'bytes',
-                'Content-Length': contentLength.toString(),
-                'Content-Type': 'audio/mpeg',
-                'Cache-Control': 'no-cache, no-store, must-revalidate',
-                'Pragma': 'no-cache',
-            }
-            response.writeHead(206, headers)
-
-            const stream = vidoeResponse.body
-            if (stream) {
-                const nodeStream = Readable.fromWeb(stream)
-                nodeStream.pipe(response)
-            }
+            const { quality } = request.query
+            const maxQuality = resolveQuality(quality as string | undefined)
+            const responsePayload = await resolveAdaptiveStream({
+                videoId: id,
+                sourceUrl: findVideo.stream,
+                requestPath: request.path,
+                maxQuality,
+            })
+            response.writeHead(200, {
+                'Content-Type': responsePayload.contentType,
+                'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+            })
+            response.send(responsePayload.body)
         } catch (error) {
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)

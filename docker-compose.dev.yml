@@ -16,6 +16,7 @@ services:
       - yukikaze_player_db_data:/var/lib/mysql/data
 
   yukikaze_player_app_dev:
+    image: yukikaze_player_app_dev:latest
     build: 
       context: .
       dockerfile: apps/web/Dockerfile.development
@@ -74,6 +75,7 @@ services:
             - node_modules/
 
   yukikaze_player_song_dev:
+    image: yukikaze_player_song_dev:latest
     build:
       context: .
       dockerfile: services/song-service/Dockerfile.development
@@ -111,6 +113,7 @@ services:
             - node_modules/
 
   yukikaze_player_home_dev:
+    image: yukikaze_player_home_dev:latest
     build:
       context: .
       dockerfile: services/home-service/Dockerfile.development
@@ -144,6 +147,7 @@ services:
             - node_modules/
 
   yukikaze_player_notification_dev:
+    image: yukikaze_player_notification_dev:latest
     build:
       context: .
       dockerfile: services/notification-service/Dockerfile.development
@@ -177,6 +181,7 @@ services:
             - node_modules/
 
   yukikaze_player_video_dev:
+    image: yukikaze_player_video_dev:latest
     build:
       context: .
       dockerfile: services/video-service/Dockerfile.development
@@ -191,7 +196,7 @@ services:
     ports:
       - "5009:5009"
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:5009/check || exit 1"]
+      test: ["CMD-SHELL", "command -v ffmpeg >/dev/null 2>&1 && command -v ffprobe >/dev/null 2>&1 && curl -f http://localhost:5009/check || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -215,6 +220,7 @@ services:
             - node_modules/
 
   yukikaze_player_social_dev:
+    image: yukikaze_player_social_dev:latest
     build:
       context: .
       dockerfile: services/social-service/Dockerfile.development
@@ -248,6 +254,7 @@ services:
             - node_modules/
 
   yukikaze_player_gateway_dev:
+    image: yukikaze_player_gateway_dev:latest
     build:
       context: .
       dockerfile: services/gateway-service/Dockerfile.development
@@ -289,6 +296,7 @@ services:
             - node_modules/
 
   yukikaze_player_artist_dev:
+    image: yukikaze_player_artist_dev:latest
     build:
       context: .
       dockerfile: services/artist-service/Dockerfile.development
@@ -326,6 +334,7 @@ services:
             - node_modules/
 
   yukikaze_player_auth_dev:
+    image: yukikaze_player_auth_dev:latest
     build:
       context: .
       dockerfile: services/auth-service/Dockerfile.development
@@ -359,6 +368,7 @@ services:
             - node_modules/
 
   yukikaze_player_banner_dev:
+    image: yukikaze_player_banner_dev:latest
     build:
       context: .
       dockerfile: services/banner-service/Dockerfile.development
@@ -396,6 +406,7 @@ services:
             - node_modules/
 
   yukikaze_player_playlist_dev:
+    image: yukikaze_player_playlist_dev:latest
     build:
       context: .
       dockerfile: services/playlist-service/Dockerfile.development
@@ -433,6 +444,7 @@ services:
             - node_modules/
 
   yukikaze_player_user_dev:
+    image: yukikaze_player_user_dev:latest
     build:
       context: .
       dockerfile: services/user-service/Dockerfile.development

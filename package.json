@@ -70,8 +70,10 @@
     "check-types": "turbo run check-types",
     "start:web": "turbo run start --filter=@yukikaze/web",
     "start:services": "turbo run start --filter=@yukikaze/video-service --filter=@yukikaze/genre-service --filter=@yukikaze/playlist-service --filter=@yukikaze/gateway-service --filter=@yukikaze/home-service --filter=@yukikaze/notification-service --filter=@yukikaze/song-service --filter=@yukikaze/artist-service --filter=@yukikaze/banner-service --filter=@yukikaze/user-service --filter=@yukikaze/auth-service --filter=@yukikaze/social-service",
-    "docker-start:dev": "docker compose -f ./docker-compose.dev.yml up -d",
-    "docker-start:prod": "docker compose -f ./docker-compose.prod.yml up -d",
+    "docker-build:dev": "docker compose -f ./docker-compose.dev.yml build --pull --progress=plain",
+    "docker-build:prod": "docker compose -f ./docker-compose.prod.yml build --pull --progress=plain",
+    "docker-start:dev": "docker compose -f ./docker-compose.dev.yml up -d --build --pull always",
+    "docker-start:prod": "docker compose -f ./docker-compose.prod.yml up -d --build --pull always",
     "docker-stop:dev": "docker compose -f ./docker-compose.dev.yml down",
     "docker-stop:prod": "docker compose -f ./docker-compose.prod.yml down"
   },

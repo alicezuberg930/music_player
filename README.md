@@ -140,11 +140,22 @@ VITE_WEB_PUSH_PUBLIC_KEY & WEB_PUSH_PUBLIC_KEY share the same value
 
 ### To build docker images to host on render
 ```bash
-docker build -t tien1411/yukikaze_music_api:latest -f Dockerfile.services .
+docker build --pull -t tien1411/yukikaze_music_api:latest -f Dockerfile.services .
 ```
 
 ```bash
 docker push tien1411/yukikaze_music_api:latest
+```
+
+For deterministic local rebuilds with the tagged compose images, use:
+```bash
+npm run docker-build:dev
+npm run docker-start:dev
+```
+or
+```bash
+npm run docker-build:prod
+npm run docker-start:prod
 ```
 
 ## Documentation

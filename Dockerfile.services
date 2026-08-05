@@ -51,6 +51,8 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
+RUN apk add --no-cache ffmpeg
+
 COPY --from=production-dependencies --chown=node:node /app/node_modules ./node_modules
 COPY --from=runtime-files --chown=node:node /runtime/ ./
 COPY --chown=node:node docker-start-services.mjs ./docker-start-services.mjs

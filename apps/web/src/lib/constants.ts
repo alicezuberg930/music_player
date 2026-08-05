@@ -6,4 +6,8 @@ const notificationOptions = {
     options: { scope: "/", updateViaCache: "none" } as RegistrationOptions
 }
 
-export { vapidKey, pushNotificationKey, notificationOptions }
+const audioStreamUrl = (id: string) => `${import.meta.env.VITE_API_URL}/songs/stream/${id}`
+
+const videoStreamUrl = (id: string) => `${import.meta.env.VITE_API_URL}/videos/stream/${id}`
+
+export { vapidKey, pushNotificationKey, notificationOptions, audioStreamUrl, videoStreamUrl }

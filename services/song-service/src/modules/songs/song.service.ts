@@ -36,6 +36,7 @@ export class SongService {
                 const totalPages = Math.ceil(total / currentLimit)
 
                 const data = await db.query.songs.findMany({
+                    columns: { stream: false },
                     where: condition,
                     limit: currentLimit,
                     offset: (currentPage - 1) * currentLimit,
@@ -269,7 +270,8 @@ export class SongService {
     public async findSong(request: Request<{ id: string }>, response: Response) {
         try {
             const { id } = request.params
-            const data: Song | undefined = await db.query.songs.findFirst({
+            const data: Omit<Song, 'stream'> | undefined = await db.query.songs.findFirst({
+                columns: { stream: false },
                 where: eq(songs.id, id),
                 with: {
                     user: {

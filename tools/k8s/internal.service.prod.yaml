@@ -1,0 +1,215 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: yukikaze-player-app-prod
+  labels:
+    app.kubernetes.io/name: yukikaze-player-app
+    app.kubernetes.io/part-of: yukikaze-player
+    app.kubernetes.io/environment: prod
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: yukikaze-player-app
+    app.kubernetes.io/environment: prod
+  ports:
+    - port: 5173
+      targetPort: 5173
+      name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yukikaze-player-gateway-prod
+  labels:
+    app.kubernetes.io/name: yukikaze-player-gateway
+    app.kubernetes.io/part-of: yukikaze-player
+    app.kubernetes.io/environment: prod
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: yukikaze-player-gateway
+    app.kubernetes.io/environment: prod
+  ports:
+    - port: 5000
+      targetPort: 5000
+      name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yukikaze-player-home-prod
+  labels:
+    app.kubernetes.io/name: yukikaze-player-home
+    app.kubernetes.io/part-of: yukikaze-player
+    app.kubernetes.io/environment: prod
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: yukikaze-player-home
+    app.kubernetes.io/environment: prod
+  ports:
+    - port: 5001
+      targetPort: 5001
+      name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yukikaze-player-song-prod
+  labels:
+    app.kubernetes.io/name: yukikaze-player-song
+    app.kubernetes.io/part-of: yukikaze-player
+    app.kubernetes.io/environment: prod
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: yukikaze-player-song
+    app.kubernetes.io/environment: prod
+  ports:
+    - port: 5003
+      targetPort: 5003
+      name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yukikaze-player-notification-prod
+  labels:
+    app.kubernetes.io/name: yukikaze-player-notification
+    app.kubernetes.io/part-of: yukikaze-player
+    app.kubernetes.io/environment: prod
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: yukikaze-player-notification
+    app.kubernetes.io/environment: prod
+  ports:
+    - port: 5010
+      targetPort: 5010
+      name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yukikaze-player-video-prod
+  labels:
+    app.kubernetes.io/name: yukikaze-player-video
+    app.kubernetes.io/part-of: yukikaze-player
+    app.kubernetes.io/environment: prod
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: yukikaze-player-video
+    app.kubernetes.io/environment: prod
+  ports:
+    - port: 5009
+      targetPort: 5009
+      name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yukikaze-player-social-prod
+  labels:
+    app.kubernetes.io/name: yukikaze-player-social
+    app.kubernetes.io/part-of: yukikaze-player
+    app.kubernetes.io/environment: prod
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: yukikaze-player-social
+    app.kubernetes.io/environment: prod
+  ports:
+    - port: 5011
+      targetPort: 5011
+      name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yukikaze-player-auth-prod
+  labels:
+    app.kubernetes.io/name: yukikaze-player-auth
+    app.kubernetes.io/part-of: yukikaze-player
+    app.kubernetes.io/environment: prod
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: yukikaze-player-auth
+    app.kubernetes.io/environment: prod
+  ports:
+    - port: 5002
+      targetPort: 5002
+      name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yukikaze-player-artist-prod
+  labels:
+    app.kubernetes.io/name: yukikaze-player-artist
+    app.kubernetes.io/part-of: yukikaze-player
+    app.kubernetes.io/environment: prod
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: yukikaze-player-artist
+    app.kubernetes.io/environment: prod
+  ports:
+    - port: 5004
+      targetPort: 5004
+      name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yukikaze-player-banner-prod
+  labels:
+    app.kubernetes.io/name: yukikaze-player-banner
+    app.kubernetes.io/part-of: yukikaze-player
+    app.kubernetes.io/environment: prod
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: yukikaze-player-banner
+    app.kubernetes.io/environment: prod
+  ports:
+    - port: 5005
+      targetPort: 5005
+      name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yukikaze-player-playlist-prod
+  labels:
+    app.kubernetes.io/name: yukikaze-player-playlist
+    app.kubernetes.io/part-of: yukikaze-player
+    app.kubernetes.io/environment: prod
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: yukikaze-player-playlist
+    app.kubernetes.io/environment: prod
+  ports:
+    - port: 5007
+      targetPort: 5007
+      name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yukikaze-player-user-prod
+  labels:
+    app.kubernetes.io/name: yukikaze-player-user
+    app.kubernetes.io/part-of: yukikaze-player
+    app.kubernetes.io/environment: prod
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: yukikaze-player-user
+    app.kubernetes.io/environment: prod
+  ports:
+    - port: 5006
+      targetPort: 5006
+      name: http

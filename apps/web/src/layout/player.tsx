@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "@/redux/store"
 // sections
 import { useMutation } from "@tanstack/react-query"
 import { songQueries } from "@/lib/queries/song"
+import { audioStreamUrl } from "@/lib/constants"
 
 const Player: React.FC = () => {
   const dispatch = useDispatch()
@@ -181,10 +182,9 @@ const Player: React.FC = () => {
       setIsLoadingAudio(true)
 
       // Use streaming endpoint with HTTP caching
-      const streamingUrl = `${import.meta.env.VITE_API_URL}/songs/stream/${currentSong.id}`
       console.log(`Streaming: ${currentSong.title}`)
 
-      audioRef.current = new Audio(streamingUrl)
+      audioRef.current = new Audio(audioStreamUrl(currentSong.id))
       audioRef.current.load()
       audioRef.current.volume = volume / 100
       audioRef.current.oncanplaythrough = onCanPlayThrough

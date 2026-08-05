@@ -1,7 +1,7 @@
 import '@/styles/video-player.css'
 import { useEffect, useRef, useState } from 'react'
 import { formatDuration } from '@/lib/utils'
-import type { VideoPlayerProps } from './types'
+import type { MinimalHlsPlayer, VideoPlayerProps } from './types'
 import { Maximize, Minimize, PauseCircle, PictureInPicture, PlayCircle, Settings, Volume1, Volume2, VolumeOff } from '@yukikaze/ui'
 import { Popover, PopoverContent, PopoverTrigger } from '@yukikaze/ui/popover'
 
@@ -14,6 +14,7 @@ export const VideoPlayer = ({ videoUrl }: VideoPlayerProps) => {
     const timelineContainer = useRef<HTMLDivElement | null>(null)
     const videoContainer = useRef<HTMLDivElement | null>(null)
     const videoPlayer = useRef<HTMLVideoElement | null>(null)
+    const hlsInstance = useRef<MinimalHlsPlayer | null>(null)
     const previewVideo = useRef<HTMLVideoElement | null>(null)
     const previewCanvas = useRef<HTMLCanvasElement | null>(null)
     const currentTime = useRef<HTMLSpanElement | null>(null)
@@ -122,18 +123,56 @@ export const VideoPlayer = ({ videoUrl }: VideoPlayerProps) => {
         )
     }
 
-    const initializeVideoPlayer = (url: string) => {
-        if (!videoContainer.current || !videoPlayer.current) return
+    const initializeVideoPlayer = async (url: string, isCancelled: () => boolean) => {
+        if (isCancelled() || !videoContainer.current || !videoPlayer.current) return
+
         videoPlayer.current.pause()
         videoPlayer.current.currentTime = 0
+        hlsInstance.current?.destroy()
+        hlsInstance.current = null
         videoPlayer.current.removeAttribute('src')
         videoPlayer.current.load()
+
+        if (!videoPlayer.current.canPlayType('application/vnd.apple.mpegurl')) {
+            try {
+                const hlsModule = await import('hls.js')
+                const Hls = ((hlsModule as { default?: { isSupported?: () => boolean } }).default ?? (hlsModule as { Hls?: { isSupported?: () => boolean } }).Hls) as {
+                    isSupported?: () => boolean
+                    new(config?: Record<string, unknown>): MinimalHlsPlayer
+                }
+                const isSupported = Hls?.isSupported?.() ?? false
+                if (!isSupported) throw new Error('Browser does not support HLS streaming')
+
+                const hls: MinimalHlsPlayer = new Hls()
+                hlsInstance.current = hls
+                hls.attachMedia(videoPlayer.current)
+                hls.loadSource(url)
+                return
+            } catch (error) {
+                console.error('HLS fallback failed, using direct source:', error)
+            }
+        }
+
         videoPlayer.current.src = url
         videoPlayer.current.load()
     }
 
     useEffect(() => {
-        initializeVideoPlayer(videoUrl)
+        let isCancelled = false
+            ; (async () => {
+                if (isCancelled) return
+                try {
+                    await initializeVideoPlayer(videoUrl, () => isCancelled)
+                } catch (error) {
+                    if (!isCancelled) console.error('Failed to initialize video source:', error)
+                }
+            })()
+
+        return () => {
+            isCancelled = true
+            hlsInstance.current?.destroy()
+            hlsInstance.current = null
+        }
     }, [videoUrl])
 
     useEffect(() => {

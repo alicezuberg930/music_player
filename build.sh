@@ -24,8 +24,7 @@ if [ "$build_type" = "pm2" ]; then
 	bun run build:packages
 
 	# 3. Build services
-	# bun run build:services
-	turbo run build --filter=@yukikaze/playlist-service && turbo run build --filter=@yukikaze/genre-service && turbo run build --filter=@yukikaze/gateway-service && turbo run build --filter=@yukikaze/home-service && turbo run build --filter=@yukikaze/song-service && turbo run build --filter=@yukikaze/artist-service && turbo run build --filter=@yukikaze/banner-service && turbo run build --filter=@yukikaze/user-service && turbo run build --filter=@yukikaze/auth-service
+	bun run build:services
 
 	# 4. Build web
 	bun run build:web
@@ -82,8 +81,20 @@ EOF
 	echo "Removing old images"
 	docker compose -f docker-compose.prod.yml rm -f || true
 
-	echo "Building and starting containers"
-	docker compose -f 'docker-compose.prod.yml' build 'yukikaze_player_gateway_prod' && docker compose -f 'docker-compose.prod.yml' build 'yukikaze_player_song_prod' && docker compose -f 'docker-compose.prod.yml' build 'yukikaze_player_home_prod' && docker compose -f 'docker-compose.prod.yml' build 'yukikaze_player_artist_prod' && docker compose -f 'docker-compose.prod.yml' build 'yukikaze_player_auth_prod' && docker compose -f 'docker-compose.prod.yml' build 'yukikaze_player_playlist_prod' && docker compose -f 'docker-compose.prod.yml' build 'yukikaze_player_banner_prod' && docker compose -f 'docker-compose.prod.yml' build 'yukikaze_player_user_prod' && docker compose -f 'docker-compose.prod.yml' build 'yukikaze_player_app_prod'
+	echo "Building containers"
+	docker compose -f docker-compose.prod.yml build \
+		yukikaze_player_gateway_prod \
+		yukikaze_player_song_prod \
+		yukikaze_player_home_prod \
+		yukikaze_player_notification_prod \
+		yukikaze_player_video_prod \
+		yukikaze_player_social_prod \
+		yukikaze_player_artist_prod \
+		yukikaze_player_auth_prod \
+		yukikaze_player_playlist_prod \
+		yukikaze_player_banner_prod \
+		yukikaze_player_user_prod \
+		yukikaze_player_app_prod
 	
 	# docker compose -f docker-compose.prod.yml up --build -d
 

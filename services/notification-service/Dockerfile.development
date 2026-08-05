@@ -14,6 +14,6 @@ RUN bun run build:packages
 
 WORKDIR /build/services/notification-service
 
-EXPOSE 5009
+EXPOSE 5010
 
 CMD ["bun", "run", "dev"]

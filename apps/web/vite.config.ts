@@ -8,14 +8,14 @@ import ViteSitemap from 'vite-plugin-sitemap'
 export default defineConfig(async ({ mode }): Promise<UserConfig> => {
   // Load env from root folder
   const env = loadEnv(mode, path.resolve(__dirname, '../../'), '')
-  const viteEnv = env.VITE_ENV || mode
-  const hostname = env.WEB_URL
+  const viteEnv = env.VITE_ENV
+  const hostname = 'https://www.tien-music-player.site'
 
-  // Fetch static & dynamic routes from backend API
+  // // Fetch static & dynamic routes from backend API
   const dynamicRoutes: string[] = []
   if (viteEnv === 'production') {
     try {
-      const response = await fetch(`${env.VITE_API_URL}/api/v1/home/sitemap-urls`)
+      const response = await fetch(`${env.VITE_API_URL}/home/sitemap-urls`)
       const data = await response.json() as { data: string[] }
       dynamicRoutes.push(...data.data)
     } catch (error) {
@@ -56,6 +56,7 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
             'dayjs-chunk': ['dayjs'],
             // 'hls-chunk': ['hls.js'],
             'chart': ['recharts'],
+            ['dnd']: ['@dnd-kit/core', '@dnd-kit/sortable', '@dnd-kit/utilities'],
             'framer-motion-chunk': ['framer-motion'],
           },
           chunkFileNames: 'chunks/[name]-[hash].js',

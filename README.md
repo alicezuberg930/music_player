@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/github/license/alicezuberg930/music_player)](LICENSE)
 [![Contributors](https://img.shields.io/github/contributors/alicezuberg930/music_player)](https://github.com/alicezuberg930/music_player/graphs/contributors)
 
-A modern music streaming platform that enables users to discover, search, upload, and stream music from various artists. Features include personalized playlists, real-time lyrics display, artist profiles, and a seamless listening experience with high-quality audio streaming.
+A modern music streaming platform that enables users to discover, search, upload, and stream music from various artists. Features include personalized playlists, real-time lyrics display, artist profiles, real-time notifications, chat, comments, and a seamless listening experience with high-quality audio streaming.
 
 ## Tech Stack
 
@@ -106,20 +106,20 @@ A modern music streaming platform that enables users to discover, search, upload
 
 ### Docker Deployment
 
-This system is deployed using Docker Compose & Nginx reverse proxy.
+On VPS this system is deployed using Docker Compose & Nginx reverse proxy.
 
 Config files:
 
-- docker-compose.yml
+- docker-compose.prod.yml
 - tools/nginx/music-player-app.conf
 - tools/nginx/music-player-api.conf
 
-### Vercel Deployment
+### Vercel & Render Deployment
 
-The web app and dashboard can also be deployed to Vercel directly from the monorepo.
+The web app and dashboard can also be deployed to Vercel directly from the monorepo and the services can be deployed to render via built docker image.
 
 ### Env variables
-To generate VITE_WEB_PUSH_PUBLIC_KEY & WEB_PUSH_PUBLIC_KEY & WEB_PUSH_PRIVATE_KEY run 
+Notification that display at the system level is currently using native web push API. To generate VITE_WEB_PUSH_PUBLIC_KEY & WEB_PUSH_PUBLIC_KEY & WEB_PUSH_PRIVATE_KEY run 
 ```bash
 npx web-push generate-vapid-keys
 ```
@@ -136,15 +136,26 @@ Private Key:
 =======================================
 ```
 
-VITE_WEB_PUSH_PUBLIC_KEY & WEB_PUSH_PUBLIC_KEY share the same value
+VITE_WEB_PUSH_PUBLIC_KEY (on the front-end) & WEB_PUSH_PUBLIC_KEY (on the back-end) share the same value
 
-### To build docker images to host on render
+### To build docker images for hosting on render
 ```bash
-docker build -t tien1411/yukikaze_music_api:latest -f Dockerfile.services .
+docker build --pull -t tien1411/yukikaze_music_api:latest -f Dockerfile.services .
 ```
 
 ```bash
 docker push tien1411/yukikaze_music_api:latest
+```
+
+For deterministic local rebuilds with the tagged compose images, use:
+```bash
+npm run docker-build:dev
+npm run docker-start:dev
+```
+or
+```bash
+npm run docker-build:prod
+npm run docker-start:prod
 ```
 
 ## Documentation
@@ -153,6 +164,8 @@ Located in `/docs` folder:
 
 - Deployment guide
 - Project structure
+- Database structure
+- Architecture
 - Privacy Policy & Terms of Service
 
 ## License

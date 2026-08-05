@@ -16,6 +16,7 @@ services:
       - yukikaze_player_db_data:/var/lib/mysql/data
 
   yukikaze_player_app_prod:
+    image: yukikaze_player_app_prod:latest
     build: 
       context: .
       dockerfile: apps/web/Dockerfile.production
@@ -40,6 +41,10 @@ services:
         condition: service_healthy
       yukikaze_player_notification_prod:
         condition: service_healthy
+      yukikaze_player_video_prod:
+        condition: service_healthy
+      yukikaze_player_social_prod:
+        condition: service_healthy
       yukikaze_player_gateway_prod:
         condition: service_healthy
       yukikaze_player_artist_prod:
@@ -56,6 +61,7 @@ services:
       #   condition: service_healthy
 
   yukikaze_player_song_prod:
+    image: yukikaze_player_song_prod:latest
     build:
       context: .
       dockerfile: services/song-service/Dockerfile.production
@@ -80,6 +86,7 @@ services:
         condition: service_healthy
 
   yukikaze_player_home_prod:
+    image: yukikaze_player_home_prod:latest
     build:
       context: .
       dockerfile: services/home-service/Dockerfile.production
@@ -98,6 +105,7 @@ services:
         condition: service_healthy
 
   yukikaze_player_notification_prod:
+    image: yukikaze_player_notification_prod:latest
     build:
       context: .
       dockerfile: services/notification-service/Dockerfile.production
@@ -105,9 +113,54 @@ services:
     env_file: .env
     container_name: yukikaze_player_notification_prod
     ports:
+      - "5010:5010"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5010/check || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    depends_on:
+      yukikaze_player_gateway_prod:
+        condition: service_healthy
+
+  yukikaze_player_video_prod:
+    image: yukikaze_player_video_prod:latest
+    build:
+      context: .
+      dockerfile: services/video-service/Dockerfile.production
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - REDIS_HOST=redis
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+    container_name: yukikaze_player_video_prod
+    ports:
       - "5009:5009"
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:5009/check || exit 1"]
+      test: ["CMD-SHELL", "command -v ffmpeg >/dev/null 2>&1 && command -v ffprobe >/dev/null 2>&1 && curl -f http://localhost:5009/check || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    depends_on:
+      yukikaze_player_gateway_prod:
+        condition: service_healthy
+
+  yukikaze_player_social_prod:
+    image: yukikaze_player_social_prod:latest
+    build:
+      context: .
+      dockerfile: services/social-service/Dockerfile.production
+    restart: unless-stopped
+    env_file: .env
+    container_name: yukikaze_player_social_prod
+    ports:
+      - "5011:5011"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5011/check || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -117,6 +170,7 @@ services:
         condition: service_healthy
 
   yukikaze_player_gateway_prod:
+    image: yukikaze_player_gateway_prod:latest
     build:
       context: .
       dockerfile: services/gateway-service/Dockerfile.production
@@ -131,6 +185,8 @@ services:
       - ARTIST_SERVICE_HOST=yukikaze_player_artist_prod
       - PLAYLIST_SERVICE_HOST=yukikaze_player_playlist_prod
       - USER_SERVICE_HOST=yukikaze_player_user_prod
+      - VIDEO_SERVICE_HOST=yukikaze_player_video_prod
+      - SOCIAL_SERVICE_HOST=yukikaze_player_social_prod
     container_name: yukikaze_player_gateway_prod
     ports:
       - "5000:5000"
@@ -142,6 +198,7 @@ services:
       start_period: 10s
 
   yukikaze_player_artist_prod:
+    image: yukikaze_player_artist_prod:latest
     build:
       context: .
       dockerfile: services/artist-service/Dockerfile.production
@@ -165,6 +222,7 @@ services:
         condition: service_healthy
 
   yukikaze_player_auth_prod:
+    image: yukikaze_player_auth_prod:latest
     build:
       context: .
       dockerfile: services/auth-service/Dockerfile.production
@@ -184,6 +242,7 @@ services:
         condition: service_healthy
 
   yukikaze_player_banner_prod:
+    image: yukikaze_player_banner_prod:latest
     build:
       context: .
       dockerfile: services/banner-service/Dockerfile.production
@@ -207,6 +266,7 @@ services:
         condition: service_healthy
 
   yukikaze_player_playlist_prod:
+    image: yukikaze_player_playlist_prod:latest
     build:
       context: .
       dockerfile: services/playlist-service/Dockerfile.production
@@ -230,6 +290,7 @@ services:
         condition: service_healthy
 
   yukikaze_player_user_prod:
+    image: yukikaze_player_user_prod:latest
     build:
       context: .
       dockerfile: services/user-service/Dockerfile.production

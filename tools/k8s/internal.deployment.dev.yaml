@@ -1,0 +1,560 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yukikaze-player-app-dev
+  labels:
+    app.kubernetes.io/name: yukikaze-player-app
+    app.kubernetes.io/part-of: yukikaze-player
+    app.kubernetes.io/environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: yukikaze-player-app
+      app.kubernetes.io/environment: dev
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: yukikaze-player-app
+        app.kubernetes.io/part-of: yukikaze-player
+        app.kubernetes.io/environment: dev
+    spec:
+      containers:
+        - name: app
+          image: yukikaze_player_app_dev:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: yukikaze-player-secrets-dev
+            - configMapRef:
+                name: yukikaze-player-config-dev
+          ports:
+            - containerPort: 5173
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 5173
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 5173
+            initialDelaySeconds: 30
+            periodSeconds: 20
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yukikaze-player-gateway-dev
+  labels:
+    app.kubernetes.io/name: yukikaze-player-gateway
+    app.kubernetes.io/part-of: yukikaze-player
+    app.kubernetes.io/environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: yukikaze-player-gateway
+      app.kubernetes.io/environment: dev
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: yukikaze-player-gateway
+        app.kubernetes.io/part-of: yukikaze-player
+        app.kubernetes.io/environment: dev
+    spec:
+      containers:
+        - name: gateway
+          image: yukikaze_player_gateway_dev:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: yukikaze-player-secrets-dev
+            - configMapRef:
+                name: yukikaze-player-config-dev
+          env:
+            - name: HOME_SERVICE_HOST
+              value: yukikaze-player-home-dev
+            - name: NOTIFICATION_SERVICE_HOST
+              value: yukikaze-player-notification-dev
+            - name: AUTH_SERVICE_HOST
+              value: yukikaze-player-auth-dev
+            - name: SONG_SERVICE_HOST
+              value: yukikaze-player-song-dev
+            - name: BANNER_SERVICE_HOST
+              value: yukikaze-player-banner-dev
+            - name: ARTIST_SERVICE_HOST
+              value: yukikaze-player-artist-dev
+            - name: PLAYLIST_SERVICE_HOST
+              value: yukikaze-player-playlist-dev
+            - name: USER_SERVICE_HOST
+              value: yukikaze-player-user-dev
+            - name: VIDEO_SERVICE_HOST
+              value: yukikaze-player-video-dev
+            - name: SOCIAL_SERVICE_HOST
+              value: yukikaze-player-social-dev
+          ports:
+            - containerPort: 5000
+          readinessProbe:
+            httpGet:
+              path: /check
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /check
+              port: 5000
+            initialDelaySeconds: 30
+            periodSeconds: 20
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yukikaze-player-home-dev
+  labels:
+    app.kubernetes.io/name: yukikaze-player-home
+    app.kubernetes.io/part-of: yukikaze-player
+    app.kubernetes.io/environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: yukikaze-player-home
+      app.kubernetes.io/environment: dev
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: yukikaze-player-home
+        app.kubernetes.io/part-of: yukikaze-player
+        app.kubernetes.io/environment: dev
+    spec:
+      containers:
+        - name: home
+          image: yukikaze_player_home_dev:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: yukikaze-player-secrets-dev
+            - configMapRef:
+                name: yukikaze-player-config-dev
+          ports:
+            - containerPort: 5001
+          readinessProbe:
+            httpGet:
+              path: /check
+              port: 5001
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /check
+              port: 5001
+            initialDelaySeconds: 30
+            periodSeconds: 20
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yukikaze-player-song-dev
+  labels:
+    app.kubernetes.io/name: yukikaze-player-song
+    app.kubernetes.io/part-of: yukikaze-player
+    app.kubernetes.io/environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: yukikaze-player-song
+      app.kubernetes.io/environment: dev
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: yukikaze-player-song
+        app.kubernetes.io/part-of: yukikaze-player
+        app.kubernetes.io/environment: dev
+    spec:
+      containers:
+        - name: song
+          image: yukikaze_player_song_dev:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: yukikaze-player-secrets-dev
+            - configMapRef:
+                name: yukikaze-player-config-dev
+          ports:
+            - containerPort: 5003
+          readinessProbe:
+            httpGet:
+              path: /check
+              port: 5003
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /check
+              port: 5003
+            initialDelaySeconds: 30
+            periodSeconds: 20
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yukikaze-player-notification-dev
+  labels:
+    app.kubernetes.io/name: yukikaze-player-notification
+    app.kubernetes.io/part-of: yukikaze-player
+    app.kubernetes.io/environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: yukikaze-player-notification
+      app.kubernetes.io/environment: dev
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: yukikaze-player-notification
+        app.kubernetes.io/part-of: yukikaze-player
+        app.kubernetes.io/environment: dev
+    spec:
+      containers:
+        - name: notification
+          image: yukikaze_player_notification_dev:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: yukikaze-player-secrets-dev
+            - configMapRef:
+                name: yukikaze-player-config-dev
+          ports:
+            - containerPort: 5010
+          readinessProbe:
+            httpGet:
+              path: /check
+              port: 5010
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /check
+              port: 5010
+            initialDelaySeconds: 30
+            periodSeconds: 20
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yukikaze-player-video-dev
+  labels:
+    app.kubernetes.io/name: yukikaze-player-video
+    app.kubernetes.io/part-of: yukikaze-player
+    app.kubernetes.io/environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: yukikaze-player-video
+      app.kubernetes.io/environment: dev
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: yukikaze-player-video
+        app.kubernetes.io/part-of: yukikaze-player
+        app.kubernetes.io/environment: dev
+    spec:
+      containers:
+        - name: video
+          image: yukikaze_player_video_dev:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: yukikaze-player-secrets-dev
+            - configMapRef:
+                name: yukikaze-player-config-dev
+          ports:
+            - containerPort: 5009
+          readinessProbe:
+            httpGet:
+              path: /check
+              port: 5009
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /check
+              port: 5009
+            initialDelaySeconds: 30
+            periodSeconds: 20
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yukikaze-player-social-dev
+  labels:
+    app.kubernetes.io/name: yukikaze-player-social
+    app.kubernetes.io/part-of: yukikaze-player
+    app.kubernetes.io/environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: yukikaze-player-social
+      app.kubernetes.io/environment: dev
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: yukikaze-player-social
+        app.kubernetes.io/part-of: yukikaze-player
+        app.kubernetes.io/environment: dev
+    spec:
+      containers:
+        - name: social
+          image: yukikaze_player_social_dev:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: yukikaze-player-secrets-dev
+            - configMapRef:
+                name: yukikaze-player-config-dev
+          ports:
+            - containerPort: 5011
+          readinessProbe:
+            httpGet:
+              path: /check
+              port: 5011
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /check
+              port: 5011
+            initialDelaySeconds: 30
+            periodSeconds: 20
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yukikaze-player-auth-dev
+  labels:
+    app.kubernetes.io/name: yukikaze-player-auth
+    app.kubernetes.io/part-of: yukikaze-player
+    app.kubernetes.io/environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: yukikaze-player-auth
+      app.kubernetes.io/environment: dev
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: yukikaze-player-auth
+        app.kubernetes.io/part-of: yukikaze-player
+        app.kubernetes.io/environment: dev
+    spec:
+      containers:
+        - name: auth
+          image: yukikaze_player_auth_dev:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: yukikaze-player-secrets-dev
+            - configMapRef:
+                name: yukikaze-player-config-dev
+          ports:
+            - containerPort: 5002
+          readinessProbe:
+            httpGet:
+              path: /check
+              port: 5002
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /check
+              port: 5002
+            initialDelaySeconds: 30
+            periodSeconds: 20
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yukikaze-player-artist-dev
+  labels:
+    app.kubernetes.io/name: yukikaze-player-artist
+    app.kubernetes.io/part-of: yukikaze-player
+    app.kubernetes.io/environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: yukikaze-player-artist
+      app.kubernetes.io/environment: dev
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: yukikaze-player-artist
+        app.kubernetes.io/part-of: yukikaze-player
+        app.kubernetes.io/environment: dev
+    spec:
+      containers:
+        - name: artist
+          image: yukikaze_player_artist_dev:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: yukikaze-player-secrets-dev
+            - configMapRef:
+                name: yukikaze-player-config-dev
+          ports:
+            - containerPort: 5004
+          readinessProbe:
+            httpGet:
+              path: /check
+              port: 5004
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /check
+              port: 5004
+            initialDelaySeconds: 30
+            periodSeconds: 20
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yukikaze-player-banner-dev
+  labels:
+    app.kubernetes.io/name: yukikaze-player-banner
+    app.kubernetes.io/part-of: yukikaze-player
+    app.kubernetes.io/environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: yukikaze-player-banner
+      app.kubernetes.io/environment: dev
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: yukikaze-player-banner
+        app.kubernetes.io/part-of: yukikaze-player
+        app.kubernetes.io/environment: dev
+    spec:
+      containers:
+        - name: banner
+          image: yukikaze_player_banner_dev:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: yukikaze-player-secrets-dev
+            - configMapRef:
+                name: yukikaze-player-config-dev
+          ports:
+            - containerPort: 5005
+          readinessProbe:
+            httpGet:
+              path: /check
+              port: 5005
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /check
+              port: 5005
+            initialDelaySeconds: 30
+            periodSeconds: 20
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yukikaze-player-playlist-dev
+  labels:
+    app.kubernetes.io/name: yukikaze-player-playlist
+    app.kubernetes.io/part-of: yukikaze-player
+    app.kubernetes.io/environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: yukikaze-player-playlist
+      app.kubernetes.io/environment: dev
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: yukikaze-player-playlist
+        app.kubernetes.io/part-of: yukikaze-player
+        app.kubernetes.io/environment: dev
+    spec:
+      containers:
+        - name: playlist
+          image: yukikaze_player_playlist_dev:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: yukikaze-player-secrets-dev
+            - configMapRef:
+                name: yukikaze-player-config-dev
+          ports:
+            - containerPort: 5007
+          readinessProbe:
+            httpGet:
+              path: /check
+              port: 5007
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /check
+              port: 5007
+            initialDelaySeconds: 30
+            periodSeconds: 20
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yukikaze-player-user-dev
+  labels:
+    app.kubernetes.io/name: yukikaze-player-user
+    app.kubernetes.io/part-of: yukikaze-player
+    app.kubernetes.io/environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: yukikaze-player-user
+      app.kubernetes.io/environment: dev
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: yukikaze-player-user
+        app.kubernetes.io/part-of: yukikaze-player
+        app.kubernetes.io/environment: dev
+    spec:
+      containers:
+        - name: user
+          image: yukikaze_player_user_dev:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: yukikaze-player-secrets-dev
+            - configMapRef:
+                name: yukikaze-player-config-dev
+          ports:
+            - containerPort: 5006
+          readinessProbe:
+            httpGet:
+              path: /check
+              port: 5006
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /check
+              port: 5006
+            initialDelaySeconds: 30
+            periodSeconds: 20

@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: yukikaze-player-ingress-prod
+  labels:
+    app.kubernetes.io/name: yukikaze-player
+    app.kubernetes.io/part-of: yukikaze-player
+    app.kubernetes.io/environment: prod
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: yukikaze-player-gateway-prod
+                port:
+                  number: 5000
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: yukikaze-player-app-prod
+                port:
+                  number: 5173

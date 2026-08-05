@@ -1,52 +1,45 @@
-FROM oven/bun:1-alpine AS base
+ARG BUN_VERSION=1.3.4
 
-# Stage 1: prune application dependencies
+FROM oven/bun:${BUN_VERSION}-alpine AS base
+
 FROM base AS prepare
 WORKDIR /prune
 
-RUN bun install -g turbo
+RUN bun install --global turbo@2.6.3
 
 COPY . .
-RUN turbo prune @yukikaze/song-service --docker
+RUN turbo prune @yukikaze/video-service --docker
 
-# Stage 2: Build application
 FROM base AS builder
-
 WORKDIR /build
-COPY --from=prepare /prune/out/json ./
-RUN bun install
-COPY --from=prepare /prune/out/full ./
 
-# Build packages and API
+COPY --from=prepare /prune/out/json ./
+COPY --from=prepare /prune/out/bun.lock ./bun.lock
+RUN bun install --frozen-lockfile
+
+COPY --from=prepare /prune/out/full ./
 RUN bun run build
 
-# Install only production dependencies for final image
-RUN rm -rf node_modules && bun install --production
+RUN rm -rf node_modules && bun install --production --frozen-lockfile
 
-# Stage 3:Production image
-FROM base AS runner
+FROM node:22-alpine AS runner
 WORKDIR /app
 
-# Install curl for healthchecks
-RUN apk add --no-cache curl
+ENV NODE_ENV=production
 
-# Run as non-root user for security
+RUN apk add --no-cache curl ffmpeg
 RUN addgroup --system --gid 1001 yukikaze && \
-    adduser --system --uid 1001 web
+    adduser --system --uid 1001 video
 
-# Copy workspace dependencies and built packages
-COPY --from=builder --chown=web:yukikaze /build/node_modules ./node_modules
-COPY --from=builder --chown=web:yukikaze /build/packages ./packages
-COPY --from=builder --chown=web:yukikaze /build/services/song-service/dist ./dist
-COPY --from=prepare --chown=web:yukikaze /prune/ca.pem ./
+COPY --from=builder --chown=video:yukikaze /build/node_modules ./node_modules
+COPY --from=builder --chown=video:yukikaze /build/packages ./packages
+COPY --from=builder --chown=video:yukikaze /build/services/video-service/dist ./dist
+COPY --from=prepare --chown=video:yukikaze /prune/ca.pem ./ca.pem
 
-# Create uploads directory with correct permissions
-RUN mkdir -p uploads && chown -R web:yukikaze uploads
+RUN mkdir -p uploads && chown video:yukikaze uploads
 
-USER web
+USER video
 
-# Expose the port the app runs on
-EXPOSE 5003
+EXPOSE 5009
 
-# Start the application
-CMD ["bun", "dist/index.js"]
+CMD ["node", "dist/index.js"]

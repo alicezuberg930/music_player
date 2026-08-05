@@ -33,9 +33,11 @@ RUN addgroup --system --gid 1001 yukikaze && \
 COPY --from=builder --chown=notification:yukikaze /build/node_modules ./node_modules
 COPY --from=builder --chown=notification:yukikaze /build/packages ./packages
 COPY --from=builder --chown=notification:yukikaze /build/services/notification-service/dist ./dist
+COPY --from=prepare --chown=notification:yukikaze /prune/ca.pem ./ca.pem
+COPY --from=prepare --chown=notification:yukikaze /prune/kafka-ca.pem ./kafka-ca.pem
 
 USER notification
 
-EXPOSE 5009
+EXPOSE 5010
 
 CMD ["node", "dist/index.js"]

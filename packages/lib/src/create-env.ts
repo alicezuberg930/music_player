@@ -95,5 +95,6 @@ export const env = {
     WEB_PUSH_SUBJECT: process.env.WEB_PUSH_SUBJECT,
     WEB_PUSH_PUBLIC_KEY: process.env.WEB_PUSH_PUBLIC_KEY,
     WEB_PUSH_PRIVATE_KEY: process.env.WEB_PUSH_PRIVATE_KEY,
-
+    // mixed
+    WEB_URL: process.env.WEB_URL
 }

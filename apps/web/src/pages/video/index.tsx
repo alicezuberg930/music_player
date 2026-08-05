@@ -1,11 +1,8 @@
-import { useEffect, useRef, useState } from "react"
-import { Link, useParams } from "@tanstack/react-router"
-// import Hls from "hls.js"
-import { formatDuration } from "@/lib/utils"
-import type { Video } from "@/@types/video"
+import { useParams } from "@tanstack/react-router"
 import { useQuery } from "@tanstack/react-query"
 import { videoQueries } from "@/lib/queries/video"
 import { VideoPlayer } from "@/components/video-player/video-player"
+import { videoStreamUrl } from "@/lib/constants"
 // import { useMobile } from "@/hooks/useMobile"
 
 // var hls: Hls | null = null
@@ -24,7 +21,7 @@ const VideoPage = () => {
 
     return (
         <div className={`all-container w-full bg-purple-950 py-10 gap-6 ${'h-screen flex justify-between px-5'}`}>
-            {data && (<VideoPlayer videoUrl={data.stream} />)}
+            {data && (<VideoPlayer videoUrl={videoStreamUrl(data.id)} />)}
             <div className={`overflow-x-scroll text-white rounded-md h-[90%] max-h-[90%] ${'bg-[rgba(255,255,255,0.1)] w-1/4'}`}>
                 <div className="p-4">
                     <span className="font-bold text-lg">Danh sách phát</span>

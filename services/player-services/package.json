@@ -11,7 +11,9 @@
     "@yukikaze/home-service": "workspace:*",
     "@yukikaze/notification-service": "workspace:*",
     "@yukikaze/playlist-service": "workspace:*",
+    "@yukikaze/social-service": "workspace:*",
     "@yukikaze/song-service": "workspace:*",
-    "@yukikaze/user-service": "workspace:*"
+    "@yukikaze/user-service": "workspace:*",
+    "@yukikaze/video-service": "workspace:*"
   }
 }

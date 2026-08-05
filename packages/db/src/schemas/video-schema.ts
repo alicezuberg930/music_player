@@ -2,7 +2,7 @@ import { index, mysqlTable, int, varchar, boolean, text, date } from "drizzle-or
 import { createdAt, updatedAt } from "../utils"
 import { createId } from "@yukikaze/lib/create-cuid"
 import { relations } from "drizzle-orm"
-import { artistsVideos, users } from "./"
+import { artistsVideos, users } from "."
 
 export const videos = mysqlTable("videos", {
     id: varchar({ length: 36 }).primaryKey().notNull().$defaultFn(() => createId()),

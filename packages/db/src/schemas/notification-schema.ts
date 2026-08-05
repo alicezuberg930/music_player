@@ -2,7 +2,7 @@ import { relations } from "drizzle-orm"
 import { boolean, index, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core"
 import { createId } from "@yukikaze/lib/create-cuid"
 import { createdAt, updatedAt } from "../utils"
-import { users } from "./"
+import { users } from "."
 
 export const notifications = mysqlTable("notifications", {
     id: varchar({ length: 36 }).primaryKey().notNull().$defaultFn(() => createId()),

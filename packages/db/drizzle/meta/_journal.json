@@ -134,6 +134,13 @@
       "when": 1785306925480,
       "tag": "0019_dazzling_gorilla_man",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "5",
+      "when": 1785920739702,
+      "tag": "0020_new_vanisher",
+      "breakpoints": true
     }
   ]
 }

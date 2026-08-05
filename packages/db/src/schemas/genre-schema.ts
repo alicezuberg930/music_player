@@ -2,7 +2,7 @@ import { varchar, mysqlTable, type AnyMySqlColumn, foreignKey, text } from "driz
 import { createdAt, updatedAt } from "../utils"
 import { createId } from "@yukikaze/lib/create-cuid"
 import { relations } from "drizzle-orm"
-import { songGenres } from "./song.schema"
+import { songGenres } from "."
 
 // genres table
 export const genres = mysqlTable("genres", {

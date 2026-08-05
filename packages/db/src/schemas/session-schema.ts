@@ -2,7 +2,7 @@ import { index, mysqlTable, int, varchar, boolean, text, date } from "drizzle-or
 import { createdAt, updatedAt } from "../utils"
 import { createId } from "@yukikaze/lib/create-cuid"
 import { relations } from "drizzle-orm"
-import { users } from "./"
+import { users } from "."
 
 // session table
 export const sessions = mysqlTable("sessions", {

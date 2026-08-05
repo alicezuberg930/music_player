@@ -1,5 +1,5 @@
 import { varchar, index, mysqlTable, int } from "drizzle-orm/mysql-core"
-import { songs, artists } from "./"
+import { songs, artists } from "."
 import { relations } from "drizzle-orm"
 
 export const artistsSongs = mysqlTable("artists_songs", {

@@ -7,6 +7,7 @@ export * from './song'
 export * from './user'
 export * from './video'
 export * from './notification'
+export * from './comment'
 
 export type Query = {
     page?: number

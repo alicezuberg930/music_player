@@ -8,7 +8,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@yukikaze/ui/tooltip"
 import VolumeSlider from "./volume-slider"
 import LyricsDrawer from "./lyrics-drawer"
 // icons
-import { Ellipsis, Heart, MicVocal, MusicIcon, PauseCircle, PlayCircle, Repeat, Repeat1, Shuffle, SkipBack, SkipForward } from "@yukikaze/ui"
+import { Ellipsis, Heart, MusicIcon, PauseCircle, PlayCircle, Repeat, Repeat1, Shuffle, SkipBack, SkipForward } from "@yukikaze/ui"
 // utils
 import { formatDuration } from "@/lib/utils"
 // redux
@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "@/redux/store"
 import { useMutation } from "@tanstack/react-query"
 import { songQueries } from "@/lib/queries/song"
 import { audioStreamUrl } from "@/lib/constants"
+import CommentDrawer from "./comment-drawer"
 
 const Player: React.FC = () => {
   const dispatch = useDispatch()
@@ -398,7 +399,7 @@ const Player: React.FC = () => {
               <div
                 ref={thumbRef}
                 className="absolute top-0 left-0 bottom-0 h-full bg-primary rounded-full"
-              ></div>
+              />
             </button>
             <Typography className="font-semibold text-gray-700 m-0">
               {formatDuration(currentSong?.duration ?? 0)}
@@ -406,8 +407,8 @@ const Player: React.FC = () => {
           </div>
         </div>
         <div className="flex-1 items-center gap-4 hidden md:flex justify-end">
+          <CommentDrawer />
           <LyricsDrawer
-            drawerTrigger={<MicVocal size={20} />}
             audioRef={audioRef}
           />
           <VolumeSlider volume={volume} setVolume={setVolume} />

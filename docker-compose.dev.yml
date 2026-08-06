@@ -13,7 +13,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - yukikaze_player_db_data:/var/lib/mysql/data
+      - yukikaze_player_db_data:/var/lib/mysql
 
   yukikaze_player_app_dev:
     image: yukikaze_player_app_dev:latest

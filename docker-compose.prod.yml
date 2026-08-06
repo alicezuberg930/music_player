@@ -3,17 +3,18 @@ services:
     image: mysql:9
     container_name: yukikaze_player_db
     environment:
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_HOST=${MYSQL_HOST}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_PORT=${MYSQL_PORT}
-      - MYSQL_SSL_MODE=${MYSQL_SSL_MODE}
-      - MYSQL_USER=${MYSQL_USER}
-    env_file: .env
+      - MYSQL_ROOT_PASSWORD=test
+      - MYSQL_DATABASE=test
+      # - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_PASSWORD=test
+      # - MYSQL_PORT=${MYSQL_PORT}
+      # - MYSQL_SSL_MODE=${MYSQL_SSL_MODE}
+      - MYSQL_USER=test
+    # env_file: .env
     ports:
       - "3306:3306"
     volumes:
-      - yukikaze_player_db_data:/var/lib/mysql/data
+      - yukikaze_player_db_data:/var/lib/mysql
 
   yukikaze_player_app_prod:
     image: yukikaze_player_app_prod:latest

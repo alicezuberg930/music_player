@@ -11,13 +11,13 @@ import {
 import { useSelector } from "@/redux/store"
 import { Typography } from "@yukikaze/ui/typography"
 import { Button } from "@yukikaze/ui/button"
+import { MicVocal } from "@yukikaze/ui"
 
 type Props = {
-  drawerTrigger: React.ReactNode
   audioRef: React.RefObject<HTMLAudioElement | null>
 }
 
-const LyricsDrawer: React.FC<Props> = ({ drawerTrigger, audioRef }) => {
+const LyricsDrawer: React.FC<Props> = ({ audioRef }) => {
   const { currentSong } = useSelector((state) => state.music)
   const [lyrics, setLyrics] = React.useState<string>("")
   const [currentTime, setCurrentTime] = React.useState(0)
@@ -62,7 +62,7 @@ const LyricsDrawer: React.FC<Props> = ({ drawerTrigger, audioRef }) => {
           <Button variant="ghost" size="icon-sm" aria-label="Open lyrics" />
         }
       >
-        {drawerTrigger}
+        <MicVocal size={20} />
       </DrawerTrigger>
       <DrawerContent className="bg-white/70 backdrop-blur-lg">
         <div className="mx-auto w-full h-screen max-w-6xl relative">

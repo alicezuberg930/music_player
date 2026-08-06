@@ -4,7 +4,7 @@ export namespace SocialValidators {
     export const createCommentInput = z.object({
         songId: z.string('songId is required'),
         content: z.string('Content is required').min(1, 'Content must not be empty'),
-        parent_comment_id: z.string().optional(),
+        parentCommentId: z.string().optional(),
     })
     export type CreateCommentInput = z.infer<typeof createCommentInput>
 

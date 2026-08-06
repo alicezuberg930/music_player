@@ -46,16 +46,16 @@ export class CommentService {
 
     public async createComment(request: Request<{}, {}, SocialValidators.CreateCommentInput>, response: Response) {
         try {
-            const { songId, content, parent_comment_id } = request.body
+            const { songId, content, parentCommentId } = request.body
             const userId = request.userId
             if (!userId) throw new BadRequestException("User is required")
 
-            const parent = parent_comment_id && await db.query.comments.findFirst({
-                where: and(eq(comments.id, parent_comment_id), eq(comments.songId, songId)),
+            const parent = parentCommentId && await db.query.comments.findFirst({
+                where: and(eq(comments.id, parentCommentId), eq(comments.songId, songId)),
                 columns: { id: true },
             })
 
-            if (parent_comment_id && !parent) {
+            if (parentCommentId && !parent) {
                 throw new BadRequestException("Parent comment not found")
             }
 
@@ -76,7 +76,7 @@ export class CommentService {
                 userId,
                 songId,
                 content,
-                ...(parent_comment_id ? { parentCommentId: parent_comment_id } : {}),
+                ...(parentCommentId ? { parentCommentId: parentCommentId } : {}),
             }).$returningId()
 
             if (!insertedComment) {
@@ -85,15 +85,15 @@ export class CommentService {
 
             await db.update(songs).set({ comments: sql`${songs.comments} + 1` }).where(eq(songs.id, songId))
 
-            if (parent_comment_id) {
-                const participantIds = await this.collectThreadUserIds(parent_comment_id)
+            if (parentCommentId) {
+                const participantIds = await this.collectThreadUserIds(parentCommentId)
                 const recipients = participantIds.filter((id) => id !== userId)
                 if (recipients.length > 0) {
                     const payload: CommentReplyEvent = {
                         type: "comment.reply.created",
                         commentId: insertedComment.id!,
                         songId,
-                        parentCommentId: parent_comment_id,
+                        parentCommentId,
                         actorUserId: userId,
                         actorFullName: actor.fullname,
                         content,

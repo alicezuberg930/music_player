@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "2984434a-3124-472c-b76b-d6cec7b7015a",
+  "id": "8f104a6e-99c9-4252-bdad-ec8fd153946a",
   "prevId": "3d477043-4b1c-43ec-a217-b1271f58a498",
   "tables": {
     "artist_followers": {

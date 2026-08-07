@@ -11,6 +11,7 @@ import { queryClient } from '@/providers/query-client-provider'
 export const keys = {
   all: (opts: QueryVideo) => ['videos', opts],
   one: (id: string) => ['videos', id],
+  stream: (id: string) => ['videos', 'stream', id],
   create: () => ['videos', 'create'],
   update: () => ['videos', 'update'],
   delete: () => ['videos', 'delete'],
@@ -31,6 +32,20 @@ export const videoQueries = () => ({
         getNextPageParam: (lastPage, _allPages, lastPageParam) => {
           return lastPage.paginate!.totalPages > lastPageParam + 1 ? lastPageParam + 1 : undefined
         }
+      }),
+  },
+
+  stream: {
+    queryOptions: (id: string) =>
+      queryOptions({
+        queryKey: keys.stream(id),
+        queryFn: async () => {
+          const { data } = await httpClient.get<Response<Video>>(
+            `/videos/stream/${id}`
+          )
+          return data
+        },
+        enabled: !!id,
       }),
   },
 

@@ -1,16 +1,40 @@
+import { useEffect, useState } from 'react'
 import { useParams } from "@tanstack/react-router"
 import { useQuery } from "@tanstack/react-query"
 import { videoQueries } from "@/lib/queries/video"
 import { VideoPlayer } from "@/components/video-player/video-player"
-import { videoStreamUrl } from "@/lib/constants"
-// import { useMobile } from "@/hooks/useMobile"
-
-// var hls: Hls | null = null
 
 const VideoPage = () => {
     const { id } = useParams({ strict: false })
     const { data } = useQuery(videoQueries().one.queryOptions(id))
-    // const isMobile = useMobile()
+    const [videoUrl, setVideoUrl] = useState<string | null>(null)
+
+    useEffect(() => {
+        if (!id) return
+
+        let isCancelled = false
+        const controller = new AbortController()
+
+        fetch(`${import.meta.env.VITE_API_URL}/videos/stream/${id}`, {
+            signal: controller.signal,
+            headers: { Accept: 'application/json' },
+        })
+            .then(async (response) => {
+                if (!response.ok) throw new Error('Failed to resolve video stream URL')
+                const payload = await response.json() as { url?: string }
+                if (!isCancelled && typeof payload.url === 'string' && payload.url) {
+                    setVideoUrl(payload.url)
+                }
+            })
+            .catch((error) => {
+                if (!isCancelled) console.error('Failed to resolve video stream URL:', error)
+            })
+
+        return () => {
+            isCancelled = true
+            controller.abort()
+        }
+    }, [id])
 
     // const toggleTheaterMode = () => {
     //     if (!videoContainer.current || !videoPlayer.current) return
@@ -21,7 +45,7 @@ const VideoPage = () => {
 
     return (
         <div className={`all-container w-full bg-purple-950 py-10 gap-6 ${'h-screen flex justify-between px-5'}`}>
-            {data && (<VideoPlayer videoUrl={videoStreamUrl(data.id)} />)}
+            {data && videoUrl && (<VideoPlayer videoUrl={videoUrl} />)}
             <div className={`overflow-x-scroll text-white rounded-md h-[90%] max-h-[90%] ${'bg-[rgba(255,255,255,0.1)] w-1/4'}`}>
                 <div className="p-4">
                     <span className="font-bold text-lg">Danh sách phát</span>

@@ -22,6 +22,29 @@
     display: none;
 }
 
+.buffered-segments,
+.played-progress {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.buffered-segments {
+    z-index: 1;
+}
+
+.played-progress {
+    z-index: 2;
+    background-color: purple;
+}
+
+.buffered-segment {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
 .timeline-container.scrubbing .timeline,
 .timeline-container:hover .timeline {
     height: 100%;
@@ -32,17 +55,8 @@
     display: block;
 }
 
-.timeline::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: calc(100% - var(--progress-position)*100%);
-    background-color: purple;
-}
-
 .thumb-indicator {
+    z-index: 3;
     scale: 0;
     position: absolute;
     transform: translateX(-50%) scale(var(--scale));

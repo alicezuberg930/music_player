@@ -1,7 +1,7 @@
 // lib
 import type { Request, Response } from 'express'
 import fs from 'node:fs'
-import NodeID3 from 'node-id3'
+import path from 'node:path'
 import { cached, invalidateCache } from "@yukikaze/redis"
 // database
 import { db, eq, inArray, and, like, or } from '@yukikaze/db'
@@ -13,7 +13,7 @@ import { deleteFile, extractPublicId, uploadFile } from "@yukikaze/upload"
 import { createId } from "@yukikaze/lib/create-cuid"
 import { resizeImageToBuffer } from '@yukikaze/lib/image-resize'
 import { VideoValidators } from '@yukikaze/validator'
-import { resolveQuality, resolveAdaptiveStream } from '../../lib/adaptive-streaming'
+
 
 export class VideoService {
     public async getVideos(request: Request<{}, {}, {}, VideoValidators.QueryVideoParams>, response: Response) {
@@ -304,20 +304,21 @@ export class VideoService {
             const { id } = request.params
             const findVideo = await db.query.videos.findFirst({ where: eq(videos.id, id), columns: { stream: true } })
             if (!findVideo || !findVideo.stream) throw new NotFoundException('Video not found')
-            const { quality } = request.query
-            const maxQuality = resolveQuality(quality as string | undefined)
-            const responsePayload = await resolveAdaptiveStream({
-                videoId: id,
-                sourceUrl: findVideo.stream,
-                requestPath: request.path,
-                maxQuality,
-                resource: typeof request.query.resource === 'string' ? request.query.resource : undefined,
-            })
-            response.writeHead(200, {
-                'Content-Type': responsePayload.contentType,
-                'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
-            })
-            response.send(responsePayload.body)
+
+            const serviceRoot = path.resolve(__dirname, '..', '..', '..')
+            const manifestPath = path.join(serviceRoot, 'tmp', 'adaptive-streams', id, 'auto', 'master.m3u8')
+            if (!fs.existsSync(manifestPath)) throw new NotFoundException('Video manifest not found')
+
+            const forwardedProto = typeof request.headers['x-forwarded-proto'] === 'string'
+                ? request.headers['x-forwarded-proto'].split(',')[0]
+                : undefined
+            const protocol = forwardedProto ?? request.protocol
+            const forwardedHost = typeof request.headers['x-forwarded-host'] === 'string'
+                ? request.headers['x-forwarded-host'].split(',')[0]
+                : undefined
+            const url = `${protocol}://${forwardedHost}/api/v1/videos/tmp/adaptive-streams/${id}/auto/master.m3u8`
+
+            return response.json({ url })
         } catch (error) {
             if (response.headersSent) return
             if (error instanceof HttpException) throw error

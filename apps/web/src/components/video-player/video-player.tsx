@@ -17,6 +17,8 @@ export const VideoPlayer = ({ videoUrl }: VideoPlayerProps) => {
     const hlsInstance = useRef<MinimalHlsPlayer | null>(null)
     const previewVideo = useRef<HTMLVideoElement | null>(null)
     const previewCanvas = useRef<HTMLCanvasElement | null>(null)
+    const timelinePlayedProgress = useRef<HTMLDivElement | null>(null)
+    const bufferedSegments = useRef<HTMLDivElement | null>(null)
     const currentTime = useRef<HTMLSpanElement | null>(null)
     const isScrubbing = useRef<boolean>(false)
 
@@ -123,17 +125,52 @@ export const VideoPlayer = ({ videoUrl }: VideoPlayerProps) => {
         )
     }
 
+    const updateTimelineProgress = () => {
+        if (!videoPlayer.current || !timelineContainer.current || !timelinePlayedProgress.current || !bufferedSegments.current) return
+
+        const duration = videoPlayer.current.duration
+        const currentTimeValue = videoPlayer.current.currentTime
+        const progressPercent = Number.isFinite(duration) && duration > 0
+            ? (currentTimeValue / duration) * 100
+            : 0
+
+        timelineContainer.current.style.setProperty('--progress-position', (progressPercent / 100).toString())
+        timelinePlayedProgress.current.style.width = `${Math.min(100, Math.max(0, progressPercent))}%`
+
+        bufferedSegments.current.replaceChildren()
+        if (!Number.isFinite(duration) || duration <= 0 || videoPlayer.current.buffered.length === 0) return
+
+        const fragment = document.createDocumentFragment()
+        for (let index = 0; index < videoPlayer.current.buffered.length; index += 1) {
+            const start = videoPlayer.current.buffered.start(index)
+            const end = videoPlayer.current.buffered.end(index)
+            if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start) continue
+
+            const segment = document.createElement('div')
+            segment.className = 'buffered-segment'
+            segment.style.left = `${(start / duration) * 100}%`
+            segment.style.width = `${((end - start) / duration) * 100}%`
+            fragment.appendChild(segment)
+        }
+
+        bufferedSegments.current.appendChild(fragment)
+    }
+
     const initializeVideoPlayer = async (url: string, isCancelled: () => boolean) => {
         if (isCancelled() || !videoContainer.current || !videoPlayer.current) return
 
+        const nativeCanPlay = videoPlayer.current.canPlayType('application/vnd.apple.mpegurl')
+        console.log('[VideoPlayer] native HLS canPlayType:', nativeCanPlay)
+
         videoPlayer.current.pause()
         videoPlayer.current.currentTime = 0
-        hlsInstance.current?.destroy()
-        hlsInstance.current = null
         videoPlayer.current.removeAttribute('src')
         videoPlayer.current.load()
 
-        if (!videoPlayer.current.canPlayType('application/vnd.apple.mpegurl')) {
+        hlsInstance.current?.destroy()
+        hlsInstance.current = null
+
+        if (!nativeCanPlay) {
             try {
                 const hlsModule = await import('hls.js')
                 const Hls = ((hlsModule as { default?: { isSupported?: () => boolean } }).default ?? (hlsModule as { Hls?: { isSupported?: () => boolean } }).Hls) as {
@@ -141,16 +178,27 @@ export const VideoPlayer = ({ videoUrl }: VideoPlayerProps) => {
                     new(config?: Record<string, unknown>): MinimalHlsPlayer
                 }
                 const isSupported = Hls?.isSupported?.() ?? false
+                console.log('[VideoPlayer] hls.js isSupported:', isSupported)
                 if (!isSupported) throw new Error('Browser does not support HLS streaming')
 
                 const hls: MinimalHlsPlayer = new Hls()
                 hlsInstance.current = hls
+                try {
+                    // attach basic error logging for hls.js
+                    ; (hls as any).on?.((Hls as any).Events?.ERROR ?? 'error', (event: any, data: any) => {
+                        console.error('[hls.js] ERROR event:', event, data)
+                    })
+                } catch (e) {
+                    // ignore if attaching logging fails
+                }
                 hls.attachMedia(videoPlayer.current)
                 hls.loadSource(url)
                 return
             } catch (error) {
-                console.error('HLS fallback failed, using direct source:', error)
+                console.error('[VideoPlayer] HLS fallback failed, using direct source:', error)
             }
+        } else {
+            console.log('[VideoPlayer] Browser supports native HLS; using native playback')
         }
 
         videoPlayer.current.src = url
@@ -181,11 +229,15 @@ export const VideoPlayer = ({ videoUrl }: VideoPlayerProps) => {
             setIsFullscreen(document.fullscreenElement === videoContainer.current)
         }
         const handleUpdateTime = () => {
-            const percent = (videoPlayer.current?.currentTime || 0) / (videoPlayer.current?.duration || Infinity)
-            timelineContainer.current?.style.setProperty('--progress-position', percent.toString())
+            updateTimelineProgress()
             currentTime.current!.innerText = formatDuration(Math.floor(videoPlayer.current?.currentTime ?? 0))
         }
         videoPlayer.current.addEventListener('timeupdate', handleUpdateTime)
+        videoPlayer.current.addEventListener('progress', updateTimelineProgress)
+        videoPlayer.current.addEventListener('loadedmetadata', updateTimelineProgress)
+        videoPlayer.current.addEventListener('canplay', updateTimelineProgress)
+        videoPlayer.current.addEventListener('playing', updateTimelineProgress)
+        videoPlayer.current.addEventListener('seeked', updateTimelineProgress)
         timelineContainer.current?.addEventListener('mousemove', handleVideoPlaying)
         timelineContainer.current?.addEventListener('mousedown', toggleScrubbing)
         document.addEventListener('fullscreenchange', handleFullscreenChange)
@@ -197,6 +249,11 @@ export const VideoPlayer = ({ videoUrl }: VideoPlayerProps) => {
         })
         return () => {
             videoPlayer.current?.removeEventListener('timeupdate', handleUpdateTime)
+            videoPlayer.current?.removeEventListener('progress', updateTimelineProgress)
+            videoPlayer.current?.removeEventListener('loadedmetadata', updateTimelineProgress)
+            videoPlayer.current?.removeEventListener('canplay', updateTimelineProgress)
+            videoPlayer.current?.removeEventListener('playing', updateTimelineProgress)
+            videoPlayer.current?.removeEventListener('seeked', updateTimelineProgress)
             timelineContainer.current?.removeEventListener('mousemove', handleVideoPlaying)
             timelineContainer.current?.removeEventListener('mousedown', toggleScrubbing)
             document.removeEventListener('fullscreenchange', handleFullscreenChange)
@@ -237,6 +294,8 @@ export const VideoPlayer = ({ videoUrl }: VideoPlayerProps) => {
                     ref={timelineContainer}
                 >
                     <div className='timeline'>
+                        <div ref={bufferedSegments} className='buffered-segments' />
+                        <div ref={timelinePlayedProgress} className='played-progress' />
                         <canvas
                             ref={previewCanvas}
                             width={160}

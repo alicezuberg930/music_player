@@ -1,5 +1,5 @@
 import { useLocation } from '@tanstack/react-router'
-import { useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import VideoCard from '@/layout/video-card'
 import { Typography } from '@yukikaze/ui/typography'
 import { useLocales } from '@/lib/locales'
@@ -34,13 +34,15 @@ const SearchMVPage = () => {
             {status === 'error' && (<div>Error loading songs</div>)}
             {status === 'success' && (
                 data?.pages.map(page => (
-                    page?.data && (
-                        <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-5 gap-y-8'>
-                            {page?.data?.map((video: Video) => (
-                                <VideoCard video={video} key={video?.id} />
-                            ))}
-                        </div>
-                    )
+                    <React.Fragment key={page.timestamp}>
+                        {page?.data && (
+                            <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-5 gap-y-8'>
+                                {page?.data?.map((video: Video) => (
+                                    <VideoCard video={video} key={video?.id} />
+                                ))}
+                            </div>
+                        )}
+                    </React.Fragment>
                 ))
             )}
             <div ref={ref}>

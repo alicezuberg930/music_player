@@ -88,6 +88,15 @@ const onProxyRequest = (proxyReq: ClientRequest, req: IncomingMessage, target: s
     if (req.headers.authorization) {
         proxyReq.setHeader('authorization', req.headers.authorization)
     }
+
+    const forwardedHost = req.headers.host || req.headers['x-forwarded-host'] || ''
+    const forwardedProto = typeof req.headers['x-forwarded-proto'] === 'string' && req.headers['x-forwarded-proto']
+        ? req.headers['x-forwarded-proto']
+        : 'http'
+    if (forwardedHost) {
+        proxyReq.setHeader('x-forwarded-host', forwardedHost)
+    }
+    proxyReq.setHeader('x-forwarded-proto', forwardedProto)
     const now = new Date()
     const timestamp = `${String(now.getDate()).padStart(2, '0')}-${String(now.getMonth() + 1).padStart(2, '0')}-${now.getFullYear()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`
     const message = `[${timestamp}] [${proxyReq.path}] Proxying ${req.method} request from ${req.url} to ${target}${proxyReq.path}`

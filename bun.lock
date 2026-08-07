@@ -568,8 +568,6 @@
         "cookie-parser": "^1.4.7",
         "express": "catalog:express",
         "multer": "catalog:multer",
-        "music-metadata": "^11.9.0",
-        "node-id3": "^0.2.9",
       },
       "devDependencies": {
         "@repo/eslint-config": "workspace:*",

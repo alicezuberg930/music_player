@@ -1,9 +1,11 @@
 import express, { Request, Response } from 'express'
+import path from 'node:path'
 import cookieParser from "cookie-parser"
 import { env } from '@yukikaze/lib/create-env'
 import { errorInterceptor, notFoundHandlerMiddleware, responseInterceptor } from '@yukikaze/middleware'
 import { videoRouter } from './modules'
 const app = express()
+const serviceRoot = path.resolve(__dirname, '..')
 
 app.set('trust proxy', 1);
 
@@ -12,6 +14,9 @@ app.use(responseInterceptor)
 
 // parse cookies
 app.use(cookieParser())
+
+// expose generated adaptive-stream assets from the service tmp folder
+app.use('/tmp', express.static(path.join(serviceRoot, 'tmp')))
 
 // for parsing content-type of application/json & application/x-www-form-urlencoded
 // Increase body size limit for file uploads

@@ -37,7 +37,7 @@ const SearchAllPage = () => {
                         )}
                         {searchData?.songs?.slice(0, 2).map((song: any) => (
                             <div className='flex-1 h-full bg-main-200 rounded-md' key={song?.encodeId}>
-                                <SongItem song={song} imgSize='xl' />
+                                <SongItem key={song.id} song={song} imgSize='xl' />
                             </div>
                         ))}
                     </div>

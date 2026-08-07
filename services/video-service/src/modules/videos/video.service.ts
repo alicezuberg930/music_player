@@ -89,6 +89,7 @@ export class VideoService {
                 ...result
             })
         } catch (error) {
+            if (response.headersSent) return
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)
         }
@@ -159,6 +160,7 @@ export class VideoService {
             await invalidateCache('songs:list:*')
             return response.status(201).json({ message: 'Video created successfully' })
         } catch (error) {
+            if (response.headersSent) return
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)
         }
@@ -225,6 +227,7 @@ export class VideoService {
             await invalidateCache('videos:list:*')
             return response.json({ message: 'Videos updated successfully' })
         } catch (error) {
+            if (response.headersSent) return
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)
         }
@@ -251,6 +254,7 @@ export class VideoService {
             if (!data) throw new NotFoundException('Video not found')
             return response.json({ message: 'Video fetched successfully', data })
         } catch (error) {
+            if (response.headersSent) return
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)
         }
@@ -272,6 +276,7 @@ export class VideoService {
             await invalidateCache('songs:list:*')
             return response.json({ message: 'Song deleted successfully' })
         } catch (error) {
+            if (response.headersSent) return
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)
         }
@@ -288,6 +293,7 @@ export class VideoService {
             await db.update(videos).set({ views: (findVideo.views ?? 0) + 1 }).where(eq(videos.id, id))
             return response.json({ message: 'Video view added successfully' })
         } catch (error) {
+            if (response.headersSent) return
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)
         }
@@ -305,6 +311,7 @@ export class VideoService {
                 sourceUrl: findVideo.stream,
                 requestPath: request.path,
                 maxQuality,
+                resource: typeof request.query.resource === 'string' ? request.query.resource : undefined,
             })
             response.writeHead(200, {
                 'Content-Type': responsePayload.contentType,
@@ -312,6 +319,7 @@ export class VideoService {
             })
             response.send(responsePayload.body)
         } catch (error) {
+            if (response.headersSent) return
             if (error instanceof HttpException) throw error
             throw new BadRequestException(error instanceof Error ? error.message : undefined)
         }

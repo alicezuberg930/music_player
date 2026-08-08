@@ -18,7 +18,8 @@
     "check-types": "tsc --noEmit",
     "db:studio": "npx drizzle-kit studio",
     "db:generate": "npx drizzle-kit generate",
-    "db:migrate": "npx drizzle-kit migrate"
+    "db:migrate": "npx drizzle-kit migrate",
+    "db:migrate:log": "npx tsx ./src/migrate-with-log.ts"
   },
   "dependencies": {
     "@yukikaze/lib": "workspace:*",

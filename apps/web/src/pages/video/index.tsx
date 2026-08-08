@@ -44,9 +44,9 @@ const VideoPage = () => {
     // }
 
     return (
-        <div className={`all-container w-full bg-purple-950 py-10 gap-6 ${'h-screen flex justify-between px-5'}`}>
+        <div className={`all-container w-full bg-primary/50 py-10 gap-6 h-screen flex justify-between px-4`}>
             {data && videoUrl && (<VideoPlayer videoUrl={videoUrl} />)}
-            <div className={`overflow-x-scroll text-white rounded-md h-[90%] max-h-[90%] ${'bg-[rgba(255,255,255,0.1)] w-1/4'}`}>
+            <div className={`text-white rounded-xl ${'bg-white/20 w-1/4'}`}>
                 <div className="p-4">
                     <span className="font-bold text-lg">Danh sách phát</span>
                 </div>

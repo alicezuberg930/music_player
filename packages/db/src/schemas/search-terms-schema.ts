@@ -6,11 +6,12 @@ import { users } from "."
 export const searchTerms = mysqlTable("search_terms", {
     id: varchar({ length: 36 }).primaryKey().notNull().$defaultFn(() => createId()),
     userId: varchar({ length: 36 }).references(() => users.id, { onDelete: "cascade" }),
-    content: text().notNull(),
+    content: varchar({ length: 255 }).notNull(),
     // for increasing count if its content is the same
     count: int(),
     createdAt,
     updatedAt
 }, (t) => [
-    index('sessions_user_id_idx').on(t.userId),
+    index('content_idx').on(t.content),
+    index('user_id_idx').on(t.userId),
 ])

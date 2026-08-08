@@ -4,17 +4,16 @@ import {
     index,
     int,
     mysqlTable,
-    text,
     varchar
 } from "drizzle-orm/mysql-core"
 import { createId } from "@yukikaze/lib/create-cuid"
 import { createdAt, updatedAt } from "../utils"
-import { songs, users } from "./"
+import { songs, users } from "."
 
 export const comments = mysqlTable("comments", {
     id: varchar({ length: 36 }).primaryKey().notNull().$defaultFn(() => createId()),
     userId: varchar({ length: 36 }).notNull().references(() => users.id, { onDelete: "cascade" }),
-    content: text().notNull(),
+    content: varchar({ length: 255 }).notNull(),
     parentCommentId: varchar({ length: 36 }).references(
         (): AnyMySqlColumn => comments.id,
         { onDelete: "set null" },
@@ -49,7 +48,7 @@ export const chats = mysqlTable("chats", {
     id: varchar({ length: 36 }).primaryKey().notNull().$defaultFn(() => createId()),
     fromUserId: varchar({ length: 36 }).notNull().references(() => users.id, { onDelete: "cascade" }),
     toUserId: varchar({ length: 36 }).notNull().references(() => users.id, { onDelete: "cascade" }),
-    content: text().notNull(),
+    content: varchar({ length: 255 }).notNull(),
     createdAt,
     updatedAt,
 }, (t) => [

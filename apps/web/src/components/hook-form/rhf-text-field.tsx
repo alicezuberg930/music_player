@@ -38,7 +38,7 @@ export const RHFTextField = ({
 
 type RHFTextAreaProps = React.ComponentProps<"textarea"> & {
     name: string
-    fieldLabel: string
+    fieldLabel?: string
 }
 
 export const RHFTextArea = ({

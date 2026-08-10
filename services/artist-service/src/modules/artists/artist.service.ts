@@ -7,7 +7,7 @@ import { extractPublicId, uploadFile } from "@yukikaze/upload"
 import { createId } from "@yukikaze/lib/create-cuid"
 import { resizeImageToBuffer } from "@yukikaze/lib/image-resize"
 import fs from "node:fs"
-import { ArtistValidators } from "@yukikaze/validator"
+import { CreateArtistInput } from "@yukikaze/validator"
 
 export class ArtistService {
     public async getArtists(request: Request, response: Response) {
@@ -31,7 +31,7 @@ export class ArtistService {
         }
     }
 
-    public async createArtist(request: Request<{}, {}, ArtistValidators.CreateArtistInput>, response: Response) {
+    public async createArtist(request: Request<{}, {}, CreateArtistInput>, response: Response) {
         try {
             const { name } = request.body
             let thumbnailUrl: string | null = null
@@ -64,7 +64,7 @@ export class ArtistService {
         }
     }
 
-    public async updateArtist(request: Request<{ id: string }, {}, Partial<ArtistValidators.CreateArtistInput>>, response: Response) {
+    public async updateArtist(request: Request<{ id: string }, {}, Partial<CreateArtistInput>>, response: Response) {
         try {
             const { id } = request.params
             const findArtist = await db.query.artists.findFirst({ where: eq(artists.id, id), columns: { thumbnail: true } })

@@ -33,8 +33,7 @@ const SignInForm: React.FC = () => {
     formState: { isSubmitting },
   } = methods
 
-  const onSubmit = async (data: AuthValidators.SignInInput) =>
-    await signIn(data)
+  const onSubmit = async (data: AuthValidators.SignInInput) => await signIn(data)
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

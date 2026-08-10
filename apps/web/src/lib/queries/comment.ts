@@ -1,27 +1,8 @@
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
-import type { Query, Response } from '@/@types'
-import { queryClient } from '../../providers/query-client-provider'
+import type { Comment, Query, Response } from '@/@types'
+import { queryClient } from '@/providers/query-client-provider'
 import { httpClient } from '../repository/http-client'
-import type { SocialValidators } from '@yukikaze/validator'
-
-export type PublicUser = {
-  id: string
-  fullname: string
-  avatar?: string | null
-}
-
-export type Comment = {
-  id: string
-  userId: string
-  content: string
-  parentCommentId: string | null
-  songId: string
-  likes: number | null
-  createdAt: string
-  updatedAt: string
-  user: PublicUser
-  replies: Comment[]
-}
+import type { CreateCommentInput } from '@yukikaze/validator'
 
 export const keys = {
   all: (songId: string, opts: Query) => ['comments', songId, opts],
@@ -48,7 +29,7 @@ export const commentQueries = () => ({
     mutationOptions: () =>
       mutationOptions({
         mutationKey: keys.create(),
-        mutationFn: async (input: SocialValidators.CreateCommentInput) => {
+        mutationFn: async (input: CreateCommentInput) => {
           return await httpClient.post<Response<Comment>>('/social/comments', input)
         },
         onSuccess: () => {

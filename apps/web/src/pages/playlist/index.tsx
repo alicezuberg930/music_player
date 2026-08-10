@@ -41,12 +41,6 @@ const PlaylistPage: React.FC = () => {
     const { data, isLoading } = useQuery(playlistQueries().one.queryOptions(id!))
     const navigate = useNavigate()
     const playAlbum = new URLSearchParams(location.search).get("playAlbum") === "true"
-    const activeSongIndex = useMemo(() => {
-        return activeSong ? playlistSongs.findIndex(song => String(song.id) === String(activeSong.id)) : -1
-    }, [activeSong, playlistSongs])
-    const activeOrder = useMemo(() => {
-        return activeSongIndex >= 0 ? activeSongIndex + 1 : undefined
-    }, [activeSongIndex])
     const songIds = useMemo(() => {
         return playlistSongs.map((song) => String(song.id))
     }, [playlistSongs])

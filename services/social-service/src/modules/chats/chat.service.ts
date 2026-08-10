@@ -5,19 +5,11 @@ import { chats, users } from '@yukikaze/db/schemas'
 import type { ChatMessageEvent } from '@yukikaze/kafka/types'
 import { emitChatMessageEvent } from '@yukikaze/kafka/producer'
 import { HttpException, BadRequestException, NotFoundException } from '@yukikaze/lib/exception'
-import { SocialValidators } from '@yukikaze/validator'
-
-type ConversationQuery = SocialValidators.GetConversationsInput
-
-const toNumber = (value: string | undefined, fallback: number) => {
-    if (!value) return fallback
-    const parsed = Number(value)
-    return Number.isFinite(parsed) ? parsed : fallback
-}
+import { QueryConversationsInput, SendChatInput } from '@yukikaze/validator'
 
 export class ChatService {
     public async sendChatMessage(
-        request: Request<{}, {}, SocialValidators.SendChatInput>,
+        request: Request<{}, {}, SendChatInput>,
         response: Response,
     ) {
         try {
@@ -65,7 +57,7 @@ export class ChatService {
     }
 
     public async listConversation(
-        request: Request<{ userId: string }, {}, {}, ConversationQuery>,
+        request: Request<{ userId: string }, {}, {}, QueryConversationsInput>,
         response: Response,
     ) {
         try {
@@ -75,8 +67,8 @@ export class ChatService {
             if (userId === toUserId) throw new BadRequestException("Cannot get conversation with yourself")
 
             const { page = '1', limit = '50' } = request.query
-            const currentPage = toNumber(page, 1)
-            const pageSize = toNumber(limit, 50)
+            const currentPage = Number(page)
+            const pageSize = Number(limit)
 
             const data = await db.query.chats.findMany({
                 where: or(

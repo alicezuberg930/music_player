@@ -9,7 +9,7 @@ import {
 } from '@yukikaze/lib/exception'
 import type { CommentReplyEvent } from '@yukikaze/kafka/types'
 import { emitCommentReplyEvent } from '@yukikaze/kafka/producer'
-import { SocialValidators } from '@yukikaze/validator'
+import { QueryCommentsInput, CreateCommentInput } from '@yukikaze/validator'
 import { CommentWithChildren, PublicUser } from './comment.model'
 
 export class CommentService {
@@ -22,7 +22,7 @@ export class CommentService {
             UNION ALL
             SELECT c.id, c.user_id, c.parent_comment_id
             FROM comments c
-            INNER JOIN comment_thread ct ON c.parent_comment_id = ct.id OR c.id = ct.parent_comment_id
+            INNER JOIN comment_thread ct ON c.parent_comment_id = ct.id
         )
         SELECT DISTINCT user_id
         FROM comment_thread
@@ -44,7 +44,7 @@ export class CommentService {
         return [...new Set(userIds)]
     }
 
-    public async createComment(request: Request<{}, {}, SocialValidators.CreateCommentInput>, response: Response) {
+    public async createComment(request: Request<{}, {}, CreateCommentInput>, response: Response) {
         try {
             const { songId, content, parentCommentId } = request.body
             const userId = request.userId
@@ -122,7 +122,7 @@ export class CommentService {
     }
 
     public async listComments(
-        request: Request<{ songId: string }, {}, {}, SocialValidators.GetCommentsInput>,
+        request: Request<{ songId: string }, {}, {}, QueryCommentsInput>,
         response: Response,
     ) {
         try {

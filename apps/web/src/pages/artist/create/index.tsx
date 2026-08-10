@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useLocales } from '@/lib/locales'
-import { ArtistValidators } from '@yukikaze/validator'
+import { type CreateArtistInput, createArtistInput } from '@yukikaze/validator'
 import * as z from 'zod'
 // types
 import type { CustomFile } from '@/components/upload'
@@ -17,7 +17,7 @@ import { useMutation } from '@tanstack/react-query'
 import { artistQueries } from '@/lib/queries/artist'
 import { toast } from '@yukikaze/ui'
 
-type FormValuesProps = ArtistValidators.CreateArtistInput & {
+type FormValuesProps = CreateArtistInput & {
     thumbnail?: CustomFile | string
 }
 
@@ -26,7 +26,7 @@ const CreateArtistPage: React.FC = () => {
     const { mutateAsync } = useMutation(artistQueries().create.mutationOptions())
 
     // artist_name_is_required
-    const ArtistSchema = ArtistValidators.createArtistInput.extend({
+    const ArtistSchema = createArtistInput.extend({
         thumbnail: z.union([z.instanceof(File), z.string()]).optional(),
     })
 

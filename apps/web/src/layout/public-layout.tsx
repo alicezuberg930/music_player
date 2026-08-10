@@ -5,6 +5,8 @@ import Player from "./player"
 import Header from "./header/header"
 import { useDispatch, useSelector } from "@/redux/store"
 import { setScrollTop } from "@/redux/slices/app"
+import { cn } from "@yukikaze/ui"
+import { ChatBubble } from "./chat-bubble"
 
 export const PublicLayout: React.FC = () => {
     const { showSideBarRight } = useSelector(state => state.app)
@@ -25,9 +27,16 @@ export const PublicLayout: React.FC = () => {
                 <SidebarLeft />
                 <div className="flex-1 flex flex-col relative">
                     <Header />
-                    <main className={`px-4 md:px-8 mt-14 pb-12 flex-auto overflow-y-scroll scroll-smooth transition-all duration-600 ease-in-out ${showSideBarRight && 'xl:mr-82.5 mr-0'}`} onScroll={handleScrollTop}>
+                    <main
+                        className={cn(
+                            'px-4 md:px-8 mt-14 pb-12 flex-auto overflow-y-scroll scroll-smooth transition-all duration-600 ease-in-out',
+                            showSideBarRight && 'xl:mr-82.5 mr-0'
+                        )}
+                        onScroll={handleScrollTop}
+                    >
                         <Outlet />
                     </main>
+                    <ChatBubble />
                 </div>
                 <SidebarRight />
             </div>

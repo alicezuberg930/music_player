@@ -93,6 +93,23 @@ const fr = {
   'invalid_or_expired_token': 'Jeton invalide ou expiré.',
   'adding_song_to_playlist_success': 'Chanson ajoutée à la liste de lecture',
   'adding_song_to_favorites_success': 'Chanson ajoutée aux favoris',
+  'comment_textarea_placeholder': 'Écrire un commentaire...',
+  'comment_send': 'Envoyer',
+  'comment_sending': 'Envoi...',
+  'comment_default_user_name': 'Utilisateur',
+  'comment_like_label': 'j\'aime',
+  'comment_reply': 'Répondre',
+  'comment_toggle_button': 'Basculer le panneau de commentaires',
+  'comment_title': 'Commentaires',
+  'comment_no_song_selected': 'Sélectionnez une chanson pour voir et participer aux commentaires.',
+  'comment_need_login': 'Vous devez vous connecter pour participer à la discussion.',
+  'comment_waiting_for_song': 'Aucune chanson en lecture pour afficher les commentaires pour le moment.',
+  'comment_fetch_failed': 'Impossible de charger les commentaires',
+  'comment_empty_state': 'Aucun commentaire pour cette chanson pour le moment.',
+  'comment_login_to_comment': 'Veuillez vous connecter pour commenter.',
+  'comment_submit_success': 'Commentaire publié',
+  'comment_login_to_reply': 'Veuillez vous connecter pour répondre.',
+  'comment_reply_success': 'Réponse envoyée',
 }
 
 export default fr

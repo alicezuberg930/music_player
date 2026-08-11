@@ -22,6 +22,7 @@ interface ServerToClientEvents {
     }) => void
     'notification:comment': (payload: {
         toUserId: string
+        actorUserId: string
         type: 'comment'
         actorFullName: string
         actorAvatar?: string
@@ -30,6 +31,7 @@ interface ServerToClientEvents {
     }) => void
     'notification:chat': (payload: {
         toUserId: string
+        actorUserId: string
         type: 'chat'
         actorFullName: string
         actorAvatar?: string
@@ -85,12 +87,14 @@ const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
         const handleCommentNotification = (payload: {
             toUserId: string
+            actorUserId: string
             type: 'comment'
             actorFullName: string
             actorAvatar?: string
             title: string
             content: string
         }) => {
+            // if (user?.id && payload.actorUserId === user.id) return
             if (user?.id && payload.toUserId !== user.id) return
             toast.success(payload.title, { description: payload.content })
             queryClient.invalidateQueries({ queryKey: ['notifications', 'unread'] })
@@ -99,6 +103,7 @@ const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
         const handleChatNotification = (payload: {
             toUserId: string
+            actorUserId: string
             type: 'chat'
             actorFullName: string
             actorAvatar?: string
@@ -127,7 +132,7 @@ const SocketProvider = ({ children }: { children: React.ReactNode }) => {
             notificationSocket.off('connect_error', handleError)
             notificationSocket.disconnect()
         }
-    }, [queryClient])
+    }, [queryClient, user?.id])
 
     const memoizedValue = useMemo(() => ({
         socket

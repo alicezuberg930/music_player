@@ -93,6 +93,23 @@ const cn = {
   'invalid_or_expired_token': '无效或过期的令牌。',
   'adding_song_to_playlist_success': '歌曲已添加到播放列表',
   'adding_song_to_favorites_success': '歌曲已添加到收藏',
+  'comment_textarea_placeholder': '写一条评论...',
+  'comment_send': '发送',
+  'comment_sending': '发送中...',
+  'comment_default_user_name': '用户',
+  'comment_like_label': '赞',
+  'comment_reply': '回复',
+  'comment_toggle_button': '切换评论抽屉',
+  'comment_title': '评论',
+  'comment_no_song_selected': '选择一首歌曲查看并参与评论。',
+  'comment_need_login': '请先登录后再参与讨论。',
+  'comment_waiting_for_song': '当前没有正在播放的歌曲可显示评论。',
+  'comment_fetch_failed': '无法加载评论',
+  'comment_empty_state': '该歌曲暂无评论。',
+  'comment_login_to_comment': '请先登录后再发表评论。',
+  'comment_submit_success': '评论已发送',
+  'comment_login_to_reply': '请先登录后再回复。',
+  'comment_reply_success': '回复已发送',
 }
 
 export default cn

@@ -93,6 +93,23 @@ const en = {
     'invalid_or_expired_token': 'Invalid or expired token.',
     'adding_song_to_playlist_success': 'Song added to playlist',
     'adding_song_to_favorites_success': 'Song added to favorites',
+    'comment_textarea_placeholder': 'Write a comment...',
+    'comment_send': 'Send',
+    'comment_sending': 'Sending...',
+    'comment_default_user_name': 'User',
+    'comment_like_label': 'likes',
+    'comment_reply': 'Reply',
+    'comment_toggle_button': 'Toggle comment bottom sheet',
+    'comment_title': 'Comments',
+    'comment_no_song_selected': 'Select a song to view and join the comments.',
+    'comment_need_login': 'You need to sign in to join the discussion.',
+    'comment_waiting_for_song': 'No song is currently playing yet to show comments.',
+    'comment_fetch_failed': 'Failed to load comments',
+    'comment_empty_state': 'No comments yet for this song.',
+    'comment_login_to_comment': 'Please sign in to comment.',
+    'comment_submit_success': 'Comment posted',
+    'comment_login_to_reply': 'Please sign in to reply.',
+    'comment_reply_success': 'Reply sent',
 }
 
 export default en

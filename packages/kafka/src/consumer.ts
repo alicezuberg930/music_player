@@ -98,7 +98,10 @@ const handleCommentReplyEvent = async (
     rawEvent: CommentReplyEvent,
     sendWebPushToSubscriptions: SendWebPushToSubscriptions,
 ) => {
-    const recipientUserIds = [...new Set(rawEvent.threadUserIds.filter((id) => id !== rawEvent.actorUserId))]
+    const actorUserId = rawEvent.actorUserId
+    const recipientUserIds = [...new Set(
+        rawEvent.threadUserIds.filter((id) => id !== actorUserId),
+    )]
     if (recipientUserIds.length === 0) return
 
     const uniqueKeys = recipientUserIds.map((toUserId) => `comment:${rawEvent.commentId}:${toUserId}`)

@@ -93,6 +93,23 @@ const vi = {
   'invalid_or_expired_token': 'Mã thông báo không hợp lệ hoặc đã hết hạn.',
   'adding_song_to_playlist_success': 'Đã thêm bài hát vào playlist',
   'adding_song_to_favorites_success': 'Đã thêm bài hát vào yêu thích',
+  'comment_textarea_placeholder': 'Viết bình luận...',
+  'comment_send': 'Gửi',
+  'comment_sending': 'Đang gửi...',
+  'comment_default_user_name': 'Người dùng',
+  'comment_like_label': 'thích',
+  'comment_reply': 'Trả lời',
+  'comment_toggle_button': 'Toggle comment bottom sheet',
+  'comment_title': 'Bình luận',
+  'comment_no_song_selected': 'Chọn bài hát để xem và tham gia bình luận.',
+  'comment_need_login': 'Bạn cần đăng nhập để tham gia thảo luận.',
+  'comment_waiting_for_song': 'Chưa có bài hát đang phát để hiện thị bình luận.',
+  'comment_fetch_failed': 'Không tải được bình luận',
+  'comment_empty_state': 'Chưa có bình luận nào cho bài hát này.',
+  'comment_login_to_comment': 'Vui lòng đăng nhập để bình luận.',
+  'comment_submit_success': 'Đã đăng bình luận',
+  'comment_login_to_reply': 'Vui lòng đăng nhập để phản hồi.',
+  'comment_reply_success': 'Đã gửi phản hồi',
 }
 
 export default vi

@@ -21,14 +21,21 @@ import { useSelector } from '@/redux/store'
 import { commentQueries } from '@/lib/queries/comment'
 import type { Comment } from '@/@types'
 import { FormProvider, RHFTextArea } from '@/components/hook-form'
-import { useForm, type UseFormReturn } from 'react-hook-form'
 import { createCommentInput, type CreateCommentInput } from '@yukikaze/validator'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { useLocales } from '@/lib/locales'
 
 const CommentComposer: React.FC<{
     onSubmit: (data: CreateCommentInput) => Promise<void>
-    methods: UseFormReturn<any>
-}> = ({ onSubmit, methods }) => {
+    songId?: string
+}> = ({ onSubmit, songId }) => {
+    const { translate } = useLocales()
+    const methods = useForm<CreateCommentInput>({
+        resolver: zodResolver(createCommentInput),
+        defaultValues: { content: '', songId },
+    })
+
     const {
         handleSubmit,
         formState: { isSubmitting }
@@ -39,7 +46,7 @@ const CommentComposer: React.FC<{
             <div className='space-y-2 w-full'>
                 <RHFTextArea
                     name='content'
-                    placeholder='Viết bình luận...'
+                    placeholder={translate('comment_textarea_placeholder')}
                     className='resize-none'
                     disabled={isSubmitting}
                 />
@@ -49,7 +56,7 @@ const CommentComposer: React.FC<{
                         size='sm'
                         disabled={isSubmitting}
                     >
-                        {isSubmitting ? 'Đang gửi...' : 'Gửi'}
+                        {isSubmitting ? translate('comment_sending') : translate('comment_send')}
                     </Button>
                 </div>
             </div>
@@ -62,105 +69,90 @@ const CommentItem: React.FC<{
     onReply: (commentId: string, content: string) => Promise<void>
     activeReplyId: string | null
     setActiveReplyId: React.Dispatch<React.SetStateAction<string | null>>
-    replyMap: Record<string, string>
-    setReplyMap: React.Dispatch<React.SetStateAction<Record<string, string>>>
-    methods: UseFormReturn<any>
+    songId?: string
 }> = ({
     comment,
     onReply,
     activeReplyId,
     setActiveReplyId,
-    replyMap,
-    setReplyMap,
-    methods
+    songId
 }) => {
-        const isReplyOpen = activeReplyId === comment.id
-        const userName = comment.user?.fullname || 'Người dùng'
-        const avatarFallback = useMemo(() => userName.charAt(0).toUpperCase(), [userName])
+    const { translate } = useLocales()
+    const isReplyOpen = activeReplyId === comment.id
+    const userName = comment.user?.fullname || translate('comment_default_user_name')
+    const avatarFallback = useMemo(() => userName.charAt(0).toUpperCase(), [userName])
 
-        const handleToggleReply = useCallback(() => {
-            setActiveReplyId((current) => (current === comment.id ? null : comment.id))
-        }, [comment.id, setActiveReplyId])
+    const handleToggleReply = useCallback(() => {
+        setActiveReplyId((current) => (current === comment.id ? null : comment.id))
+    }, [comment.id, setActiveReplyId])
 
-        const handleReplySubmit = useCallback(async (data: CreateCommentInput) => {
-            await onReply(comment.id, replyMap[comment.id] ?? '')
-            setReplyMap((previous) => ({
-                ...previous,
-                [comment.id]: data.content,
-            }))
-        }, [comment.id, onReply, replyMap])
+    const handleReplySubmit = useCallback(async (data: CreateCommentInput) => {
+        await onReply(comment.id, data.content)
+    }, [comment.id, onReply])
 
-        return (
-            <div className='flex flex-col gap-2'>
-                <div className='flex gap-3'>
-                    <Avatar className='size-9 shrink-0'>
-                        {comment.user?.avatar && <AvatarImage src={comment.user?.avatar} alt={userName} />}
-                        <AvatarFallback>{avatarFallback}</AvatarFallback>
-                    </Avatar>
-                    <div className='min-w-0 flex-1'>
-                        <div className='flex items-center gap-2'>
-                            <Typography className='font-semibold text-sm leading-none'>
-                                {userName}
-                            </Typography>
-                            <Typography className='text-xs text-muted-foreground'>
-                                {fToNow(comment.createdAt)}
-                            </Typography>
-                        </div>
-                        <Typography className='mt-1 whitespace-pre-line'>
-                            {comment.content}
+    return (
+        <div className='flex flex-col gap-2'>
+            <div className='flex gap-3'>
+                <Avatar className='size-9 shrink-0'>
+                    {comment.user?.avatar && <AvatarImage src={comment.user?.avatar} alt={userName} />}
+                    <AvatarFallback>{avatarFallback}</AvatarFallback>
+                </Avatar>
+                <div className='min-w-0 flex-1'>
+                    <div className='flex items-center gap-2'>
+                        <Typography className='font-semibold text-sm leading-none'>
+                            {userName}
                         </Typography>
-                        <div className='mt-2 flex items-center gap-4 text-xs text-muted-foreground'>
-                            <span>{comment.likes ?? 0} thích</span>
-                            <button
-                                type='button'
-                                className='hover:text-foreground'
-                                onClick={handleToggleReply}
-                            >
-                                Trả lời
-                            </button>
-                        </div>
-                        {isReplyOpen && (
-                            <div className='mt-3'>
-                                <CommentComposer
-                                    onSubmit={handleReplySubmit}
-                                    methods={methods}
-                                />
-                            </div>
-                        )}
+                        <Typography className='text-xs text-muted-foreground'>
+                            {fToNow(comment.createdAt)}
+                        </Typography>
                     </div>
-                </div>
-                {comment.replies?.length > 0 && (
-                    <div className='ml-8 mt-2 border-l border-border/80 pl-4'>
-                        {comment.replies.map((reply) => (
-                            <CommentItem
-                                key={reply.id}
-                                comment={reply}
-                                onReply={onReply}
-                                activeReplyId={activeReplyId}
-                                setActiveReplyId={setActiveReplyId}
-                                replyMap={replyMap}
-                                setReplyMap={setReplyMap}
-                                methods={methods}
+                    <Typography className='mt-1 whitespace-pre-line'>
+                        {comment.content}
+                    </Typography>
+                    <div className='mt-2 flex items-center gap-4 text-xs text-muted-foreground'>
+                        <span>{comment.likes ?? 0} {translate('comment_like_label')}</span>
+                        <button
+                            type='button'
+                            className='hover:text-foreground'
+                            onClick={handleToggleReply}
+                        >
+                            {translate('comment_reply')}
+                        </button>
+                    </div>
+                    {isReplyOpen && (
+                        <div className='mt-3'>
+                            <CommentComposer
+                                onSubmit={handleReplySubmit}
+                                songId={songId}
                             />
-                        ))}
-                    </div>
-                )}
+                        </div>
+                    )}
+                </div>
             </div>
-        )
-    }
+            {comment.replies?.length > 0 && (
+                <div className='ml-8 mt-2 border-l border-border/80 pl-4'>
+                    {comment.replies.map((reply) => (
+                        <CommentItem
+                            key={reply.id}
+                            comment={reply}
+                            onReply={onReply}
+                            activeReplyId={activeReplyId}
+                            setActiveReplyId={setActiveReplyId}
+                            songId={songId}
+                        />
+                    ))}
+                </div>
+            )}
+        </div>
+    )
+}
 
 const CommentDrawer: React.FC = () => {
     const { currentSong } = useSelector((state) => state.music)
     const { isAuthenticated } = useAuthContext()
+    const { translate } = useLocales()
 
-    // const [topLevelContent, setTopLevelContent] = useState('')
-    const [replyContents, setReplyContents] = useState<Record<string, string>>({})
     const [activeReplyId, setActiveReplyId] = useState<string | null>(null)
-
-    const methods = useForm<CreateCommentInput>({
-        resolver: zodResolver(createCommentInput),
-        defaultValues: { content: '', songId: currentSong?.id },
-    })
 
     const {
         data,
@@ -178,11 +170,6 @@ const CommentDrawer: React.FC = () => {
     const comments = useMemo(() => data ?? [], [data])
 
     const clearReplyState = useCallback((commentId: string) => {
-        setReplyContents((previous) => {
-            const next = { ...previous }
-            delete next[commentId]
-            return next
-        })
         setActiveReplyId((current) => (current === commentId ? null : current))
     }, [])
 
@@ -190,7 +177,7 @@ const CommentDrawer: React.FC = () => {
         const content = data.content.trim()
         if (!currentSong?.id || !content) return
         if (!isAuthenticated) {
-            toast.error('Vui lòng đăng nhập để bình luận.')
+            toast.error(translate('comment_login_to_comment'))
             return
         }
 
@@ -199,18 +186,17 @@ const CommentDrawer: React.FC = () => {
             content,
         }, {
             onSuccess: () => {
-                // setTopLevelContent('')
-                toast.success('Đã đăng bình luận')
+                toast.success(translate('comment_submit_success'))
             }
         })
-    }, [currentSong?.id, isAuthenticated, mutateAsync])
+    }, [currentSong?.id, isAuthenticated, mutateAsync, translate])
 
     const handleSubmitReply = useCallback(
         async (commentId: string, rawContent: string) => {
             const content = rawContent.trim()
             if (!currentSong?.id || !content) return
             if (!isAuthenticated) {
-                toast.error('Vui lòng đăng nhập để phản hồi.')
+                toast.error(translate('comment_login_to_reply'))
                 return
             }
 
@@ -221,11 +207,11 @@ const CommentDrawer: React.FC = () => {
             }, {
                 onSuccess: () => {
                     clearReplyState(commentId)
-                    toast.success('Đã gửi phản hồi')
+                    toast.success(translate('comment_reply_success'))
                 },
             })
         },
-        [currentSong?.id, isAuthenticated, mutateAsync, clearReplyState]
+        [currentSong?.id, isAuthenticated, mutateAsync, clearReplyState, translate]
     )
 
     return (
@@ -235,7 +221,7 @@ const CommentDrawer: React.FC = () => {
                     <Button
                         variant='ghost'
                         size='icon-sm'
-                        aria-label='Toggle comment bottom sheet'
+                        aria-label={translate('comment_toggle_button')}
                     />
                 }
             >
@@ -244,7 +230,7 @@ const CommentDrawer: React.FC = () => {
             <DrawerContent className='bg-white/70 backdrop-blur-lg'>
                 <div className='mx-auto w-full h-screen max-w-6xl relative'>
                     <DrawerHeader>
-                        <DrawerTitle>Bình luận</DrawerTitle>
+                        <DrawerTitle>{translate('comment_title')}</DrawerTitle>
                         <DrawerDescription>
                             {currentSong?.title ? `${currentSong.title} - ${currentSong.artistNames}` : ''}
                         </DrawerDescription>
@@ -253,23 +239,22 @@ const CommentDrawer: React.FC = () => {
                     <div className='px-4 pb-4 h-[calc(100%-10rem)] overflow-auto space-y-4'>
                         {!currentSong?.id ? (
                             <div className='rounded-md border border-dashed border-muted p-3 text-sm text-muted-foreground'>
-                                Chọn bài hát để xem và tham gia bình luận.
+                                {translate('comment_no_song_selected')}
                             </div>
                         ) : isAuthenticated ? (
                             <CommentComposer
-                                // value={topLevelContent}
                                 onSubmit={handleSubmitComment}
-                                methods={methods}
+                                songId={currentSong?.id}
                             />
                         ) : (
                             <div className='rounded-md border border-dashed border-muted p-3 text-sm text-muted-foreground'>
-                                Bạn cần đăng nhập để tham gia thảo luận.
+                                {translate('comment_need_login')}
                             </div>
                         )}
 
                         {!currentSong?.id ? (
                             <div className='rounded-md border border-dashed border-muted p-4 text-center text-sm text-muted-foreground'>
-                                Chưa có bài hát đang phát để hiển thị bình luận.
+                                {translate('comment_waiting_for_song')}
                             </div>
                         ) : isLoading ? (
                             <div className='flex justify-center py-10'>
@@ -277,7 +262,7 @@ const CommentDrawer: React.FC = () => {
                             </div>
                         ) : isError ? (
                             <Typography className='text-center text-sm text-destructive'>
-                                Không tải được bình luận
+                                {translate('comment_fetch_failed')}
                             </Typography>
                         ) : comments.length > 0 ? (
                             <ScrollArea className='h-full'>
@@ -289,16 +274,14 @@ const CommentDrawer: React.FC = () => {
                                             onReply={handleSubmitReply}
                                             activeReplyId={activeReplyId}
                                             setActiveReplyId={setActiveReplyId}
-                                            replyMap={replyContents}
-                                            setReplyMap={setReplyContents}
-                                            methods={methods}
+                                            songId={currentSong?.id}
                                         />
                                     ))}
                                 </div>
                             </ScrollArea>
                         ) : (
                             <div className='rounded-md border border-dashed border-muted p-4 text-center text-sm text-muted-foreground'>
-                                Chưa có bình luận nào cho bài hát này.
+                                {translate('comment_empty_state')}
                             </div>
                         )}
                     </div>

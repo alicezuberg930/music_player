@@ -26,7 +26,7 @@ export class CommentService {
         )
         SELECT DISTINCT user_id
         FROM comment_thread
-    `)
+        `)
 
         const rows: unknown = rawRows
         if (!Array.isArray(rows)) return []
@@ -87,7 +87,10 @@ export class CommentService {
 
             if (parentCommentId) {
                 const participantIds = await this.collectThreadUserIds(parentCommentId)
-                const recipients = participantIds.filter((id) => id !== userId)
+                const recipients = [
+                    ...new Set(participantIds),
+                ].filter((id) => id && id !== userId)
+
                 if (recipients.length > 0) {
                     const payload: CommentReplyEvent = {
                         type: "comment.reply.created",

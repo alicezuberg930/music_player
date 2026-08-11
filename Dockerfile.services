@@ -52,12 +52,14 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 RUN apk add --no-cache ffmpeg
+ENV VIDEO_TMP_DIR=/tmp/yukikaze/video-service
 
 COPY --from=production-dependencies --chown=node:node /app/node_modules ./node_modules
 COPY --from=runtime-files --chown=node:node /runtime/ ./
 COPY --chown=node:node docker-start-services.mjs ./docker-start-services.mjs
 COPY --chown=node:node ca.pem ./ca.pem
 COPY --chown=node:node kafka-ca.pem ./kafka-ca.pem
+RUN mkdir -p "${VIDEO_TMP_DIR}" && chown node:node "${VIDEO_TMP_DIR}"
 
 RUN set -eux; \
     for service in artist-service auth-service banner-service gateway-service genre-service home-service notification-service playlist-service social-service song-service user-service video-service; do \

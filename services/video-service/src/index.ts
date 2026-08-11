@@ -5,7 +5,7 @@ import { env } from '@yukikaze/lib/create-env'
 import { errorInterceptor, notFoundHandlerMiddleware, responseInterceptor } from '@yukikaze/middleware'
 import { videoRouter } from './modules'
 const app = express()
-const serviceRoot = path.resolve(__dirname, '..')
+const tmpDirectory = (process.env.VIDEO_TMP_DIR ? process.env.VIDEO_TMP_DIR.trim() : path.join(process.cwd(), 'tmp'))
 
 app.set('trust proxy', 1);
 
@@ -16,7 +16,7 @@ app.use(responseInterceptor)
 app.use(cookieParser())
 
 // expose generated adaptive-stream assets from the service tmp folder
-app.use('/tmp', express.static(path.join(serviceRoot, 'tmp')))
+app.use('/tmp', express.static(tmpDirectory))
 
 // for parsing content-type of application/json & application/x-www-form-urlencoded
 // Increase body size limit for file uploads

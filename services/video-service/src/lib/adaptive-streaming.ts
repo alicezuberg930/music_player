@@ -8,7 +8,10 @@ import { DimensionInfo, HLS_QUALITIES, HlsQuality, presets, SelectedQuality, Str
 const execFileAsync = promisify(execFile)
 let transcodeLibraryCheck: Promise<void> | null = null
 const transcodeJobs = new Map<string, Promise<string>>()
-const defaultOutputDirectory = path.join(process.cwd(), 'tmp', 'adaptive-streams')
+const defaultOutputDirectory = path.join(
+    (process.env.VIDEO_TMP_DIR ? process.env.VIDEO_TMP_DIR : path.join(process.cwd(), 'tmp')),
+    'adaptive-streams'
+)
 const masterPlaylist = 'master.m3u8'
 
 const runCommand = async (command: string, args: string[]): Promise<string> => {
@@ -284,4 +287,4 @@ const resolveAdaptiveStream = async ({
     return output
 }
 
-export { resolveQuality, resolveAdaptiveStream }
+export { resolveQuality, resolveAdaptiveStream, defaultOutputDirectory }

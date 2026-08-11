@@ -13,6 +13,7 @@ import { deleteFile, extractPublicId, uploadFile } from "@yukikaze/upload"
 import { createId } from "@yukikaze/lib/create-cuid"
 import { resizeImageToBuffer } from '@yukikaze/lib/image-resize'
 import { VideoValidators } from '@yukikaze/validator'
+import { resolveAdaptiveStream, resolveQuality } from '../../lib/adaptive-streaming'
 
 
 export class VideoService {
@@ -107,8 +108,6 @@ export class VideoService {
             // find artist names from artistIds
             const findArtists = await db.query.artists.findMany({ columns: { name: true }, where: inArray(artists.id, artistIds) })
             // extract metadata from audio file
-            const { parseFile } = await import('music-metadata')
-            const metadata = await parseFile(videoFile.path)
             if (thumbnailFile) {
                 // Read file into buffer first to release file handle
                 const originalBuffer = fs.readFileSync(thumbnailFile.path)
@@ -121,26 +120,6 @@ export class VideoService {
                 fs.writeFileSync(thumbnailFile.path, resizedBuffer)
                 thumbnailUrl = (await uploadFile({ files: thumbnailFile, subFolder: '/cover', publicId: createId() })) as string
             } else {
-                const picture = metadata.common.picture?.[0]
-                if (picture) {
-                    const coverPath = `uploads/${Date.now() + '-' + Math.round(Math.random() * 1e9)}.${picture.format.split('/')[1]}`
-                    fs.writeFileSync(coverPath, Buffer.from(picture.data))
-                    // Read file into buffer first to release file handle
-                    const originalBuffer = fs.readFileSync(coverPath)
-                    // Resize image from buffer
-                    const resizedBuffer = await resizeImageToBuffer(originalBuffer, {
-                        height: 100, width: 100,
-                        aspectRatio: '1:1',
-                        fit: 'cover',
-                    })
-                    fs.writeFileSync(coverPath, resizedBuffer)
-                    const coverFile = {
-                        path: coverPath,
-                        mimetype: picture.format,
-                        originalname: `cover.${picture.format.split('/')[1]}`
-                    } as Express.Multer.File
-                    thumbnailUrl = (await uploadFile({ files: coverFile, subFolder: '/cover', publicId: createId() })) as string
-                }
             }
             // upload audio file to cloud storage and get the url
             const videoUrl = await uploadFile({ files: videoFile, subFolder: '/video', publicId: createId() })
@@ -150,14 +129,11 @@ export class VideoService {
                 userId: request.userId!,
                 size: videoFile.size,
                 alias: slugify(title),
-                duration: Math.floor(metadata.format.duration ?? 0),
                 artistNames: findArtists.map(a => a.name).join(", "),
                 stream: videoUrl as string,
                 thumbnail: thumbnailUrl ?? '/assets/default/default-video-thumbnail.png'
             }
-            const insertVideo = await db.insert(videos).values(video).$returningId()
-            await db.insert(artistsVideos).values(artistIds.map(artistId => ({ videoId: insertVideo[0]!.id, artistId })))
-            await invalidateCache('songs:list:*')
+            await invalidateCache('videos:list:*')
             return response.status(201).json({ message: 'Video created successfully' })
         } catch (error) {
             if (response.headersSent) return
@@ -299,15 +275,28 @@ export class VideoService {
         }
     }
 
-    public async streamVideo(request: Request<{ id: string }>, response: Response) {
+    public async streamVideo(request: Request<{ id: string }, {}, {}, { quality?: string }>, response: Response) {
         try {
             const { id } = request.params
             const findVideo = await db.query.videos.findFirst({ where: eq(videos.id, id), columns: { stream: true } })
             if (!findVideo || !findVideo.stream) throw new NotFoundException('Video not found')
 
-            const serviceRoot = path.resolve(__dirname, '..', '..', '..')
-            const manifestPath = path.join(serviceRoot, 'tmp', 'adaptive-streams', id, 'auto', 'master.m3u8')
-            if (!fs.existsSync(manifestPath)) throw new NotFoundException('Video manifest not found')
+            const tmpDirectory = (process.env.VIDEO_TMP_DIR && process.env.VIDEO_TMP_DIR.trim().length > 0
+                ? process.env.VIDEO_TMP_DIR.trim()
+                : path.join(process.cwd(), 'tmp'))
+            const manifestPath = path.join(tmpDirectory, 'adaptive-streams', id, 'auto', 'master.m3u8')
+            const requestedQuality = typeof request.query.quality === 'string'
+                ? resolveQuality(request.query.quality)
+                : undefined
+            await resolveAdaptiveStream({
+                videoId: id,
+                sourceUrl: findVideo.stream,
+                requestPath: `/api/v1/videos/tmp/adaptive-streams/${id}/auto/master.m3u8`,
+                maxQuality: requestedQuality
+            })
+            if (!fs.existsSync(manifestPath)) {
+                throw new NotFoundException('Video manifest not found')
+            }
 
             const forwardedProto = typeof request.headers['x-forwarded-proto'] === 'string'
                 ? request.headers['x-forwarded-proto'].split(',')[0]
@@ -316,7 +305,9 @@ export class VideoService {
             const forwardedHost = typeof request.headers['x-forwarded-host'] === 'string'
                 ? request.headers['x-forwarded-host'].split(',')[0]
                 : undefined
-            const url = `${protocol}://${forwardedHost}/api/v1/videos/tmp/adaptive-streams/${id}/auto/master.m3u8`
+            const host = forwardedHost ?? request.get('host')
+            if (!host) throw new NotFoundException('Unable to determine host for stream URL')
+            const url = `${protocol}://${host}/api/v1/videos/tmp/adaptive-streams/${id}/auto/master.m3u8`
 
             return response.json({ url })
         } catch (error) {

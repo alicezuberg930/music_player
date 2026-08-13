@@ -77,95 +77,88 @@ const CommentItem: React.FC<{
     setActiveReplyId,
     songId
 }) => {
-    const { translate } = useLocales()
-    const isReplyOpen = activeReplyId === comment.id
-    const userName = comment.user?.fullname || translate('comment_default_user_name')
-    const avatarFallback = useMemo(() => userName.charAt(0).toUpperCase(), [userName])
+        const { translate } = useLocales()
+        const isReplyOpen = activeReplyId === comment.id
+        const userName = comment.user?.fullname || translate('comment_default_user_name')
+        const avatarFallback = useMemo(() => userName.charAt(0).toUpperCase(), [userName])
 
-    const handleToggleReply = useCallback(() => {
-        setActiveReplyId((current) => (current === comment.id ? null : comment.id))
-    }, [comment.id, setActiveReplyId])
+        const handleToggleReply = useCallback(() => {
+            setActiveReplyId((current) => (current === comment.id ? null : comment.id))
+        }, [comment.id, setActiveReplyId])
 
-    const handleReplySubmit = useCallback(async (data: CreateCommentInput) => {
-        await onReply(comment.id, data.content)
-    }, [comment.id, onReply])
+        const handleReplySubmit = useCallback(async (data: CreateCommentInput) => {
+            await onReply(comment.id, data.content)
+        }, [comment.id, onReply])
 
-    return (
-        <div className='flex flex-col gap-2'>
-            <div className='flex gap-3'>
-                <Avatar className='size-9 shrink-0'>
-                    {comment.user?.avatar && <AvatarImage src={comment.user?.avatar} alt={userName} />}
-                    <AvatarFallback>{avatarFallback}</AvatarFallback>
-                </Avatar>
-                <div className='min-w-0 flex-1'>
-                    <div className='flex items-center gap-2'>
-                        <Typography className='font-semibold text-sm leading-none'>
-                            {userName}
+        return (
+            <div className='flex flex-col gap-2'>
+                <div className='flex gap-3'>
+                    <Avatar className='size-9 shrink-0'>
+                        {comment.user?.avatar && <AvatarImage src={comment.user?.avatar} alt={userName} />}
+                        <AvatarFallback>{avatarFallback}</AvatarFallback>
+                    </Avatar>
+                    <div className='min-w-0 flex-1'>
+                        <div className='flex items-center gap-2'>
+                            <Typography className='font-semibold text-sm leading-none'>
+                                {userName}
+                            </Typography>
+                            <Typography className='text-xs text-muted-foreground'>
+                                {fToNow(comment.createdAt)}
+                            </Typography>
+                        </div>
+                        <Typography className='mt-1 whitespace-pre-line'>
+                            {comment.content}
                         </Typography>
-                        <Typography className='text-xs text-muted-foreground'>
-                            {fToNow(comment.createdAt)}
-                        </Typography>
+                        <div className='mt-2 flex items-center gap-4 text-xs text-muted-foreground'>
+                            <span>{comment.likes ?? 0} {translate('comment_like_label')}</span>
+                            <button
+                                type='button'
+                                className='hover:text-foreground'
+                                onClick={handleToggleReply}
+                            >
+                                {translate('comment_reply')}
+                            </button>
+                        </div>
+                        {isReplyOpen && (
+                            <div className='mt-3'>
+                                <CommentComposer
+                                    onSubmit={handleReplySubmit}
+                                    songId={songId}
+                                />
+                            </div>
+                        )}
                     </div>
-                    <Typography className='mt-1 whitespace-pre-line'>
-                        {comment.content}
-                    </Typography>
-                    <div className='mt-2 flex items-center gap-4 text-xs text-muted-foreground'>
-                        <span>{comment.likes ?? 0} {translate('comment_like_label')}</span>
-                        <button
-                            type='button'
-                            className='hover:text-foreground'
-                            onClick={handleToggleReply}
-                        >
-                            {translate('comment_reply')}
-                        </button>
-                    </div>
-                    {isReplyOpen && (
-                        <div className='mt-3'>
-                            <CommentComposer
-                                onSubmit={handleReplySubmit}
+                </div>
+                {comment.replies?.length > 0 && (
+                    <div className='ml-8 mt-2 border-l border-border/80 pl-4'>
+                        {comment.replies.map((reply) => (
+                            <CommentItem
+                                key={reply.id}
+                                comment={reply}
+                                onReply={onReply}
+                                activeReplyId={activeReplyId}
+                                setActiveReplyId={setActiveReplyId}
                                 songId={songId}
                             />
-                        </div>
-                    )}
-                </div>
+                        ))}
+                    </div>
+                )}
             </div>
-            {comment.replies?.length > 0 && (
-                <div className='ml-8 mt-2 border-l border-border/80 pl-4'>
-                    {comment.replies.map((reply) => (
-                        <CommentItem
-                            key={reply.id}
-                            comment={reply}
-                            onReply={onReply}
-                            activeReplyId={activeReplyId}
-                            setActiveReplyId={setActiveReplyId}
-                            songId={songId}
-                        />
-                    ))}
-                </div>
-            )}
-        </div>
-    )
-}
+        )
+    }
 
 const CommentDrawer: React.FC = () => {
     const { currentSong } = useSelector((state) => state.music)
     const { isAuthenticated } = useAuthContext()
     const { translate } = useLocales()
-
     const [activeReplyId, setActiveReplyId] = useState<string | null>(null)
-
-    const {
-        data,
-        isLoading,
-        isError,
-    } = useQuery({
-        ...commentQueries().all.queryOptions(currentSong?.id ?? '', {
+    const { mutateAsync } = useMutation(commentQueries().create.mutationOptions())
+    const { data, isLoading, isError } = useQuery(
+        commentQueries().all.queryOptions(currentSong?.id ?? '', {
             page: 1,
             limit: 30,
         })
-    })
-
-    const { mutateAsync } = useMutation(commentQueries().create.mutationOptions())
+    )
 
     const comments = useMemo(() => data ?? [], [data])
 
@@ -227,7 +220,7 @@ const CommentDrawer: React.FC = () => {
             >
                 <MessageSquareText />
             </DrawerTrigger>
-            <DrawerContent className='bg-white/70 backdrop-blur-lg'>
+            <DrawerContent className='bg-white/70 backdrop-blur-lg overflow-hidden'>
                 <div className='mx-auto w-full h-screen max-w-6xl relative'>
                     <DrawerHeader>
                         <DrawerTitle>{translate('comment_title')}</DrawerTitle>
@@ -265,20 +258,18 @@ const CommentDrawer: React.FC = () => {
                                 {translate('comment_fetch_failed')}
                             </Typography>
                         ) : comments.length > 0 ? (
-                            <ScrollArea className='h-full'>
-                                <div className='space-y-5 pr-3'>
-                                    {comments.map((comment) => (
-                                        <CommentItem
-                                            key={comment.id}
-                                            comment={comment}
-                                            onReply={handleSubmitReply}
-                                            activeReplyId={activeReplyId}
-                                            setActiveReplyId={setActiveReplyId}
-                                            songId={currentSong?.id}
-                                        />
-                                    ))}
-                                </div>
-                            </ScrollArea>
+                            <div className='space-y-5 pr-3'>
+                                {comments.map((comment) => (
+                                    <CommentItem
+                                        key={comment.id}
+                                        comment={comment}
+                                        onReply={handleSubmitReply}
+                                        activeReplyId={activeReplyId}
+                                        setActiveReplyId={setActiveReplyId}
+                                        songId={currentSong?.id}
+                                    />
+                                ))}
+                            </div>
                         ) : (
                             <div className='rounded-md border border-dashed border-muted p-4 text-center text-sm text-muted-foreground'>
                                 {translate('comment_empty_state')}

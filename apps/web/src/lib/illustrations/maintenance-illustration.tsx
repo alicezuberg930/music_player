@@ -2,11 +2,6 @@ import { memo } from 'react';
 //
 import BackgroundIllustration from './background-illustration';
 
-const PRIMARY_LIGHT = '#79C2C2';
-const PRIMARY_MAIN = '#0E8080';
-const PRIMARY_DARK = '#0A5F5F';
-const PRIMARY_DARKER = '#074848';
-
 function MaintenanceIllustration({ ...other }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div {...other}>
@@ -14,7 +9,7 @@ function MaintenanceIllustration({ ...other }: React.HTMLAttributes<HTMLDivEleme
         <BackgroundIllustration />
 
         <path
-          fill={PRIMARY_MAIN}
+          className="fill-primary"
           d="M297.46 99.296l-185.934-5.29c-6.35-.18-11.526 4.158-11.526 9.693v159.882c0 5.534 5.176 9.742 11.526 9.4l185.934-10.028c5.28-.284 9.54-4.576 9.54-9.585v-144.73c0-5.012-4.26-9.194-9.54-9.342z"
           opacity="0.12"
         />
@@ -54,13 +49,13 @@ function MaintenanceIllustration({ ...other }: React.HTMLAttributes<HTMLDivEleme
         />
 
         <path
-          fill={PRIMARY_DARKER}
+          className="fill-primary/60"
           d="M238.581 194.781l-1.199 1.199-25.289-25.298 4.595-4.597a2.173 2.173 0 012.977-.091l18.553 16.422.004.004c3.645 3.243 3.812 8.907.359 12.361z"
           opacity="0.24"
         />
 
         <path
-          fill={PRIMARY_DARKER}
+          className="fill-primary/60"
           d="M236.161 154.083c-5.298 5.298-13.254 6.31-19.566 3.038l-33.13 40.345a5.761 5.761 0 01-8.607.516l-3.145-3.145 6.122-6.125a2.174 2.174 0 103.075-3.076l42.668-42.682 1.907 1.907a3.308 3.308 0 004.68 0l7.117-7.12c1.142-1.144 3.097-.561 3.429 1.021 1.125 5.357-.392 11.161-4.55 15.321z"
           opacity="0.24"
         />
@@ -112,8 +107,8 @@ function MaintenanceIllustration({ ...other }: React.HTMLAttributes<HTMLDivEleme
             y2="199.671"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor={PRIMARY_LIGHT} />
-            <stop offset="1" stopColor={PRIMARY_DARK} />
+            <stop stopColor="var(--primary)" />
+            <stop offset="1" stopColor="var(--primary)" />
           </linearGradient>
 
           <linearGradient
@@ -124,8 +119,8 @@ function MaintenanceIllustration({ ...other }: React.HTMLAttributes<HTMLDivEleme
             y2="199.671"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor={PRIMARY_LIGHT} />
-            <stop offset="1" stopColor={PRIMARY_DARK} />
+            <stop stopColor="var(--primary)" />
+            <stop offset="1" stopColor="var(--primary)" />
           </linearGradient>
 
           <linearGradient

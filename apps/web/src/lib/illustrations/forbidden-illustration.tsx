@@ -2,11 +2,6 @@ import { memo } from 'react';
 //
 import BackgroundIllustration from './background-illustration';
 
-const PRIMARY_LIGHT = '#79C2C2';
-const PRIMARY_MAIN = '#0E8080';
-const PRIMARY_DARK = '#0A5F5F';
-const PRIMARY_DARKER = '#074848';
-
 function ForbiddenIllustration({ ...other }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div {...other}>
@@ -21,7 +16,7 @@ function ForbiddenIllustration({ ...other }: React.HTMLAttributes<HTMLDivElement
         />
 
         <path
-          fill={PRIMARY_MAIN}
+          className="fill-primary"
           d="M425.545 119.2c0-5-4.6-9-9.6-8.2-2-3.7-6-6-10.2-5.9 4.3-21.4-30-21.4-25.7 0-8.7-.8-15.1 9.4-10.4 16.8 2.1 3.5 5.9 5.6 10 5.5h38.7v-.1c4.1-.4 7.2-3.9 7.2-8.1zm-321.3 81.8c.1-4.2-4.1-7.8-8.2-7-1.7-3.2-5.1-5.1-8.8-5 3.8-18.4-25.8-18.4-22 0-7.4-.7-12.9 8.1-8.9 14.4 1.8 3 5.1 4.8 8.6 4.7h33.2v-.1c3.4-.4 6.1-3.4 6.1-7z"
           opacity="0.08"
         />
@@ -48,7 +43,7 @@ function ForbiddenIllustration({ ...other }: React.HTMLAttributes<HTMLDivElement
         />
 
         <path
-          fill={PRIMARY_DARKER}
+          className="fill-primary/60"
           d="M244.945 189.8c-67.6 1.3-77 97-11 111.4 81 11.8 92.7-107.3 11-111.4zm-48.5 56.2c-1-40.4 49.8-63.8 79.9-36.9l-68.3 68.3c-7.5-8.7-11.6-19.9-11.6-31.4zm48.5 48.5c-11.5 0-22.7-4.1-31.4-11.6l68.3-68.3c27 30.1 3.5 80.9-36.9 79.9z"
         />
 
@@ -66,8 +61,8 @@ function ForbiddenIllustration({ ...other }: React.HTMLAttributes<HTMLDivElement
             y2="307.306"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor={PRIMARY_LIGHT} />
-            <stop offset="1" stopColor={PRIMARY_DARK} />
+            <stop stopColor="var(--primary)" />
+            <stop offset="1" stopColor="var(--primary)" />
           </linearGradient>
         </defs>
       </svg>

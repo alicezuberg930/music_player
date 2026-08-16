@@ -44,7 +44,7 @@ interface ClientToServerEvents {
     'notification:ping': (acknowledge: (payload: { timestamp: string }) => void) => void
 }
 
-const apiUrl = new URL(import.meta.env.VITE_API_URL ?? 'http://localhost:5000/api/v1', window.location.origin)
+const apiUrl = new URL(import.meta.env.VITE_API_URL!)
 const apiPath = apiUrl.pathname.replace(/\/$/, '')
 
 type SocketContextType = {

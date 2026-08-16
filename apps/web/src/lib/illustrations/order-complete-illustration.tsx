@@ -2,11 +2,6 @@ import { memo } from 'react';
 //
 import BackgroundIllustration from './background-illustration';
 
-const PRIMARY_LIGHT = '#79C2C2';
-const PRIMARY_MAIN = '#0E8080';
-const PRIMARY_DARK = '#0A5F5F';
-const PRIMARY_DARKER = '#074848';
-
 function OrderCompleteIllustration({ ...other }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div {...other}>
@@ -36,7 +31,7 @@ function OrderCompleteIllustration({ ...other }: React.HTMLAttributes<HTMLDivEle
         />
 
         <path
-          fill={PRIMARY_DARKER}
+          className="fill-primary/60"
           d="M128.66 184.017h-.012a7.874 7.874 0 00-7.875 7.875v58.431a7.875 7.875 0 007.875 7.875h.012a7.875 7.875 0 007.875-7.875v-58.431a7.875 7.875 0 00-7.875-7.875zM162.335 184.017h-.012a7.875 7.875 0 00-7.875 7.875v58.431a7.875 7.875 0 007.875 7.875h.012a7.876 7.876 0 007.876-7.875v-58.431a7.875 7.875 0 00-7.876-7.875zM196.023 184.017h-.012a7.875 7.875 0 00-7.875 7.875v58.431a7.875 7.875 0 007.875 7.875h.012a7.876 7.876 0 007.876-7.875v-58.431a7.875 7.875 0 00-7.876-7.875zM229.699 184.017h-.012a7.875 7.875 0 00-7.875 7.875v58.431a7.875 7.875 0 007.875 7.875h.012a7.875 7.875 0 007.875-7.875v-58.431a7.875 7.875 0 00-7.875-7.875z"
         />
 
@@ -64,8 +59,8 @@ function OrderCompleteIllustration({ ...other }: React.HTMLAttributes<HTMLDivEle
             y2="247.455"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor={PRIMARY_MAIN} />
-            <stop offset="1" stopColor={PRIMARY_DARK} />
+            <stop stopColor="var(--primary)" />
+            <stop offset="1" stopColor="var(--primary)" />
           </linearGradient>
 
           <linearGradient
@@ -76,8 +71,8 @@ function OrderCompleteIllustration({ ...other }: React.HTMLAttributes<HTMLDivEle
             y2="176.397"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor={PRIMARY_LIGHT} />
-            <stop offset="1" stopColor={PRIMARY_DARK} />
+            <stop stopColor="var(--primary)" />
+            <stop offset="1" stopColor="var(--primary)" />
           </linearGradient>
 
           <linearGradient
@@ -88,8 +83,8 @@ function OrderCompleteIllustration({ ...other }: React.HTMLAttributes<HTMLDivEle
             y2="97.537"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor={PRIMARY_LIGHT} />
-            <stop offset="1" stopColor={PRIMARY_DARK} />
+            <stop stopColor="var(--primary)" />
+            <stop offset="1" stopColor="var(--primary)" />
           </linearGradient>
 
           <linearGradient
@@ -100,8 +95,8 @@ function OrderCompleteIllustration({ ...other }: React.HTMLAttributes<HTMLDivEle
             y2="257"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor={PRIMARY_LIGHT} />
-            <stop offset="1" stopColor={PRIMARY_DARK} />
+            <stop stopColor="var(--primary)" />
+            <stop offset="1" stopColor="var(--primary)" />
           </linearGradient>
         </defs>
       </svg>

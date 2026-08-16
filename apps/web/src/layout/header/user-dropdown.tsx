@@ -15,7 +15,7 @@ import {
 } from '@yukikaze/ui/dropdown-menu'
 import { useLocales } from '@/lib/locales'
 import { paths } from '@/lib/paths'
-import { LogOut, Settings, Spotlight, Upload, User } from '@yukikaze/ui'
+import { LogOut, Settings, Spotlight, Upload, User, Video } from '@yukikaze/ui'
 import { Link } from '@tanstack/react-router'
 import { useTheme } from '@yukikaze/ui'
 import { memo } from 'react'
@@ -60,6 +60,12 @@ const UserDropdown: React.FC = () => {
             <Link to={paths.ADD_ARTIST}>{translate('add_artist')}</Link>
             <DropdownMenuShortcut>
               <Spotlight />
+            </DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link to={paths.UPLOAD_VIDEO}>{translate('upload_video')}</Link>
+            <DropdownMenuShortcut>
+              <Video />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuSub>

@@ -1,5 +1,16 @@
+export const VIDEO_QUALITIES = ['240p', '360p', '480p', '720p', '1080p'] as const
+
+export type VideoQuality = (typeof VIDEO_QUALITIES)[number]
+export type VideoQualitySelection = 'auto' | VideoQuality
+
 export type VideoPlayerProps = {
-    videoUrl: string
+    videoId: string
+}
+
+export type VideoStreamResponse = {
+    url: string
+    quality: VideoQualitySelection
+    qualities: VideoQuality[]
 }
 
 export type MinimalHlsPlayer = {

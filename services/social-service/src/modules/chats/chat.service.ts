@@ -4,7 +4,7 @@ import { db } from '@yukikaze/db'
 import { chats, users } from '@yukikaze/db/schemas'
 import type { ChatMessageEvent } from '@yukikaze/kafka/types'
 import { emitChatMessageEvent } from '@yukikaze/kafka/producer'
-import { HttpException, BadRequestException, NotFoundException } from '@yukikaze/lib/exception'
+import { HttpException, BadRequestException, ForbiddenException, NotFoundException } from '@yukikaze/lib/exception'
 import { QueryConversationsInput, SendChatInput } from '@yukikaze/validator'
 
 export class ChatService {
@@ -82,6 +82,45 @@ export class ChatService {
 
             return response.json({
                 message: 'Conversation fetched successfully',
+                data,
+            })
+        } catch (error) {
+            if (error instanceof HttpException) throw error
+            throw new BadRequestException(error instanceof Error ? error.message : undefined)
+        }
+    }
+
+    public async listConversationMessages(
+        request: Request<{ chatId: string }>,
+        response: Response,
+    ) {
+        try {
+            const userId = request.userId
+            const { chatId } = request.params
+            if (!userId) throw new BadRequestException("User is required")
+
+            const chat = await db.query.chats.findFirst({
+                where: eq(chats.id, chatId),
+                columns: { fromUserId: true, toUserId: true },
+            })
+            if (!chat) throw new NotFoundException("Chat not found")
+            if (chat.fromUserId !== userId && chat.toUserId !== userId) {
+                throw new ForbiddenException("You are not a participant in this conversation")
+            }
+
+            const participantUserId = chat.fromUserId === userId
+                ? chat.toUserId
+                : chat.fromUserId
+            const data = await db.query.chats.findMany({
+                where: or(
+                    and(eq(chats.fromUserId, userId), eq(chats.toUserId, participantUserId)),
+                    and(eq(chats.fromUserId, participantUserId), eq(chats.toUserId, userId)),
+                ),
+                orderBy: [asc(chats.createdAt)],
+            })
+
+            return response.json({
+                message: 'Conversation messages fetched successfully',
                 data,
             })
         } catch (error) {

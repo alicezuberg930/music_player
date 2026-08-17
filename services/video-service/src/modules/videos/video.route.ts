@@ -60,7 +60,7 @@ videoRouter.put('/listens/add/:id',
 )
 
 videoRouter.get('/stream/:id',
-    (request: Request<{ id: string }>, response: Response) => videoController.streamVideo(request, response)
+    (request: Request<{ id: string }, {}, {}, { quality?: string }>, response: Response) => videoController.streamVideo(request, response)
 )
 
 export { videoRouter }

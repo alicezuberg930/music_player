@@ -22,6 +22,13 @@ class ChatController {
     ) {
         return await this.chatService.listConversation(request, response)
     }
+
+    public async listConversationMessages(
+        request: Request<{ chatId: string }>,
+        response: Response,
+    ) {
+        return await this.chatService.listConversationMessages(request, response)
+    }
 }
 
 export default new ChatController()

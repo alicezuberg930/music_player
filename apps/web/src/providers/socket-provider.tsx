@@ -4,6 +4,20 @@ import { toast } from "@yukikaze/ui"
 import { getQueryClient } from "./query-client-provider"
 import { useAuthContext } from "./auth-provider"
 
+export type ChatNotificationPayload = {
+    toUserId: string
+    actorUserId: string
+    type: 'chat'
+    actorFullName: string
+    actorAvatar?: string
+    title: string
+    content: string
+    refId: string
+    refName: string
+    link: string
+    emittedAt: string
+}
+
 interface ServerToClientEvents {
     'notification:connected': (payload: {
         socketId: string
@@ -29,15 +43,7 @@ interface ServerToClientEvents {
         title: string
         content: string
     }) => void
-    'notification:chat': (payload: {
-        toUserId: string
-        actorUserId: string
-        type: 'chat'
-        actorFullName: string
-        actorAvatar?: string
-        title: string
-        content: string
-    }) => void
+    'notification:chat': (payload: ChatNotificationPayload) => void
 }
 
 interface ClientToServerEvents {
@@ -101,15 +107,7 @@ const SocketProvider = ({ children }: { children: React.ReactNode }) => {
             queryClient.invalidateQueries({ queryKey: ['notifications'] })
         }
 
-        const handleChatNotification = (payload: {
-            toUserId: string
-            actorUserId: string
-            type: 'chat'
-            actorFullName: string
-            actorAvatar?: string
-            title: string
-            content: string
-        }) => {
+        const handleChatNotification = (payload: ChatNotificationPayload) => {
             if (user?.id && payload.toUserId !== user.id) return
             toast.info(payload.title, { description: payload.content })
             queryClient.invalidateQueries({ queryKey: ['notifications', 'unread'] })

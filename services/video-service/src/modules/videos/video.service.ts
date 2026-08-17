@@ -14,6 +14,7 @@ import { createId } from "@yukikaze/lib/create-cuid"
 import { resizeImageToBuffer } from '@yukikaze/lib/image-resize'
 import { VideoValidators } from '@yukikaze/validator'
 import { resolveAdaptiveStream, resolveQuality } from '../../lib/adaptive-streaming'
+import { HLS_QUALITIES } from '../../lib/@types/adaptive-streaming'
 
 
 export class VideoService {
@@ -281,21 +282,43 @@ export class VideoService {
             const findVideo = await db.query.videos.findFirst({ where: eq(videos.id, id), columns: { stream: true } })
             if (!findVideo || !findVideo.stream) throw new NotFoundException('Video not found')
 
+            const qualityParam = typeof request.query.quality === 'string'
+                ? request.query.quality.trim().toLowerCase()
+                : ''
+            const requestedQuality = qualityParam && qualityParam !== 'auto'
+                ? resolveQuality(qualityParam)
+                : undefined
+            if (qualityParam && qualityParam !== 'auto' && !requestedQuality) {
+                throw new BadRequestException('Unsupported video quality')
+            }
+
             const tmpDirectory = (process.env.VIDEO_TMP_DIR && process.env.VIDEO_TMP_DIR.trim().length > 0
                 ? process.env.VIDEO_TMP_DIR.trim()
                 : path.join(process.cwd(), 'tmp'))
             const manifestPath = path.join(tmpDirectory, 'adaptive-streams', id, 'auto', 'master.m3u8')
-            const requestedQuality = typeof request.query.quality === 'string'
-                ? resolveQuality(request.query.quality)
-                : undefined
             await resolveAdaptiveStream({
                 videoId: id,
                 sourceUrl: findVideo.stream,
                 requestPath: `/api/v1/videos/tmp/adaptive-streams/${id}/auto/master.m3u8`,
-                maxQuality: requestedQuality
             })
             if (!fs.existsSync(manifestPath)) {
                 throw new NotFoundException('Video manifest not found')
+            }
+
+            const variantPaths = fs.readFileSync(manifestPath, 'utf8')
+                .split(/\r?\n/)
+                .map(line => line.trim())
+                .filter(line => line.length > 0 && !line.startsWith('#'))
+            const qualities = HLS_QUALITIES.slice(0, variantPaths.length)
+            if (qualities.length === 0) throw new NotFoundException('Video variants not found')
+
+            let resourcePath = 'master.m3u8'
+            if (requestedQuality) {
+                const qualityIndex = qualities.indexOf(requestedQuality)
+                if (qualityIndex < 0) {
+                    throw new BadRequestException(`Video quality ${requestedQuality} is unavailable`)
+                }
+                resourcePath = variantPaths[qualityIndex]!
             }
 
             const forwardedProto = typeof request.headers['x-forwarded-proto'] === 'string'
@@ -307,9 +330,14 @@ export class VideoService {
                 : undefined
             const host = forwardedHost ?? request.get('host')
             if (!host) throw new NotFoundException('Unable to determine host for stream URL')
-            const url = `${protocol}://${host}/api/v1/videos/tmp/adaptive-streams/${id}/auto/master.m3u8`
+            const normalizedResourcePath = resourcePath.replace(/\\/g, '/')
+            const url = `${protocol}://${host}/api/v1/videos/tmp/adaptive-streams/${id}/auto/${normalizedResourcePath}`
 
-            return response.json({ url })
+            return response.json({
+                url,
+                quality: requestedQuality ?? 'auto',
+                qualities,
+            })
         } catch (error) {
             if (response.headersSent) return
             if (error instanceof HttpException) throw error

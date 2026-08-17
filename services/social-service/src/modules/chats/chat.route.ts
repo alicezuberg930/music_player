@@ -14,6 +14,13 @@ chatRouter.post(
 )
 
 chatRouter.get(
+    "/chats/messages/:chatId",
+    JWTMiddleware,
+    (request: Request<{ chatId: string }>, response: Response) =>
+        chatController.listConversationMessages(request, response),
+)
+
+chatRouter.get(
     "/chats/:userId",
     JWTMiddleware,
     validateRequest(queryConversationsInput),

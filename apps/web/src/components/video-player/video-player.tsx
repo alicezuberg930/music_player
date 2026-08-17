@@ -1,15 +1,28 @@
 import '@/styles/video-player.css'
 import { useEffect, useRef, useState } from 'react'
 import { formatDuration } from '@/lib/utils'
-import type { MinimalHlsPlayer, VideoPlayerProps } from './types'
+import { httpClient } from '@/lib/repository/http-client'
+import {
+    VIDEO_QUALITIES,
+    type MinimalHlsPlayer,
+    type VideoPlayerProps,
+    type VideoQuality,
+    type VideoQualitySelection,
+    type VideoStreamResponse,
+} from './types'
 import { Maximize, Minimize, PauseCircle, PictureInPicture, PlayCircle, Settings, Volume1, Volume2, VolumeOff } from '@yukikaze/ui'
 import { Popover, PopoverContent, PopoverTrigger } from '@yukikaze/ui/popover'
 
-export const VideoPlayer = ({ videoUrl }: VideoPlayerProps) => {
+export const VideoPlayer = ({ videoId }: VideoPlayerProps) => {
     const [isPlaying, setIsPlaying] = useState(false)
     const [isFullscreen, setIsFullscreen] = useState(false)
     const [volume, setVolume] = useState(50)
     const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+    const [videoUrl, setVideoUrl] = useState<string | null>(null)
+    const [selectedQuality, setSelectedQuality] = useState<VideoQualitySelection>('auto')
+    const [availableQualities, setAvailableQualities] = useState<VideoQuality[]>([])
+    const [isStreamLoading, setIsStreamLoading] = useState(true)
+    const [streamError, setStreamError] = useState<string | null>(null)
     // refs to prevent component re-rendering too many times
     const timelineContainer = useRef<HTMLDivElement | null>(null)
     const videoContainer = useRef<HTMLDivElement | null>(null)
@@ -21,6 +34,8 @@ export const VideoPlayer = ({ videoUrl }: VideoPlayerProps) => {
     const bufferedSegments = useRef<HTMLDivElement | null>(null)
     const currentTime = useRef<HTMLSpanElement | null>(null)
     const isScrubbing = useRef<boolean>(false)
+    const resolvedQuality = useRef<VideoQualitySelection>('auto')
+    const playbackRestore = useRef<{ currentTime: number; shouldResume: boolean } | null>(null)
 
     const toggleVideo = () => {
         if (!videoPlayer.current) return
@@ -68,6 +83,18 @@ export const VideoPlayer = ({ videoUrl }: VideoPlayerProps) => {
 
     const changePlayBackRate = (speed: number) => {
         if (videoPlayer.current) videoPlayer.current.playbackRate = speed
+        setIsSettingsOpen(false)
+    }
+
+    const changeVideoQuality = (quality: VideoQualitySelection) => {
+        if (quality === selectedQuality || isStreamLoading) return
+        if (videoPlayer.current && videoUrl) {
+            playbackRestore.current = {
+                currentTime: videoPlayer.current.currentTime,
+                shouldResume: !videoPlayer.current.paused,
+            }
+        }
+        setSelectedQuality(quality)
         setIsSettingsOpen(false)
     }
 
@@ -177,6 +204,7 @@ export const VideoPlayer = ({ videoUrl }: VideoPlayerProps) => {
                     isSupported?: () => boolean
                     new(config?: Record<string, unknown>): MinimalHlsPlayer
                 }
+                if (isCancelled()) return
                 const isSupported = Hls?.isSupported?.() ?? false
                 console.log('[VideoPlayer] hls.js isSupported:', isSupported)
                 if (!isSupported) throw new Error('Browser does not support HLS streaming')
@@ -207,17 +235,71 @@ export const VideoPlayer = ({ videoUrl }: VideoPlayerProps) => {
 
     useEffect(() => {
         let isCancelled = false
-            ; (async () => {
-                if (isCancelled) return
-                try {
-                    await initializeVideoPlayer(videoUrl, () => isCancelled)
-                } catch (error) {
-                    if (!isCancelled) console.error('Failed to initialize video source:', error)
-                }
-            })()
+        const controller = new AbortController()
+
+        setIsStreamLoading(true)
+        setStreamError(null)
+
+        void httpClient.get<VideoStreamResponse>(
+            `/videos/stream/${videoId}`,
+            selectedQuality === 'auto' ? {} : { quality: selectedQuality },
+            { signal: controller.signal },
+        ).then((payload) => {
+            if (isCancelled) return
+            resolvedQuality.current = payload.quality
+            setAvailableQualities(payload.qualities)
+            setVideoUrl(payload.url)
+        }).catch((error) => {
+            if (isCancelled) return
+            playbackRestore.current = null
+            setSelectedQuality(resolvedQuality.current)
+            setStreamError(error instanceof Error ? error.message : 'Unable to load video stream')
+        }).finally(() => {
+            if (!isCancelled) setIsStreamLoading(false)
+        })
 
         return () => {
             isCancelled = true
+            controller.abort()
+        }
+    }, [selectedQuality, videoId])
+
+    useEffect(() => {
+        if (!videoUrl) return
+        let isCancelled = false
+        const player = videoPlayer.current
+        const restorePlayback = () => {
+            const playback = playbackRestore.current
+            if (!playback || !videoPlayer.current) return
+            playbackRestore.current = null
+
+            const duration = videoPlayer.current.duration
+            videoPlayer.current.currentTime = Number.isFinite(duration)
+                ? Math.min(playback.currentTime, Math.max(0, duration - 0.1))
+                : playback.currentTime
+            if (playback.shouldResume) {
+                void videoPlayer.current.play()
+                    .then(() => setIsPlaying(true))
+                    .catch(() => setIsPlaying(false))
+            } else {
+                setIsPlaying(false)
+            }
+        }
+        player?.addEventListener('loadedmetadata', restorePlayback)
+
+        void (async () => {
+            try {
+                await initializeVideoPlayer(videoUrl, () => isCancelled)
+            } catch (error) {
+                if (!isCancelled) {
+                    console.error('Failed to initialize video source:', error)
+                }
+            }
+        })()
+
+        return () => {
+            isCancelled = true
+            player?.removeEventListener('loadedmetadata', restorePlayback)
             hlsInstance.current?.destroy()
             hlsInstance.current = null
         }
@@ -271,8 +353,20 @@ export const VideoPlayer = ({ videoUrl }: VideoPlayerProps) => {
         videoPlayer.current.volume = volume / 100
     }, [volume])
 
+    const qualityOptions: VideoQualitySelection[] = [
+        'auto',
+        ...(availableQualities.length > 0
+            ? [...availableQualities].reverse()
+            : [...VIDEO_QUALITIES].reverse()),
+    ]
+
     return (
         <div ref={videoContainer} className='relative h-fit aspect-video w-full'>
+            {!videoUrl && (
+                <div className='absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-black text-sm text-white'>
+                    {streamError ?? 'Preparing video...'}
+                </div>
+            )}
             <video
                 ref={videoPlayer}
                 className='w-full h-full rounded-xl outline-none'
@@ -282,7 +376,7 @@ export const VideoPlayer = ({ videoUrl }: VideoPlayerProps) => {
             />
             <video
                 ref={previewVideo}
-                src={videoUrl}
+                src={videoUrl ?? undefined}
                 preload='metadata'
                 muted
                 className='hidden'
@@ -351,16 +445,34 @@ export const VideoPlayer = ({ videoUrl }: VideoPlayerProps) => {
                         <span>{formatDuration(Math.floor(videoPlayer.current?.duration ?? 0))}</span>
                     </div>
                     <Popover open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
-                        <PopoverTrigger aria-label='Playback speed' className='cursor-pointer'>
+                        <PopoverTrigger aria-label='Playback settings' className='flex cursor-pointer items-center gap-1'>
+                            <span className='text-xs font-semibold'>
+                                {isStreamLoading ? '...' : selectedQuality === 'auto' ? 'Auto' : selectedQuality}
+                            </span>
                             <Settings strokeWidth={1} size={30} />
                         </PopoverTrigger>
-                        <PopoverContent side='top' align='end' className='w-40 gap-0 bg-[#ffffff4d] p-0 text-white backdrop-blur-xs overflow-hidden'>
+                        <PopoverContent side='top' align='end' className='max-h-96 w-48 gap-0 overflow-y-auto bg-[#ffffff4d] p-0 text-white backdrop-blur-xs'>
+                            <div className='px-3 py-2 text-xs font-semibold uppercase tracking-wider text-white/70'>Quality</div>
+                            {qualityOptions.map((quality) => (
+                                <button
+                                    key={quality}
+                                    type='button'
+                                    disabled={isStreamLoading}
+                                    aria-pressed={selectedQuality === quality}
+                                    onClick={() => changeVideoQuality(quality)}
+                                    className='flex w-full cursor-pointer items-center justify-between px-3 py-2 text-left hover:bg-[#ffffff33] disabled:cursor-wait disabled:opacity-50'
+                                >
+                                    <span>{quality === 'auto' ? 'Auto' : quality}</span>
+                                    {selectedQuality === quality ? <span aria-hidden='true'>•</span> : null}
+                                </button>
+                            ))}
+                            <div className='border-t border-white/20 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-white/70'>Playback speed</div>
                             {[0.25, 0.5, 1, 1.5, 2].map((speed) => (
                                 <button
                                     key={speed}
                                     type='button'
                                     onClick={() => changePlayBackRate(speed)}
-                                    className='flex w-full cursor-pointer items-center px-2 py-2 text-left hover:bg-[#ffffff33]'
+                                    className='flex w-full cursor-pointer items-center px-3 py-2 text-left hover:bg-[#ffffff33]'
                                 >
                                     {speed === 1 ? 'Tốc độ chuẩn' : `Tốc độ x${speed}`}
                                 </button>

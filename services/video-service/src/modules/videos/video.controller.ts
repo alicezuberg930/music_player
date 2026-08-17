@@ -33,7 +33,7 @@ class VideoController {
         return await this.videoService.addVideoView(request, response)
     }
 
-    public async streamVideo(request: Request<{ id: string }>, response: Response) {
+    public async streamVideo(request: Request<{ id: string }, {}, {}, { quality?: string }>, response: Response) {
         return await this.videoService.streamVideo(request, response)
     }
 }
